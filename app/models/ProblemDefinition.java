@@ -2,7 +2,10 @@ package models;
 
 import play.db.jpa.Model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import java.util.Set;
 
 /**
  * Created by IntelliJ IDEA.
@@ -14,6 +17,24 @@ import javax.persistence.Entity;
 
 @Entity
 public class ProblemDefinition extends Model {
+
+	public String name;
+	public RCACase rcaCase;
+
+	@OneToMany(mappedBy = "problem", cascade = CascadeType.ALL)
+	public Set<ProblemCause> causes;
+
+	public ProblemDefinition(String s, RCACase rcaCase, Set<ProblemCause> causes) {
+		this.name = s;
+		this.rcaCase = rcaCase;
+		this.causes = causes;
+	}
+
 	public ProblemDefinition(String s, RCACase rcaCase) {
+		this(s, rcaCase, null);
+	}
+
+	public void addCause(ProblemCause cause){
+		this.causes.add(cause);
 	}
 }

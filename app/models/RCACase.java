@@ -10,7 +10,10 @@ package models;
 
 import play.db.jpa.Model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import java.util.Set;
 
 @Entity
 public class RCACase extends Model {
@@ -22,8 +25,8 @@ public class RCACase extends Model {
 
 	public Status status;
 
-	//@OneToMany(mappedBy="case", cascade=CascadeType.ALL)
-	//public Set<ProblemDefinition> problems;
+	@OneToMany(mappedBy="rcaCase", cascade= CascadeType.ALL)
+	public Set<ProblemDefinition> problems;
 
 	public RCACase(String name) {
 		this.name = name;
@@ -46,6 +49,11 @@ public class RCACase extends Model {
 			default:
 				return false;
 		}
+	}
+
+	public void addProblemDefinition(ProblemDefinition problem){
+		this.problems.add(problem);
+
 	}
 
 }
