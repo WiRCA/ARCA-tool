@@ -9,6 +9,8 @@
  * http://www.playframework.org/documentation/1.2.3/guide2
  */
 
+import models.ProblemCause;
+import models.ProblemDefinition;
 import models.RCACase;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,10 +31,17 @@ public class PrototypeTest extends UnitTest {
 		* information
 		* from those objects. Select a problem definition to the second step of the RCA case.
 		*
+		* Problem definition:
+		*   - title
+		*   - case
+		*   - causes <-- closest causes
 		 */
 	@Test
 	public void problemDetection() {
-		//TODO
+		RCACase rcaCase = RCACase.find("byName", "Test RCA case.").first();
+		new ProblemDefinition("Kahvi loppu", rcaCase);
+
+		assertNotNull(ProblemDefinition.find("byTitle", "Kahvi loppu").first());
 	}
 
 	/*
@@ -41,9 +50,16 @@ public class PrototypeTest extends UnitTest {
 		* more causes related to previously created causes, and then remove different causes. Select some of the root
 		* causes for the next step of the RCA case.
 		*
+		* ProblemCause
+		*   - title
+		*   - problem
+		*   - actions
+		*   - causes ManyToMany
+		*
 		 */
 	@Test
 	public void rootCauseDetection() {
+
 		//TODO
 	}
 
@@ -52,6 +68,10 @@ public class PrototypeTest extends UnitTest {
 		* selecting some
 		* of the corrective actions, finish the RCA case.
 		*
+		* CorrectiveAction
+		*   - title
+		*   - causes ManyToMany
+		*   - problem
 		 */
 	@Test
 	public void correctiveActionInnovation() {

@@ -19,8 +19,9 @@ public class BasicTest extends UnitTest {
 		RCACase testCase = RCACase.find("byName", "Test case").first();
 
 		assertNotNull(testCase);
-		assertEquals("Test case", testCase.name);
+		assertEquals("Test case 2", testCase.name);
 	}
+
 
 	@Test
 	public void goThroughRCACase() {
