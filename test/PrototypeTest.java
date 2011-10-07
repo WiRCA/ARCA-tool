@@ -45,25 +45,6 @@ public class PrototypeTest extends UnitTest {
 	}
 
 	/*
-		* Create new problem causes for our RCA cases problem definition(s) that were selected in the previous step
-		* . Create
-		* more causes related to previously created causes, and then remove different causes. Select some of the root
-		* causes for the next step of the RCA case.
-		*
-		* ProblemCause
-		*   - title
-		*   - problem
-		*   - actions
-		*   - causes ManyToMany
-		*
-		 */
-	@Test
-	public void rootCauseDetection() {
-
-		//TODO
-	}
-
-	/*
 		* Create new corrective actions for the root causes that were selected in the previous test. After
 		* selecting some
 		* of the corrective actions, finish the RCA case.
