@@ -13,6 +13,7 @@ import play.db.jpa.Model;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -28,9 +29,19 @@ public class RCACase extends Model {
 	@OneToMany(mappedBy="rcaCase", cascade= CascadeType.ALL)
 	public Set<ProblemDefinition> problems;
 
+	public Set<ProblemDefinition> selectedProblems;
+
+	public Set<ProblemCause> selectedCauses;
+
+	public Set<CorrectiveAction> selectedActions;
+
 	public RCACase(String name) {
 		this.name = name;
 		this.status = models.RCACase.Status.ProblemDetection;
+		this.problems = new HashSet<ProblemDefinition>();
+		this.selectedProblems = new HashSet<ProblemDefinition>();
+		this.selectedCauses = new HashSet<ProblemCause>();
+		this.selectedActions = new HashSet<CorrectiveAction>();
 	}
 
 	public boolean nextStep() {
@@ -38,14 +49,26 @@ public class RCACase extends Model {
 		// TODO: to be set before going to the next step in the RCA process.
 		switch (status) {
 			case ProblemDetection:
-				status = Status.RootCauseDetection;
-				return true;
+				if (this.selectedProblems.size() > 0) {
+					status = Status.RootCauseDetection;
+					return true;
+				} else {
+					return false;
+				}
 			case RootCauseDetection:
-				status = Status.CorrectiveActionInnovation;
-				return true;
+				if (this.selectedCauses.size() > 0) {
+					status = Status.CorrectiveActionInnovation;
+					return true;
+				} else {
+					return false;
+				}
 			case CorrectiveActionInnovation:
-				status = Status.Finished;
-				return true;
+				if (this.selectedActions.size() > 0) {
+					status = Status.Finished;
+					return true;
+				} else {
+					return false;
+				}
 			default:
 				return false;
 		}
@@ -53,7 +76,20 @@ public class RCACase extends Model {
 
 	public void addProblemDefinition(ProblemDefinition problem){
 		this.problems.add(problem);
-
 	}
+
+	public void addSelectedProblemDefinition(ProblemDefinition problem){
+		this.selectedProblems.add(problem);
+	}
+
+	public void addSelectedProblemCause(ProblemCause cause){
+		this.selectedCauses.add(cause);
+	}
+
+	public void addSelectedCorrectiveAction(CorrectiveAction action){
+		this.selectedActions.add(action);
+	}
+
+
 
 }
