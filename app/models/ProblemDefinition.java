@@ -37,7 +37,4 @@ public class ProblemDefinition extends Model {
 	public void addCause(ProblemCause cause){
 		this.causes.add(cause);
 	}
-
-	public void addCause(ProblemCause probCause) {
-	}
 }
