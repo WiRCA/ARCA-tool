@@ -1,5 +1,9 @@
 package models;
 
+import play.db.jpa.Model;
+
+import javax.persistence.Entity;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Eero
@@ -7,5 +11,23 @@ package models;
  * Time: 20:24
  * To change this template use File | Settings | File Templates.
  */
-public class ProblemCause {
+@Entity
+public class ProblemCause extends Model{
+
+	public String name;
+
+	public ProblemCause(String name) {
+		this.name = name;
+	}
+
+	public boolean isCauseOf(ProblemDefinition probDef) {
+		return false;  //To change body of created methods use File | Settings | File Templates.
+	}
+
+	public void addCause(ProblemCause probCause) {
+	}
+
+	public void hasCause(ProblemCause probCause) {
+		//To change body of created methods use File | Settings | File Templates.
+	}
 }

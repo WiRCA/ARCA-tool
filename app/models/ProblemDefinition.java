@@ -16,4 +16,7 @@ import javax.persistence.Entity;
 public class ProblemDefinition extends Model {
 	public ProblemDefinition(String s, RCACase rcaCase) {
 	}
+
+	public void addCause(ProblemCause probCause) {
+	}
 }
