@@ -1,5 +1,9 @@
 package models;
 
+import play.db.jpa.Model;
+
+import javax.persistence.Entity;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Eero
@@ -7,5 +11,6 @@ package models;
  * Time: 20:25
  * To change this template use File | Settings | File Templates.
  */
-public class CorrectiveAction {
+@Entity
+public class CorrectiveAction extends Model {
 }

@@ -27,13 +27,16 @@ public class RCACase extends Model {
 	public Status status;
 
 	@OneToMany(mappedBy="rcaCase", cascade= CascadeType.ALL)
-	public Set<ProblemDefinition> problems;
+	public Set<ProblemDefinition> problems = new HashSet<ProblemDefinition>();
 
-	public Set<ProblemDefinition> selectedProblems;
+	@OneToMany
+	public Set<ProblemDefinition> selectedProblems = new HashSet<ProblemDefinition>();
 
-	public Set<ProblemCause> selectedCauses;
+	@OneToMany
+	public Set<ProblemCause> selectedCauses = new HashSet<ProblemCause>();
 
-	public Set<CorrectiveAction> selectedActions;
+	@OneToMany
+	public Set<CorrectiveAction> selectedActions = new HashSet<CorrectiveAction>();
 
 	public RCACase(String name) {
 		this.name = name;

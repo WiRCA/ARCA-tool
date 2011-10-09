@@ -3,6 +3,7 @@ package models;
 import play.db.jpa.Model;
 
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 
 /**
  * Created by IntelliJ IDEA.
@@ -15,6 +16,9 @@ import javax.persistence.Entity;
 public class ProblemCause extends Model{
 
 	public String name;
+
+	@ManyToOne
+	public ProblemDefinition problem;
 
 	public ProblemCause(String name) {
 		this.name = name;

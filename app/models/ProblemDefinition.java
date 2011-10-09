@@ -4,7 +4,9 @@ import play.db.jpa.Model;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -19,10 +21,12 @@ import java.util.Set;
 public class ProblemDefinition extends Model {
 
 	public String name;
+
+	@ManyToOne
 	public RCACase rcaCase;
 
 	@OneToMany(mappedBy = "problem", cascade = CascadeType.ALL)
-	public Set<ProblemCause> causes;
+	public Set<ProblemCause> causes = new HashSet<ProblemCause>();
 
 	public ProblemDefinition(String s, RCACase rcaCase, Set<ProblemCause> causes) {
 		this.name = s;
