@@ -8,15 +8,20 @@
 
 RCACase(case1):
     name: Worst-Case
+    status: ProblemDetection
 
 RCACase(case2):
     name: Was?
+    status: RootCauseDetection
 
 RCACase(case3):
     name: QWERTY
+    status: ProblemDetection
 
 RCACase(case4):
     name: "Where be the database?"
+    status: ProblemDetection
 
 RCACase(case5):
     name: Usual
+    status: ProblemDetection
