@@ -1,4 +1,23 @@
 #{extends 'main.html' /}
 #{set title:'Home' /}
-<!-- TODO: list all -->
-#{welcome /}
+#{if RCACases.size() > 1}
+<div class="older-posts">
+    <h3>RCACases <span class="from">from this app</span></h3>
+
+    #{list items:RCACases, as:'RCACase'}
+    <div class="post">
+        <h2 class="post-title">
+            ${RCACase.name}
+        </h2>
+
+    </div>
+    #{/list}
+</div>
+
+#{/if}
+
+#{else}
+<div class="empty">
+    There is currently nothing to read here.
+</div>
+#{/else}
