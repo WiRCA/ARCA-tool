@@ -79,6 +79,7 @@ public class RCACase extends Model {
 
 	public void addProblemDefinition(ProblemDefinition problem){
 		this.problems.add(problem);
+		problem.rcaCase = this;
 	}
 
 	public void addSelectedProblemDefinition(ProblemDefinition problem){
