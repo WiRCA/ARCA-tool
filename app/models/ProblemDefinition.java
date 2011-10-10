@@ -18,27 +18,16 @@ import java.util.Set;
  */
 
 @Entity
-public class ProblemDefinition extends Model {
+public class ProblemDefinition extends RCAGraphNode {
 
 	public String name;
 
 	@ManyToOne
 	public RCACase rcaCase;
 
-	@OneToMany(mappedBy = "problem", cascade = CascadeType.ALL)
-	public Set<ProblemCause> causes = new HashSet<ProblemCause>();
-
-	public ProblemDefinition(String s, RCACase rcaCase, Set<ProblemCause> causes) {
+	public ProblemDefinition(String s, RCACase rcaCase) {
 		this.name = s;
 		this.rcaCase = rcaCase;
-		this.causes = causes;
 	}
 
-	public ProblemDefinition(String s, RCACase rcaCase) {
-		this(s, rcaCase, null);
-	}
-
-	public void addCause(ProblemCause cause){
-		this.causes.add(cause);
-	}
 }
