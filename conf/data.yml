@@ -1,0 +1,22 @@
+# you describe your data using the YAML notation here
+# and then load them using Fixtures.load("data.yml")
+
+# User(bob):
+#   email: bob@gmail.com
+#   password: secret
+#   fullname: Bob
+
+RCACase(case1):
+    name: Worst-Case
+
+RCACase(case2):
+    name: Was?
+
+RCACase(case3):
+    name: QWERTY
+
+RCACase(case4):
+    name: "Where be the database?"
+
+RCACase(case5):
+    name: Usual
