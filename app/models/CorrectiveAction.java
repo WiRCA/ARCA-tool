@@ -19,7 +19,7 @@ public class CorrectiveAction extends Model {
 	public ProblemDefinition problem;
 
 	@ManyToMany
-	public Set<ProblemCause> causes;
+	public Set<ProblemCause> causes = new HashSet<ProblemCause>();
 
 	public CorrectiveAction(String title, ProblemDefinition problem, Set<ProblemCause> causes){
 		this.title = title;
@@ -28,8 +28,11 @@ public class CorrectiveAction extends Model {
 	}
 
 	public CorrectiveAction(String title, ProblemDefinition problem){
-		this(title, problem, null);
+		this.title = title;
+		this.problem = problem;
 	}
 
+
+	//MUST BE REDONE WHEN PROBLEMCAUSE IS FINISHED.
 
 }
