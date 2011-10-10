@@ -1,14 +1,12 @@
-import org.junit.*;
-import play.test.*;
-import play.mvc.*;
-import play.mvc.Http.*;
-import models.*;
+import org.junit.Test;
+import play.mvc.Http;
+import play.test.FunctionalTest;
 
 public class ApplicationTest extends FunctionalTest {
 
     @Test
     public void testThatIndexPageWorks() {
-        Response response = GET("/");
+        Http.Response response = GET("/");
         assertIsOk(response);
         assertContentType("text/html", response);
         assertCharset(play.Play.defaultWebEncoding, response);

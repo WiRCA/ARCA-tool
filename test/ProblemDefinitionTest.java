@@ -26,7 +26,7 @@ public class ProblemDefinitionTest extends UnitTest {
 	@Test
 	public void ProblemDetect() {
 		RCACase rcaCase = RCACase.find("byName", "Test RCA case.").first();
-		ProblemDefinition problem = new ProblemDefinition("Kahvi loppu", rcaCase);
+		ProblemDefinition problem = new ProblemDefinition("Kahvi loppu", rcaCase).save();
 		rcaCase.addProblemDefinition(problem);
 		assertTrue(rcaCase.problems.contains(problem));
 		assertNotNull(ProblemDefinition.find("byName", "Kahvi loppu").first());
@@ -38,6 +38,6 @@ public class ProblemDefinitionTest extends UnitTest {
 		ProblemCause cause = new ProblemCause("Ei printattu");
 		ProblemDefinition problem1 = new ProblemDefinition("Ei puruja", rcaCase);
 		problem1.addCause(cause);
-		assertTrue(problem1.causes.contains(cause));
+		assertTrue(cause.isCauseOf(problem1));
 	}
 }

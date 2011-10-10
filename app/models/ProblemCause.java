@@ -13,7 +13,7 @@ import javax.persistence.ManyToOne;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-public class ProblemCause extends Model{
+public class ProblemCause extends RCAGraphNode {
 
 	public String name;
 
@@ -22,16 +22,5 @@ public class ProblemCause extends Model{
 
 	public ProblemCause(String name) {
 		this.name = name;
-	}
-
-	public boolean isCauseOf(ProblemDefinition probDef) {
-		return false;  //To change body of created methods use File | Settings | File Templates.
-	}
-
-	public void addCause(ProblemCause probCause) {
-	}
-
-	public void hasCause(ProblemCause probCause) {
-		//To change body of created methods use File | Settings | File Templates.
 	}
 }
