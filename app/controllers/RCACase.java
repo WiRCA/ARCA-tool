@@ -22,9 +22,11 @@
 
 package controllers;
 
+import models.ProblemDefinition;
 import play.mvc.Controller;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by IntelliJ IDEA.
@@ -37,9 +39,23 @@ import java.util.List;
 public class RCACase extends Controller {
 
 	    public static void index() {
-
-        render();
+		List<RCACase> RCACases = models.RCACase.find("order by Name").from(0).fetch(10);
+        render(RCACases);
     }
+		public static void show(long id) {
+		models.RCACase rcaCase = models.RCACase.findById(id);
+		Set<ProblemDefinition> Problems = rcaCase.problems;
+		render(rcaCase);
+	}
+	public static void newRCACase(String name) {
+		models.RCACase rca = new models.RCACase(name);
+		rca.save();
+		//show(rca.id);
+		index();
+	}
+	public static void create() {
+		render();
+	}
 
 
 }

@@ -7,7 +7,7 @@ GET     /                                       Application.index
 
 #RCACase
 GET     /RCACase                                RCACase.index
-GET     /RCACase/new                            RCACase.new
+GET     /RCACase/create                            RCACase.create
 
 # Ignore favicon requests
 GET     /favicon.ico                            404

@@ -28,5 +28,27 @@
 </head>
 <body>
 
+
+#{form @RCACase.newRCACase(RCACase?.id)}
+
+    #{ifErrors}
+        <p class="error">
+            Please correct these errors.
+        </p>
+    #{/ifErrors}
+
+    <p>
+        #{field 'name'}
+        <label>Name:</label>
+        <input type="text" name="${field.name}"
+            value="${RCACase?.name}" class="${field.errorClass}" />
+        #{/field}
+    </p>
+<p>
+        <input type="submit" value="Create!" />
+    </p>
+
+#{/form}
+
 </body>
 </html>
