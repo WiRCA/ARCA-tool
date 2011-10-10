@@ -5,6 +5,10 @@
 # Home page
 GET     /                                       Application.index
 
+#RCACase
+GET     /RCACase                                RCACase.index
+GET     /RCACase/new                            RCACase.new
+
 # Ignore favicon requests
 GET     /favicon.ico                            404
 
