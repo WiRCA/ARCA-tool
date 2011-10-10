@@ -7,7 +7,7 @@
     #{list items:RCACases, as:'RCACase'}
     <div class="post">
         <h2 class="post-title">
-            ${RCACase.name}
+            <a href="@{Application.show(RCACase.id)}">${RCACase.name}</a>
         </h2>
 
     </div>

@@ -14,4 +14,10 @@ public class Application extends Controller {
         render(RCACases);
     }
 
+	public static void show(long id) {
+		models.RCACase rcaCase = models.RCACase.findById(id);
+		Set<ProblemDefinition> Problems = rcaCase.problems;
+		render(rcaCase);
+	}
+
 }
