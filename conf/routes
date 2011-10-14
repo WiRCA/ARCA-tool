@@ -13,7 +13,7 @@ GET     /RCACase                                RCACase.index
 GET     /RCACase/create                         RCACase.create
 GET     /RCACase/{id}/addProblem                RCACaseController.addProblem
 POST    /RCACase/{rcaCaseId}/saveProblem        RCACaseController.saveProblem
-GET     ${ProblemRoute}                         ProblemDefinition.index
+GET     ${ProblemRoute}                         ProblemDefinitionController.index
 GET     ${CauseRoute}                           ProblemCause.index
 GET     ${CauseRoute}/{cause_id}/CorrectiveAction CorrectiveAction.index
 # Ignore favicon requests
