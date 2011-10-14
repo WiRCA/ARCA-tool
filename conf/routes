@@ -3,11 +3,13 @@
 # ~~~~
 
 # Home page, links to: new-rca-case, view-rca-cases
-GET     /                                       RCACase.index
+GET     /                                       RCACaseController.index
 
 #RCACase
-GET     /RCACase                                RCACase.index
-GET     /RCACase/create                         RCACase.create
+GET     /RCACase                                RCACaseController.index
+GET     /RCACase/create                         RCACaseController.create
+GET     /RCACase/{id}/addProblem                RCACaseController.addProblem
+POST    /RCACase/{rcaCaseId}/saveProblem        RCACaseController.saveProblem
 #GET     /RCACase/{id}/ProblemDefinition         ProblemDefinition.index
 #GET     /RCACase/{id}/ProblemDefinition/{id}/ProblemCause   ProblemCause.index
 #GET     /RCACase/{id}/ProblemDefinition/{id}/ProblemCause/{id}/CorrectiveAction CorrectiveAction.index

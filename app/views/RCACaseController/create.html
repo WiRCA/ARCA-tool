@@ -1,6 +1,5 @@
 <!--
-  ~ Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen, Joona Koistinen,
-  Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus
+  ~ Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen, Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus
   ~
   ~ Permission is hereby granted, free of charge, to any person obtaining a copy
   ~ of this software and associated documentation files (the "Software"), to deal
@@ -21,29 +20,35 @@
   ~ THE SOFTWARE.
   -->
 
-#{extends 'main.html' /}
-#{set title:'Show RCA Case ${rcaCase.name}' /}
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title></title>
+</head>
+<body>
 
-<h1>${rcaCase.name}</h1>
-<p>Status: ${rcaCase.status}</p>
 
-<h3><a href="@{RCACase.moveToNextStep(rcaCase.id)}">Move to next step</a></h3>
+#{form @RCACaseController.newRCACase(RCACase?.id)}
 
-#{if rcaCase.problems.size() > 0}
-<div class="problems">
-<h2>Problems</h2>
-    #{list items:Problems, as:'Problem'}
-    <div class="post">
-        <h2 class="post-title">
-            ${Problem.name}
-        </h2>
-    </div>
-    #{/list}
-</div>
-#{/if}
+    #{ifErrors}
+        <p class="error">
+            Please correct these errors.
+        </p>
+    #{/ifErrors}
 
-#{else}
-<div class="empty">
-    There is currently nothing to read here.
-</div>
-#{/else}
+    <p>
+        #{field 'name'}
+        <label>Name:</label>
+        <input type="text" name="${field.name}"
+            value="${RCACase?.name}" class="${field.errorClass}" />
+        #{/field}
+    </p>
+<p>
+        <input type="submit" value="Create!" />
+    </p>
+
+#{/form}
+
+</body>
+</html>

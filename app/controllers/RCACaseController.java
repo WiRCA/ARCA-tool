@@ -23,10 +23,10 @@
 package controllers;
 
 import models.ProblemDefinition;
+import models.RCACase;
 import play.mvc.Controller;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by IntelliJ IDEA.
@@ -36,19 +36,18 @@ import java.util.Set;
  * To change this template use File | Settings | File Templates.
  */
 
-public class RCACase extends Controller {
+public class RCACaseController extends Controller {
 
 	    public static void index() {
-		List<RCACase> RCACases = models.RCACase.find("order by Name").from(0).fetch(10);
+		List<RCACase> RCACases = RCACase.find("order by Name").from(0).fetch(10);
         render(RCACases);
     }
 		public static void show(long id) {
-		models.RCACase rcaCase = models.RCACase.findById(id);
-		Set<ProblemDefinition> Problems = rcaCase.problems;
+		RCACase rcaCase = RCACase.findById(id);
 		render(rcaCase);
 	}
 	public static void newRCACase(String name) {
-		models.RCACase rca = new models.RCACase(name);
+		RCACase rca = new RCACase(name);
 		rca.save();
 		//show(rca.id);
 		index();
@@ -57,8 +56,18 @@ public class RCACase extends Controller {
 		render();
 	}
 
+	public static void addProblem(long rcaCaseId) {
+		render(rcaCaseId);
+	}
+
+	public static void saveProblem(String name, long rcaCaseId){
+		ProblemDefinition problem = new ProblemDefinition(name, rcaCaseId);
+		problem.save();
+		show(rcaCaseId);
+	}
+
 	public static void moveToNextStep(long id) {
-		models.RCACase rcaCase = models.RCACase.findById(id);
+		RCACase rcaCase = RCACase.findById(id);
 		rcaCase.nextStep();
 		show(rcaCase.id);
 	}

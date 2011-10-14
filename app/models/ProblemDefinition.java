@@ -17,9 +17,10 @@ public class ProblemDefinition extends RCAGraphNode {
 	@ManyToOne
 	public RCACase rcaCase;
 
-	public ProblemDefinition(String name, RCACase rcaCase) {
+	public ProblemDefinition(String name, long rcaCaseId) {
 		this.name = name;
-		this.rcaCase = rcaCase;
+		this.rcaCase = models.RCACase.findById(rcaCaseId);
+		this.rcaCase.addProblemDefinition(this);
 	}
 
 	public ProblemDefinition(String name) {

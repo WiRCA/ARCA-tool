@@ -51,7 +51,7 @@ public class ProblemCauseTest extends UnitTest {
 		Fixtures.deleteDatabase();
 		RCACase rcaCase = new RCACase("Test RCA case.");
 		rcaCase.save();
-		ProblemDefinition probDef = new ProblemDefinition("Out of coffee", rcaCase);
+		ProblemDefinition probDef = new ProblemDefinition("Out of coffee", rcaCase.id);
 		probDef.save();
 		ProblemCause probCause = new ProblemCause("Out of coffee grounds");
 		probCause.save();

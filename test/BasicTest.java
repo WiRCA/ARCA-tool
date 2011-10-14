@@ -31,7 +31,7 @@ public class BasicTest extends UnitTest {
 		// Create a new RCACase and save it
 		RCACase testCase;
 		testCase = new RCACase("Test case 2").save();
-		ProblemDefinition problem = new ProblemDefinition("Test problem", testCase);
+		ProblemDefinition problem = new ProblemDefinition("Test problem", testCase.id);
 		ProblemCause cause = new ProblemCause("Test cause");
 		CorrectiveAction action = new CorrectiveAction("Test action");
 

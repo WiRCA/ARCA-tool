@@ -27,7 +27,7 @@ public class CorrectiveActionTest extends UnitTest {
 	@Test
 	public void correctiveAction() {
 		RCACase rcaCase = RCACase.find("byName", "Test RCA case.").first();
-		ProblemDefinition problem = new ProblemDefinition("Kahvi loppu", rcaCase);
+		ProblemDefinition problem = new ProblemDefinition("Kahvi loppu", rcaCase.id);
 		rcaCase.addProblemDefinition(problem);
 		// TODO: Add corrective actions to ProblemCause.Done when ProblemCause ready.
 	}
