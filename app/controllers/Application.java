@@ -10,7 +10,7 @@ import models.*;
 public class Application extends Controller {
 
     public static void index() {
-        RCACase.index();
+        RCACaseController.index();
         
     }
 
