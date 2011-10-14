@@ -26,11 +26,11 @@ import play.mvc.Controller;
 
 public class ProblemCause extends Controller {
 	
-	public static void index() {
+	public static void index(long case_id, long problem_id) {
 		render();
 	}
 
-		public static void show(long id) {
+		public static void show(long case_id, long problem_id, long cause_id) {
 		render();
 	}
 }
