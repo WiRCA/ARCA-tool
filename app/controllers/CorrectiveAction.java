@@ -20,28 +20,17 @@
  * THE SOFTWARE.
  */
 
-/**
- * Created by IntelliJ IDEA.
- * User: Mikko
- * Date: 10.10.2011
- * Time: 16:49
- * To change this template use File | Settings | File Templates.
- */
-import play.*;
-import play.jobs.*;
-import play.test.*;
+package controllers;
 
-import models.*;
+import play.mvc.Controller;
 
-@OnApplicationStart
-public class Bootstrap extends Job {
+public class CorrectiveAction extends Controller {
+	
+	public static void index(long case_id, long problem_id, long cause_id) {
+		render();
+	}
 
-    public void doJob() {
-        // Check if the database is empty
-        if(RCACase.count() == 0) {
-	        Fixtures.deleteAllModels();
-            Fixtures.loadModels("data.yml");
-        }
-    }
-
+	public static void show(long case_id, long problem_id, long cause_id, long action_id) {
+		render();
+	}
 }

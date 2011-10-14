@@ -1,6 +1,5 @@
 <!--
-  ~ Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen, Joona Koistinen,
-  Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus
+  ~ Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen, Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus
   ~
   ~ Permission is hereby granted, free of charge, to any person obtaining a copy
   ~ of this software and associated documentation files (the "Software"), to deal
@@ -22,28 +21,4 @@
   -->
 
 #{extends 'main.html' /}
-#{set title:'Show RCA Case ${rcaCase.name}' /}
-
-<h1>${rcaCase.name}</h1>
-<p>Status: ${rcaCase.status}</p>
-
-<h3><a href="@{RCACase.moveToNextStep(rcaCase.id)}">Move to next step</a></h3>
-
-#{if rcaCase.problems.size() > 0}
-<div class="problems">
-<h2>Problems</h2>
-    #{list items:rcaCase.problems, as:'Problem'}
-    <div class="post">
-        <h2 class="post-title">
-            ${Problem.name}
-        </h2>
-    </div>
-    #{/list}
-</div>
-#{/if}
-
-#{else}
-<div class="empty">
-    There is currently nothing to read here.
-</div>
-#{/else}
+#{set title:'Problem definitions' /}

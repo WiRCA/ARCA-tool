@@ -2,15 +2,18 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
+%{ProblemRoute='/RCACase/{case_id}/ProblemDefinition'}%
+%{CauseRoute=ProblemRoute + '/{problem_id}/ProblemCause'}%
+
 # Home page, links to: new-rca-case, view-rca-cases
 GET     /                                       RCACase.index
 
 #RCACase
 GET     /RCACase                                RCACase.index
 GET     /RCACase/create                         RCACase.create
-#GET     /RCACase/{id}/ProblemDefinition         ProblemDefinition.index
-#GET     /RCACase/{id}/ProblemDefinition/{id}/ProblemCause   ProblemCause.index
-#GET     /RCACase/{id}/ProblemDefinition/{id}/ProblemCause/{id}/CorrectiveAction CorrectiveAction.index
+GET     ${ProblemRoute}                         ProblemDefinition.index
+GET     ${CauseRoute}                           ProblemCause.index
+GET     ${CauseRoute}/{cause_id}/CorrectiveAction CorrectiveAction.index
 
 # Ignore favicon requests
 GET     /favicon.ico                            404
