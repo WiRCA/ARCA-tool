@@ -8,9 +8,9 @@ GET     /                                       RCACase.index
 #RCACase
 GET     /RCACase                                RCACase.index
 GET     /RCACase/create                         RCACase.create
-#GET     /RCACase/{id}/ProblemDefinition         ProblemDefinition.index
-#GET     /RCACase/{id}/ProblemDefinition/{id}/ProblemCause   ProblemCause.index
-#GET     /RCACase/{id}/ProblemDefinition/{id}/ProblemCause/{id}/CorrectiveAction CorrectiveAction.index
+GET     /RCACase/{id}/ProblemDefinition         ProblemDefinition.show({id})
+GET     /RCACase/{id}/ProblemDefinition/{id}/ProblemCause ProblemCause.show({id})
+GET     /RCACase/{id}/ProblemDefinition/{id}/ProblemCause/{id}/CorrectiveAction CorrectiveAction.show({id})
 
 # Ignore favicon requests
 GET     /favicon.ico                            404

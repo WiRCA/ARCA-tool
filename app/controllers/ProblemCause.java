@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen, Joona Koistinen,
- * Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus
+ * Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen, Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,34 +22,15 @@
 
 package controllers;
 
-import models.ProblemDefinition;
 import play.mvc.Controller;
 
-import java.util.List;
-import java.util.Set;
-
-public class RCACase extends Controller {
-
+public class ProblemCause extends Controller {
+	
 	public static void index() {
-		List<RCACase> RCACases = models.RCACase.find("order by Name").from(0).fetch(10);
-		render(RCACases);
-	}
-
-	public static void show(long id) {
-		models.RCACase rcaCase = models.RCACase.findById(id);
-		render(rcaCase);
-	}
-
-	public static void newRCACase(String name) {
-		models.RCACase rca = new models.RCACase(name);
-		rca.save();
-		//show(rca.id);
-		index();
-	}
-
-	public static void create() {
 		render();
 	}
 
-
+		public static void show(long id) {
+		render();
+	}
 }
