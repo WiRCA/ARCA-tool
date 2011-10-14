@@ -3,7 +3,7 @@
 # ~~~~
 
 # Home page, links to: new-rca-case, view-rca-cases
-GET     /                                       Application.index
+GET     /                                       RCACase.index
 
 #RCACase
 GET     /RCACase                                RCACase.index
