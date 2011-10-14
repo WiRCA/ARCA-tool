@@ -17,13 +17,13 @@ public class ProblemDefinition extends RCAGraphNode {
 	@ManyToOne
 	public RCACase rcaCase;
 
-	public ProblemDefinition(String s, RCACase rcaCase) {
-		this.name = s;
+	public ProblemDefinition(String name, RCACase rcaCase) {
+		this.name = name;
 		this.rcaCase = rcaCase;
 	}
 
-	public ProblemDefinition(String s) {
-		this.name = s;
+	public ProblemDefinition(String name) {
+		this.name = name;
 	}
 
 }
