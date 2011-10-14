@@ -27,6 +27,8 @@
 <h1>${rcaCase.name}</h1>
 <p>Status: ${rcaCase.status}</p>
 
+<h3><a href="@{RCACase.moveToNextStep(rcaCase.id)}">Move to next step</a></h3>
+
 #{if rcaCase.problems.size() > 0}
 <div class="problems">
 <h2>Problems</h2>
@@ -35,7 +37,6 @@
         <h2 class="post-title">
             ${Problem.name}
         </h2>
-
     </div>
     #{/list}
 </div>
