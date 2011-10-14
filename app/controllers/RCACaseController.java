@@ -46,12 +46,14 @@ public class RCACaseController extends Controller {
 		RCACase rcaCase = RCACase.findById(id);
 		render(rcaCase);
 	}
+
 	public static void newRCACase(String name) {
 		RCACase rca = new RCACase(name);
 		rca.save();
 		//show(rca.id);
 		index();
 	}
+
 	public static void create() {
 		render();
 	}
