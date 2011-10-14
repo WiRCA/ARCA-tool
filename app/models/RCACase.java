@@ -74,6 +74,8 @@ public class RCACase extends Model {
 				}
 			default:
 				return false;
+			case Finished:
+				return false;
 		}
 	}
 

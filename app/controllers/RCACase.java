@@ -57,5 +57,11 @@ public class RCACase extends Controller {
 		render();
 	}
 
+	public static void moveToNextStep(long id) {
+		models.RCACase rcaCase = models.RCACase.findById(id);
+		rcaCase.nextStep();
+		show(rcaCase.id);
+	}
+
 
 }
