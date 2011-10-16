@@ -3,10 +3,8 @@ import models.ProblemDefinition;
 import models.RCACase;
 import org.junit.Before;
 import org.junit.Test;
-import play.mvc.Scope;
 import play.test.Fixtures;
 import play.test.UnitTest;
-import sun.jdbc.odbc.ee.PooledObject;
 
 import javax.mail.Session;
 
