@@ -3,8 +3,12 @@ import models.ProblemDefinition;
 import models.RCACase;
 import org.junit.Before;
 import org.junit.Test;
+import play.mvc.Scope;
 import play.test.Fixtures;
 import play.test.UnitTest;
+import sun.jdbc.odbc.ee.PooledObject;
+
+import javax.mail.Session;
 
 
 /*
@@ -59,6 +63,7 @@ public class ProblemCauseTest extends UnitTest {
 		ProblemCause probCause2 = new ProblemCause("Out of money");
 		probCause2.save();
 		probCause.addCause(probCause2);
+		probCause2.refresh();
 		probCause2.save();
 	}
 
