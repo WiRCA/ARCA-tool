@@ -29,11 +29,8 @@ import play.mvc.Controller;
 import java.util.List;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Pekka
- * Date: 10.10.2011
- * Time: 18.33
- * To change this template use File | Settings | File Templates.
+ * @author Pekka
+ *
  */
 
 public class RCACaseController extends Controller {
@@ -71,6 +68,7 @@ public class RCACaseController extends Controller {
 	public static void moveToNextStep(long id) {
 		RCACase rcaCase = RCACase.findById(id);
 		rcaCase.nextStep();
+		rcaCase.save();
 		show(rcaCase.id);
 	}
 

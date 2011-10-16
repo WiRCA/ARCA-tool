@@ -24,21 +24,21 @@ package models;
 
 import play.db.jpa.Model;
 
+import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Created by IntelliJ IDEA.
- * User: eero
- * Date: 10.10.2011
- * Time: 17:24
- * To change this template use File | Settings | File Templates.
+ * @author eero
  */
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class RCAGraphNode extends Model {
 
-	@ManyToMany(mappedBy = "nodes")
+	@ManyToMany
 	Set<RCAGraphRelation> relations = new HashSet<RCAGraphRelation>();
 
 		public void addCause(RCAGraphNode cause) {

@@ -24,18 +24,16 @@ package models;
 
 import play.db.jpa.Model;
 
+import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by IntelliJ IDEA.
- * User: eero
- * Date: 10.10.2011
- * Time: 17:24
- * To change this template use File | Settings | File Templates.
+ * @author eero
  */
+@Entity
 public class RCAGraphRelation extends Model {
 
 	@ManyToOne

@@ -37,7 +37,7 @@
     #{list items:rcaCase.problems, as:'problem'}
     <div class="post">
         <h2 class="post-title">
-            <a href="@{ProblemDefinitionController.show(problem.id)}">${problem.name}</a>
+            #{a @ProblemDefinitionController.show(rcaCase.id, problem.id)}${problem.name}#{/a}
         </h2>
     </div>
     #{/list}

@@ -6,21 +6,26 @@
 %{CauseRoute=ProblemRoute + '/{problem_id}/ProblemCause'}%
 
 # Home page, links to: new-rca-case, view-rca-cases
-GET     /                                       RCACaseController.index
+GET     /                                                   RCACaseController.index
 
 #RCACase
-GET     /RCACase                                RCACase.index
-GET     /RCACase/create                         RCACase.create
-GET     /RCACase/{id}/addProblem                RCACaseController.addProblem
-POST    /RCACase/{rcaCaseId}/saveProblem        RCACaseController.saveProblem
-GET     ${ProblemRoute}                         ProblemDefinitionController.index
-GET     ${CauseRoute}                           ProblemCause.index
-GET     ${CauseRoute}/{cause_id}/CorrectiveAction CorrectiveAction.index
+GET     /RCACase                                            RCACaseController.index
+GET     /RCACase/{id}                                       RCACaseController.show
+GET     /RCACase/create                                     RCACaseController.create
+GET     /RCACase/nextStep/{id}                              RCACaseController.moveToNextStep
+GET     /RCACase/{rcaCaseId}/addProblem                     RCACaseController.addProblem
+POST    /RCACase/{rcaCaseId}/saveProblem                    RCACaseController.saveProblem
+GET     ${ProblemRoute}                                     ProblemDefinitionController.index
+GET     /RCACase/{case_id}/ProblemDefinition/{problem_id}   ProblemDefinitionController.show
+GET     ${CauseRoute}                                       ProblemCause.index
+GET     ${CauseRoute}/{cause_id}/CorrectiveAction           CorrectiveAction.index
+
+
 # Ignore favicon requests
-GET     /favicon.ico                            404
+GET     /favicon.ico                                        404
 
 # Map static resources from the /app/public folder to the /public path
-GET     /public/                                staticDir:public
+GET     /public/                                            staticDir:public
 
 # Catch all
-*       /{controller}/{action}                  {controller}.{action}
+*       /{controller}/{action}                              {controller}.{action}
