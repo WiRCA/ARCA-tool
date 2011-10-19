@@ -10,7 +10,7 @@ GET     /                                                   RCACaseController.in
 
 #RCACase
 GET     /RCACase                                            RCACaseController.index
-GET     /RCACase/{id}                                       RCACaseController.show
+GET     /RCACase/{<[0-9]+>id}                                       RCACaseController.show
 GET     /RCACase/create                                     RCACaseController.create
 GET     /RCACase/nextStep/{id}                              RCACaseController.moveToNextStep
 GET     /RCACase/{rcaCaseId}/addProblem                     RCACaseController.addProblem
