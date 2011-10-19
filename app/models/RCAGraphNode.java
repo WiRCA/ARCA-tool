@@ -24,10 +24,7 @@ package models;
 
 import play.db.jpa.Model;
 
-import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -38,23 +35,14 @@ import java.util.Set;
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class RCAGraphNode extends Model {
 
-	@ManyToMany
-	Set<RCAGraphRelation> relations = new HashSet<RCAGraphRelation>();
+	@OneToMany
+	public Set<RCAGraphNode> causes = new HashSet<RCAGraphNode>();
 
-		public void addCause(RCAGraphNode cause) {
-			RCAGraphRelation relation = new RCAGraphRelation();
-			relation.cause = cause;
-			relation.effect = this;
-			this.relations.add(relation);
-			cause.relations.add(relation);
+	public void addCause(RCAGraphNode cause) {
+		this.causes.add(cause);
 	}
 
 	public boolean isCauseOf(RCAGraphNode cause) {
-		for (RCAGraphRelation relation : relations) {
-			if (relation.effect.equals(cause)) {
-				return true;
-			}
-		}
-		return false;
+		return cause.causes.contains(this);
 	}
 }

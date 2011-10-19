@@ -23,7 +23,9 @@
 
 package controllers;
 
-import models.ProblemDefinition;
+import models.*;
+import models.ProblemCause;
+import play.data.validation.Required;
 import play.mvc.Controller;
 
 public class ProblemDefinitionController extends Controller {
@@ -36,5 +38,14 @@ public class ProblemDefinitionController extends Controller {
 		ProblemDefinition problem = ProblemDefinition.findById(problem_id);
 		notFoundIfNull(problem);
 		render(problem);
+	}
+
+	public static void addCause(Long toCause, @Required String name) {
+		if (!validation.hasErrors()) {
+			models.ProblemCause cause = new ProblemCause(name).save();
+			RCAGraphNode node = RCAGraphNode.findById(toCause);
+			node.addCause(cause);
+			node.save();
+		}
 	}
 }

@@ -19,9 +19,21 @@
   ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
   ~ THE SOFTWARE.
   -->
+#{set 'moreScripts'}
+        <script type="text/javascript" charset="utf-8">
+            var addCauseAction = #{jsAction @ProblemDefinitionController.addCause(':toCause', ':name') /}
+
+            function addCause(toCause) {
+                $.post(addCauseAction({toCause: toCause, name: prompt('cause name?')}), function() {
+                    location.reload(true);
+                });
+            }
+        </script>
+#{/set}
 
 #{extends 'main.html' /}
-#{set 'title'}Show RCA Case ${rcaCase.name}#{/set}
+#{set 'title'}Show Problem definiton#{/set}
 
-moi
-
+<ul>
+#{causes node:problem /}
+</ul>

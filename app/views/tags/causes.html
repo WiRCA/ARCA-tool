@@ -1,0 +1,9 @@
+<li>${_node.name} <a href="javascript:addCause(${_node.id});">Add cause</a>
+    #{if _node.causes}
+    <ul>
+    #{list _node.causes, as:'cause'}
+        #{causes node:cause/}
+    #{/list}
+    </ul>
+    #{/if}
+</li>

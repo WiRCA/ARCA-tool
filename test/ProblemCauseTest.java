@@ -83,6 +83,8 @@ public class ProblemCauseTest extends UnitTest {
 		ProblemCause probCause = ProblemCause.find("byName", "Out of coffee grounds").first();
 		ProblemCause probCause2 = ProblemCause.find("byName", "Out of money").first();
 		probCause.addCause(probCause2);
+		assertTrue(!probCause.causes.isEmpty());
+		assertTrue(probCause2.causes.isEmpty());
 	}
 
 
