@@ -33,8 +33,8 @@ public class ProblemDefinitionController extends Controller {
 	}
 
 	public static void show(long case_id, long problem_id) {
-
 		ProblemDefinition problem = ProblemDefinition.findById(problem_id);
+		notFoundIfNull(problem);
 		render(problem);
 	}
 }

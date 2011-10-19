@@ -35,19 +35,20 @@ import java.util.List;
 
 public class RCACaseController extends Controller {
 
-	    public static void index() {
+	public static void index() {
 		List<RCACase> RCACases = RCACase.find("order by Name").from(0).fetch(10);
-        render(RCACases);
-    }
-		public static void show(long id) {
+		render(RCACases);
+	}
+
+	public static void show(long id) {
 		RCACase rcaCase = RCACase.findById(id);
+		notFoundIfNull(rcaCase);
 		render(rcaCase);
 	}
 
 	public static void newRCACase(String name) {
 		RCACase rca = new RCACase(name);
 		rca.save();
-		//show(rca.id);
 		index();
 	}
 
@@ -67,6 +68,7 @@ public class RCACaseController extends Controller {
 
 	public static void moveToNextStep(long id) {
 		RCACase rcaCase = RCACase.findById(id);
+		notFoundIfNull(rcaCase);
 		rcaCase.nextStep();
 		rcaCase.save();
 		show(rcaCase.id);

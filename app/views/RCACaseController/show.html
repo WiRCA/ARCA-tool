@@ -22,7 +22,7 @@
   -->
 
 #{extends 'main.html' /}
-#{set title:'Show RCA Case ${rcaCase.name}' /}
+#{set 'title'}Show RCA Case ${rcaCase.name}#{/title}
 
 <h1>${rcaCase.name}</h1>
 <p>Status: ${rcaCase.status}</p>
