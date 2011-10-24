@@ -1,5 +1,6 @@
 /*
- * Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen, Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus
+ * Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen, Joona Koistinen,
+ * Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,38 +33,42 @@ import java.security.NoSuchAlgorithmException;
  */
 public class EncodingUtils {
 
-    public static final String SHA1 = "SHA-1";
-    public static final String SHA256 = "SHA-256";
-    public static final String SHA384 = "SHA-384";
-    public static final String SHA512 = "SHA-512";
+	public static final String SHA1 = "SHA-1";
+	public static final String SHA256 = "SHA-256";
+	public static final String SHA384 = "SHA-384";
+	public static final String SHA512 = "SHA-512";
 
-    public static String encodeSHA(String text, String algorithm, boolean encodeBase64) throws NoSuchAlgorithmException {
-        if (text != null) {
-            MessageDigest md = MessageDigest.getInstance(algorithm);
-            md.update(text.getBytes());
+	private EncodingUtils() {
+	}
 
-            byte byteData[] = md.digest();
+	public static String encodeSHA(String text, String algorithm, boolean encodeBase64) throws
+	NoSuchAlgorithmException {
+		if (text != null) {
+			MessageDigest md = MessageDigest.getInstance(algorithm);
+			md.update(text.getBytes());
 
-	        StringBuilder sb = new StringBuilder();
-	        for (byte aByteData : byteData) {
-		        sb.append(Integer.toString((aByteData & 0xff) + 0x100, 16).substring(1));
-	        }
+			byte byteData[] = md.digest();
 
-            if (encodeBase64) {
-                return new String(Base64.encodeBase64(sb.toString().getBytes()));
-            }
+			StringBuilder sb = new StringBuilder();
+			for (byte aByteData : byteData) {
+				sb.append(Integer.toString((aByteData & 0xff) + 0x100, 16).substring(1));
+			}
 
-            return sb.toString();
-        }
+			if (encodeBase64) {
+				return new String(Base64.encodeBase64(sb.toString().getBytes()));
+			}
 
-        return null;
-    }
+			return sb.toString();
+		}
+
+		return null;
+	}
 
 	public static String encodeSHA1(String text) throws NoSuchAlgorithmException {
 		return encodeSHA(text, SHA1, false);
 	}
 
-    public static String encodeSHA1Base64(String text) throws NoSuchAlgorithmException {
-        return encodeSHA(text, SHA1, true);
-    }
+	public static String encodeSHA1Base64(String text) throws NoSuchAlgorithmException {
+		return encodeSHA(text, SHA1, true);
+	}
 }
