@@ -2,3 +2,5 @@
 
 require:
     - play -> secure
+    - play -> carbonate 0.9.1
+    - play -> cobertura 2.4
