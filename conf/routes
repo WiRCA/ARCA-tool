@@ -6,7 +6,7 @@
 GET     /                                       module:secure
 
 # Home page
-GET     /                                       Application.index
+GET     /                                       ApplicationController.index
 
 # Ignore favicon requests
 GET     /favicon.ico                            404
