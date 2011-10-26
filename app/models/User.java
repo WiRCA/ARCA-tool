@@ -1,12 +1,11 @@
 package models;
 
+import play.Logger;
 import play.db.jpa.Model;
+import utils.EncodingUtils;
 
 import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
-import javax.persistence.PersistenceUnit;
-import java.util.Set;
-import java.util.TreeSet;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * @author Eero Laukkanen
@@ -27,15 +26,26 @@ public class User extends Model {
 
 	/**
 	 * TODO
-	 * @param email
-	 * @param name
-	 * @param password
+	 * @param email User's email address
+	 * @param password User's password
 	 */
-	public User(String email, String name, String password) {
+	public User(String email, String password) {
 		this.email = email;
-		this.name = name;
-		this.password = password;
+		changePassword(password);
 		//this.cases = new TreeSet<RCACase>();
+	}
+
+	/**
+	 * Change user's password with new password
+	 * @param newPassword User's new password
+	 */
+	public void changePassword(String newPassword) {
+		try {
+			this.password = EncodingUtils.encodeSHA1(newPassword);
+		} catch (NoSuchAlgorithmException e) {
+			// Should not happen
+			Logger.error(e.getMessage(), "User's " + this.email + " password change failed");
+		}
 	}
 
 	/**

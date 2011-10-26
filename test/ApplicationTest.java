@@ -5,9 +5,9 @@ import play.test.FunctionalTest;
 public class ApplicationTest extends FunctionalTest {
 
     @Test
-    public void testThatIndexPageWorks() {
-        Http.Response response = GET("/");
-        assertIsOk(response);
+    public void testThatLoginPageWorks() {
+        Http.Response response = GET("/login");
+	    assertIsOk(response);
         assertContentType("text/html", response);
         assertCharset(play.Play.defaultWebEncoding, response);
     }
