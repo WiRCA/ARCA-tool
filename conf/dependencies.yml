@@ -3,3 +3,4 @@
 require:
     - play -> secure
     - play -> cobertura 2.4
+    - play -> migrate 1.4
