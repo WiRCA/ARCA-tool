@@ -11,7 +11,7 @@ import java.security.NoSuchAlgorithmException;
  */
 public class SecurityController extends Secure.Security {
 
-	static boolean authenticate(String username, String password) {
+	public static boolean authenticate(String username, String password) {
 		try {
 			return User.find("byEmailAndPassword", username, EncodingUtils.encodeSHA1(password)).first() != null;
 		} catch (NoSuchAlgorithmException e) {
