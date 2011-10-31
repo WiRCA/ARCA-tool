@@ -37,7 +37,7 @@ import java.security.NoSuchAlgorithmException;
 public class AuthenticationTest extends UnitTest{
 
 	@Test
-	public void testSHA1EncodingBase64() throws NoSuchAlgorithmException {
+	public void AuthenticationTest() throws NoSuchAlgorithmException {
         String username = "admin@arcatool.fi";
         String password = "arcatooladmin";
         assertTrue(SecurityController.authenticate(username, password));
