@@ -4,9 +4,9 @@ import play.Logger;
 import play.db.jpa.Model;
 import utils.EncodingUtils;
 
-import javax.persistence.Entity;
-import javax.persistence.PersistenceUnit;
+import javax.persistence.*;
 import java.security.NoSuchAlgorithmException;
+import java.util.Set;
 
 /**
  * @author Eero Laukkanen
@@ -16,15 +16,18 @@ import java.security.NoSuchAlgorithmException;
  * TODO
  */
 @Entity
-@PersistenceUnit(name="user")
+@Table(name="user")
+@PersistenceUnit(name="userdb")
 public class User extends Model {
 
 	public String email;
 	public String name;
 	public String password;
 
-	//@ManyToMany
-	//public Set<RCACase> cases;
+	@ManyToMany
+	@JoinTable(name="usercases", joinColumns = {@JoinColumn(name="user_id", nullable = false)},
+	           inverseJoinColumns = {@JoinColumn(name="case_id", nullable = false)})
+	public Set<RCACase> cases;
 
 	/**
 	 * TODO
