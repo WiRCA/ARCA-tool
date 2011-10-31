@@ -24,6 +24,7 @@
 package utils;
 
 import org.apache.commons.codec.binary.Base64;
+import play.Logger;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -41,34 +42,40 @@ public final class EncodingUtils {
 	private EncodingUtils() {
 	}
 
-	public static String encodeSHA(String text, String algorithm, boolean encodeBase64) throws
-	NoSuchAlgorithmException {
-		if (text != null) {
-			MessageDigest md = MessageDigest.getInstance(algorithm);
-			md.update(text.getBytes());
+	public static String encodeSHA(String text, String algorithm, boolean encodeBase64) {
+		try {
+			if (text != null) {
+				MessageDigest md = null;
 
-			byte byteData[] = md.digest();
+				md = MessageDigest.getInstance(algorithm);
 
-			StringBuilder sb = new StringBuilder();
-			for (byte aByteData : byteData) {
-				sb.append(Integer.toString((aByteData & 0xff) + 0x100, 16).substring(1));
+				md.update(text.getBytes());
+
+				byte byteData[] = md.digest();
+
+				StringBuilder sb = new StringBuilder();
+				for (byte aByteData : byteData) {
+					sb.append(Integer.toString((aByteData & 0xff) + 0x100, 16).substring(1));
+				}
+
+				if (encodeBase64) {
+					return new String(Base64.encodeBase64(sb.toString().getBytes()));
+				}
+
+				return sb.toString();
 			}
-
-			if (encodeBase64) {
-				return new String(Base64.encodeBase64(sb.toString().getBytes()));
-			}
-
-			return sb.toString();
+		} catch (NoSuchAlgorithmException e) {
+			Logger.error(e, "SHA encode failed");
 		}
 
 		return null;
 	}
 
-	public static String encodeSHA1(String text) throws NoSuchAlgorithmException {
+	public static String encodeSHA1(String text) {
 		return encodeSHA(text, SHA1, false);
 	}
 
-	public static String encodeSHA1Base64(String text) throws NoSuchAlgorithmException {
+	public static String encodeSHA1Base64(String text) {
 		return encodeSHA(text, SHA1, true);
 	}
 }
