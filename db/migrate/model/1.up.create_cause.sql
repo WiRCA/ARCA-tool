@@ -25,7 +25,7 @@ CREATE TABLE rcacase (
 CREATE TABLE usercases (
   `user_id` BIGINT UNSIGNED NOT NULL,
   `case_id` BIGINT UNSIGNED NOT NULL REFERENCES rcacase(id),
-  PRIMARY KEY (`userid`, `case_id`)
+  PRIMARY KEY (`user_id`, `case_id`)
 );
 
 CREATE TABLE causesof (
