@@ -5,6 +5,7 @@ import play.db.jpa.Model;
 import utils.EncodingUtils;
 
 import javax.persistence.Entity;
+import javax.persistence.PersistenceUnit;
 import java.security.NoSuchAlgorithmException;
 
 /**
@@ -15,6 +16,7 @@ import java.security.NoSuchAlgorithmException;
  * TODO
  */
 @Entity
+@PersistenceUnit(name="user")
 public class User extends Model {
 
 	public String email;
