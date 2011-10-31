@@ -31,7 +31,7 @@ import java.security.NoSuchAlgorithmException;
 /**
  * @author Risto Virtanen
  */
-public class EncodingUtils {
+public final class EncodingUtils {
 
 	public static final String SHA1 = "SHA-1";
 	public static final String SHA256 = "SHA-256";
