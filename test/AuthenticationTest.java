@@ -28,18 +28,21 @@ import play.test.UnitTest;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Mikko
- * Date: 31.10.2011
- * Time: 17:13
- * To change this template use File | Settings | File Templates.
+ * @author Mikko
  */
 public class AuthenticationTest extends UnitTest{
 
 	@Test
-	public void AuthenticationTest() throws NoSuchAlgorithmException {
+	public void testAuthenticationCorrect() throws NoSuchAlgorithmException {
         String username = "admin@arcatool.fi";
         String password = "arcatooladmin";
+        assertTrue(SecurityController.authenticate(username, password));
+	}
+
+	@Test
+	public void testAuthenticationFalse() throws NoSuchAlgorithmException {
+        String username = "admin@arcatool.fi";
+        String password = "FOOBAR";
         assertTrue(SecurityController.authenticate(username, password));
 	}
 }
