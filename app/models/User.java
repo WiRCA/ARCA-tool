@@ -1,11 +1,9 @@
 package models;
 
-import play.Logger;
 import play.db.jpa.Model;
 import utils.EncodingUtils;
 
 import javax.persistence.*;
-import java.security.NoSuchAlgorithmException;
 import java.util.Set;
 
 /**
@@ -36,7 +34,7 @@ public class User extends Model {
 	 */
 	public User(String email, String password) {
 		this.email = email;
-		changePassword(password);
+		this.password = EncodingUtils.encodeSHA1(password);
 		//this.cases = new TreeSet<RCACase>();
 	}
 
@@ -45,12 +43,7 @@ public class User extends Model {
 	 * @param newPassword User's new password
 	 */
 	public void changePassword(String newPassword) {
-		try {
-			this.password = EncodingUtils.encodeSHA1(newPassword);
-		} catch (NoSuchAlgorithmException e) {
-			// Should not happen
-			Logger.error(e.getMessage(), "User's " + this.email + " password change failed");
-		}
+		this.password = EncodingUtils.encodeSHA1(newPassword);
 	}
 
 	/**

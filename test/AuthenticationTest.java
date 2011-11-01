@@ -20,7 +20,6 @@
  * THE SOFTWARE.
  */
 
-import controllers.Secure;
 import controllers.SecurityController;
 import org.junit.Test;
 import play.test.UnitTest;
@@ -35,7 +34,7 @@ public class AuthenticationTest extends UnitTest{
 	@Test
 	public void testAuthenticationCorrect() throws NoSuchAlgorithmException {
         String username = "admin@arcatool.fi";
-        String password = "arcatooladmin";
+        String password = "admin";
         assertTrue(SecurityController.authenticate(username, password));
 	}
 
@@ -43,6 +42,6 @@ public class AuthenticationTest extends UnitTest{
 	public void testAuthenticationFalse() throws NoSuchAlgorithmException {
         String username = "admin@arcatool.fi";
         String password = "FOOBAR";
-        assertTrue(SecurityController.authenticate(username, password));
+        assertFalse(SecurityController.authenticate(username, password));
 	}
 }
