@@ -1,36 +1,47 @@
 -- The causes table
 CREATE TABLE cause (
-  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(255),
-  `creator_id` BIGINT UNSIGNED NOT NULL,
-  `case_id` BIGINT UNSIGNED NOT NULL REFERENCES rcacase(id),
-  PRIMARY KEY (`id`)
-);
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  name VARCHAR(255),
+  creator_id BIGINT UNSIGNED NOT NULL,
+  INDEX cre_ind (creator_id),
+  case_id BIGINT UNSIGNED NOT NULL REFERENCES rcacase(id),
+  INDEX cas_ind (case_id),
+  PRIMARY KEY (id),
+  FOREIGN KEY (creator_id) REFERENCES user(id) ON DELETE CASCADE,
+  FOREIGN KEY (case_id) REFERENCES rcacase(id) ON DELETE CASCADE
+) ENGINE=INNODB;
 
 -- The corrections table
 CREATE TABLE corrections (
-  `cause_id` BIGINT UNSIGNED NOT NULL REFERENCES cause(id),
-  `correction` VARCHAR(255),
-  PRIMARY KEY (`cause_id`, `correction`)
-);
+  cause_id BIGINT UNSIGNED NOT NULL,
+  correction VARCHAR(255),
+  PRIMARY KEY (cause_id, correction),
+  FOREIGN KEY (cause_id) REFERENCES cause(id) ON DELETE CASCADE
+) ENGINE=INNODB;
 
 CREATE TABLE rcacase (
-  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(255),
-  `problem_id` BIGINT UNSIGNED NOT NULL REFERENCES cause(id),
-  `owner_id` BIGINT UNSIGNED NOT NULL,
-  PRIMARY KEY (`id`)
-);
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  name VARCHAR(255),
+  problem_id BIGINT UNSIGNED NOT NULL,
+  owner_id BIGINT UNSIGNED NOT NULL,
+  PRIMARY KEY (id),
+  FOREIGN KEY (problem_id) REFERENCES cause(id) ON DELETE SET NULL,
+  FOREIGN KEY (owner_id) REFERENCES user(id) ON DELETE SET NULL
+) ENGINE=INNODB;
 
 CREATE TABLE usercases (
-  `user_id` BIGINT UNSIGNED NOT NULL,
-  `case_id` BIGINT UNSIGNED NOT NULL REFERENCES rcacase(id),
-  PRIMARY KEY (`user_id`, `case_id`)
-);
+  user_id BIGINT UNSIGNED NOT NULL,
+  case_id BIGINT UNSIGNED NOT NULL,
+  PRIMARY KEY (user_id, case_id),
+  FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE,
+  FOREIGN KEY (case_id) REFERENCES rcacase(id) ON DELETE CASCADE
+) ENGINE=INNODB;
 
 CREATE TABLE causesof (
-  `cause_id` BIGINT UNSIGNED NOT NULL REFERENCES cause(id),
-  `effect_id` BIGINT UNSIGNED NOT NULL REFERENCES cause(id),
-  PRIMARY KEY (`cause_id`, `effect_id`)
-);
+  cause_id BIGINT UNSIGNED NOT NULL,
+  effect_id BIGINT UNSIGNED NOT NULL,
+  PRIMARY KEY (cause_id, effect_id),
+  FOREIGN KEY (cause_id) REFERENCES cause(id) ON DELETE CASCADE,
+  FOREIGN KEY (effect_id) REFERENCES cause(id) ON DELETE CASCADE
+) ENGINE=INNODB;
 
