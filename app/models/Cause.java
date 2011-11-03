@@ -27,8 +27,9 @@ public class Cause extends Model {
 	inverseJoinColumns = {@JoinColumn(name="id_cause", nullable = false)})
 	public Set<Cause> causes;
 
+	@ElementCollection
 	@JoinTable(name="corrections", joinColumns = {@JoinColumn(name="id_cause", nullable = false)})
-	public ArrayList<String> corrections;
+	public List<String> corrections;
 
 	/**
 	 * Creates a new cause with name.
