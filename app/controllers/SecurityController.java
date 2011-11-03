@@ -16,11 +16,11 @@ public class SecurityController extends Secure.Security {
 		return found != null;
 	}
 
-	static void onAuthenticated() {
+	public static void onAuthenticated() {
 		ApplicationController.index();
 	}
 
-	static void onDisconnected() {
+	public static void onDisconnected() {
 		ApplicationController.index();
 	}
 }

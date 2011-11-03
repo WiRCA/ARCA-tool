@@ -19,7 +19,7 @@ public class Cause extends Model {
 
 	public String name;
 
-	@ManyToOne
+	@OneToOne(mappedBy = "problem")
 	public RCACase rcaCase;
 
 	@ManyToMany

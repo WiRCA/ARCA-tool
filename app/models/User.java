@@ -4,6 +4,7 @@ import play.db.jpa.Model;
 import utils.EncodingUtils;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -35,7 +36,7 @@ public class User extends Model {
 	public User(String email, String password) {
 		this.email = email;
 		this.password = EncodingUtils.encodeSHA1(password);
-		//this.cases = new TreeSet<RCACase>();
+		this.cases = new HashSet<RCACase>();
 	}
 
 	/**
@@ -48,13 +49,14 @@ public class User extends Model {
 
 	/**
 	 * TODO
-	 * @param name
-	 * @param problem
+	 * @param name todo
+	 * @param problem todo
 	 *
-	 * @return
+	 * @return user object
 	 */
 	public User addRCACase(String name, String problem) {
-		//TODO
+		RCACase rcaCase = new RCACase(name, problem).save();
+		this.cases.add(rcaCase);
 		return this;
 	}
 

@@ -24,49 +24,64 @@ import org.junit.Test;
 import play.test.UnitTest;
 import utils.EncodingUtils;
 
+import java.lang.reflect.Constructor;
+
 /**
  * @author Risto Virtanen
  */
 public class EncodingUtilsTest extends UnitTest {
 
 	@Test
-    public void testSHA1Encoding() {
+	public void privateConstructorTest() throws Exception {
+		Constructor cons = EncodingUtils.class.getDeclaredConstructor();
+		cons.setAccessible(true);
+		cons.newInstance((Object[])null);
+	}
+
+	@Test
+    public void SHA1EncodingTest() {
         String signature = "aaf069eee997d46c07d6570b010a9e5b5eb3f5f6";
         String encoded = EncodingUtils.encodeSHA1("a-root-cause-analysis");
         assertEquals(signature, encoded);
     }
 
 	@Test
-    public void testSHA1EncodingBase64() {
+    public void SHA1EncodingBase64Test() {
         String signature = "YWFmMDY5ZWVlOTk3ZDQ2YzA3ZDY1NzBiMDEwYTllNWI1ZWIzZjVmNg==";
         String encoded = EncodingUtils.encodeSHA1Base64("a-root-cause-analysis");
         assertEquals(signature, encoded);
     }
 
 	@Test
-    public void testSHA256Encoding() {
+    public void SHA256EncodingTest() {
         String signature = "20344e63bb2ad8d2e53e6b95d5997b226dc58b1d68c0556edc53c27aee784490";
         String encoded = EncodingUtils.encodeSHA("a-root-cause-analysis", EncodingUtils.SHA256, false);
         assertEquals(signature, encoded);
     }
 
 	@Test
-    public void testSHA384Encoding() {
+    public void SHA384EncodingTest() {
         String signature = "8fb414d98f267789b7ccf8e3faf092c7893aac82c2e841c8dd53d7f5f88ab6ffa36b47adbb2566f48172a6f800617ec3";
         String encoded = EncodingUtils.encodeSHA("a-root-cause-analysis", EncodingUtils.SHA384, false);
         assertEquals(signature, encoded);
     }
 
 	@Test
-    public void testSHA512Encoding() {
+    public void SHA512EncodingTest() {
         String signature = "16485bb8bd497f010f6bc9c6aaa19bfa8894a00bb0c15919cf9a2ca5fbe6f5032b2b621e0a609b34b087733e8e195d59a1c04da53a0b9ad06016b0d63bac498a";
         String encoded = EncodingUtils.encodeSHA("a-root-cause-analysis", EncodingUtils.SHA512, false);
         assertEquals(signature, encoded);
     }
 
 	@Test
-    public void testNullEncoding() {
+    public void nullEncodingTest() {
         String encoded = EncodingUtils.encodeSHA(null, EncodingUtils.SHA512, false);
+        assertNull(encoded);
+    }
+
+	@Test
+    public void noSuchAlgorithmExceptionTest() {
+        String encoded = EncodingUtils.encodeSHA("test", "notAnAlgorithm", false);
         assertNull(encoded);
     }
 

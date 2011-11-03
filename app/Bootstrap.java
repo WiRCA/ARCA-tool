@@ -30,10 +30,13 @@ import play.jobs.OnApplicationStart;
 @OnApplicationStart
 public class Bootstrap extends Job {
 
+	public static final String ADMIN_USER_EMAIL = "admin@arcatool.fi";
+	public static final String ADMIN_USER_PASSWORD = "admin";
+
     public void doJob() {
         // Check if the database is empty
         if(User.count() == 0) {
-	        User admin = new User("admin@arcatool.fi", "admin");
+	        User admin = new User(ADMIN_USER_EMAIL, ADMIN_USER_PASSWORD);
 	        admin.name = "Admin user";
 	        admin.save();
         }

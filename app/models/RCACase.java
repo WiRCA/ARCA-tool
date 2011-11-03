@@ -19,15 +19,17 @@ import java.util.TreeSet;
 public class RCACase extends Model {
 
 	public String name;
+
+	@OneToOne
 	public Cause problem;
 
 	/**
 	 * TODO
-	 * @param name
-	 * @param problem
+	 * @param name todo
+	 * @param problem todo
 	 */
 	public RCACase(String name, String problem) {
 		this.name = name;
-		this.problem = new Cause(name);
+		this.problem = new Cause(problem).save();
 	}
 }
