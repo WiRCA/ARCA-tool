@@ -13,8 +13,7 @@ import java.util.TreeSet;
  * @author Eero Laukkanen
  */
 
-@Entity
-@Table(name="cause")
+@Entity(name="cause")
 @PersistenceUnit(name="maindb")
 public class Cause extends Model {
 

@@ -14,8 +14,7 @@ import java.util.Set;
 /**
  * TODO
  */
-@Entity
-@Table(name="user")
+@Entity(name="user")
 @PersistenceUnit(name="userdb")
 public class User extends Model {
 
