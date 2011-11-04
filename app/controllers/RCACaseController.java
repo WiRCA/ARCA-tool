@@ -24,6 +24,8 @@ package controllers;
 
 import models.RCACase;
 import models.User;
+import models.enums.CompanySize;
+import models.enums.RCACaseType;
 import play.mvc.Controller;
 import play.mvc.With;
 
@@ -35,19 +37,19 @@ public class RCACaseController extends Controller{
 
 	public static void create(){
 		String user = SecurityController.connected();
-		render(user);
+		RCACaseType[] types = RCACaseType.values();
+		CompanySize[] companySizes = CompanySize.values();
+		render(user, types, companySizes);
 	}
 
-	public static void create(String name, String type, boolean isMultinational, String companyName,
+	public static void postRCAData(String name, String type, boolean isMultinational, String companyName,
 	                          String companySize,
 	                          boolean isCasePublic) {
 		String username = SecurityController.connected();
 		User user = User.find("byEmail", username).first();
-		user.addRCACase(name, type, isMultinational, companyName,
+		RCACase rcaCase = user.addRCACase(name, type, isMultinational, companyName,
 			companySize, isCasePublic).save();
+		render(rcaCase);
 	}
-
-
-	//TODO Form submit handler
 
 }

@@ -2,9 +2,17 @@
 # For example, for French create a messages.fr file
 #
 createRCA.title = Create a new RCA case
-createRCA.casename = Case name
+createRCA.caseName = Case name
+createRCA.rcaCaseType = Case type
 createRCA.company = Company name
 createRCA.companySize = What is the amount of personnel in your company?
 createRCA.public = Is this a public case?
 createRCA.create = Create the new RCA case!
 createRCA.multinational = Multinational company?
+
+postRCAData.title = RCA Created
+postRCAData.owner = RCA case owner
+
+RCACaseType.softwareProject = Software project
+RCACaseType.hr = Human resouces related problem
+RCACaseType.other = Other

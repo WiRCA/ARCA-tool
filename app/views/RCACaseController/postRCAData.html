@@ -1,0 +1,12 @@
+#{extends 'main.html' /}
+#{set title:'postRCAData.title' /}
+
+<h1>&{'postRCAData.title'}</h1>
+
+<p>&{'createRCA.caseName'}: ${rcaCase.name}</p>
+<p>&{'createRCA.rcaCaseType'}: ${rcaCase.caseType}</p>
+<p>&{'createRCA.company'}: ${rcaCase.companyName}</p>
+<p>&{'createRCA.companySize'}: ${rcaCase.companySize}</p>
+<p>&{'createRCA.multinational'}: ${rcaCase.isMultinational}</p>
+<p>&{'createRCA.public'}: ${rcaCase.isCasePublic}</p>
+<p>&{'postRCAData.owner'}: ${rcaCase.owner.name}</p>

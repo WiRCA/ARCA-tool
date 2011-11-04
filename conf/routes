@@ -10,7 +10,7 @@ GET     /                                       ApplicationController.index
 
 # Create RCACase -page
 GET     /CreateRCACase                          RCACaseController.create
-POST    /CreatedRCACase                         RCACaseController.create
+POST    /CreateRCACase                         RCACaseController.postRCAData
 # Ignore favicon requests
 GET     /favicon.ico                            404
 
