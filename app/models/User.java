@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
+ * This class represents a user in RCA application.
  * @author Eero Laukkanen
  */
 
@@ -45,7 +46,7 @@ public class User extends Model {
 	public void changePassword(String newPassword) {
 		this.password = EncodingUtils.encodeSHA1(newPassword);
 	}
-
+	
 	/**
 	 * TODO
 	 * @param rcaCase

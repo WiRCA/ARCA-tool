@@ -56,7 +56,7 @@ public class RCACase extends Model {
 		this.owner = owner;
 		this.causes = new TreeSet<Cause>();
 		// Creating the new 'initial problem' for the RCACase with the case name.
-		this.problem = new Cause(name).save();
+		this.problem = new Cause(name, owner).save();
 
 		//TODO Rest of the parameters
 	}
