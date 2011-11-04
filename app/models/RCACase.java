@@ -27,7 +27,7 @@ public class RCACase extends Model {
 	public String companySize;
 	public boolean isCasePublic;
 
-	@ManyToOne
+	@ManyToOne(targetEntity = User.class)
 	public User owner;
 
 	@OneToOne
