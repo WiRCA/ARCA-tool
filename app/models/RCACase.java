@@ -16,6 +16,7 @@ import java.util.TreeSet;
  */
 @Entity
 @Table(name = "rcacase")
+@PersistenceUnit(name="maindb")
 public class RCACase extends Model {
 
 	public String name;

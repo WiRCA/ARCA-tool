@@ -15,6 +15,7 @@ import java.util.TreeSet;
 
 @Entity
 @Table(name="cause")
+@PersistenceUnit(name="maindb")
 public class Cause extends Model {
 
 	public String name;
