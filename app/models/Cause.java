@@ -22,8 +22,7 @@ public class Cause extends Model {
 	@OneToOne(mappedBy = "problem")
 	public RCACase rcaCase;
 
-	@ManyToOne
-	public User creator;
+	public Long creator_id;
 
 	@ManyToMany
 	@JoinTable(name="causesof", joinColumns = {@JoinColumn(name = "id_effect", nullable = false)},
@@ -40,7 +39,7 @@ public class Cause extends Model {
 	 */
 	public Cause(String name, User creator) {
 		this.name = name;
-		this.creator = creator;
+		this.creator_id = creator.id;
 		causes = new TreeSet<Cause>();
 		corrections = new ArrayList<String>();
 	}
