@@ -23,10 +23,11 @@ public class User extends Model {
 	public String name;
 	public String password;
 
-	@ManyToMany
-	@JoinTable(name="usercases", joinColumns = {@JoinColumn(name="user_id", nullable = false)},
-	           inverseJoinColumns = {@JoinColumn(name="case_id", nullable = false)})
-	public Set<RCACase> cases;
+	@ElementCollection
+	/*@JoinTable(name="usercases", joinColumns = {@JoinColumn(name="user_id", nullable = false)},
+	           inverseJoinColumns = {@JoinColumn(name="case_id", nullable = false)})*/
+	@JoinTable(name="usercases", joinColumns = {@JoinColumn(name="user_id", nullable = false)})
+	public Set<Long> caseIDs;
 
 	/**
 	 * TODO
@@ -36,7 +37,7 @@ public class User extends Model {
 	public User(String email, String password) {
 		this.email = email;
 		this.password = EncodingUtils.encodeSHA1(password);
-		this.cases = new HashSet<RCACase>();
+		this.caseIDs = new HashSet<Long>();
 	}
 
 	/**
@@ -53,7 +54,7 @@ public class User extends Model {
 	 * @return
 	 */
 	public RCACase addRCACase(RCACase rcaCase) {
-		this.cases.add(rcaCase);
+		this.caseIDs.add(rcaCase.id);
 		return rcaCase;
 	}
 
@@ -70,8 +71,8 @@ public class User extends Model {
 	public RCACase addRCACase(String name, String type, boolean isMultinational, String companyName,
 	                          String companySize,
 	               boolean isCasePublic){
-		RCACase rcaCase = new RCACase(name, type, isMultinational, companyName, companySize, isCasePublic, this);
-		this.cases.add(rcaCase);
+		RCACase rcaCase = new RCACase(name, type, isMultinational, companyName, companySize, isCasePublic, this).save();
+		this.caseIDs.add(rcaCase.id);
 		return rcaCase;
 	}
 
