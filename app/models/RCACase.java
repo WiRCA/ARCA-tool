@@ -23,7 +23,6 @@ public class RCACase extends Model {
 	public String caseType;
 	public boolean isMultinational;
 	public String companyName;
-	// Company size could (should?) be implemented in the future as Enum.
 	public String companySize;
 	public boolean isCasePublic;
 
