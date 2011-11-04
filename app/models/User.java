@@ -14,8 +14,8 @@ import java.util.Set;
 /**
  * TODO
  */
-@Entity(name="user")
 @PersistenceUnit(name="userdb")
+@Entity(name="user")
 public class User extends Model {
 
 	public String email;

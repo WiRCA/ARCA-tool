@@ -14,8 +14,8 @@ import java.util.TreeSet;
 /**
  * TODO   ENUMS
  */
-@Entity(name = "rcacase")
 @PersistenceUnit(name="maindb")
+@Entity(name = "rcacase")
 public class RCACase extends Model {
 
 	public String name;
