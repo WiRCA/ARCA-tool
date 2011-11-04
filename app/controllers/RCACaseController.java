@@ -22,6 +22,7 @@
 
 package controllers;
 
+import models.RCACase;
 import models.User;
 import models.enums.CompanySize;
 import models.enums.RCACaseType;
@@ -46,8 +47,7 @@ public class RCACaseController extends Controller {
 	                          boolean isCasePublic) {
 		String username = SecurityController.connected();
 		User user = User.find("byEmail", username).first();
-		RCACase rcaCase = user.addRCACase(name, type, isMultinational, companyName,
-			companySize, isCasePublic).save();
+		RCACase rcaCase = user.addRCACase(name, type, isMultinational, companyName, companySize, isCasePublic).save();
 		render(rcaCase);
 	}
 
