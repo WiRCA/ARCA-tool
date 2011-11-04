@@ -2,7 +2,9 @@ package models;
 
 import play.db.jpa.Model;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.persistence.PersistenceUnit;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -12,24 +14,44 @@ import java.util.TreeSet;
 
 
 /**
- * TODO
+ * TODO   ENUMS
  */
 @Entity
-@Table(name="rcacase")
 public class RCACase extends Model {
 
 	public String name;
+	public String problem;
+	public Enum type;
+	public boolean isMultinational;
+	public String companyName;
+	public Enum companySize;
+	public boolean isPublic;
 
-	@OneToOne
-	public Cause problem;
+
+	@OneToMany
+	public Set<Cause> causes;
 
 	/**
 	 * TODO
-	 * @param name todo
-	 * @param problem todo
+	 * @param name
+	 * @param problem
 	 */
 	public RCACase(String name, String problem) {
+
 		this.name = name;
-		this.problem = new Cause(problem).save();
+		this.problem = problem;
+		this.causes = new TreeSet<Cause>();
+		//TODO Rest of the parameters
+	}
+
+	/**
+	 * TODO
+	 * @param name
+	 *
+	 * @return
+	 */
+	public RCACase addCause(String name) {
+		//TODO
+		return this;
 	}
 }

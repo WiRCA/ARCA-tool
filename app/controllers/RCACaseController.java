@@ -22,6 +22,7 @@
 
 package controllers;
 
+import models.RCACase;
 import play.mvc.Controller;
 import play.mvc.With;
 
@@ -34,6 +35,11 @@ public class RCACaseController extends Controller{
 	public static void create(){
 		String user = SecurityController.connected();
 		render(user);
+	}
+
+	public static void create(...) {
+		RCACase newCase = new RCACase(...);
+		newCase.save();
 	}
 
 
