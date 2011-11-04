@@ -37,10 +37,16 @@ public class RCACaseController extends Controller{
 		render(user);
 	}
 
-	public static void create(...) {
-		RCACase newCase = new RCACase(...);
+	/**
+	 * TODO
+	 *
+	 */
+	/*
+	public static void create() {
+		RCACase newCase = new RCACase();
 		newCase.save();
 	}
+	*/
 
 
 	//TODO Form submit handler
