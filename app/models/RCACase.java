@@ -27,6 +27,8 @@ public class RCACase extends Model {
 	// Company size could (should?) be implemented in the future as Enum.
 	public String companySize;
 	public boolean isCasePublic;
+
+	@ManyToOne
 	public User owner;
 
 

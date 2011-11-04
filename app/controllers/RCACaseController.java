@@ -27,7 +27,7 @@ import play.mvc.Controller;
 import play.mvc.With;
 
 /**
- * @author: Mikko Valjus
+ * @author Mikko Valjus
  */
 @With(Secure.class)
 public class RCACaseController extends Controller{

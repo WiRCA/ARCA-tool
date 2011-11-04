@@ -23,6 +23,9 @@ public class User extends Model {
 	public String name;
 	public String password;
 
+	@OneToMany(mappedBy = "owner")
+	public Set<RCACase> myCases;
+
 	@ManyToMany
 	@JoinTable(name="usercases", joinColumns = {@JoinColumn(name="user_id", nullable = false)},
 	           inverseJoinColumns = {@JoinColumn(name="case_id", nullable = false)})
@@ -36,6 +39,7 @@ public class User extends Model {
 	public User(String email, String password) {
 		this.email = email;
 		this.password = EncodingUtils.encodeSHA1(password);
+		this.myCases = new HashSet<RCACase>();
 		this.cases = new HashSet<RCACase>();
 	}
 
@@ -48,18 +52,17 @@ public class User extends Model {
 	}
 
 	/**
-	 *
+	 * TODO
 	 * @param rcaCase
 	 * @return
 	 */
 	public RCACase addRCACase(RCACase rcaCase) {
 		this.cases.add(rcaCase);
 		return rcaCase;
-
 	}
 
 	/**
-	 *
+	 * TODO
 	 * @param name
 	 * @param type
 	 * @param isMultinational
@@ -72,6 +75,7 @@ public class User extends Model {
 	                          String companySize,
 	               boolean isCasePublic){
 		RCACase rcaCase = new RCACase(name, type, isMultinational, companyName, companySize, isCasePublic, this);
+		this.myCases.add(rcaCase);
 		this.cases.add(rcaCase);
 		return rcaCase;
 	}
