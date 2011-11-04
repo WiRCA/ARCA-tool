@@ -22,6 +22,9 @@ public class Cause extends Model {
 	@OneToOne(mappedBy = "problem")
 	public RCACase rcaCase;
 
+	@ManyToOne
+	public User creator;
+
 	@ManyToMany
 	@JoinTable(name="causesof", joinColumns = {@JoinColumn(name = "id_effect", nullable = false)},
 	inverseJoinColumns = {@JoinColumn(name="id_cause", nullable = false)})
@@ -35,8 +38,9 @@ public class Cause extends Model {
 	 * Creates a new cause with name.
 	 * @param name name for the created cause.
 	 */
-	public Cause(String name) {
+	public Cause(String name, User creator) {
 		this.name = name;
+		this.creator = creator;
 		causes = new TreeSet<Cause>();
 		corrections = new ArrayList<String>();
 	}
@@ -59,7 +63,6 @@ public class Cause extends Model {
 	 * @return itself.
 	 */
 	public Cause addCause(String name) {
-		//TODO
 		return this;
 	}
 

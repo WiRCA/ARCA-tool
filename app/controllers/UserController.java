@@ -23,38 +23,28 @@
 
 package controllers;
 
-import models.User;
 import play.mvc.Controller;
 import play.mvc.With;
 
 /**
- * @author Mikko Valjus
+ * @author Eero Laukkanen
  */
+
 @With(Secure.class)
-public class RCACaseController extends Controller {
-
-	public static void create() {
-		String user = SecurityController.connected();
-		render(user);
-	}
-
-	public static void create(String name, String type, boolean isMultinational, String companyName,
-	                          String companySize,
-	                          boolean isCasePublic) {
-		String username = SecurityController.connected();
-		User user = User.find("byEmail", username).first();
-		user.addRCACase(name, type, isMultinational, companyName, companySize, isCasePublic).save();
-	}
-
-
-	//TODO Form submit handler
-
-	public static void show(Long id) {
+public class UserController extends Controller {
+	public static void index() {
 
 	}
 
-	public static void getStream(Long id, Long timestamp) {
+	public static void register() {
 
 	}
 
+	public static void register(String name, String email, String password) {
+
+	}
+
+	public static void addRCACaseForUser(Long caseId, Long userId) {
+
+	}
 }
