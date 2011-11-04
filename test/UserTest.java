@@ -27,11 +27,9 @@ public class UserTest extends UnitTest {
 	    rcaCaseUser.save();
 	    rcaCaseUser.refresh();
 	    assertTrue(rcaCaseUser.cases.size() == 1);
-	    assertTrue(rcaCaseUser.myCases.size() == 1);
 	    RCACase rcaCase = RCACase.find("byName", "new unique rca case").first();
 	    assertNotNull(rcaCase);
 	    assertTrue(rcaCaseUser.cases.contains(rcaCase));
-	    assertTrue(rcaCaseUser.myCases.contains(rcaCase));
 	    assertTrue(rcaCase.problem.name.equals("new unique rca case"));
     }
 
