@@ -31,7 +31,6 @@ public class RCACase extends Model {
 	@ManyToOne
 	public User owner;
 
-
 	@OneToOne
 	public Cause problem;
 
