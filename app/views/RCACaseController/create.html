@@ -16,7 +16,7 @@ Yrityksen tiedot:
 
     <h1>&{'createRCA.title'}</h1>
 
-    #{form @create()}
+    #{form @RCACaseController.create()}
 
     #{if flash.error}
     <p class="error">
@@ -33,7 +33,7 @@ Yrityksen tiedot:
         <label for="casename">&{'createRCA.casename'}</label>
         <input type="text" name="casename" id="casename" value="${flash.casename}"/>
     </p>
-    #{select 'RCAtype', value:1, id:'select1'}
+    #{select 'RCAtype', value:1, id:'RCAType'}
     #{option 1}Software case#{/option}
     #{option 2}Other#{/option}
     #{/select}
@@ -43,7 +43,7 @@ Yrityksen tiedot:
     </p>
 
     <label>&{'createRCA.companySize'}</label>
-    #{select 'CompanySize', value:1, id:'CompanySize'}
+    #{select 'companySize', value:1, id:'companySize'}
     #{option 1}1-10#{/option}
     #{option 2}11-50#{/option}
     #{option 3}51-100#{/option}

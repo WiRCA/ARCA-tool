@@ -23,6 +23,7 @@
 package controllers;
 
 import models.RCACase;
+import models.User;
 import play.mvc.Controller;
 import play.mvc.With;
 
@@ -37,16 +38,14 @@ public class RCACaseController extends Controller{
 		render(user);
 	}
 
-	/**
-	 * TODO
-	 *
-	 */
-	/*
-	public static void create() {
-		RCACase newCase = new RCACase();
-		newCase.save();
+	public static void create(String name, String type, boolean isMultinational, String companyName,
+	                          String companySize,
+	                          boolean isCasePublic) {
+		String username = SecurityController.connected();
+		User user = User.find("byEmail", username).first();
+		user.addRCACase(name, type, isMultinational, companyName,
+			companySize, isCasePublic).save();
 	}
-	*/
 
 
 	//TODO Form submit handler
