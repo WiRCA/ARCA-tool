@@ -48,16 +48,32 @@ public class User extends Model {
 	}
 
 	/**
-	 * TODO
-	 * @param name todo
-	 * @param problem todo
 	 *
-	 * @return user object
+	 * @param rcaCase
+	 * @return
 	 */
-	public User addRCACase(String name, String problem) {
-		RCACase rcaCase = new RCACase(name, problem).save();
+	public RCACase addRCACase(RCACase rcaCase) {
 		this.cases.add(rcaCase);
-		return this;
+		return rcaCase;
+
+	}
+
+	/**
+	 *
+	 * @param name
+	 * @param type
+	 * @param isMultinational
+	 * @param companyName
+	 * @param companySize
+	 * @param isCasePublic
+	 * @return
+	 */
+	public RCACase addRCACase(String name, String type, boolean isMultinational, String companyName,
+	                          String companySize,
+	               boolean isCasePublic){
+		RCACase rcaCase = new RCACase(name, type, isMultinational, companyName, companySize, isCasePublic, this);
+		this.cases.add(rcaCase);
+		return rcaCase;
 	}
 
 }
