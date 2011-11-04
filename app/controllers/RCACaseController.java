@@ -48,7 +48,7 @@ public class RCACaseController extends Controller {
 		String username = SecurityController.connected();
 		User user = User.find("byEmail", username).first();
 		RCACase rcaCase = user.addRCACase(name, type, isMultinational, companyName, companySize, isCasePublic).save();
-		render(rcaCase);
+		render(rcaCase, user);
 	}
 
 
