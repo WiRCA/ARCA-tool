@@ -13,15 +13,16 @@ import java.util.TreeSet;
  * @author Eero Laukkanen
  */
 
-@Entity
-@Table(name="cause")
 @PersistenceUnit(name="maindb")
+@Entity(name="cause")
 public class Cause extends Model {
 
 	public String name;
 
 	@OneToOne(mappedBy = "problem")
 	public RCACase rcaCase;
+
+	public Long creator_id;
 
 	@ManyToMany
 	@JoinTable(name="causesof", joinColumns = {@JoinColumn(name = "id_effect", nullable = false)},
@@ -36,8 +37,9 @@ public class Cause extends Model {
 	 * Creates a new cause with name.
 	 * @param name name for the created cause.
 	 */
-	public Cause(String name) {
+	public Cause(String name, User creator) {
 		this.name = name;
+		this.creator_id = creator.id;
 		causes = new TreeSet<Cause>();
 		corrections = new ArrayList<String>();
 	}
@@ -60,7 +62,6 @@ public class Cause extends Model {
 	 * @return itself.
 	 */
 	public Cause addCause(String name) {
-		//TODO
 		return this;
 	}
 

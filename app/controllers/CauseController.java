@@ -1,5 +1,6 @@
 /*
- * Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen, Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus
+ * Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen, Joona Koistinen,
+ * Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,42 +23,25 @@
 
 package controllers;
 
-import models.User;
-import models.enums.CompanySize;
-import models.enums.RCACaseType;
 import play.mvc.Controller;
 import play.mvc.With;
 
 /**
- * @author Mikko Valjus
+ * @author Eero Laukkanen
  */
+
 @With(Secure.class)
-public class RCACaseController extends Controller {
+public class CauseController extends Controller {
 
-	public static void create() {
-		String user = SecurityController.connected();
-		RCACaseType[] types = RCACaseType.values();
-		CompanySize[] companySizes = CompanySize.values();
-		render(user, types, companySizes);
-	}
-
-	public static void postRCAData(String name, String type, boolean isMultinational, String companyName,
-	                          String companySize,
-	                          boolean isCasePublic) {
-		String username = SecurityController.connected();
-		User user = User.find("byEmail", username).first();
-		RCACase rcaCase = user.addRCACase(name, type, isMultinational, companyName,
-			companySize, isCasePublic).save();
-		render(rcaCase);
-	}
-
-
-	public static void show(Long id) {
+	public static void addCause(Long causeId, Long name) {
 
 	}
 
-	public static void getStream(Long id, Long timestamp) {
+	public static void addRelation(Long fromId, Long toID) {
 
 	}
 
+	public static void deleteCause(Long id) {
+
+	}
 }

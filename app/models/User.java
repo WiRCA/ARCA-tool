@@ -8,28 +8,26 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
+ * This class represents a user in RCA application.
  * @author Eero Laukkanen
  */
 
 /**
  * TODO
  */
-@Entity
-@Table(name="user")
 @PersistenceUnit(name="userdb")
+@Entity(name="user")
 public class User extends Model {
 
 	public String email;
 	public String name;
 	public String password;
 
-	@OneToMany(mappedBy = "owner")
-	public Set<RCACase> myCases;
-
-	@ManyToMany
-	@JoinTable(name="usercases", joinColumns = {@JoinColumn(name="user_id", nullable = false)},
-	           inverseJoinColumns = {@JoinColumn(name="case_id", nullable = false)})
-	public Set<RCACase> cases;
+	@ElementCollection
+	/*@JoinTable(name="usercases", joinColumns = {@JoinColumn(name="user_id", nullable = false)},
+	           inverseJoinColumns = {@JoinColumn(name="case_id", nullable = false)})*/
+	@JoinTable(name="usercases", joinColumns = {@JoinColumn(name="user_id", nullable = false)})
+	public Set<Long> caseIDs;
 
 	/**
 	 * TODO
@@ -39,8 +37,7 @@ public class User extends Model {
 	public User(String email, String password) {
 		this.email = email;
 		this.password = EncodingUtils.encodeSHA1(password);
-		this.myCases = new HashSet<RCACase>();
-		this.cases = new HashSet<RCACase>();
+		this.caseIDs = new HashSet<Long>();
 	}
 
 	/**
@@ -50,14 +47,14 @@ public class User extends Model {
 	public void changePassword(String newPassword) {
 		this.password = EncodingUtils.encodeSHA1(newPassword);
 	}
-
+	
 	/**
 	 * TODO
 	 * @param rcaCase
 	 * @return
 	 */
 	public RCACase addRCACase(RCACase rcaCase) {
-		this.cases.add(rcaCase);
+		this.caseIDs.add(rcaCase.id);
 		return rcaCase;
 	}
 
@@ -74,9 +71,8 @@ public class User extends Model {
 	public RCACase addRCACase(String name, String type, boolean isMultinational, String companyName,
 	                          String companySize,
 	               boolean isCasePublic){
-		RCACase rcaCase = new RCACase(name, type, isMultinational, companyName, companySize, isCasePublic, this);
-		this.myCases.add(rcaCase);
-		this.cases.add(rcaCase);
+		RCACase rcaCase = new RCACase(name, type, isMultinational, companyName, companySize, isCasePublic, this).save();
+		this.caseIDs.add(rcaCase.id);
 		return rcaCase;
 	}
 
