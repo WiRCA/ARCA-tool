@@ -3,11 +3,7 @@ package models.enums;
 import play.i18n.Messages;
 
 /**
- * Created by IntelliJ IDEA.
- * User: juha
- * Date: 11/4/11
- * Time: 3:32 PM
- * To change this template use File | Settings | File Templates.
+ * @author Juha Viljanen
  */
 public enum RCACaseType {
 
