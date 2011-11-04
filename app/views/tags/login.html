@@ -19,13 +19,15 @@
   ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
   ~ THE SOFTWARE.
   -->
-#{extends 'Secure/layout.html' /}
-
+#{if session.username}
+   <p>User's name: ${session.userFullname} #{a @Secure.logout(), id:'logout-link'}Logout#{/a}</p>
+#{/if}
+#{else}
 <div id="login">
-	
+
 	<h1>&{'secure.title'}</h1>
-		
-	#{form @authenticate()}
+
+	#{form @Secure.authenticate()}
 		
 		#{if flash.error}
 			<p class="error">
@@ -55,3 +57,4 @@
 		</p>
 	#{/form}
 </div>
+#{/else}

@@ -1,12 +1,11 @@
 package models;
 
-import play.Logger;
 import play.db.jpa.Model;
 import utils.EncodingUtils;
 
-import javax.persistence.Entity;
-import javax.persistence.PersistenceUnit;
-import java.security.NoSuchAlgorithmException;
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Eero Laukkanen
@@ -16,15 +15,18 @@ import java.security.NoSuchAlgorithmException;
  * TODO
  */
 @Entity
-@PersistenceUnit(name="user")
+@Table(name="user")
+@PersistenceUnit(name="userdb")
 public class User extends Model {
 
 	public String email;
 	public String name;
 	public String password;
 
-	//@ManyToMany
-	//public Set<RCACase> cases;
+	@ManyToMany
+	@JoinTable(name="usercases", joinColumns = {@JoinColumn(name="user_id", nullable = false)},
+	           inverseJoinColumns = {@JoinColumn(name="case_id", nullable = false)})
+	public Set<RCACase> cases;
 
 	/**
 	 * TODO
@@ -33,8 +35,8 @@ public class User extends Model {
 	 */
 	public User(String email, String password) {
 		this.email = email;
-		changePassword(password);
-		//this.cases = new TreeSet<RCACase>();
+		this.password = EncodingUtils.encodeSHA1(password);
+		this.cases = new HashSet<RCACase>();
 	}
 
 	/**
@@ -42,23 +44,19 @@ public class User extends Model {
 	 * @param newPassword User's new password
 	 */
 	public void changePassword(String newPassword) {
-		try {
-			this.password = EncodingUtils.encodeSHA1(newPassword);
-		} catch (NoSuchAlgorithmException e) {
-			// Should not happen
-			Logger.error(e.getMessage(), "User's " + this.email + " password change failed");
-		}
+		this.password = EncodingUtils.encodeSHA1(newPassword);
 	}
 
 	/**
 	 * TODO
-	 * @param name
-	 * @param problem
+	 * @param name todo
+	 * @param problem todo
 	 *
-	 * @return
+	 * @return user object
 	 */
 	public User addRCACase(String name, String problem) {
-		//TODO
+		RCACase rcaCase = new RCACase(name, problem).save();
+		this.cases.add(rcaCase);
 		return this;
 	}
 

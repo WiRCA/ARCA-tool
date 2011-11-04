@@ -2,9 +2,7 @@ package models;
 
 import play.db.jpa.Model;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
-import javax.persistence.PersistenceUnit;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -16,14 +14,22 @@ import java.util.TreeSet;
  */
 
 @Entity
+@Table(name="cause")
 public class Cause extends Model {
 
 	public String name;
 
+	@OneToOne(mappedBy = "problem")
+	public RCACase rcaCase;
+
 	@ManyToMany
+	@JoinTable(name="causesof", joinColumns = {@JoinColumn(name = "id_effect", nullable = false)},
+	inverseJoinColumns = {@JoinColumn(name="id_cause", nullable = false)})
 	public Set<Cause> causes;
 
-	public ArrayList<String> corrections;
+	@ElementCollection
+	@JoinTable(name="corrections", joinColumns = {@JoinColumn(name="id_cause", nullable = false)})
+	public List<String> corrections;
 
 	/**
 	 * Creates a new cause with name.
