@@ -1,5 +1,6 @@
 /*
- * Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen, Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus
+ * Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen, Joona Koistinen,
+ * Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,6 +24,7 @@
 package controllers;
 
 import models.RCACase;
+import models.User;
 import play.mvc.Controller;
 import play.mvc.With;
 
@@ -30,16 +32,20 @@ import play.mvc.With;
  * @author: Mikko Valjus
  */
 @With(Secure.class)
-public class RCACaseController extends Controller{
+public class RCACaseController extends Controller {
 
-	public static void create(){
+	public static void create() {
 		String user = SecurityController.connected();
 		render(user);
 	}
 
-	public static void create(...) {
-		RCACase newCase = new RCACase(...);
-		newCase.save();
+	public static void create(String name, String type, boolean isMultinational, String companyName,
+	                          String companySize,
+	                          boolean isCasePublic) {
+		String username = SecurityController.connected();
+		User user = User.find("byEmail", username).first();
+		user.addRCACase(name, type, isMultinational, companyName,
+			companySize, isCasePublic).save();
 	}
 
 
