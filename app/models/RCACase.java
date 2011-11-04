@@ -27,8 +27,7 @@ public class RCACase extends Model {
 	public String companySize;
 	public boolean isCasePublic;
 
-	@ManyToOne(targetEntity = User.class)
-	public User owner;
+	public Long owner_id;
 
 	@OneToOne
 	public Cause problem;
@@ -53,7 +52,7 @@ public class RCACase extends Model {
 		this.companyName = companyName;
 		this.companySize = companySize;
 		this.isCasePublic = isCasePublic;
-		this.owner = owner;
+		this.owner_id = owner.id;
 		this.causes = new TreeSet<Cause>();
 		// Creating the new 'initial problem' for the RCACase with the case name.
 		this.problem = new Cause(name, owner).save();
