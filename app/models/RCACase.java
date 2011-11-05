@@ -59,4 +59,8 @@ public class RCACase extends Model {
 		//TODO Rest of the parameters
 	}
 
+	public User getOwner() {
+		return User.findById(owner_id);
+	}
+
 }

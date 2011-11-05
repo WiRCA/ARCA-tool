@@ -5,6 +5,7 @@ import utils.EncodingUtils;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -74,6 +75,11 @@ public class User extends Model {
 		RCACase rcaCase = new RCACase(name, type, isMultinational, companyName, companySize, isCasePublic, this).save();
 		this.caseIDs.add(rcaCase.id);
 		return rcaCase;
+	}
+
+	public Set<RCACase> getRCACases() {
+		List<RCACase> cases = RCACase.find("id in ?", caseIDs.toArray()).fetch();
+		return new HashSet<RCACase>(cases);
 	}
 
 }

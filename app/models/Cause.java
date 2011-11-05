@@ -74,4 +74,8 @@ public class Cause extends Model {
 		//TODO
 		return this;
 	}
+
+	public User getCreator() {
+		return User.findById(creator_id);
+	}
 }

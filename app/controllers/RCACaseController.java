@@ -43,8 +43,7 @@ public class RCACaseController extends Controller {
 	}
 
 	public static void postRCAData(String name, String type, boolean isMultinational, String companyName,
-	                          String companySize,
-	                          boolean isCasePublic) {
+	                          String companySize, boolean isCasePublic) {
 		String username = SecurityController.connected();
 		User user = User.find("byEmail", username).first();
 		RCACase rcaCase = user.addRCACase(name, type, isMultinational, companyName, companySize, isCasePublic).save();
