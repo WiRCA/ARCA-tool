@@ -17,7 +17,7 @@ public class SecurityController extends Secure.Security {
 	}
 
 	public static void onAuthenticated() {
-		ApplicationController.index();
+		UserController.index();
 	}
 
 	public static void onDisconnected() {

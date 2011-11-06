@@ -16,7 +16,7 @@ Yrityksen tiedot:
 
     <h1>&{'createRCA.title'}</h1>
 
-    #{form @RCACaseController.postRCAData()}
+    #{form @RCACaseController.create()}
 
     #{if flash.error}
     <p class="error">RCA Case type
@@ -66,8 +66,7 @@ Yrityksen tiedot:
 
     <p id="public-field">
         <input type="checkbox" name="isCasePublic" id="isCasePublic" value="true" ${flash.isCasePublic ? 'checked="true"' :
-        ''}
-                                                                      />
+        ''} />
         <label for="isCasePublic">&{'createRCA.public'}</label>
     </p>
 

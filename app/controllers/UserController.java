@@ -25,6 +25,9 @@ package controllers;
 
 import play.mvc.Controller;
 import play.mvc.With;
+import models.User;
+import models.RCACase;
+import java.util.Set;
 
 /**
  * @author Eero Laukkanen
@@ -33,10 +36,13 @@ import play.mvc.With;
 @With(Secure.class)
 public class UserController extends Controller {
 	public static void index() {
-
+        String username = SecurityController.connected();
+        User user = User.find("byEmail", username).first();
+        Set<RCACase> cases = user.getRCACases();
+        render(user, cases);
 	}
 
-	public static void register() {
+	public static void registerUser() {
 
 	}
 

@@ -10,9 +10,15 @@ createRCA.public = Is this a public case?
 createRCA.create = Create the new RCA case!
 createRCA.multinational = Multinational company?
 
-postRCAData.title = RCA Created
-postRCAData.owner = RCA case owner
+showRCACase.title = RCA Case %s
+showRCACase.owner = RCA case owner
+showRCACase.back = Back to my cases
 
 RCACaseType.softwareProject = Software project
 RCACaseType.hr = Human resouces related problem
 RCACaseType.other = Other
+
+user.welcomeTitle = Welcome %s!
+user.createRCACase = Create new RCA case
+user.noRCACases = No RCA cases
+user.myCases = My cases

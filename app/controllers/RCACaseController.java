@@ -35,24 +35,29 @@ import play.mvc.With;
 @With(Secure.class)
 public class RCACaseController extends Controller {
 
-	public static void create() {
+	public static void createRCACase() {
 		String user = SecurityController.connected();
 		RCACaseType[] types = RCACaseType.values();
 		CompanySize[] companySizes = CompanySize.values();
 		render(user, types, companySizes);
 	}
 
-	public static void postRCAData(String name, String type, boolean isMultinational, String companyName,
+	public static void create(String name, String type, boolean isMultinational, String companyName,
 	                          String companySize, boolean isCasePublic) {
 		String username = SecurityController.connected();
 		User user = User.find("byEmail", username).first();
 		RCACase rcaCase = user.addRCACase(name, type, isMultinational, companyName, companySize, isCasePublic).save();
-		render(rcaCase, user);
+		show(rcaCase.id);
 	}
 
 
 	public static void show(Long id) {
-
+        RCACase rcaCase = RCACase.findById(id);
+        if (rcaCase != null) {
+            render(rcaCase);
+        } else {
+            renderText("Unknown case id.");
+        }
 	}
 
 	public static void getStream(Long id, Long timestamp) {

@@ -7,10 +7,15 @@ GET     /                                       module:secure
 
 # Home page
 GET     /                                       ApplicationController.index
+GET     /user                                   UserController.index
 
 # Create RCACase -page
-GET     /CreateRCACase                          RCACaseController.create
-POST    /CreateRCACase                         RCACaseController.postRCAData
+GET     /CreateRCACase                          RCACaseController.createRCACase
+POST    /CreateRCACase                          RCACaseController.create
+
+# Show RCA case
+GET     /{id}                                   RCACaseController.show
+
 # Ignore favicon requests
 GET     /favicon.ico                            404
 

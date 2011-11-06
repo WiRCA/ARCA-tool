@@ -74,12 +74,17 @@ public class User extends Model {
 	               boolean isCasePublic){
 		RCACase rcaCase = new RCACase(name, type, isMultinational, companyName, companySize, isCasePublic, this).save();
 		this.caseIDs.add(rcaCase.id);
+        this.save();
 		return rcaCase;
 	}
 
 	public Set<RCACase> getRCACases() {
-		List<RCACase> cases = RCACase.find("id in ?", caseIDs.toArray()).fetch();
-		return new HashSet<RCACase>(cases);
+        HashSet<RCACase> cases = new HashSet<RCACase>();
+        for (Long id : caseIDs) {
+            RCACase rcaCase = RCACase.findById(id);
+            cases.add(rcaCase);
+        }
+		return cases;
 	}
 
 }
