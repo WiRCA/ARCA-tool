@@ -2,8 +2,12 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
+%{ context = play.configuration.getProperty('http.path', '/') }%
+
 # Secure module
-GET     /                                       module:secure
+GET     ${context}/login                        Secure.login
+POST    ${context}/login                        Secure.authenticate
+GET     ${context}/logout                       Secure.logout
 
 # Home page
 GET     /                                       ApplicationController.index
