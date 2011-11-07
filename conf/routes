@@ -3,7 +3,7 @@
 # ~~~~
 
 # Secure module
-GET     /                                       module:secure
+*       /                                       module:secure
 
 # Home page
 GET     /                                       ApplicationController.index
