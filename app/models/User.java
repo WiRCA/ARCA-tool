@@ -1,5 +1,7 @@
 package models;
 
+import models.enums.CompanySize;
+import models.enums.RCACaseType;
 import play.db.jpa.Model;
 import utils.EncodingUtils;
 
@@ -69,8 +71,8 @@ public class User extends Model {
 	 * @param isCasePublic
 	 * @return
 	 */
-	public RCACase addRCACase(String name, String type, boolean isMultinational, String companyName,
-	                          String companySize,
+	public RCACase addRCACase(String name, RCACaseType type, boolean isMultinational, String companyName,
+	                          CompanySize companySize,
 	               boolean isCasePublic){
 		RCACase rcaCase = new RCACase(name, type, isMultinational, companyName, companySize, isCasePublic, this).save();
 		this.caseIDs.add(rcaCase.id);

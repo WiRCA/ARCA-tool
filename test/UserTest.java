@@ -1,5 +1,7 @@
 import models.RCACase;
 import models.User;
+import models.enums.CompanySize;
+import models.enums.RCACaseType;
 import org.junit.Test;
 import play.mvc.Before;
 import play.test.UnitTest;
@@ -23,7 +25,8 @@ public class UserTest extends UnitTest {
     public void addRcaCaseTest() {
         User rcaCaseUser = new User("rcaCaseUser@arcatool.fi", "password").save();
 	    assertNotNull(rcaCaseUser);
-	    rcaCaseUser.addRCACase("new unique rca case", "type", true, "test company", "14", true).save();
+	    rcaCaseUser.addRCACase("new unique rca case", RCACaseType.HR, true, "test company", CompanySize.FIFTY, true
+	                          ).save();
 	    rcaCaseUser.save();
 	    rcaCaseUser.refresh();
 	    assertTrue(rcaCaseUser.caseIDs.size() == 1);

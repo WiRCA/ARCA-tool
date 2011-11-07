@@ -1,5 +1,7 @@
 package models;
 
+import models.enums.CompanySize;
+import models.enums.RCACaseType;
 import play.db.jpa.Model;
 
 import javax.persistence.*;
@@ -20,12 +22,15 @@ public class RCACase extends Model {
 
 	public String name;
 	public TreeSet<Cause> causes;
-	public String caseType;
+
+	@Enumerated(EnumType.ORDINAL)
+	public RCACaseType caseType;
 	public boolean isMultinational;
 	public String companyName;
-	public String companySize;
-	public boolean isCasePublic;
 
+	@Enumerated(EnumType.ORDINAL)
+	public CompanySize companySize;
+	public boolean isCasePublic;
 	public Long owner_id;
 
 	@OneToOne
@@ -42,9 +47,8 @@ public class RCACase extends Model {
 	 * @param isCasePublic
 	 */
 
-	public RCACase(String name, String type, boolean isMultinational, String companyName, String companySize,
+	public RCACase(String name, RCACaseType type, boolean isMultinational, String companyName, CompanySize companySize,
 	               boolean isCasePublic, User owner) {
-
 		this.name = name;
 		this.caseType = type;
 		this.isMultinational = isMultinational;
@@ -55,8 +59,6 @@ public class RCACase extends Model {
 		this.causes = new TreeSet<Cause>();
 		// Creating the new 'initial problem' for the RCACase with the case name.
 		this.problem = new Cause(name, owner).save();
-
-		//TODO Rest of the parameters
 	}
 
 	public User getOwner() {

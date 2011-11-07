@@ -42,19 +42,24 @@ public class RCACaseController extends Controller {
 		render(username, types, companySizes);
 	}
 
-	public static void create(String name, String type, boolean isMultinational, String companyName,
-	                          String companySize, boolean isCasePublic) {
+	public static void create(String name, int type, boolean multinational, String companyName,
+	                          int companySize, boolean isCasePublic) {
 		String username = SecurityController.connected();
 		User user = User.find("byEmail", username).first();
-		RCACase rcaCase = user.addRCACase(name, type, isMultinational, companyName, companySize, isCasePublic).save();
+		RCACaseType rcaCaseType = RCACaseType.valueOf(type);
+		CompanySize size = CompanySize.valueOf(companySize);
+		RCACase rcaCase = user.addRCACase(name, rcaCaseType, multinational, companyName, size,
+		                                  isCasePublic).save();
 		show(rcaCase.id);
 	}
 
 
 	public static void show(Long id) {
         RCACase rcaCase = RCACase.findById(id);
+		String size = rcaCase.companySize.text;
+		String type = rcaCase.caseType.text;
         if (rcaCase != null) {
-            render(rcaCase);
+            render(rcaCase, type, size);
         } else {
             renderText("Unknown case id.");
         }
