@@ -36,10 +36,10 @@ import play.mvc.With;
 public class RCACaseController extends Controller {
 
 	public static void createRCACase() {
-		String user = SecurityController.connected();
+		String username = SecurityController.connected();
 		RCACaseType[] types = RCACaseType.values();
 		CompanySize[] companySizes = CompanySize.values();
-		render(user, types, companySizes);
+		render(username, types, companySizes);
 	}
 
 	public static void create(String name, String type, boolean isMultinational, String companyName,
