@@ -29,6 +29,13 @@ import models.enums.RCACaseType;
 import play.mvc.Controller;
 import play.mvc.With;
 
+import java.util.*;
+import play.libs.*;
+import play.libs.F.*;
+import models.events.*;
+import play.Logger;
+import com.google.gson.reflect.*;
+
 /**
  * @author Mikko Valjus
  */
@@ -55,18 +62,28 @@ public class RCACaseController extends Controller {
 
 
 	public static void show(Long id) {
-        RCACase rcaCase = RCACase.findById(id);
-		String size = rcaCase.companySize.text;
-		String type = rcaCase.caseType.text;
-        if (rcaCase != null) {
-            render(rcaCase, type, size);
-        } else {
-            renderText("Unknown case id.");
-        }
+    RCACase rcaCase = RCACase.findById(id);
+  	String size = rcaCase.companySize.text;
+  	String type = rcaCase.caseType.text;
+    if (rcaCase != null) {
+        render(rcaCase, type, size);
+    } else {
+        renderText("Unknown case id.");
+    }
 	}
 
 	public static void getStream(Long id, Long timestamp) {
 
 	}
+	
+	public static void waitMessages(Long id, Long lastReceived) {
+	  RCACase rcaCase = RCACase.findById(id);
+	  Logger.info("RCACase id: " + rcaCase.id);
+	  Logger.info("lastReceived: " + lastReceived);
+    List messages = await(rcaCase.nextMessages(lastReceived));
+    renderJSON(messages, new TypeToken<List<IndexedEvent<Event>>>() {}.getType());
+  }
+  
+  
 
 }

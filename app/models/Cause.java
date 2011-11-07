@@ -59,10 +59,14 @@ public class Cause extends Model {
 	 * Adds a cause for a cause.
 	 * @param name name to be used for the cause.
 	 *
-	 * @return itself.
+	 * @return cause the cause created when added.
 	 */
 	public Cause addCause(String name) {
-		return this;
+	  Cause newCause = new Cause(name, this.getCreator());
+	  this.causes.add(newCause);
+	  
+	  
+		return newCause;
 	}
 
 	/**

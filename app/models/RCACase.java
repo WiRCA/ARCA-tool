@@ -8,6 +8,11 @@ import javax.persistence.*;
 import java.util.Set;
 import java.util.TreeSet;
 
+import play.libs.*;
+import play.libs.F.*;
+import java.util.List;
+import models.events.*;
+
 /**
  * @author Eero Laukkanen
  */
@@ -18,10 +23,18 @@ import java.util.TreeSet;
  */
 @PersistenceUnit(name="maindb")
 @Entity(name = "rcacase")
+
 public class RCACase extends Model {
 
 	public String name;
 	public TreeSet<Cause> causes;
+	
+  @Transient
+	final ArchivedEventStream<Event> causeEvents = new ArchivedEventStream<Event>(100);
+	
+	public Promise<List<IndexedEvent<Event>>> nextMessages(long lastReceived) {
+      return causeEvents.nextEvents(lastReceived);
+  }
 
 	@Enumerated(EnumType.ORDINAL)
 	public RCACaseType caseType;

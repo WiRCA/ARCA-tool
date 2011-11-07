@@ -25,6 +25,8 @@ package controllers;
 
 import play.mvc.Controller;
 import play.mvc.With;
+import models.Cause;
+import models.events.AddCauseEvent;
 
 /**
  * @author Eero Laukkanen
@@ -33,8 +35,12 @@ import play.mvc.With;
 @With(Secure.class)
 public class CauseController extends Controller {
 
-	public static void addCause(Long causeId, Long name) {
+	public static void addCause(String causeId, String name) {
+    Cause cause = Cause.findById(Long.valueOf(causeId));
+    Cause newCause = cause.addCause(name);
 
+    AddCauseEvent event = new AddCauseEvent(newCause, causeId);
+    cause.rcaCase.causeEvents.publish(event);
 	}
 
 	public static void addRelation(Long fromId, Long toID) {
