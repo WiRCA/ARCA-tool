@@ -51,7 +51,7 @@ public class RCACaseTest extends UnitTest {
 		assertEquals(comparisonCase.companyName, "Keijon Kaapeli ja Kaivanto Oy");
 		assertEquals(testCase.caseType, RCACaseType.valueOf(2));
 		assertNotSame(testCase.companySize, CompanySize.valueOf(3));
-		assertEquals(testCase.owner_id, user.id);
+		assertEquals(testCase.ownerID, user.id);
 		assertFalse(testCase.isCasePublic);
 		assertTrue(testCase.isMultinational);
 		assertEquals(comparisonCase.name, "TestRCACase");
