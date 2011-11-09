@@ -25,8 +25,12 @@ package controllers;
 
 import play.mvc.Controller;
 import play.mvc.With;
+import play.libs.F.*;
 import models.Cause;
+import models.RCACase;
+import models.events.*;
 import models.events.AddCauseEvent;
+import play.cache.Cache;
 
 /**
  * @author Eero Laukkanen
@@ -35,12 +39,13 @@ import models.events.AddCauseEvent;
 @With(Secure.class)
 public class CauseController extends Controller {
 
-	public static void addCause(String causeId, String name) {
+public static void addCause(String causeId, String name) {
     Cause cause = Cause.findById(Long.valueOf(causeId));
-    Cause newCause = cause.addCause(name);
+    Cause newCause = cause.addCause(name).save();
 
     AddCauseEvent event = new AddCauseEvent(newCause, causeId);
-    cause.rcaCase.causeEvents.publish(event);
+    CauseStream causeEvents = Cache.get("stream", CauseStream.class);
+    causeEvents.getStream().publish(event);
 	}
 
 	public static void addRelation(Long fromId, Long toID) {

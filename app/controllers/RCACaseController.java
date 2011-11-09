@@ -84,8 +84,6 @@ public class RCACaseController extends Controller {
 	
 	public static void waitMessages(Long id, Long lastReceived) {
 	  RCACase rcaCase = RCACase.findById(id);
-	  Logger.info("RCACase id: " + rcaCase.id);
-	  Logger.info("lastReceived: " + lastReceived);
     List messages = await(rcaCase.nextMessages(lastReceived));
     renderJSON(messages, new TypeToken<List<IndexedEvent<Event>>>() {}.getType());
   }

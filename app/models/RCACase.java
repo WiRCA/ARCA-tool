@@ -10,11 +10,13 @@ import java.util.TreeSet;
 import play.libs.F.*;
 import java.util.List;
 import models.events.*;
+import play.cache.Cache;
+
+import play.Logger;
 
 /**
  * @author Eero Laukkanen
  */
-
 
 /**
  * TODO   ENUMS
@@ -27,13 +29,11 @@ public class RCACase extends Model {
 	public String name;
 	public TreeSet<Cause> causes;
 	
-  @Transient
-	public final ArchivedEventStream<Event> causeEvents = new ArchivedEventStream<Event>(100);
-	
 	public Promise<List<IndexedEvent<Event>>> nextMessages(long lastReceived) {
-      return causeEvents.nextEvents(lastReceived);
+	    CauseStream stream = Cache.get("stream", CauseStream.class);
+      return stream.getStream().nextEvents(lastReceived);
   }
-
+  	
 	@Enumerated(EnumType.ORDINAL)
 	public RCACaseType caseType;
 	public boolean isMultinational;
@@ -60,6 +60,7 @@ public class RCACase extends Model {
 
 	public RCACase(String name, RCACaseType type, boolean isMultinational, String companyName, CompanySize companySize,
 	               boolean isCasePublic, User owner) throws MandatoryFieldEmptyException {
+	  
 		if (name.trim().length() == 0) {
 			throw new MandatoryFieldEmptyException("Name field is empty!");
 		}
@@ -77,6 +78,9 @@ public class RCACase extends Model {
 		this.causes = new TreeSet<Cause>();
 		// Creating the new 'initial problem' for the RCACase with the case name.
 		this.problem = new Cause(name, owner).save();
+		
+		CauseStream causeEvents = new CauseStream(100);
+		Cache.set("stream", causeEvents, "30mn");
 	}
 
 	public User getOwner() {

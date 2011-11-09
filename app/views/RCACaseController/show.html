@@ -21,7 +21,7 @@
   ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
   ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
   ~ THE SOFTWARE.
-  
+  -->
 
 <h1>&{'showRCACase.title', rcaCase.name}</h1>
 
@@ -33,7 +33,7 @@
 <p>&{'createRCA.public'}: ${rcaCase.isCasePublic}</p>
 <p>&{'showRCACase.owner'}: ${rcaCase.owner.name}</p>
 
-#{a @UserController.index() } &{'showRCACase.back'} #{/a}-->
+#{a @UserController.index() } &{'showRCACase.back'} #{/a}
 
 <div id="container">
   <div id="center-container">
@@ -42,8 +42,6 @@
 </div>
 
 <div id="log"></div>
-  
-
 
 <script type="text/javascript">
     $(document).ready(function() {
@@ -83,7 +81,7 @@
       var json = [
           {
             "data": {"$color": "#83548B","$type": "circle","$dim":10},
-            "id": "0",
+            "id": "1",
             "name": "graphnode"
           }];
       //Running number for creating nodes
@@ -198,12 +196,12 @@
                     $(events).each(function() {
                         if(this.data.text){
                           var newNode = {
-                            "id": this.data.text,
-                            "name": this.data.text
+                            "id": this.data.causeTo,
+                            "name": this.data.causeTo
                           };
                           var node = {
-                            "id": this.data.nodeFrom,
-                            "name": this.data.nodeFrom
+                            "id": this.data.causeFrom,
+                            "name": this.data.causeFrom
                           };
                           fd.graph.addAdjacence(node,newNode);
                           fd.computeIncremental({
