@@ -26,11 +26,12 @@ import models.RCACase;
 import models.User;
 import models.enums.CompanySize;
 import models.enums.RCACaseType;
+import models.MandatoryFieldEmptyException;
 import play.mvc.Controller;
 import play.mvc.With;
 
 import java.util.*;
-import play.libs.*;
+
 import play.libs.F.*;
 import models.events.*;
 import play.Logger;
@@ -42,11 +43,11 @@ import com.google.gson.reflect.*;
 @With(Secure.class)
 public class RCACaseController extends Controller {
 
-	public static void createRCACase() {
+	public static void createRCACase(String errorMessage) {
 		String username = SecurityController.connected();
 		RCACaseType[] types = RCACaseType.values();
 		CompanySize[] companySizes = CompanySize.values();
-		render(username, types, companySizes);
+		render(username, types, companySizes, errorMessage);
 	}
 
 	public static void create(String name, int type, boolean multinational, String companyName,
@@ -55,8 +56,13 @@ public class RCACaseController extends Controller {
 		User user = User.find("byEmail", username).first();
 		RCACaseType rcaCaseType = RCACaseType.valueOf(type);
 		CompanySize size = CompanySize.valueOf(companySize);
-		RCACase rcaCase = user.addRCACase(name, rcaCaseType, multinational, companyName, size,
-		                                  isCasePublic).save();
+		RCACase rcaCase = null;
+		try {
+			rcaCase = user.addRCACase(name, rcaCaseType, multinational, companyName, size,
+			                                  isCasePublic).save();
+		} catch (MandatoryFieldEmptyException e) {
+			createRCACase(e.getMessage());
+		}
 		show(rcaCase.id);
 	}
 

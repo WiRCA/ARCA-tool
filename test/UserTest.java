@@ -1,3 +1,4 @@
+import models.MandatoryFieldEmptyException;
 import models.RCACase;
 import models.User;
 import models.enums.CompanySize;
@@ -25,8 +26,12 @@ public class UserTest extends UnitTest {
     public void addRcaCaseTest() {
         User rcaCaseUser = new User("rcaCaseUser@arcatool.fi", "password").save();
 	    assertNotNull(rcaCaseUser);
-	    rcaCaseUser.addRCACase("new unique rca case", RCACaseType.HR, true, "test company", CompanySize.FIFTY, true
-	                          ).save();
+	    try {
+		    rcaCaseUser.addRCACase("new unique rca case", RCACaseType.HR, true, "test company", CompanySize.FIFTY, true
+		                          ).save();
+	    } catch (MandatoryFieldEmptyException e) {
+		    fail("Exception in creating a valid RCA case!");
+	    }
 	    rcaCaseUser.save();
 	    rcaCaseUser.refresh();
 	    assertTrue(rcaCaseUser.caseIDs.size() == 1);

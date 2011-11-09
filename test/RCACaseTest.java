@@ -21,6 +21,7 @@
  */
 
 import controllers.RCACaseController;
+import models.MandatoryFieldEmptyException;
 import models.RCACase;
 import models.User;
 import models.enums.CompanySize;
@@ -32,13 +33,26 @@ import play.test.UnitTest;
  * @author: Mikko Valjus
  */
 public class RCACaseTest extends UnitTest {
+	private User user;
+	private RCACaseType rcaCaseType;
+	private CompanySize size;
+
+	@Before
+        public void setUp() {
+			user = User.find("byEmail", "admin@arcatool.fi").first();
+			rcaCaseType = RCACaseType.valueOf(2);
+			size = CompanySize.valueOf(2);
+        }
+
 	@Test
-    public void createRCACaseTest(){
-		User user = User.find("byEmail", "admin@arcatool.fi").first();
-		RCACaseType rcaCaseType = RCACaseType.valueOf(2);
-		CompanySize size = CompanySize.valueOf(2);
-		RCACase testCase = user.addRCACase("TestRCACase", rcaCaseType, true, "Keijon Kaapeli ja Kaivanto Oy", size,
-		                                   false);
+    public void createRCACaseTest() {
+		RCACase testCase = null;
+		try {
+			testCase = user.addRCACase("TestRCACase", rcaCaseType, true, "Keijon Kaapeli ja Kaivanto Oy", size,
+			                                   false);
+		} catch (MandatoryFieldEmptyException e) {
+			fail("Exception in creating a valid RCA case!");
+		}
 		assertTrue(user.caseIDs.contains(testCase.id));
 		RCACase comparisonCase =  RCACase.find("byID",testCase.id).first();
 		assertEquals(comparisonCase.companyName, "Keijon Kaapeli ja Kaivanto Oy");
@@ -48,5 +62,10 @@ public class RCACaseTest extends UnitTest {
 		assertFalse(testCase.isCasePublic);
 		assertTrue(testCase.isMultinational);
 		assertEquals(comparisonCase.name, "TestRCACase");
+	}
+
+	@Test(expected = MandatoryFieldEmptyException.class)
+	public void createRCACaseWithInsufficientInput() throws MandatoryFieldEmptyException {
+		RCACase testCase = user.addRCACase("", rcaCaseType, true, "", size, false);
 	}
 }

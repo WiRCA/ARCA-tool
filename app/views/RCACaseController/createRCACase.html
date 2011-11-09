@@ -38,6 +38,8 @@ Yrityksen tiedot:
 
     <h1>&{'createRCA.title'}</h1>
 
+    ${errorMessage}
+
     #{form @RCACaseController.create()}
 
     #{if flash.error}

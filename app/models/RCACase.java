@@ -5,10 +5,8 @@ import models.enums.RCACaseType;
 import play.db.jpa.Model;
 
 import javax.persistence.*;
-import java.util.Set;
 import java.util.TreeSet;
 
-import play.libs.*;
 import play.libs.F.*;
 import java.util.List;
 import models.events.*;
@@ -61,7 +59,14 @@ public class RCACase extends Model {
 	 */
 
 	public RCACase(String name, RCACaseType type, boolean isMultinational, String companyName, CompanySize companySize,
-	               boolean isCasePublic, User owner) {
+	               boolean isCasePublic, User owner) throws MandatoryFieldEmptyException {
+		if (name.trim().length() == 0) {
+			throw new MandatoryFieldEmptyException("Name field is empty!");
+		}
+		else if (companyName.trim().length() == 0) {
+			throw new MandatoryFieldEmptyException("Company name field is empty!");
+		}
+
 		this.name = name;
 		this.caseType = type;
 		this.isMultinational = isMultinational;
