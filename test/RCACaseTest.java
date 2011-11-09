@@ -28,7 +28,7 @@ import org.junit.*;
 import play.test.UnitTest;
 
 /**
- * @author: Mikko Valjus
+ * @author Mikko Valjus
  */
 public class RCACaseTest extends UnitTest {
 	private User user;

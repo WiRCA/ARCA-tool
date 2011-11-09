@@ -1,4 +1,4 @@
-/*
+package job;/*
  * Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen, Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
