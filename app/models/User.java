@@ -72,7 +72,7 @@ public class User extends Model {
 	 */
 	public RCACase addRCACase(String name, RCACaseType type, boolean isMultinational, String companyName,
 	                          CompanySize companySize,
-	               boolean isCasePublic) throws MandatoryFieldEmptyException {
+	               boolean isCasePublic) {
 		RCACase rcaCase = new RCACase(name, type, isMultinational, companyName, companySize, isCasePublic, this).save();
 		this.caseIDs.add(rcaCase.id);
         this.save();

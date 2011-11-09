@@ -20,8 +20,6 @@
  * THE SOFTWARE.
  */
 
-import controllers.RCACaseController;
-import models.MandatoryFieldEmptyException;
 import models.RCACase;
 import models.User;
 import models.enums.CompanySize;
@@ -47,12 +45,7 @@ public class RCACaseTest extends UnitTest {
 	@Test
     public void createRCACaseTest() {
 		RCACase testCase = null;
-		try {
-			testCase = user.addRCACase("TestRCACase", rcaCaseType, true, "Keijon Kaapeli ja Kaivanto Oy", size,
-			                                   false);
-		} catch (MandatoryFieldEmptyException e) {
-			fail("Exception in creating a valid RCA case!");
-		}
+		testCase = user.addRCACase("TestRCACase", rcaCaseType, true, "Keijon Kaapeli ja Kaivanto Oy", size, false);
 		assertTrue(user.caseIDs.contains(testCase.id));
 		RCACase comparisonCase =  RCACase.find("byID",testCase.id).first();
 		assertEquals(comparisonCase.companyName, "Keijon Kaapeli ja Kaivanto Oy");
@@ -64,8 +57,4 @@ public class RCACaseTest extends UnitTest {
 		assertEquals(comparisonCase.name, "TestRCACase");
 	}
 
-	@Test(expected = MandatoryFieldEmptyException.class)
-	public void createRCACaseWithInsufficientInput() throws MandatoryFieldEmptyException {
-		RCACase testCase = user.addRCACase("", rcaCaseType, true, "", size, false);
-	}
 }

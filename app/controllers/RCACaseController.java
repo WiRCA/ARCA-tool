@@ -26,7 +26,8 @@ import models.RCACase;
 import models.User;
 import models.enums.CompanySize;
 import models.enums.RCACaseType;
-import models.MandatoryFieldEmptyException;
+import play.data.validation.Min;
+import play.data.validation.Required;
 import play.mvc.Controller;
 import play.mvc.With;
 
@@ -43,26 +44,26 @@ import com.google.gson.reflect.*;
 @With(Secure.class)
 public class RCACaseController extends Controller {
 
-	public static void createRCACase(String errorMessage) {
+	public static void createRCACase() {
 		String username = SecurityController.connected();
 		RCACaseType[] types = RCACaseType.values();
 		CompanySize[] companySizes = CompanySize.values();
-		render(username, types, companySizes, errorMessage);
+		render(username, types, companySizes);
 	}
 
-	public static void create(String name, int type, boolean multinational, String companyName,
-	                          int companySize, boolean isCasePublic) {
+	public static void create(@Required String name, @Required @Min(0) int type, boolean multinational,
+	                          @Required String companyName, @Required @Min(0) int companySize, boolean isCasePublic) {
+	   if(validation.hasErrors()) {
+		   params.flash(); // add http parameters to the flash scope
+		   validation.keep(); // keep the errors for the next request
+		   createRCACase();
+        }
 		String username = SecurityController.connected();
 		User user = User.find("byEmail", username).first();
 		RCACaseType rcaCaseType = RCACaseType.valueOf(type);
 		CompanySize size = CompanySize.valueOf(companySize);
 		RCACase rcaCase = null;
-		try {
-			rcaCase = user.addRCACase(name, rcaCaseType, multinational, companyName, size,
-			                                  isCasePublic).save();
-		} catch (MandatoryFieldEmptyException e) {
-			createRCACase(e.getMessage());
-		}
+		rcaCase = user.addRCACase(name, rcaCaseType, multinational, companyName, size, isCasePublic).save();
 		show(rcaCase.id);
 	}
 
