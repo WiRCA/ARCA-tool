@@ -36,11 +36,11 @@ import models.events.AddCauseEvent;
 public class CauseController extends Controller {
 
 	public static void addCause(String causeId, String name) {
-    Cause cause = Cause.findById(Long.valueOf(causeId));
-    Cause newCause = cause.addCause(name);
+		Cause cause = Cause.findById(Long.valueOf(causeId));
+		Cause newCause = cause.addCause(name);
 
-    AddCauseEvent event = new AddCauseEvent(newCause, causeId);
-    cause.rcaCase.causeEvents.publish(event);
+		AddCauseEvent event = new AddCauseEvent(newCause);
+		cause.rcaCase.publish(event);
 	}
 
 	public static void addRelation(Long fromId, Long toID) {

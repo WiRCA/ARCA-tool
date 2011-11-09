@@ -34,6 +34,14 @@
 <p>&{'showRCACase.owner'}: ${rcaCase.owner.name}</p>
 
 #{a @UserController.index() } &{'showRCACase.back'} #{/a}-->
+#{set 'moreStyles'}
+    <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/base.css'}">
+    <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/ForceDirected.css'}">
+#{/set}
+#{set 'moreScripts'}
+    <script src="@{'/public/javascripts/smalljit.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+#{/set}
+
 
 <div id="container">
   <div id="center-container">
@@ -42,14 +50,14 @@
 </div>
 
 <div id="log"></div>
-  
+
 
 
 <script type="text/javascript">
     $(document).ready(function() {
       init();
     });
-    
+
     var labelType, useGradients, nativeTextSupport, animate;
 
     (function() {
@@ -83,8 +91,8 @@
       var json = [
           {
             "data": {"$color": "#83548B","$type": "circle","$dim":10},
-            "id": "0",
-            "name": "graphnode"
+            "id": ${rcaCase.problem.id},
+            "name": '${rcaCase.problem.name}'
           }];
       //Running number for creating nodes
       var runningNumber = 0;
@@ -230,7 +238,7 @@
           });
       }
       getNodes();
-      
+
 
       // load JSON data.
       fd.loadJSON(json);
