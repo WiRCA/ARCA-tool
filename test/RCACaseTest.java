@@ -20,7 +20,6 @@
  * THE SOFTWARE.
  */
 
-import controllers.RCACaseController;
 import models.MandatoryFieldEmptyException;
 import models.RCACase;
 import models.User;
@@ -30,7 +29,7 @@ import org.junit.*;
 import play.test.UnitTest;
 
 /**
- * @author: Mikko Valjus
+ * @author Mikko Valjus
  */
 public class RCACaseTest extends UnitTest {
 	private User user;
@@ -66,6 +65,6 @@ public class RCACaseTest extends UnitTest {
 
 	@Test(expected = MandatoryFieldEmptyException.class)
 	public void createRCACaseWithInsufficientInput() throws MandatoryFieldEmptyException {
-		RCACase testCase = user.addRCACase("", rcaCaseType, true, "", size, false);
+		user.addRCACase("", rcaCaseType, true, "", size, false);
 	}
 }
