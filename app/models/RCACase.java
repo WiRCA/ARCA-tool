@@ -55,8 +55,8 @@ public class RCACase extends Model {
 	 * @param isCasePublic
 	 */
 
-	public RCACase(String name, RCACaseType type, boolean isMultinational, String companyName,
-	               CompanySize companySize, boolean isCasePublic, User owner) {
+	public RCACase(String name, RCACaseType type, boolean isMultinational, String companyName, CompanySize companySize,
+	               boolean isCasePublic, User owner) throws MandatoryFieldEmptyException {
 		this.name = name;
 		this.caseType = type;
 		this.isMultinational = isMultinational;

@@ -7,7 +7,6 @@ import utils.EncodingUtils;
 
 import javax.persistence.*;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -73,7 +72,7 @@ public class User extends Model {
 	 */
 	public RCACase addRCACase(String name, RCACaseType type, boolean isMultinational, String companyName,
 	                          CompanySize companySize,
-	               boolean isCasePublic){
+	               boolean isCasePublic) throws MandatoryFieldEmptyException {
 		RCACase rcaCase = new RCACase(name, type, isMultinational, companyName, companySize, isCasePublic, this).save();
 		this.caseIDs.add(rcaCase.id);
         this.save();
