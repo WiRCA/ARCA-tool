@@ -30,7 +30,7 @@ public class RCACase extends Model {
 	public TreeSet<Cause> causes;
 	
   @Transient
-	final ArchivedEventStream<Event> causeEvents = new ArchivedEventStream<Event>(100);
+	public final ArchivedEventStream<Event> causeEvents = new ArchivedEventStream<Event>(100);
 	
 	public Promise<List<IndexedEvent<Event>>> nextMessages(long lastReceived) {
       return causeEvents.nextEvents(lastReceived);
