@@ -29,6 +29,7 @@ public class User extends Model {
 	/*@JoinTable(name="usercases", joinColumns = {@JoinColumn(name="user_id", nullable = false)},
 	           inverseJoinColumns = {@JoinColumn(name="case_id", nullable = false)})*/
 	@JoinTable(name="usercases", joinColumns = {@JoinColumn(name="user_id", nullable = false)})
+	@Column(name = "case_id")
 	public Set<Long> caseIDs;
 
 	/**
@@ -70,9 +71,8 @@ public class User extends Model {
 	 * @param isCasePublic
 	 * @return
 	 */
-	public RCACase addRCACase(String name, RCACaseType type, boolean isMultinational, String companyName,
-	                          CompanySize companySize,
-	               boolean isCasePublic) {
+	public RCACase addRCACase(String name, int type, boolean isMultinational, String companyName,
+	                          int companySize, boolean isCasePublic) {
 		RCACase rcaCase = new RCACase(name, type, isMultinational, companyName, companySize, isCasePublic, this).save();
 		this.caseIDs.add(rcaCase.id);
         this.save();

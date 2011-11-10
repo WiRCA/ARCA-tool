@@ -60,18 +60,16 @@ public class RCACaseController extends Controller {
 		}
 		String username = SecurityController.connected();
 		User user = User.find("byEmail", username).first();
-		RCACaseType rcaCaseType = RCACaseType.valueOf(type);
-		CompanySize size = CompanySize.valueOf(companySize);
 		RCACase rcaCase = null;
-		rcaCase = user.addRCACase(name, rcaCaseType, multinational, companyName, size, isCasePublic).save();
+		rcaCase = user.addRCACase(name, type, multinational, companyName, companySize, isCasePublic).save();
 		show(rcaCase.id);
 	}
 
 
 	public static void show(Long id) {
 		RCACase rcaCase = RCACase.findById(id);
-		String size = rcaCase.companySize.text;
-		String type = rcaCase.caseType.text;
+		String size = rcaCase.getCompanySize().text;
+		String type = rcaCase.getRCACaseType().text;
 		if (rcaCase != null) {
 			render(rcaCase, type, size);
 		} else {

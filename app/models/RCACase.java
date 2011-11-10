@@ -29,13 +29,19 @@ public class RCACase extends Model {
 	public String name;
 	//TODO needed? public Set<Cause> causes;
 
-	@Enumerated(EnumType.ORDINAL)
-	public RCACaseType caseType;
+	@Column(name = "case_type_value")
+	public int caseTypeValue;
+
+	@Column(name = "company_size_value")
+	public int companySizeValue;
+
+	@Column(name = "is_multinational")
 	public boolean isMultinational;
+
+	@Column(name = "company_name")
 	public String companyName;
 
-	@Enumerated(EnumType.ORDINAL)
-	public CompanySize companySize;
+	@Column(name = "is_case_public")
 	public boolean isCasePublic;
 
 	@Column(name = "owner_id")
@@ -51,17 +57,17 @@ public class RCACase extends Model {
 	 * @param type
 	 * @param isMultinational
 	 * @param companyName
-	 * @param companySize
+	 * @param companySizeValue
 	 * @param isCasePublic
 	 */
 
-	public RCACase(String name, RCACaseType type, boolean isMultinational, String companyName,
-	               CompanySize companySize, boolean isCasePublic, User owner) {
+	public RCACase(String name, int type, boolean isMultinational, String companyName,
+	               int companySizeValue, boolean isCasePublic, User owner) {
 		this.name = name;
-		this.caseType = type;
+		this.caseTypeValue = type;
 		this.isMultinational = isMultinational;
 		this.companyName = companyName;
-		this.companySize = companySize;
+		this.companySizeValue = companySizeValue;
 		this.isCasePublic = isCasePublic;
 		this.ownerID = owner.id;
 		//TODO needed? this.causes = new TreeSet<Cause>();
@@ -79,6 +85,22 @@ public class RCACase extends Model {
 	public Promise<List<IndexedEvent<Event>>> nextMessages(long lastReceived) {
 		CauseStream stream = Cache.get("stream", CauseStream.class);
 		return stream.getStream().nextEvents(lastReceived);
+	}
+
+	public CompanySize getCompanySize() {
+		return CompanySize.valueOf(companySizeValue);
+	}
+
+	public void setCompanySize(CompanySize companySize) {
+		this.companySizeValue = companySize.value;
+	}
+
+	public RCACaseType getRCACaseType() {
+		return RCACaseType.valueOf(caseTypeValue);
+	}
+
+	public void setRCACaseType(RCACaseType rcaCaseType) {
+		this.caseTypeValue = rcaCaseType.value;
 	}
 
 }

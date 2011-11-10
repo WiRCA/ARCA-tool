@@ -45,12 +45,13 @@ public class RCACaseTest extends UnitTest {
 	@Test
     public void createRCACaseTest() {
 		RCACase testCase = null;
-		testCase = user.addRCACase("TestRCACase", rcaCaseType, true, "Keijon Kaapeli ja Kaivanto Oy", size, false);
+		testCase = user.addRCACase("TestRCACase", rcaCaseType.value, true, "Keijon Kaapeli ja Kaivanto Oy", size.value,
+		                           false);
 		assertTrue(user.caseIDs.contains(testCase.id));
 		RCACase comparisonCase =  RCACase.find("byID",testCase.id).first();
 		assertEquals(comparisonCase.companyName, "Keijon Kaapeli ja Kaivanto Oy");
-		assertEquals(testCase.caseType, RCACaseType.valueOf(2));
-		assertNotSame(testCase.companySize, CompanySize.valueOf(3));
+		assertEquals(testCase.getRCACaseType(), RCACaseType.valueOf(2));
+		assertNotSame(testCase.getCompanySize(), CompanySize.valueOf(3));
 		assertEquals(testCase.ownerID, user.id);
 		assertFalse(testCase.isCasePublic);
 		assertTrue(testCase.isMultinational);
