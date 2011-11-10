@@ -27,12 +27,13 @@ public class Cause extends Model {
 	public Long creatorID;
 
 	@ManyToMany
-	@JoinTable(name = "causesof", joinColumns = {@JoinColumn(name = "id_effect", nullable = false)},
-	           inverseJoinColumns = {@JoinColumn(name = "id_cause", nullable = false)})
+	@JoinTable(name = "causesof", joinColumns = {@JoinColumn(name = "effect_id", nullable = false)},
+	           inverseJoinColumns = {@JoinColumn(name = "cause_id", nullable = false)})
 	public Set<Cause> causes;
 
 	@ElementCollection
-	@JoinTable(name = "corrections", joinColumns = {@JoinColumn(name = "id_cause", nullable = false)})
+	@JoinTable(name = "corrections", joinColumns = {@JoinColumn(name = "cause_id", nullable = false)})
+	@Column(name = "correction")
 	public List<String> corrections;
 
 	/**
