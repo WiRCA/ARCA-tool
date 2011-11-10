@@ -1,5 +1,12 @@
 #{extends 'main.html' /}
 #{set title:'showRCACase.title' /}
+#{set 'moreStyles'}
+    <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/base.css'}">
+    <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/ForceDirected.css'}">
+#{/set}
+#{set 'moreScripts'}
+    <script src="@{'/public/javascripts/smalljit.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+#{/set}
 
 <!--
   ~ Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen, Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus
@@ -81,8 +88,8 @@
       var json = [
           {
             "data": {"$color": "#83548B","$type": "circle","$dim":10},
-            "id": "1",
-            "name": "graphnode"
+            "id": ${rcaCase.problem.id},
+            "name": "${rcaCase.problem.name}"
           }];
       //Running number for creating nodes
       var runningNumber = 0;
@@ -160,9 +167,11 @@
           //Add also a click handler to nodes
           onClick: function(node){
             if(!node) return;
-            var message = node.name+"_"+runningNumber;
+            var name = prompt('Node name?');
             runningNumber = runningNumber + 1;
-            $.post(addCause({causeId: node.id, name: message}));
+            if (name != null && name != "") {
+                $.post(addCause({causeId: node.id, name: name}));
+            }
           }
         },
         //Number of iterations for the FD algorithm
@@ -197,11 +206,11 @@
                         if(this.data.text){
                           var newNode = {
                             "id": this.data.causeTo,
-                            "name": this.data.causeTo
+                            "name": this.data.text
                           };
                           var node = {
                             "id": this.data.causeFrom,
-                            "name": this.data.causeFrom
+                            "name": this.data.text
                           };
                           fd.graph.addAdjacence(node,newNode);
                           fd.computeIncremental({
