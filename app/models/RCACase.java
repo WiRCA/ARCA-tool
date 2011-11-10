@@ -6,17 +6,17 @@ import models.events.Event;
 
 import play.cache.Cache;
 import play.db.jpa.Model;
-import play.libs.F;
 import play.libs.F.IndexedEvent;
 import play.libs.F.Promise;
 
 import javax.persistence.*;
 import java.util.List;
 
+import models.events.*;
+
 /**
  * @author Eero Laukkanen
  */
-
 
 /**
  * TODO   ENUMS
@@ -55,8 +55,8 @@ public class RCACase extends Model {
 	 * @param isCasePublic
 	 */
 
-	public RCACase(String name, RCACaseType type, boolean isMultinational, String companyName, CompanySize companySize,
-	               boolean isCasePublic, User owner) {
+	public RCACase(String name, RCACaseType type, boolean isMultinational, String companyName,
+	               CompanySize companySize, boolean isCasePublic, User owner) {
 		this.name = name;
 		this.caseType = type;
 		this.isMultinational = isMultinational;
@@ -67,6 +67,9 @@ public class RCACase extends Model {
 		//TODO needed? this.causes = new TreeSet<Cause>();
 		// Creating the new 'initial problem' for the RCACase with the case name.
 		this.problem = new Cause(name, owner).save();
+
+		CauseStream causeEvents = new CauseStream(100);
+		Cache.set("stream", causeEvents, "30mn");
 	}
 
 	public User getOwner() {
@@ -74,27 +77,8 @@ public class RCACase extends Model {
 	}
 
 	public Promise<List<IndexedEvent<Event>>> nextMessages(long lastReceived) {
-		return getCauseEvents().nextEvents(lastReceived);
+		CauseStream stream = Cache.get("stream", CauseStream.class);
+		return stream.getStream().nextEvents(lastReceived);
 	}
 
-	public F.ArchivedEventStream<Event> getCauseEvents() {
-		List<Event> events = Cache.get("causeEventsFor" + id, List.class);
-		F.ArchivedEventStream<Event> causeEvents = new F.ArchivedEventStream<Event>(100);
-		if (events != null && !events.isEmpty()) {
-			for (Event event : events) {
-				causeEvents.publish(event);
-			}
-		}
-		return causeEvents;
-	}
-
-	public void saveCauseEvents(List<Event> events) {
-		Cache.set("causeEventsFor" + id, events);
-	}
-
-	public void publish(Event event) {
-		F.ArchivedEventStream<Event> causeEvents = getCauseEvents();
-		causeEvents.publish(event);
-		saveCauseEvents(causeEvents.archive());
-	}
 }

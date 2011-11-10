@@ -21,36 +21,26 @@
  * THE SOFTWARE.
  */
 
-package controllers;
+package models.events;
 
-import play.mvc.Controller;
-import play.mvc.With;
-import models.Cause;
-import models.events.*;
-import models.events.AddCauseEvent;
-import play.cache.Cache;
+import play.libs.F.*;
 
-/**
- * @author Eero Laukkanen
- */
+import java.io.Serializable;
 
-@With(Secure.class)
-public class CauseController extends Controller {
 
-	public static void addCause(String causeId, String name) {
-		Cause cause = Cause.findById(Long.valueOf(causeId));
-		Cause newCause = cause.addCause(name).save();
+public class CauseStream implements Serializable {
 
-		AddCauseEvent event = new AddCauseEvent(newCause, causeId);
-		CauseStream causeEvents = Cache.get("stream", CauseStream.class);
-		causeEvents.getStream().publish(event);
+	public final ArchivedEventStream<Event> eventStream;
+
+	public CauseStream(long size) {
+		this.eventStream = new ArchivedEventStream<Event>(100);
 	}
 
-	public static void addRelation(Long fromId, Long toID) {
-
+	public ArchivedEventStream<Event> getStream() {
+		return eventStream;
 	}
 
-	public static void deleteCause(Long id) {
-
-	}
 }
+
+
+

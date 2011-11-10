@@ -1,5 +1,6 @@
 /*
- * Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen, Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus
+ * Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen, Joona Koistinen,
+ * Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,6 +23,7 @@
 
 package controllers;
 
+import com.google.gson.reflect.TypeToken;
 import models.RCACase;
 import models.User;
 import models.enums.CompanySize;
@@ -35,8 +37,6 @@ import java.util.*;
 
 import play.libs.F.*;
 import models.events.*;
-import play.Logger;
-import com.google.gson.reflect.*;
 
 /**
  * @author Mikko Valjus
@@ -53,11 +53,11 @@ public class RCACaseController extends Controller {
 
 	public static void create(@Required String name, @Required @Min(0) int type, boolean multinational,
 	                          @Required String companyName, @Required @Min(0) int companySize, boolean isCasePublic) {
-	   if(validation.hasErrors()) {
-		   params.flash(); // add http parameters to the flash scope
-		   validation.keep(); // keep the errors for the next request
-		   createRCACase();
-        }
+		if (validation.hasErrors()) {
+			params.flash(); // add http parameters to the flash scope
+			validation.keep(); // keep the errors for the next request
+			createRCACase();
+		}
 		String username = SecurityController.connected();
 		User user = User.find("byEmail", username).first();
 		RCACaseType rcaCaseType = RCACaseType.valueOf(type);
@@ -85,8 +85,6 @@ public class RCACaseController extends Controller {
 
 	public static void waitMessages(Long id, Long lastReceived) {
 		RCACase rcaCase = RCACase.findById(id);
-		Logger.info("RCACase id: " + rcaCase.id);
-		Logger.info("lastReceived: " + lastReceived);
 		List messages = await(rcaCase.nextMessages(lastReceived));
 		renderJSON(messages, new TypeToken<List<IndexedEvent<Event>>>() {
 		}.getType());
