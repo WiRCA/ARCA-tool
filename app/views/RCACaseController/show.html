@@ -95,7 +95,7 @@
       var runningNumber = 0;
       var lastReceived = 0
       var waitMessages = #{jsAction @waitMessages(rcaCase.id,':lastReceived') /}
-      var addCause = #{jsAction @CauseController.addCause(':causeId', ':name') /}
+      var addCause = #{jsAction @CauseController.addCause(':caseId', ':causeId', ':name') /}
       // end
       // init ForceDirected
       var fd = new $jit.ForceDirected({
@@ -170,7 +170,7 @@
             var name = prompt('Node name?');
             runningNumber = runningNumber + 1;
             if (name != null && name != "") {
-                $.post(addCause({causeId: node.id, name: name}));
+                $.post(addCause({caseId: ${rcaCase.id}, causeId: node.id, name: name}));
             }
           }
         },

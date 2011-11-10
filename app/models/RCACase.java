@@ -26,6 +26,8 @@ import models.events.*;
 
 public class RCACase extends Model {
 
+	private static final String CAUSE_STREAM_NAME_IN_CACHE = "causeStream";
+
 	public String name;
 	//TODO needed? public Set<Cause> causes;
 
@@ -73,9 +75,6 @@ public class RCACase extends Model {
 		//TODO needed? this.causes = new TreeSet<Cause>();
 		// Creating the new 'initial problem' for the RCACase with the case name.
 		this.problem = new Cause(name, owner).save();
-
-		CauseStream causeEvents = new CauseStream(100);
-		Cache.set("stream", causeEvents, "30mn");
 	}
 
 	public User getOwner() {
@@ -83,7 +82,7 @@ public class RCACase extends Model {
 	}
 
 	public Promise<List<IndexedEvent<Event>>> nextMessages(long lastReceived) {
-		CauseStream stream = Cache.get("stream", CauseStream.class);
+		CauseStream stream = this.getCauseStream();
 		return stream.getStream().nextEvents(lastReceived);
 	}
 
@@ -101,6 +100,20 @@ public class RCACase extends Model {
 
 	public void setRCACaseType(RCACaseType rcaCaseType) {
 		this.caseTypeValue = rcaCaseType.value;
+	}
+
+	public CauseStream setCauseSteam() {
+		CauseStream causeEvents = new CauseStream(100);
+		Cache.set(CAUSE_STREAM_NAME_IN_CACHE + this.id, causeEvents, "30mn");
+		return causeEvents;
+	}
+
+	public CauseStream getCauseStream() {
+		CauseStream stream = Cache.get(CAUSE_STREAM_NAME_IN_CACHE + this.id, CauseStream.class);
+		if (stream == null) {
+			stream = setCauseSteam();
+		}
+		return stream;
 	}
 
 }
