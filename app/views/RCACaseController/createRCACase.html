@@ -54,41 +54,48 @@ Yrityksen tiedot:
     <p id="casename-field">
         <label for="casename">&{'createRCA.caseName'}</label>
         <input type="text" name="name" id="casename" value="${flash.name}"/>
+        <span class="error">#{error 'name' /}</span>
     </p>
 
     <p id="RCACaseType">
-    <label for="RCACaseType">&{'createRCA.rcaCaseType'}</label>
-    #{select 'type', value:1, id:'type'}
-    #{list types, as:'type'}
-        #{option type.value}${type.text}#{/option}
-    #{/list}
-    #{/select}
+        <label for="RCACaseType">&{'createRCA.rcaCaseType'}</label>
+        #{select 'type', value:"${flash.type}", id:'type'}
+        <option value="-1">SELECT</option>
+        #{list types, as:'type'}
+            #{option type.value}${type.text}#{/option}
+        #{/list}
+        #{/select}
+        <span class="error">#{error 'type' /}</span>
     </p>
 
     <p id="company-field">
         <label for="companyName">&{'createRCA.company'}</label>
         <input type="text" name="companyName" id="companyName" value="${flash.companyName}"/>
+        <span class="error">#{error 'companyName' /}</span>
     </p>
 
-    <p id="sizeDropdown">
-    <label for="sizeDropdown">&{'createRCA.companySize'}</label>
-    #{select 'companySize', value:1, id:'companySize'}
+    <p id="sizeDropDown">
+    <label for="sizeDropDown">&{'createRCA.companySize'}</label>
+    #{select 'companySize', value:"${flash.companySize}", id:'companySize'}
+    <option value="-1">SELECT</option>
      #{list companySizes, as:'size'}
         #{option size.value}${size.text}#{/option}
     #{/list}
     #{/select}
+    <span class="error">#{error 'companySize' /}</span>
     </p>
 
     <p id="multinational-field">
         <input type="checkbox" name="multinational" id="multinational" value="true" ${flash.multinational ?
-        'checked="true"'
-         : ''}/>
+        'checked="true"' : ''}/>
+        <span class="error">#{error 'multinational' /}</span>
         <label for="multinational">&{'createRCA.multinational'}</label>
     </p>
 
     <p id="public-field">
         <input type="checkbox" name="isCasePublic" id="isCasePublic" value="true" ${flash.isCasePublic ? 'checked="true"' :
         ''} />
+        <span class="error">#{error 'isCasePublic' /}</span>
         <label for="isCasePublic">&{'createRCA.public'}</label>
     </p>
 

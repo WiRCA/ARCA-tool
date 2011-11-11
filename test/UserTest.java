@@ -25,8 +25,8 @@ public class UserTest extends UnitTest {
     public void addRcaCaseTest() {
         User rcaCaseUser = new User("rcaCaseUser@arcatool.fi", "password").save();
 	    assertNotNull(rcaCaseUser);
-	    rcaCaseUser.addRCACase("new unique rca case", RCACaseType.HR, true, "test company", CompanySize.FIFTY, true
-	                          ).save();
+		rcaCaseUser.addRCACase("new unique rca case", RCACaseType.HR.value, true, "test company",
+		                       CompanySize.FIFTY.value, true).save();
 	    rcaCaseUser.save();
 	    rcaCaseUser.refresh();
 	    assertTrue(rcaCaseUser.caseIDs.size() == 1);

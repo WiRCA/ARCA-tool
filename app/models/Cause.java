@@ -9,12 +9,13 @@ import java.util.Set;
 import java.util.TreeSet;
 
 /**
- * TODO
+ * Cause in RCA case tree.
+ *
  * @author Eero Laukkanen
  */
 
-@PersistenceUnit(name="maindb")
-@Entity(name="cause")
+@PersistenceUnit(name = "maindb")
+@Entity(name = "cause")
 public class Cause extends Model {
 
 	public String name;
@@ -22,30 +23,35 @@ public class Cause extends Model {
 	@OneToOne(mappedBy = "problem")
 	public RCACase rcaCase;
 
-	public Long creator_id;
+	@Column(name = "creator_id")
+	public Long creatorID;
 
 	@ManyToMany
-	@JoinTable(name="causesof", joinColumns = {@JoinColumn(name = "id_effect", nullable = false)},
-	inverseJoinColumns = {@JoinColumn(name="id_cause", nullable = false)})
+	@JoinTable(name = "causesof", joinColumns = {@JoinColumn(name = "effect_id", nullable = false)},
+	           inverseJoinColumns = {@JoinColumn(name = "cause_id", nullable = false)})
 	public Set<Cause> causes;
 
 	@ElementCollection
-	@JoinTable(name="corrections", joinColumns = {@JoinColumn(name="id_cause", nullable = false)})
+	@JoinTable(name = "corrections", joinColumns = {@JoinColumn(name = "cause_id", nullable = false)})
+	@Column(name = "correction")
 	public List<String> corrections;
 
 	/**
-	 * Creates a new cause with name.
+	 * Creates a new cause with name and creator.
+	 *
 	 * @param name name for the created cause.
+	 * @param creator creator of the cause
 	 */
 	public Cause(String name, User creator) {
 		this.name = name;
-		this.creator_id = creator.id;
+		this.creatorID = creator.id;
 		causes = new TreeSet<Cause>();
 		corrections = new ArrayList<String>();
 	}
 
 	/**
 	 * Adds a corrective action for a cause.
+	 *
 	 * @param name name of the corrective action.
 	 *
 	 * @return returns the Cause object.
@@ -57,25 +63,38 @@ public class Cause extends Model {
 
 	/**
 	 * Adds a cause for a cause.
+	 *
 	 * @param name name to be used for the cause.
 	 *
-	 * @return itself.
+	 * @return cause the cause created when added.
 	 */
 	public Cause addCause(String name) {
-		return this;
+		Cause newCause = new Cause(name, this.getCreator()).save();
+		this.causes.add(newCause);
+		return newCause;
 	}
 
 	/**
 	 * Adds a cause for a cause. If another already cause exists, it should be added with this method.
-	 * @param cause cause of this cause.
-	 * @return itself.
+	 *
+	 * @param cause cause to add.
+	 *
+	 * @return on success returns the added cause, otherwise returns null
 	 */
 	public Cause addCause(Cause cause) {
-		//TODO
-		return this;
+		if (!this.causes.contains(cause)) {
+			this.causes.add(cause);
+			return cause;
+		} else {
+			return null;
+		}
 	}
 
+	/**
+	 * get the creator of the cause
+	 * @return the creator of the cause
+	 */
 	public User getCreator() {
-		return User.findById(creator_id);
+		return User.findById(creatorID);
 	}
 }

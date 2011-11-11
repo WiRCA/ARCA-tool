@@ -14,7 +14,8 @@ GET     /CreateRCACase                          RCACaseController.createRCACase
 POST    /CreateRCACase                          RCACaseController.create
 
 # Show RCA case
-GET     /{id}                                   RCACaseController.show
+GET     /case/{id}                              RCACaseController.show
+GET     /case/{rcaCaseId}/update/{lastReceived}        RCACaseController.waitMessages
 
 # Ignore favicon requests
 GET     /favicon.ico                            404

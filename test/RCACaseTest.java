@@ -20,7 +20,6 @@
  * THE SOFTWARE.
  */
 
-import controllers.RCACaseController;
 import models.RCACase;
 import models.User;
 import models.enums.CompanySize;
@@ -29,24 +28,34 @@ import org.junit.*;
 import play.test.UnitTest;
 
 /**
- * @author: Mikko Valjus
+ * @author Mikko Valjus
  */
 public class RCACaseTest extends UnitTest {
+	private User user;
+	private RCACaseType rcaCaseType;
+	private CompanySize size;
+
+	@Before
+        public void setUp() {
+			user = User.find("byEmail", "admin@arcatool.fi").first();
+			rcaCaseType = RCACaseType.valueOf(2);
+			size = CompanySize.valueOf(2);
+        }
+
 	@Test
-    public void createRCACaseTest(){
-		User user = User.find("byEmail", "admin@arcatool.fi").first();
-		RCACaseType rcaCaseType = RCACaseType.valueOf(2);
-		CompanySize size = CompanySize.valueOf(2);
-		RCACase testCase = user.addRCACase("TestRCACase", rcaCaseType, true, "Keijon Kaapeli ja Kaivanto Oy", size,
-		                                   false);
+    public void createRCACaseTest() {
+		RCACase testCase = null;
+		testCase = user.addRCACase("TestRCACase", rcaCaseType.value, true, "Keijon Kaapeli ja Kaivanto Oy", size.value,
+		                           false);
 		assertTrue(user.caseIDs.contains(testCase.id));
 		RCACase comparisonCase =  RCACase.find("byID",testCase.id).first();
 		assertEquals(comparisonCase.companyName, "Keijon Kaapeli ja Kaivanto Oy");
-		assertEquals(testCase.caseType, RCACaseType.valueOf(2));
-		assertNotSame(testCase.companySize, CompanySize.valueOf(3));
-		assertEquals(testCase.owner_id, user.id);
+		assertEquals(testCase.getRCACaseType(), RCACaseType.valueOf(2));
+		assertNotSame(testCase.getCompanySize(), CompanySize.valueOf(3));
+		assertEquals(testCase.ownerID, user.id);
 		assertFalse(testCase.isCasePublic);
 		assertTrue(testCase.isMultinational);
 		assertEquals(comparisonCase.name, "TestRCACase");
 	}
+
 }

@@ -1,5 +1,6 @@
 /*
- * Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen, Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus
+ * Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen, Joona Koistinen,
+ * Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,12 +23,20 @@
 
 package controllers;
 
+import com.google.gson.reflect.TypeToken;
 import models.RCACase;
 import models.User;
 import models.enums.CompanySize;
 import models.enums.RCACaseType;
+import play.data.validation.Min;
+import play.data.validation.Required;
 import play.mvc.Controller;
 import play.mvc.With;
+
+import java.util.*;
+
+import play.libs.F.*;
+import models.events.*;
 
 /**
  * @author Mikko Valjus
@@ -42,31 +51,42 @@ public class RCACaseController extends Controller {
 		render(username, types, companySizes);
 	}
 
-	public static void create(String name, int type, boolean multinational, String companyName,
-	                          int companySize, boolean isCasePublic) {
+	public static void create(@Required String name, @Required @Min(0) int type, boolean multinational,
+	                          @Required String companyName, @Required @Min(0) int companySize, boolean isCasePublic) {
+		if (validation.hasErrors()) {
+			params.flash(); // add http parameters to the flash scope
+			validation.keep(); // keep the errors for the next request
+			createRCACase();
+		}
 		String username = SecurityController.connected();
 		User user = User.find("byEmail", username).first();
-		RCACaseType rcaCaseType = RCACaseType.valueOf(type);
-		CompanySize size = CompanySize.valueOf(companySize);
-		RCACase rcaCase = user.addRCACase(name, rcaCaseType, multinational, companyName, size,
-		                                  isCasePublic).save();
+		RCACase rcaCase = null;
+		rcaCase = user.addRCACase(name, type, multinational, companyName, companySize, isCasePublic).save();
 		show(rcaCase.id);
 	}
 
 
 	public static void show(Long id) {
-        RCACase rcaCase = RCACase.findById(id);
-		String size = rcaCase.companySize.text;
-		String type = rcaCase.caseType.text;
-        if (rcaCase != null) {
-            render(rcaCase, type, size);
-        } else {
-            renderText("Unknown case id.");
-        }
+		RCACase rcaCase = RCACase.findById(id);
+		String size = rcaCase.getCompanySize().text;
+		String type = rcaCase.getRCACaseType().text;
+		if (rcaCase != null) {
+			render(rcaCase, type, size);
+		} else {
+			renderText("Unknown case id.");
+		}
 	}
 
 	public static void getStream(Long id, Long timestamp) {
 
 	}
+
+	public static void waitMessages(Long id, Long lastReceived) {
+		RCACase rcaCase = RCACase.findById(id);
+		List messages = await(rcaCase.nextMessages(lastReceived));
+		renderJSON(messages, new TypeToken<List<IndexedEvent<Event>>>() {
+		}.getType());
+	}
+
 
 }
