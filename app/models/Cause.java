@@ -77,6 +77,17 @@ public class Cause extends Model {
 		this.causes.add(newCause);
 		return newCause;
 	}
+	
+	/**
+	 * Delete a cause from a cause.
+	 *
+	 * @param id id of the cause to be deleted.
+	 *
+	 * @return true or false if the delete worked.
+	 */
+	public void deleteCause() {
+    this.delete();
+	}
 
 	/**
 	 * Adds a cause for a cause. If another already cause exists, it should be added with this method.

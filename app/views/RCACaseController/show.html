@@ -81,6 +81,16 @@
         this.elem.style.left = (500 - this.elem.offsetWidth / 2) + 'px';
       }
     };
+    
+    var shiftDown = false;
+    var shiftDownHandler = function(e){
+      var evtObj = window.event? event:e;
+      if(evtObj.shiftKey){
+        shiftDown=true;
+      }else
+        shiftDown = false;
+    }
+    document.onkeydown = shiftDownHandler;
 
 
     function init(){
@@ -96,6 +106,7 @@
       var lastReceived = 0
       var waitMessages = #{jsAction @waitMessages(rcaCase.id,':lastReceived') /}
       var addCause = #{jsAction @CauseController.addCause(':caseId', ':causeId', ':name') /}
+      var deleteCause = #{jsAction @CauseController.deleteCause(':caseId', ':causeId') /}
       // end
       // init ForceDirected
       var fd = new $jit.ForceDirected({
@@ -167,6 +178,11 @@
           //Add also a click handler to nodes
           onClick: function(node){
             if(!node) return;
+            // DELETE A NODE
+            if (shiftDown) {
+              $.post(deleteCause({caseId: ${rcaCase.id}, causeId: node.id}));
+              return;  
+            }
             var name = prompt('Node name?');
             runningNumber = runningNumber + 1;
             if (name != null && name != "") {
@@ -198,12 +214,16 @@
           style.display = '';
         }
       });
-      var getNodes = function(){
+      var getNodes = function() {
           $.ajax({
                 url: waitMessages({lastReceived: lastReceived}),
                 success: function(events) {
                     $(events).each(function() {
-                        if(this.data.text){
+                        if (this.data.type === 'deletecauseevent') {
+                          fd.graph.removeNode(this.data.causeFrom);
+                          fd.plot();
+                        }
+                        else if(this.data.type === 'addcauseevent') {
                           var newNode = {
                             "id": this.data.causeTo,
                             "name": this.data.text

@@ -29,6 +29,7 @@ import play.mvc.With;
 import models.Cause;
 import models.events.*;
 import models.events.AddCauseEvent;
+import models.events.DeleteCauseEvent;
 import play.cache.Cache;
 
 /**
@@ -52,7 +53,14 @@ public class CauseController extends Controller {
 
 	}
 
-	public static void deleteCause(Long id) {
-
+	public static void deleteCause(Long rcaCaseId, String causeId) {
+	  RCACase rcaCase = RCACase.findById(rcaCaseId);
+    Cause cause = Cause.findById(Long.valueOf(causeId));
+    
+    DeleteCauseEvent deleteEvent = new DeleteCauseEvent(cause, causeId);
+    CauseStream causeEvents = rcaCase.getCauseStream();
+		causeEvents.getStream().publish(deleteEvent);
+    
+    cause.deleteCause();
 	}
 }
