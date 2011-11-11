@@ -9,7 +9,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 /**
- * TODO
+ * Cause in RCA case tree.
  *
  * @author Eero Laukkanen
  */
@@ -37,9 +37,10 @@ public class Cause extends Model {
 	public List<String> corrections;
 
 	/**
-	 * Creates a new cause with name.
+	 * Creates a new cause with name and creator.
 	 *
 	 * @param name name for the created cause.
+	 * @param creator creator of the cause
 	 */
 	public Cause(String name, User creator) {
 		this.name = name;
@@ -76,15 +77,23 @@ public class Cause extends Model {
 	/**
 	 * Adds a cause for a cause. If another already cause exists, it should be added with this method.
 	 *
-	 * @param cause cause of this cause.
+	 * @param cause cause to add.
 	 *
-	 * @return itself.
+	 * @return on success returns the added cause, otherwise returns null
 	 */
 	public Cause addCause(Cause cause) {
-		//TODO
-		return this;
+		if (!this.causes.contains(cause)) {
+			this.causes.add(cause);
+			return cause;
+		} else {
+			return null;
+		}
 	}
 
+	/**
+	 * get the creator of the cause
+	 * @return the creator of the cause
+	 */
 	public User getCreator() {
 		return User.findById(creatorID);
 	}
