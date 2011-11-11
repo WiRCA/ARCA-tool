@@ -42,6 +42,9 @@ public class Cause extends Model {
 	 *
 	 * @param name name for the created cause.
 	 * @param creator creator of the cause
+	 *
+	 * causes The set of causes that explain the cause.
+	 * corrections List of corrections of the cause.
 	 */
 	public Cause(String name, User creator) {
 		this.name = name;
@@ -92,7 +95,7 @@ public class Cause extends Model {
 	}
 
 	/**
-	 * get the creator of the cause
+	 * Gets the creator of the cause.
 	 * @return the creator of the cause
 	 */
 	public User getCreator() {

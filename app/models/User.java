@@ -33,9 +33,10 @@ public class User extends Model {
 	public Set<Long> caseIDs;
 
 	/**
-	 * TODO
 	 * @param email User's email address
 	 * @param password User's password
+	 *
+	 * caseIDs The set of IDs of all the private RCA cases that the User can see.
 	 */
 	public User(String email, String password) {
 		this.email = email;
@@ -52,9 +53,8 @@ public class User extends Model {
 	}
 	
 	/**
-	 * TODO
-	 * @param rcaCase
-	 * @return
+	 * @param rcaCase The RCA case to be added to the User.
+	 * @return RCACase object that represents the existing RCA case that is added to User.
 	 */
 	public RCACase addRCACase(RCACase rcaCase) {
 		this.caseIDs.add(rcaCase.id);
@@ -62,14 +62,14 @@ public class User extends Model {
 	}
 
 	/**
-	 * TODO
-	 * @param name
-	 * @param type
-	 * @param isMultinational
-	 * @param companyName
-	 * @param companySize
-	 * @param isCasePublic
-	 * @return
+	 * @param name The name of the RCA case
+	 * @param type The type of the RCA case. Enums are found in models/enums/RCACaseType.
+	 * @param isMultinational The boolean value whether the company related to the RCA case is multinational.
+	 * @param companyName The name of the company related to the RCA case.
+	 * @param companySize The size of the company related to the RCA case. Enums are found in models/enums/CompanySize.
+	 * @param isCasePublic The boolean value whether the RCA is public.
+	 *
+	 * @return RCACase object that represents the created RCA case added to the User.
 	 */
 	public RCACase addRCACase(String name, int type, boolean isMultinational, String companyName,
 	                          int companySize, boolean isCasePublic) {
