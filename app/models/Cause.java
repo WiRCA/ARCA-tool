@@ -20,7 +20,8 @@ public class Cause extends Model {
 
 	public String name;
 
-	@OneToOne(mappedBy = "problem")
+	@ManyToOne
+	@Column(name = "rcacase_id")
 	public RCACase rcaCase;
 
 	@Column(name = "creator_id")

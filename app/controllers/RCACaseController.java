@@ -77,10 +77,6 @@ public class RCACaseController extends Controller {
 		}
 	}
 
-	public static void getStream(Long id, Long timestamp) {
-
-	}
-
 	public static void waitMessages(Long id, Long lastReceived) {
 		RCACase rcaCase = RCACase.findById(id);
 		List messages = await(rcaCase.nextMessages(lastReceived));
