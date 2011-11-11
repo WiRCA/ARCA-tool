@@ -1,0 +1,10 @@
+{
+    "id": ${_node.id},
+    "name": "${_node.name}",
+    "data": {"$color": "#83548B","$type": "circle","$dim":10},
+    "children": [
+        #{list _node.causes, as:'node'}
+            #{treeNodes node:node /}${node_isLast ? '' : ','}
+        #{/list}
+    ]
+}

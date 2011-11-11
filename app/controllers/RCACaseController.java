@@ -30,6 +30,7 @@ import models.enums.CompanySize;
 import models.enums.RCACaseType;
 import play.data.validation.Min;
 import play.data.validation.Required;
+import play.data.validation.Valid;
 import play.mvc.Controller;
 import play.mvc.With;
 
@@ -45,10 +46,9 @@ import models.events.*;
 public class RCACaseController extends Controller {
 
 	public static void createRCACase() {
-		String username = SecurityController.connected();
 		RCACaseType[] types = RCACaseType.values();
 		CompanySize[] companySizes = CompanySize.values();
-		render(username, types, companySizes);
+		render(types, companySizes);
 	}
 
 	public static void create(@Required String name, @Required @Min(0) int type, boolean multinational,
@@ -58,27 +58,24 @@ public class RCACaseController extends Controller {
 			validation.keep(); // keep the errors for the next request
 			createRCACase();
 		}
-		String username = SecurityController.connected();
-		User user = User.find("byEmail", username).first();
-		RCACase rcaCase = null;
-		rcaCase = user.addRCACase(name, type, multinational, companyName, companySize, isCasePublic).save();
+
+		User user = SecurityController.getCurrentUser();
+		RCACase rcaCase = user.addRCACase(name, type, multinational, companyName, companySize, isCasePublic).save();
 		show(rcaCase.id);
 	}
 
 
 	public static void show(Long id) {
 		RCACase rcaCase = RCACase.findById(id);
+		notFoundIfNull(rcaCase);
 		String size = rcaCase.getCompanySize().text;
 		String type = rcaCase.getRCACaseType().text;
-		if (rcaCase != null) {
-			render(rcaCase, type, size);
-		} else {
-			renderText("Unknown case id.");
-		}
+		render(rcaCase, type, size);
 	}
 
 	public static void waitMessages(Long id, Long lastReceived) {
 		RCACase rcaCase = RCACase.findById(id);
+		notFoundIfNull(rcaCase);
 		List messages = await(rcaCase.nextMessages(lastReceived));
 		renderJSON(messages, new TypeToken<List<IndexedEvent<Event>>>() {
 		}.getType());

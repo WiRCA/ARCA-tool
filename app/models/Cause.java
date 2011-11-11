@@ -25,12 +25,15 @@ public class Cause extends Model {
 	public RCACase rcaCase;
 
 	@Column(name = "creator_id")
-	public Long creatorID;
+	public Long creatorId;
 
 	@ManyToMany
 	@JoinTable(name = "causesof", joinColumns = {@JoinColumn(name = "effect_id", nullable = false)},
 	           inverseJoinColumns = {@JoinColumn(name = "cause_id", nullable = false)})
 	public Set<Cause> causes;
+
+	@ManyToMany(mappedBy = "causes")
+	public Set<Cause> causesOf;
 
 	@ElementCollection
 	@JoinTable(name = "corrections", joinColumns = {@JoinColumn(name = "cause_id", nullable = false)})
@@ -40,15 +43,16 @@ public class Cause extends Model {
 	/**
 	 * Creates a new cause with name and creator.
 	 *
-	 * @param name name for the created cause.
+	 * @param name    name for the created cause.
 	 * @param creator creator of the cause
 	 *
 	 * causes The set of causes that explain the cause.
 	 * corrections List of corrections of the cause.
 	 */
-	public Cause(String name, User creator) {
+	public Cause(RCACase rcaCase, String name, User creator) {
+		this.rcaCase = rcaCase;
 		this.name = name;
-		this.creatorID = creator.id;
+		this.creatorId = creator.id;
 		causes = new TreeSet<Cause>();
 		corrections = new ArrayList<String>();
 	}
@@ -62,6 +66,7 @@ public class Cause extends Model {
 	 */
 	public Cause addCorrection(String name) {
 		this.corrections.add(name);
+		this.save();
 		return this;
 	}
 
@@ -70,23 +75,15 @@ public class Cause extends Model {
 	 *
 	 * @param name name to be used for the cause.
 	 *
+	 * @param creator creator of the cause
+	 *
 	 * @return cause the cause created when added.
 	 */
-	public Cause addCause(String name) {
-		Cause newCause = new Cause(name, this.getCreator()).save();
+	public Cause addCause(String name, User creator) {
+		Cause newCause = new Cause(rcaCase, name, creator).save();
 		this.causes.add(newCause);
+		this.save();
 		return newCause;
-	}
-	
-	/**
-	 * Delete a cause from a cause.
-	 *
-	 * @param id id of the cause to be deleted.
-	 *
-	 * @return true or false if the delete worked.
-	 */
-	public void deleteCause() {
-    this.delete();
 	}
 
 	/**
@@ -97,19 +94,30 @@ public class Cause extends Model {
 	 * @return on success returns the added cause, otherwise returns null
 	 */
 	public Cause addCause(Cause cause) {
-		if (!this.causes.contains(cause)) {
-			this.causes.add(cause);
-			return cause;
-		} else {
-			return null;
-		}
+		this.causes.add(cause);
+		this.save();
+		return cause;
 	}
 
 	/**
-	 * Gets the creator of the cause.
+	 * Delete a cause from a cause.
+	 *
+	 */
+	public void deleteCause() {
+		for (Cause cause : causesOf) {
+			cause.causes.remove(this);
+			cause.save();
+		}
+		this.rcaCase = null;
+		this.delete();
+	}
+
+	/**
+	 * Get the creator of the cause
+	 *
 	 * @return the creator of the cause
 	 */
 	public User getCreator() {
-		return User.findById(creatorID);
+		return User.findById(creatorId);
 	}
 }

@@ -29,7 +29,7 @@
   ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
   ~ THE SOFTWARE.
   -->
-
+*{
 <h1>&{'showRCACase.title', rcaCase.name}</h1>
 
 <p>&{'createRCA.caseName'}: ${rcaCase.name}</p>
@@ -41,7 +41,7 @@
 <p>&{'showRCACase.owner'}: ${rcaCase.owner.name}</p>
 
 #{a @UserController.index() } &{'showRCACase.back'} #{/a}
-
+}*
 <div id="container">
   <div id="center-container">
     <div id="infovis"></div>
@@ -96,17 +96,14 @@
     function init(){
       // init data
       var json = [
-          {
-            "data": {"$color": "#83548B","$type": "circle","$dim":10},
-            "id": ${rcaCase.problem.id},
-            "name": "${rcaCase.problem.name}"
-          }];
+          #{treeNodes node:rcaCase.problem /}
+      ];
       //Running number for creating nodes
       var runningNumber = 0;
       var lastReceived = 0
       var waitMessages = #{jsAction @waitMessages(rcaCase.id,':lastReceived') /}
-      var addCause = #{jsAction @CauseController.addCause(':caseId', ':causeId', ':name') /}
-      var deleteCause = #{jsAction @CauseController.deleteCause(':caseId', ':causeId') /}
+      var addCause = #{jsAction @CauseController.addCause(':causeId', ':name') /}
+      var deleteCause = #{jsAction @CauseController.deleteCause(':causeId') /}
       // end
       // init ForceDirected
       var fd = new $jit.ForceDirected({
@@ -150,8 +147,8 @@
             var count = 0;
             node.eachAdjacency(function() { count++; });
             //display node info in tooltip
-            tip.innerHTML = "<div class=\"tip-title\">" + node.name + "</div>"
-              + "<div class=\"tip-text\"><b>connections:</b> " + count + "</div>";
+            tip.innerHTML = '<div class="tip-title">' + node.name + '</div>'
+              + '<div class="tip-text"><b>connections:</b> ' + count + '</div>';
           }
         },
         // Add node events
@@ -180,13 +177,13 @@
             if(!node) return;
             // DELETE A NODE
             if (shiftDown) {
-              $.post(deleteCause({caseId: ${rcaCase.id}, causeId: node.id}));
+              $.post(deleteCause({causeId: node.id}));
               return;  
             }
             var name = prompt('Node name?');
             runningNumber = runningNumber + 1;
             if (name != null && name != "") {
-                $.post(addCause({caseId: ${rcaCase.id}, causeId: node.id, name: name}));
+                $.post(addCause({causeId: node.id, name: name}));
             }
           }
         },
@@ -220,7 +217,7 @@
                 success: function(events) {
                     $(events).each(function() {
                         if (this.data.type === 'deletecauseevent') {
-                          fd.graph.removeNode(this.data.causeFrom);
+                          fd.graph.removeNode(this.data.causeId);
                           fd.plot();
                         }
                         else if(this.data.type === 'addcauseevent') {

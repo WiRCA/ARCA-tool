@@ -30,7 +30,7 @@ import play.jobs.OnApplicationStart;
 @OnApplicationStart
 public class Bootstrap extends Job {
 
-	public static final String ADMIN_USER_EMAIL = "admin@arcatool.fi";
+	public static final String ADMIN_USER_EMAIL = "admin@local";
 	public static final String ADMIN_USER_PASSWORD = "admin";
 
     public void doJob() {

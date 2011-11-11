@@ -24,6 +24,7 @@
 package controllers;
 
 import models.RCACase;
+import models.User;
 import play.mvc.Controller;
 import play.mvc.With;
 import models.Cause;
@@ -39,10 +40,12 @@ import play.cache.Cache;
 @With(Secure.class)
 public class CauseController extends Controller {
 
-	public static void addCause(Long rcaCaseId, String causeId, String name) {
-		RCACase rcaCase = RCACase.findById(rcaCaseId);
+	public static void addCause(String causeId, String name) {
+		// causeId is used later as a String
 		Cause cause = Cause.findById(Long.valueOf(causeId));
-		Cause newCause = cause.addCause(name).save();
+		RCACase rcaCase = cause.rcaCase;
+
+		Cause newCause = cause.addCause(name, SecurityController.getCurrentUser());
 
 		AddCauseEvent event = new AddCauseEvent(newCause, causeId);
 		CauseStream causeEvents = rcaCase.getCauseStream();
@@ -53,14 +56,14 @@ public class CauseController extends Controller {
 
 	}
 
-	public static void deleteCause(Long rcaCaseId, String causeId) {
-	  RCACase rcaCase = RCACase.findById(rcaCaseId);
-    Cause cause = Cause.findById(Long.valueOf(causeId));
-    
-    DeleteCauseEvent deleteEvent = new DeleteCauseEvent(cause, causeId);
-    CauseStream causeEvents = rcaCase.getCauseStream();
+	public static void deleteCause(String causeId) {
+		Cause cause = Cause.findById(Long.valueOf(causeId));
+		RCACase rcaCase = cause.rcaCase;
+
+		cause.deleteCause();
+
+		DeleteCauseEvent deleteEvent = new DeleteCauseEvent(cause);
+		CauseStream causeEvents = rcaCase.getCauseStream();
 		causeEvents.getStream().publish(deleteEvent);
-    
-    cause.deleteCause();
 	}
 }

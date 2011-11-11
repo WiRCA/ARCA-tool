@@ -32,8 +32,8 @@ public class CauseStream implements Serializable {
 
 	public final ArchivedEventStream<Event> eventStream;
 
-	public CauseStream(long size) {
-		this.eventStream = new ArchivedEventStream<Event>(100);
+	public CauseStream(int size) {
+		this.eventStream = new ArchivedEventStream<Event>(size);
 	}
 
 	public ArchivedEventStream<Event> getStream() {
