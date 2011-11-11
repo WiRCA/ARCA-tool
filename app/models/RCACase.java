@@ -5,13 +5,13 @@ import models.enums.RCACaseType;
 import models.events.Event;
 
 import play.cache.Cache;
-import play.db.jpa.JPABase;
 import play.db.jpa.Model;
 import play.libs.F.IndexedEvent;
 import play.libs.F.Promise;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 import models.events.*;
 
@@ -51,6 +51,9 @@ public class RCACase extends Model {
 
 	@OneToOne
 	public Cause problem;
+
+	@OneToMany(mappedBy = "rcaCase")
+	public Set<Cause> causes;
 
 	/**
 	 * Constructor for the form in create.html.

@@ -96,7 +96,22 @@
     function init(){
       // init data
       var json = [
-          #{treeNodes node:rcaCase.problem /}
+        #{list rcaCase.causes, as:'cause'}
+          {
+            "id": ${cause.id},
+            "name": "${cause.name}",
+            "data": {"$color": "#83548B","$type": "circle","$dim":10},
+            "adjacencies": [
+            #{list cause.causes, as:'causedBy'}
+            {
+              nodeTo: "${causedBy.id}",
+              data: {"weight": 3}
+            }${causedBy_isLast ? '' : ','}
+            #{/list}
+            ]
+          }${cause_isLast ? '' : ','}
+        #{/list}
+            *{#{treeNodes node:rcaCase.problem /}}*
       ];
       //Running number for creating nodes
       var runningNumber = 0;
@@ -266,11 +281,11 @@
         },
         onComplete: function(){
           Log.write('done');
-          /*fd.animate({
+          fd.animate({
             modes: ['linear'],
             transition: $jit.Trans.Elastic.easeOut,
-            duration: 2500
-          });*/
+            duration: 50
+          });
           fd.plot();
         }
       });
