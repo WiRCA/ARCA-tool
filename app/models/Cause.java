@@ -21,7 +21,7 @@ public class Cause extends Model {
 	public String name;
 
 	@ManyToOne
-	@Column(name = "rcacase_id")
+	@JoinColumn(name = "rcacase_id")
 	public RCACase rcaCase;
 
 	@Column(name = "creator_id")
