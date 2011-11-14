@@ -2,6 +2,7 @@ package models;
 
 import models.enums.CompanySize;
 import models.enums.RCACaseType;
+import play.data.validation.Valid;
 import play.db.jpa.Model;
 import utils.EncodingUtils;
 
@@ -59,21 +60,28 @@ public class User extends Model {
 	}
 
 	/**
-	 * @param name            The name of the RCA case
+	 * @param caseName            The name of the RCA case
 	 * @param type            The type of the RCA case. Enums are found in models/enums/RCACaseType.
 	 * @param isMultinational The boolean value whether the company related to the RCA case is multinational.
 	 * @param companyName     The name of the company related to the RCA case.
-	 * @param companySize     The size of the company related to the RCA case. Enums are found in
+	 * @param companySizeValue     The size of the company related to the RCA case. Enums are found in
 	 * models/enums/CompanySize.
+	 * @param description
+	 * @param companyProducts
 	 * @param isCasePublic    The boolean value whether the RCA is public.
 	 *
 	 * @return RCACase object that represents the created RCA case added to the User.
 	 */
-	public RCACase addRCACase(String name, int type, boolean isMultinational, String companyName, int companySize,
-	                          boolean isCasePublic) {
-		RCACase rcaCase = new RCACase(name, type, isMultinational, companyName, companySize, isCasePublic, this).save();
+	public RCACase addRCACase(@Valid String caseName, @Valid int type, @Valid String description,
+	                          boolean isMultinational,
+	               @Valid String companyName,
+	               @Valid int companySizeValue, @Valid String companyProducts, boolean isCasePublic) {
+		RCACase rcaCase = new RCACase(caseName, type, description, isMultinational, companyName, companySizeValue,
+		                              companyProducts,
+		                              isCasePublic,
+		                              this).save();
 		// Creating the new 'initial problem' for the RCACase with the case name.
-		rcaCase.problem = new Cause(rcaCase, name, this).save();
+		rcaCase.problem = new Cause(rcaCase, caseName, this).save();
 		rcaCase.save();
 		this.caseIDs.add(rcaCase.id);
 		this.save();
