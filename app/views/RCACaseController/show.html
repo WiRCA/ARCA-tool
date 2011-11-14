@@ -29,7 +29,7 @@
   ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
   ~ THE SOFTWARE.
   -->
-
+*{
 <h1>&{'showRCACase.title', rcaCase.name}</h1>
 
 <p>&{'createRCA.caseName'}: ${rcaCase.name}</p>
@@ -41,7 +41,7 @@
 <p>&{'showRCACase.owner'}: ${rcaCase.owner.name}</p>
 
 #{a @UserController.index() } &{'showRCACase.back'} #{/a}
-
+}*
 <div id="container">
   <div id="center-container">
     <div id="infovis"></div>
@@ -81,21 +81,44 @@
         this.elem.style.left = (500 - this.elem.offsetWidth / 2) + 'px';
       }
     };
+    
+    var shiftDown = false;
+    var shiftDownHandler = function(e){
+      var evtObj = window.event? event:e;
+      if(evtObj.shiftKey){
+        shiftDown=true;
+      }else
+        shiftDown = false;
+    }
+    document.onkeydown = shiftDownHandler;
 
 
     function init(){
       // init data
       var json = [
+        #{list rcaCase.causes, as:'cause'}
           {
+            "id": ${cause.id},
+            "name": "${cause.name}",
             "data": {"$color": "#83548B","$type": "circle","$dim":10},
-            "id": ${rcaCase.problem.id},
-            "name": "${rcaCase.problem.name}"
-          }];
+            "adjacencies": [
+            #{list cause.causes, as:'causedBy'}
+            {
+              nodeTo: "${causedBy.id}",
+              data: {"weight": 3}
+            }${causedBy_isLast ? '' : ','}
+            #{/list}
+            ]
+          }${cause_isLast ? '' : ','}
+        #{/list}
+            *{#{treeNodes node:rcaCase.problem /}}*
+      ];
       //Running number for creating nodes
       var runningNumber = 0;
       var lastReceived = 0
       var waitMessages = #{jsAction @waitMessages(rcaCase.id,':lastReceived') /}
-      var addCause = #{jsAction @CauseController.addCause(':caseId', ':causeId', ':name') /}
+      var addCause = #{jsAction @CauseController.addCause(':causeId', ':name') /}
+      var deleteCause = #{jsAction @CauseController.deleteCause(':causeId') /}
       // end
       // init ForceDirected
       var fd = new $jit.ForceDirected({
@@ -139,8 +162,8 @@
             var count = 0;
             node.eachAdjacency(function() { count++; });
             //display node info in tooltip
-            tip.innerHTML = "<div class=\"tip-title\">" + node.name + "</div>"
-              + "<div class=\"tip-text\"><b>connections:</b> " + count + "</div>";
+            tip.innerHTML = '<div class="tip-title">' + node.name + '</div>'
+              + '<div class="tip-text"><b>connections:</b> ' + count + '</div>';
           }
         },
         // Add node events
@@ -167,10 +190,15 @@
           //Add also a click handler to nodes
           onClick: function(node){
             if(!node) return;
+            // DELETE A NODE
+            if (shiftDown) {
+              $.post(deleteCause({causeId: node.id}));
+              return;  
+            }
             var name = prompt('Node name?');
             runningNumber = runningNumber + 1;
             if (name != null && name != "") {
-                $.post(addCause({caseId: ${rcaCase.id}, causeId: node.id, name: name}));
+                $.post(addCause({causeId: node.id, name: name}));
             }
           }
         },
@@ -198,12 +226,16 @@
           style.display = '';
         }
       });
-      var getNodes = function(){
+      var getNodes = function() {
           $.ajax({
                 url: waitMessages({lastReceived: lastReceived}),
                 success: function(events) {
                     $(events).each(function() {
-                        if(this.data.text){
+                        if (this.data.type === 'deletecauseevent') {
+                          fd.graph.removeNode(this.data.causeId);
+                          fd.plot();
+                        }
+                        else if(this.data.type === 'addcauseevent') {
                           var newNode = {
                             "id": this.data.causeTo,
                             "name": this.data.text
@@ -249,11 +281,11 @@
         },
         onComplete: function(){
           Log.write('done');
-          /*fd.animate({
+          fd.animate({
             modes: ['linear'],
             transition: $jit.Trans.Elastic.easeOut,
-            duration: 2500
-          });*/
+            duration: 50
+          });
           fd.plot();
         }
       });

@@ -13,12 +13,8 @@ import java.util.Set;
  * This class represents a user in RCA application.
  * @author Eero Laukkanen
  */
-
-/**
- * TODO
- */
-@PersistenceUnit(name="userdb")
-@Entity(name="user")
+@PersistenceUnit(name = "userdb")
+@Entity(name = "user")
 public class User extends Model {
 
 	public String email;
@@ -26,16 +22,15 @@ public class User extends Model {
 	public String password;
 
 	@ElementCollection
-	/*@JoinTable(name="usercases", joinColumns = {@JoinColumn(name="user_id", nullable = false)},
-	           inverseJoinColumns = {@JoinColumn(name="case_id", nullable = false)})*/
-	@JoinTable(name="usercases", joinColumns = {@JoinColumn(name="user_id", nullable = false)})
+	@JoinTable(name = "usercases", joinColumns = {@JoinColumn(name = "user_id", nullable = false)})
 	@Column(name = "case_id")
 	public Set<Long> caseIDs;
 
 	/**
-	 * TODO
-	 * @param email User's email address
+	 * @param email    User's email address
 	 * @param password User's password
+	 *
+	 * caseIDs The set of IDs of all the private RCA cases that the User can see.
 	 */
 	public User(String email, String password) {
 		this.email = email;
@@ -45,47 +40,57 @@ public class User extends Model {
 
 	/**
 	 * Change user's password with new password
+	 *
 	 * @param newPassword User's new password
 	 */
 	public void changePassword(String newPassword) {
 		this.password = EncodingUtils.encodeSHA1(newPassword);
 	}
-	
+
 	/**
-	 * TODO
-	 * @param rcaCase
-	 * @return
+	 * @param rcaCase The RCA case to be added to the User.
+	 *
+	 * @return RCACase object that represents the existing RCA case that is added to User.
 	 */
 	public RCACase addRCACase(RCACase rcaCase) {
 		this.caseIDs.add(rcaCase.id);
+		this.save();
 		return rcaCase;
 	}
 
 	/**
-	 * TODO
-	 * @param name
-	 * @param type
-	 * @param isMultinational
-	 * @param companyName
-	 * @param companySize
-	 * @param isCasePublic
-	 * @return
+	 * @param name            The name of the RCA case
+	 * @param type            The type of the RCA case. Enums are found in models/enums/RCACaseType.
+	 * @param isMultinational The boolean value whether the company related to the RCA case is multinational.
+	 * @param companyName     The name of the company related to the RCA case.
+	 * @param companySize     The size of the company related to the RCA case. Enums are found in
+	 * models/enums/CompanySize.
+	 * @param isCasePublic    The boolean value whether the RCA is public.
+	 *
+	 * @return RCACase object that represents the created RCA case added to the User.
 	 */
-	public RCACase addRCACase(String name, int type, boolean isMultinational, String companyName,
-	                          int companySize, boolean isCasePublic) {
+	public RCACase addRCACase(String name, int type, boolean isMultinational, String companyName, int companySize,
+	                          boolean isCasePublic) {
 		RCACase rcaCase = new RCACase(name, type, isMultinational, companyName, companySize, isCasePublic, this).save();
+		// Creating the new 'initial problem' for the RCACase with the case name.
+		rcaCase.problem = new Cause(rcaCase, name, this).save();
+		rcaCase.save();
 		this.caseIDs.add(rcaCase.id);
-        this.save();
+		this.save();
 		return rcaCase;
 	}
 
 	public Set<RCACase> getRCACases() {
-        HashSet<RCACase> cases = new HashSet<RCACase>();
-        for (Long id : caseIDs) {
-            RCACase rcaCase = RCACase.findById(id);
-            cases.add(rcaCase);
-        }
+		HashSet<RCACase> cases = new HashSet<RCACase>();
+		for (Long id : caseIDs) {
+			RCACase rcaCase = RCACase.findById(id);
+			cases.add(rcaCase);
+		}
 		return cases;
 	}
 
+	@Override
+	public String toString() {
+		return name + " (" + id + ", " + email + ")";
+	}
 }

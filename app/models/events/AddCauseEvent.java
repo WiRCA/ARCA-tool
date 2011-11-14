@@ -12,7 +12,6 @@ public class AddCauseEvent extends Event {
 	public AddCauseEvent(Cause cause, String causeFrom) {
 		super("addcauseevent");
 		this.causeTo = Long.toString(cause.id);
-		//TODO
 		this.user = cause.getCreator().toString();
 		this.text = cause.name;
 		this.causeFrom = causeFrom;

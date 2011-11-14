@@ -28,7 +28,7 @@ a {
 }
 
 #container {
-    width: 1000px;
+    width: 1500px;
     height: 600px;
     margin:0 auto;
     position:relative;
@@ -37,13 +37,13 @@ a {
 #left-container, 
 #right-container, 
 #center-container {
-    height:600px;
+    height:800px;
     position:absolute;
     top:0;
 }
 
 #left-container, #right-container {
-    width:200px;
+    width:50px;
     color:#686c70;
     text-align: left;
     overflow: auto;
@@ -72,8 +72,8 @@ a {
 }
 
 #center-container {
-    width:600px;
-    left:200px;
+    width:1200px;
+    left:50px;
     background-color:#1a1a1a;
     color:#ccc;
 }
@@ -99,8 +99,8 @@ a {
 
 #infovis {
     position:relative;
-    width:600px;
-    height:600px;
+    width:1200px;
+    height:800px;
     margin:auto;
     overflow:hidden;
 }

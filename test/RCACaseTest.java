@@ -1,5 +1,6 @@
 /*
- * Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen, Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus
+ * Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen, Joona Koistinen,
+ * Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -36,23 +37,22 @@ public class RCACaseTest extends UnitTest {
 	private CompanySize size;
 
 	@Before
-        public void setUp() {
-			user = User.find("byEmail", "admin@arcatool.fi").first();
-			rcaCaseType = RCACaseType.valueOf(2);
-			size = CompanySize.valueOf(2);
-        }
+	public void setUp() {
+		user = User.find("byEmail", "admin@local").first();
+		rcaCaseType = RCACaseType.valueOf(2);
+		size = CompanySize.valueOf(2);
+	}
 
 	@Test
-    public void createRCACaseTest() {
-		RCACase testCase = null;
-		testCase = user.addRCACase("TestRCACase", rcaCaseType.value, true, "Keijon Kaapeli ja Kaivanto Oy", size.value,
-		                           false);
+	public void createRCACaseTest() {
+		RCACase testCase = user.addRCACase("TestRCACase", rcaCaseType.value, true, "Keijon Kaapeli ja Kaivanto Oy",
+		                           size.value, false);
 		assertTrue(user.caseIDs.contains(testCase.id));
-		RCACase comparisonCase =  RCACase.find("byID",testCase.id).first();
+		RCACase comparisonCase = RCACase.find("byID", testCase.id).first();
 		assertEquals(comparisonCase.companyName, "Keijon Kaapeli ja Kaivanto Oy");
 		assertEquals(testCase.getRCACaseType(), RCACaseType.valueOf(2));
 		assertNotSame(testCase.getCompanySize(), CompanySize.valueOf(3));
-		assertEquals(testCase.ownerID, user.id);
+		assertEquals(testCase.ownerId, user.id);
 		assertFalse(testCase.isCasePublic);
 		assertTrue(testCase.isMultinational);
 		assertEquals(comparisonCase.name, "TestRCACase");

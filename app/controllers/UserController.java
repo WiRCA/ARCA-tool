@@ -27,6 +27,7 @@ import play.mvc.Controller;
 import play.mvc.With;
 import models.User;
 import models.RCACase;
+
 import java.util.Set;
 
 /**
@@ -36,10 +37,9 @@ import java.util.Set;
 @With(Secure.class)
 public class UserController extends Controller {
 	public static void index() {
-        String username = SecurityController.connected();
-        User user = User.find("byEmail", username).first();
-        Set<RCACase> cases = user.getRCACases();
-        render(user, cases);
+		User user = SecurityController.getCurrentUser();
+		Set<RCACase> cases = user.getRCACases();
+		render(user, cases);
 	}
 
 	public static void registerUser() {

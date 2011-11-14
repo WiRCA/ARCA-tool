@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen, Joona Koistinen,
- * Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus
+ * Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen, Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,21 +22,19 @@
 
 package models.events;
 
-import play.libs.F.*;
+import models.Cause;
 
-import java.io.Serializable;
+public class DeleteCauseEvent extends Event {
 
+	public final String user;
+	public final String text;
+	public final String causeId;
 
-public class CauseStream implements Serializable {
-
-	public final ArchivedEventStream<Event> eventStream;
-
-	public CauseStream(int size) {
-		this.eventStream = new ArchivedEventStream<Event>(size);
-	}
-
-	public ArchivedEventStream<Event> getStream() {
-		return eventStream;
+	public DeleteCauseEvent(Cause cause) {
+		super("deletecauseevent");
+		this.user = cause.getCreator().toString();
+		this.text = cause.name;
+		this.causeId = Long.toString(cause.id);
 	}
 
 }
