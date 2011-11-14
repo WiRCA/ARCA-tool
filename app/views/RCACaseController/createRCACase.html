@@ -51,25 +51,31 @@ Yrityksen tiedot:
     </p>
     #{/if}
 
-    <p id="casename-field">
-        <label for="casename">&{'createRCA.caseName'}</label>
-        <input type="text" name="name" id="casename" value="${flash.name}"/>
+    <p id="caseName-field">
+        <label for="caseName">&{'createRCA.caseName'}</label>
+        <input type="text" name="caseName" id="caseName" value="${flash.caseName}"/>
         <span class="error">#{error 'name' /}</span>
     </p>
 
     <p id="RCACaseType">
         <label for="RCACaseType">&{'createRCA.rcaCaseType'}</label>
-        #{select 'type', value:"${flash.type}", id:'type'}
+        #{select 'caseTypeValue', value:"${flash.caseTypeValue}", id:'caseTypeValue'}
         <option value="-1">SELECT</option>
-        #{list types, as:'type'}
-            #{option type.value}${type.text}#{/option}
+        #{list types, as:'caseTypeValue'}
+            #{option caseTypeValue.value}${caseTypeValue.text}#{/option}
         #{/list}
         #{/select}
-        <span class="error">#{error 'type' /}</span>
+        <span class="error">#{error 'caseTypeValue' /}</span>
+    </p>
+
+    <p id="description-field">
+        <label for="description">&{'createRCA.description'}</label>
+        <input type="text" name="description" id="description" value="${flash.description}"/>
+        <span class="error">#{error 'description' /}</span>
     </p>
 
     <p id="company-field">
-        <label for="companyName">&{'createRCA.company'}</label>
+        <label for="companyName">&{'createRCA.companyName'}</label>
         <input type="text" name="companyName" id="companyName" value="${flash.companyName}"/>
         <span class="error">#{error 'companyName' /}</span>
     </p>
@@ -85,11 +91,17 @@ Yrityksen tiedot:
     <span class="error">#{error 'companySize' /}</span>
     </p>
 
-    <p id="multinational-field">
-        <input type="checkbox" name="multinational" id="multinational" value="true" ${flash.multinational ?
+    <p id="companyProducts-field">
+        <label for="companyProducts">&{'createRCA.companyProducts'}</label>
+        <input type="text" name="companyProducts" id="companyProducts" value="${flash.companyProducts}"/>
+        <span class="error">#{error 'companyProducts' /}</span>
+    </p>
+
+    <p id="isMultinational-field">
+        <input type="checkbox" name="isMultinational" id="isMultinational" value="true" ${flash.isMultinational ?
         'checked="true"' : ''}/>
-        <span class="error">#{error 'multinational' /}</span>
-        <label for="multinational">&{'createRCA.multinational'}</label>
+        <span class="error">#{error 'isMultinational' /}</span>
+        <label for="isMultinational">&{'createRCA.isMultinational'}</label>
     </p>
 
     <p id="public-field">

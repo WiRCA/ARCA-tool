@@ -4,11 +4,13 @@
 createRCA.title = Create a new RCA case
 createRCA.caseName = Case name
 createRCA.rcaCaseType = Case type
-createRCA.company = Company name
+createRCA.description = Short description of the problem
+createRCA.companyName = Company name
 createRCA.companySize = What is the amount of personnel in your company?
+createRCA.companyProducts = What are the main products or product types of the company?
 createRCA.public = Is this a public case?
 createRCA.create = Create the new RCA case!
-createRCA.multinational = Multinational company?
+createRCA.isMultinational = Multinational company?
 
 showRCACase.title = RCA Case %s
 showRCACase.owner = RCA case owner

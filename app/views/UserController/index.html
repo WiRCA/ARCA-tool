@@ -6,7 +6,7 @@
 <h2>&{'user.myCases'}</h2>
 <ul>
 #{list items:cases, as:'rcaCase'}
-<li>#{a @RCACaseController.show(rcaCase.id)} ${rcaCase.name} #{/a}</li>
+<li>#{a @RCACaseController.show(rcaCase.id)} ${rcaCase.caseName} #{/a}</li>
 #{/list}
 #{else}<li>&{'user.noRCACases'}</li>#{/else}
 </ul>

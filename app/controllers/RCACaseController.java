@@ -51,8 +51,10 @@ public class RCACaseController extends Controller {
 		render(types, companySizes);
 	}
 
-	public static void create(@Required String name, @Required @Min(0) int type, boolean multinational,
-	                          @Required String companyName, @Required @Min(0) int companySize, boolean isCasePublic) {
+	public static void create(@Valid String caseName, @Valid int caseTypeValue, @Valid String description,
+	                          boolean isMultinational,
+	               @Valid String companyName,
+	               @Valid int companySize, @Valid String companyProducts, boolean isCasePublic) {
 		if (validation.hasErrors()) {
 			params.flash(); // add http parameters to the flash scope
 			validation.keep(); // keep the errors for the next request
@@ -60,7 +62,9 @@ public class RCACaseController extends Controller {
 		}
 
 		User user = SecurityController.getCurrentUser();
-		RCACase rcaCase = user.addRCACase(name, type, multinational, companyName, companySize, isCasePublic).save();
+		RCACase rcaCase = user.addRCACase(caseName, caseTypeValue, description, isMultinational,
+	               companyName,
+	               companySize, companyProducts, isCasePublic).save();
 		show(rcaCase.id);
 	}
 
