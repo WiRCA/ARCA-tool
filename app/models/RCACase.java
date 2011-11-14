@@ -11,6 +11,7 @@ import play.libs.F.Promise;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 import models.events.*;
 
@@ -29,11 +30,10 @@ public class RCACase extends Model {
 	private static final String CAUSE_STREAM_NAME_IN_CACHE = "causeStream";
 
 	public String name;
-	//TODO needed? public Set<Cause> causes;
 
 	@Column(name = "case_type_value")
 	public int caseTypeValue;
-
+	
 	@Column(name = "company_size_value")
 	public int companySizeValue;
 
@@ -47,20 +47,27 @@ public class RCACase extends Model {
 	public boolean isCasePublic;
 
 	@Column(name = "owner_id")
-	public Long ownerID;
+	public Long ownerId;
 
 	@OneToOne
 	public Cause problem;
 
+	@OneToMany(mappedBy = "rcaCase")
+	public Set<Cause> causes;
+
 	/**
 	 * Constructor for the form in create.html.
 	 *
-	 * @param name
-	 * @param type
-	 * @param isMultinational
-	 * @param companyName
-	 * @param companySizeValue
-	 * @param isCasePublic
+	 * @param name The name of the RCA case
+	 * @param type The type of the RCA case. Enums are found in models/enums/RCACaseType.
+	 * @param isMultinational The boolean value whether the company related to the RCA case is multinational.
+	 * @param companyName The name of the company related to the RCA case.
+	 * @param companySizeValue The size of the company related to the RCA case. Enums are found in models/enums/CompanySize.
+	 * @param isCasePublic The boolean value whether the RCA is public.
+	 * @param owner The User who owns the case.
+	 * 
+	 * ownerId The ID of the user who creates the case.
+	 * problem The Cause object that represents the problem of the RCA case.
 	 */
 
 	public RCACase(String name, int type, boolean isMultinational, String companyName,
@@ -71,14 +78,11 @@ public class RCACase extends Model {
 		this.companyName = companyName;
 		this.companySizeValue = companySizeValue;
 		this.isCasePublic = isCasePublic;
-		this.ownerID = owner.id;
-		//TODO needed? this.causes = new TreeSet<Cause>();
-		// Creating the new 'initial problem' for the RCACase with the case name.
-		this.problem = new Cause(name, owner).save();
+		this.ownerId = owner.id;
 	}
 
 	public User getOwner() {
-		return User.findById(ownerID);
+		return User.findById(ownerId);
 	}
 
 	public Promise<List<IndexedEvent<Event>>> nextMessages(long lastReceived) {
@@ -102,7 +106,7 @@ public class RCACase extends Model {
 		this.caseTypeValue = rcaCaseType.value;
 	}
 
-	public CauseStream setCauseSteam() {
+	public CauseStream setCauseStream() {
 		CauseStream causeEvents = new CauseStream(100);
 		Cache.set(CAUSE_STREAM_NAME_IN_CACHE + this.id, causeEvents, "30mn");
 		return causeEvents;
@@ -111,7 +115,7 @@ public class RCACase extends Model {
 	public CauseStream getCauseStream() {
 		CauseStream stream = Cache.get(CAUSE_STREAM_NAME_IN_CACHE + this.id, CauseStream.class);
 		if (stream == null) {
-			stream = setCauseSteam();
+			stream = setCauseStream();
 		}
 		return stream;
 	}

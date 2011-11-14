@@ -23,4 +23,8 @@ public class SecurityController extends Secure.Security {
 	public static void onDisconnected() {
 		ApplicationController.index();
 	}
+
+	public static User getCurrentUser() {
+		return User.find("byEmail", SecurityController.connected()).first();
+	}
 }
