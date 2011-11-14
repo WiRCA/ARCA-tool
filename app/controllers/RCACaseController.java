@@ -51,7 +51,8 @@ public class RCACaseController extends Controller {
 		render(types, companySizes);
 	}
 
-	public static void create(@Valid String caseName, @Valid int caseTypeValue, @Valid String description,
+	public static void create(@Valid String caseName, @Valid int caseTypeValue,
+	                          @Valid String caseGoals, @Valid String description,
 	                          boolean isMultinational,
 	               @Valid String companyName,
 	               @Valid int companySize, @Valid String companyProducts, boolean isCasePublic) {
@@ -62,7 +63,7 @@ public class RCACaseController extends Controller {
 		}
 
 		User user = SecurityController.getCurrentUser();
-		RCACase rcaCase = user.addRCACase(caseName, caseTypeValue, description, isMultinational,
+		RCACase rcaCase = user.addRCACase(caseName, caseTypeValue, caseGoals, description, isMultinational,
 	               companyName,
 	               companySize, companyProducts, isCasePublic).save();
 		show(rcaCase.id);

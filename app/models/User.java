@@ -72,11 +72,13 @@ public class User extends Model {
 	 *
 	 * @return RCACase object that represents the created RCA case added to the User.
 	 */
-	public RCACase addRCACase(@Valid String caseName, @Valid int type, @Valid String description,
+	public RCACase addRCACase(@Valid String caseName, @Valid int type, @Valid String caseGoals,
+	                          @Valid String description,
 	                          boolean isMultinational,
 	               @Valid String companyName,
 	               @Valid int companySizeValue, @Valid String companyProducts, boolean isCasePublic) {
-		RCACase rcaCase = new RCACase(caseName, type, description, isMultinational, companyName, companySizeValue,
+		RCACase rcaCase = new RCACase(caseName, type, caseGoals, description, isMultinational, companyName,
+		                              companySizeValue,
 		                              companyProducts,
 		                              isCasePublic,
 		                              this).save();

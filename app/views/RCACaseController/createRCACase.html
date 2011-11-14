@@ -74,6 +74,12 @@ Yrityksen tiedot:
         <span class="error">#{error 'description' /}</span>
     </p>
 
+    <p id="caseGoals-field">
+        <label for="caseGoals">&{'createRCA.caseGoals'}</label>
+        <input type="text" name="caseGoals" id="caseGoals" value="${flash.caseGoals}"/>
+        <span class="error">#{error 'caseGoals' /}</span>
+    </p>
+
     <p id="company-field">
         <label for="companyName">&{'createRCA.companyName'}</label>
         <input type="text" name="companyName" id="companyName" value="${flash.companyName}"/>
