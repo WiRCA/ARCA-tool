@@ -40,6 +40,10 @@ public class RCACase extends Model {
 	@Column(name = "case_type_value")
 	public int caseTypeValue;
 
+	@Required
+	@Column(name = "case_goals")
+	public String caseGoals;
+
 	@Required @Min(0)
 	@Column(name = "company_size_value")
 	public int companySizeValue;
@@ -89,12 +93,15 @@ public class RCACase extends Model {
 	 * problem The Cause object that represents the problem of the RCA case.
 	 */
 
-	public RCACase(@Valid String caseName, @Valid int caseTypeValue, @Valid String description, boolean isMultinational,
+	public RCACase(@Valid String caseName, @Valid int caseTypeValue, @Valid String caseGoals,
+	               @Valid String description,
+	               boolean isMultinational,
 	               @Valid String companyName,
 	               @Valid int companySizeValue, @Valid String companyProducts, boolean isCasePublic,
 	               User owner) {
 		this.caseName = caseName;
 		this.caseTypeValue = caseTypeValue;
+		this.caseGoals = caseGoals;
 		this.description = description;
 		this.isMultinational = isMultinational;
 		this.companyName = companyName;
