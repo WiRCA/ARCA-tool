@@ -37,37 +37,28 @@ public class RCACase extends Model {
 	public String caseName;
 
 	@Required @Min(0)
-	@Column(name = "case_type_value")
 	public int caseTypeValue;
 
 	@Required
-	@Column(name = "case_goals")
 	public String caseGoals;
 
 	@Required @Min(0)
-	@Column(name = "company_size_value")
 	public int companySizeValue;
 
 	@Required
-	@Column(name = "description")
 	public String description;
 
-	@Column(name = "is_multinational")
 	public boolean isMultinational;
 
 	@Required
-	@Column(name = "company_name")
 	public String companyName;
 
 	@Required
-	@Column(name = "company_products")
 	public String companyProducts;
 
-	@Column(name = "is_case_public")
 	public boolean isCasePublic;
 
 	@Required
-	@Column(name = "owner_id")
 	public Long ownerId;
 
 	@OneToOne

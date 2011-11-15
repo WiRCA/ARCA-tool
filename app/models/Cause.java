@@ -21,24 +21,21 @@ public class Cause extends Model {
 	public String name;
 
 	@ManyToOne
-	@JoinColumn(name = "rcacase_id")
+	@JoinColumn(name = "rcaCaseId")
 	public RCACase rcaCase;
 
-	@Column(name = "creator_id")
 	public Long creatorId;
 
-	@ManyToMany
-	@JoinTable(name = "causesof", joinColumns = {@JoinColumn(name = "effect_id", nullable = false)},
-	           inverseJoinColumns = {@JoinColumn(name = "cause_id", nullable = false)})
-	public Set<Cause> causes;
+	@OneToMany(mappedBy = "causeTo", cascade = CascadeType.PERSIST)
+	public Set<Relation> effects;
 
-	@ManyToMany(mappedBy = "causes")
-	public Set<Cause> causesOf;
+	@OneToMany(mappedBy = "causeFrom", cascade = CascadeType.PERSIST)
+	public Set<Relation> causes;
 
-	@ElementCollection
-	@JoinTable(name = "corrections", joinColumns = {@JoinColumn(name = "cause_id", nullable = false)})
-	@Column(name = "correction")
-	public List<String> corrections;
+	@JoinTable(name = "corrections", joinColumns = {@JoinColumn(name = "causeId", nullable = false)},
+	           inverseJoinColumns = {@JoinColumn(name = "correctionId", nullable = false)})
+	@OneToMany
+	public Set<Correction> corrections;
 
 	/**
 	 * Creates a new cause with name and creator.
@@ -53,19 +50,40 @@ public class Cause extends Model {
 		this.rcaCase = rcaCase;
 		this.name = name;
 		this.creatorId = creator.id;
-		causes = new TreeSet<Cause>();
-		corrections = new ArrayList<String>();
+		causes = new TreeSet<Relation>();
+		effects = new TreeSet<Relation>();
+		corrections = new TreeSet<Correction>();
 	}
 
 	/**
+	 * Deprecated method, use addCorrection(name, description) instead.
 	 * Adds a corrective action for a cause.
 	 *
 	 * @param name name of the corrective action.
 	 *
 	 * @return returns the Cause object.
 	 */
+	@Deprecated
 	public Cause addCorrection(String name) {
-		this.corrections.add(name);
+		Correction action = new Correction(name, "");
+		action.save();
+		this.corrections.add(action);
+		this.save();
+		return this;
+	}
+
+	/**
+	 * Adds a corrective action for a cause.
+	 *
+	 * @param name name of the corrective action.
+	 * @param description description of the corrective action.
+	 *
+	 * @return returns the Cause object.
+	 */
+	public Cause addCorrection(String name, String description) {
+		Correction action = new Correction(name, description);
+		action.save();
+		this.corrections.add(action);
 		this.save();
 		return this;
 	}
@@ -80,8 +98,12 @@ public class Cause extends Model {
 	 * @return cause the cause created when added.
 	 */
 	public Cause addCause(String name, User creator) {
-		Cause newCause = new Cause(rcaCase, name, creator).save();
-		this.causes.add(newCause);
+		Cause newCause = new Cause(rcaCase, name, creator);
+		Relation newRelation = new Relation(newCause, this);
+		this.causes.add(newRelation);
+		newCause.effects.add(newRelation);
+		newCause.save();
+		newRelation.save();
 		this.save();
 		return newCause;
 	}
@@ -91,29 +113,38 @@ public class Cause extends Model {
 	 *
 	 * @param cause cause to add.
 	 *
-	 * @return on success returns the added cause, otherwise returns null
+	 * @return returns the added cause
 	 */
 	public Cause addCause(Cause cause) {
-		this.causes.add(cause);
+		Relation newRelation = new Relation(cause, this);
+		this.causes.add(newRelation);
+		cause.effects.add(newRelation);
+		cause.save();
+		newRelation.save();
 		this.save();
 		return cause;
 	}
 
 	/**
-	 * Delete a cause from a cause.
+	 * Deletes the cause.
 	 *
 	 */
 	public void deleteCause() {
-		for (Cause cause : causesOf) {
-			cause.causes.remove(this);
-			cause.save();
+		for (Relation relation : causes) {
+			relation.causeFrom.effects.remove(relation);
+			relation.causeFrom.save();
+			relation.delete();
 		}
-		this.rcaCase = null;
+		for (Relation relation : effects) {
+			relation.causeTo.causes.remove(relation);
+			relation.causeTo.save();
+			relation.delete();
+		}
 		this.delete();
 	}
 
 	/**
-	 * Get the creator of the cause
+	 * Gets the creator of the cause
 	 *
 	 * @return the creator of the cause
 	 */

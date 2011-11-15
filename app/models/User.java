@@ -23,8 +23,8 @@ public class User extends Model {
 	public String password;
 
 	@ElementCollection
-	@JoinTable(name = "usercases", joinColumns = {@JoinColumn(name = "user_id", nullable = false)})
-	@Column(name = "case_id")
+	@JoinTable(name = "usercases", joinColumns = {@JoinColumn(name = "userId", nullable = false)})
+	@Column(name = "caseId")
 	public Set<Long> caseIDs;
 
 	/**
