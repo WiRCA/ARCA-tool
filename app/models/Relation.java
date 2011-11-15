@@ -38,9 +38,11 @@ import javax.persistence.*;
 public class Relation extends Model {
 
 	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name="causeFrom")
 	public Cause causeFrom;
 
 	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name="causeTo")
 	public Cause causeTo;
 
 	/**
