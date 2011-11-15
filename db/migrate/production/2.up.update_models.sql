@@ -1,6 +1,6 @@
 DROP TABLE usercases;
 
-CREATE TABLE wircatestuser.usercases (
+CREATE TABLE arcatooluser.usercases (
   user_id BIGINT UNSIGNED NOT NULL,
   case_id BIGINT,
   PRIMARY KEY (user_id, case_id),
