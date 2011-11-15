@@ -35,6 +35,7 @@ import java.util.Set;
  *
  * @author Eero Laukkanen
  */
+@PersistenceUnit(name="userdb")
 @Entity(name="invitation")
 public class Invitation extends Model {
 

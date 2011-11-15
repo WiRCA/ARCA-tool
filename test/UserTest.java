@@ -3,7 +3,6 @@ import models.User;
 import models.enums.CompanySize;
 import models.enums.RCACaseType;
 import org.junit.Test;
-import play.mvc.Before;
 import play.test.UnitTest;
 import utils.EncodingUtils;
 
@@ -21,24 +20,22 @@ public class UserTest extends UnitTest {
 		assertEquals(normalUser.password, EncodingUtils.encodeSHA1("newPassword"));
 	}
 
-    @Test
-    public void addRcaCaseTest() {
-        User rcaCaseUser = new User("rcaCaseUser@arcatool.fi", "password").save();
-	    assertNotNull(rcaCaseUser);
-		rcaCaseUser.addRCACase("new unique rca case", RCACaseType.HR.value, "Kaapelissa ei vikaa", "Kaapelissa " +
-		                                                                                            "vikaa", true,
-			    "test company",
-		                       CompanySize.FIFTY.value, "Kaikenlaista romua", true).save();
-	    rcaCaseUser.save();
-	    rcaCaseUser.refresh();
-	    assertTrue(rcaCaseUser.caseIDs.size() == 1);
-	    assertTrue(rcaCaseUser.getRCACases().size() == 1);
-	    RCACase rcaCase = RCACase.find("byName", "new unique rca case").first();
-	    assertNotNull(rcaCase);
-	    assertTrue(rcaCaseUser.caseIDs.contains(rcaCase.id));
-	    assertTrue(rcaCaseUser.getRCACases().contains(rcaCase));
-	    assertTrue(rcaCase.getOwner().equals(rcaCaseUser));
-	    assertTrue(rcaCase.problem.name.equals("new unique rca case"));
-    }
+	@Test
+	public void addRcaCaseTest() {
+		User rcaCaseUser = new User("rcaCaseUser@arcatool.fi", "password").save();
+		assertNotNull(rcaCaseUser);
+		rcaCaseUser
+				.addRCACase("new unique rca case", RCACaseType.HR.value, "Kaapelissa ei vikaa",
+				            "Kaapelissa " + "vikaa",
+				            true, "test company", CompanySize.FIFTY.value, "Kaikenlaista romua", true);
+		assertTrue(rcaCaseUser.caseIDs.size() == 1);
+		assertTrue(rcaCaseUser.getRCACases().size() == 1);
+		RCACase rcaCase = RCACase.find("byName", "new unique rca case").first();
+		assertNotNull(rcaCase);
+		assertTrue(rcaCaseUser.caseIDs.contains(rcaCase.id));
+		assertTrue(rcaCaseUser.getRCACases().contains(rcaCase));
+		assertTrue(rcaCase.getOwner().equals(rcaCaseUser));
+		assertTrue(rcaCase.problem.name.equals("new unique rca case"));
+	}
 
 }

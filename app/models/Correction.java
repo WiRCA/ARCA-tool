@@ -29,11 +29,13 @@ import play.db.jpa.Model;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PersistenceUnit;
 
 /**
  * Corrective action for a cause in RCA tree.
  * @author Eero Laukkanen
  */
+@PersistenceUnit(name = "maindb")
 @Entity(name="correction")
 public class Correction extends Model {
 

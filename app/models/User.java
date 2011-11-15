@@ -24,7 +24,7 @@ public class User extends Model {
 
 	@ElementCollection
 	@JoinTable(name = "usercases", joinColumns = {@JoinColumn(name = "userId", nullable = false)})
-	@Column(name = "caseId")
+	@Column(name = "caseId", nullable = false)
 	public Set<Long> caseIDs;
 
 	/**

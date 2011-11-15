@@ -62,9 +62,10 @@ public class RCACase extends Model {
 	public Long ownerId;
 
 	@OneToOne
+	@JoinColumn(name="problemId")
 	public Cause problem;
 
-	@OneToMany(mappedBy = "rcaCase")
+	@OneToMany(mappedBy = "rcaCase", cascade = CascadeType.ALL)
 	public Set<Cause> causes;
 
 	/**

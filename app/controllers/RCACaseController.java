@@ -24,10 +24,12 @@
 package controllers;
 
 import com.google.gson.reflect.TypeToken;
+import models.Cause;
 import models.RCACase;
 import models.User;
 import models.enums.CompanySize;
 import models.enums.RCACaseType;
+import play.Logger;
 import play.data.validation.Min;
 import play.data.validation.Required;
 import play.data.validation.Valid;
@@ -65,7 +67,8 @@ public class RCACaseController extends Controller {
 		User user = SecurityController.getCurrentUser();
 		RCACase rcaCase = user.addRCACase(caseName, caseTypeValue, caseGoals, description, isMultinational,
 	               companyName,
-	               companySize, companyProducts, isCasePublic).save();
+	               companySize, companyProducts, isCasePublic);
+		Logger.info("got here");
 		show(rcaCase.id);
 	}
 
