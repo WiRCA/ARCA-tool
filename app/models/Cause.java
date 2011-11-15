@@ -32,7 +32,7 @@ public class Cause extends Model {
 	@OneToMany(mappedBy = "causeFrom", cascade = CascadeType.PERSIST)
 	public Set<Relation> causes;
 
-	@JoinTable(name = "corrections", joinColumns = {@JoinColumn(name = "causeId", nullable = false)},
+	@JoinTable(name = "correction", joinColumns = {@JoinColumn(name = "causeId", nullable = false)},
 	           inverseJoinColumns = {@JoinColumn(name = "correctionId", nullable = false)})
 	@OneToMany
 	public Set<Correction> corrections;
