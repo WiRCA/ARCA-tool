@@ -1,5 +1,6 @@
 package models;
 
+import org.hibernate.annotations.Cascade;
 import play.db.jpa.Model;
 
 import javax.persistence.*;
@@ -32,9 +33,7 @@ public class Cause extends Model {
 	@OneToMany(mappedBy = "causeFrom", cascade = CascadeType.PERSIST)
 	public Set<Relation> causes;
 
-	@JoinTable(name = "correction", joinColumns = {@JoinColumn(name = "causeId", nullable = false)},
-	           inverseJoinColumns = {@JoinColumn(name = "correctionId", nullable = false)})
-	@OneToMany
+	@OneToMany(mappedBy = "cause", cascade = CascadeType.PERSIST)
 	public Set<Correction> corrections;
 
 	/**

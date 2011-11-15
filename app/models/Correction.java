@@ -27,6 +27,8 @@ package models;
 import play.db.jpa.Model;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 /**
  * Corrective action for a cause in RCA tree.
@@ -38,6 +40,10 @@ public class Correction extends Model {
 	public String name;
 
 	public String description;
+
+	@ManyToOne
+	@JoinColumn(name = "causeId")
+	public Cause cause;
 
 	/**
 	 * Creates a new correction with specified name and description.
