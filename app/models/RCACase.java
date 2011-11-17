@@ -61,7 +61,7 @@ public class RCACase extends Model {
 	@Required
 	public Long ownerId;
 
-	@OneToOne
+	@OneToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name="problemId")
 	public Cause problem;
 
@@ -140,6 +140,11 @@ public class RCACase extends Model {
 			stream = setCauseStream();
 		}
 		return stream;
+	}
+
+	public void deleteCause(Cause cause) {
+		this.causes.remove(cause);
+		this.save();
 	}
 
 }

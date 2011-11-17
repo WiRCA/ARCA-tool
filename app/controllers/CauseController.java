@@ -60,7 +60,7 @@ public class CauseController extends Controller {
 		Cause cause = Cause.findById(Long.valueOf(causeId));
 		RCACase rcaCase = cause.rcaCase;
 
-		cause.deleteCause();
+		rcaCase.deleteCause(cause);
 
 		DeleteCauseEvent deleteEvent = new DeleteCauseEvent(cause);
 		CauseStream causeEvents = rcaCase.getCauseStream();

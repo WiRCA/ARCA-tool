@@ -2,6 +2,7 @@ package models;
 
 import org.hibernate.annotations.Cascade;
 import play.db.jpa.Model;
+import utils.IdComparableModel;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -17,23 +18,32 @@ import java.util.TreeSet;
 
 @PersistenceUnit(name = "maindb")
 @Entity(name = "cause")
-public class Cause extends Model {
+public class Cause extends IdComparableModel {
 
 	public String name;
 
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "rcaCaseId")
 	public RCACase rcaCase;
 
 	public Long creatorId;
 
-	@OneToMany(mappedBy = "causeTo", cascade = CascadeType.PERSIST)
-	public Set<Relation> effects;
+	@OneToMany(mappedBy = "causeTo", cascade = CascadeType.ALL)
+	public Set<Relation> causeRelations;
 
-	@OneToMany(mappedBy = "causeFrom", cascade = CascadeType.PERSIST)
-	public Set<Relation> causes;
+	@OneToMany(mappedBy = "causeFrom", cascade = CascadeType.ALL)
+	public Set<Relation> effectRelations;
 
-	@OneToMany(mappedBy = "cause", cascade = CascadeType.PERSIST)
+	@Transient
+	public Set<Cause> causes;
+
+	@Transient
+	public Set<Cause> relations;
+
+	@Transient
+	public Cause parent;
+
+	@OneToMany(mappedBy = "cause", cascade = CascadeType.ALL)
 	public Set<Correction> corrections;
 
 	/**
@@ -49,8 +59,8 @@ public class Cause extends Model {
 		this.rcaCase = rcaCase;
 		this.name = name;
 		this.creatorId = creator.id;
-		causes = new TreeSet<Relation>();
-		effects = new TreeSet<Relation>();
+		causeRelations = new TreeSet<Relation>();
+		effectRelations = new TreeSet<Relation>();
 		corrections = new TreeSet<Correction>();
 	}
 
@@ -99,8 +109,8 @@ public class Cause extends Model {
 	public Cause addCause(String name, User creator) {
 		Cause newCause = new Cause(rcaCase, name, creator);
 		Relation newRelation = new Relation(newCause, this);
-		this.causes.add(newRelation);
-		newCause.effects.add(newRelation);
+		this.causeRelations.add(newRelation);
+		newCause.effectRelations.add(newRelation);
 		newCause.save();
 		newRelation.save();
 		this.save();
@@ -116,8 +126,8 @@ public class Cause extends Model {
 	 */
 	public Cause addCause(Cause cause) {
 		Relation newRelation = new Relation(cause, this);
-		this.causes.add(newRelation);
-		cause.effects.add(newRelation);
+		this.causeRelations.add(newRelation);
+		cause.effectRelations.add(newRelation);
 		cause.save();
 		newRelation.save();
 		this.save();
@@ -125,21 +135,19 @@ public class Cause extends Model {
 	}
 
 	/**
-	 * Deletes the cause.
+	 * Deletes the cause from the relations of other causes.
 	 *
 	 */
 	public void deleteCause() {
-		for (Relation relation : causes) {
-			relation.causeFrom.effects.remove(relation);
-			relation.causeFrom.save();
-			relation.delete();
+		for (Relation relation : causeRelations) {
+			relation.causeFrom.effectRelations.remove(relation);
+			this.causeRelations.remove(relation);
 		}
-		for (Relation relation : effects) {
-			relation.causeTo.causes.remove(relation);
-			relation.causeTo.save();
-			relation.delete();
+		for (Relation relation : effectRelations) {
+			relation.causeTo.causeRelations.remove(relation);
+			this.effectRelations.remove(relation);
 		}
-		this.delete();
+		this.save();
 	}
 
 	/**
@@ -149,5 +157,59 @@ public class Cause extends Model {
 	 */
 	public User getCreator() {
 		return User.findById(creatorId);
+	}
+
+	/**
+	 * Returns the children of this cause.
+	 * @return the children of this cause.
+	 */
+	public Set<Cause> getCauses() {
+		TreeSet<Cause> children = new TreeSet<Cause>();
+		for (Relation relation : this.causeRelations) {
+			if (relation.causeFrom.isChildOf(this)) {
+				children.add(relation.causeFrom);
+			}
+		}
+		return children;
+	}
+
+	/**
+	 * Returns the relations to the causes that are not children of this cause.
+	 * @return the relations
+	 */
+	public Set<Cause> getRelations() {
+		TreeSet<Cause> relations = new TreeSet<Cause>();
+		for (Relation relation : this.causeRelations) {
+			if (!relation.causeFrom.isChildOf(this)) {
+				relations.add(relation.causeFrom);
+			}
+		}
+		return relations;
+	}
+
+	/**
+	 * returns the parent of this cause.
+	 * @return the parent of this cause
+	 */
+	public Cause getParent() {
+		if (this.effectRelations.size() > 0) {
+			return ((Relation)this.effectRelations.toArray()[0]).causeTo;
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
+	 * Checks if the cause is the parent of this cause.
+	 * @param cause cause that can be the parent of this cause.
+	 * @return true if the given cause is the parent of this cause.
+	 */
+	public boolean isChildOf(Cause cause) {
+		if (this.parent.equals(cause)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

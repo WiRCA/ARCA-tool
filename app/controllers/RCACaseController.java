@@ -68,7 +68,6 @@ public class RCACaseController extends Controller {
 		RCACase rcaCase = user.addRCACase(caseName, caseTypeValue, caseGoals, description, isMultinational,
 	               companyName,
 	               companySize, companyProducts, isCasePublic);
-		Logger.info("got here");
 		show(rcaCase.id);
 	}
 

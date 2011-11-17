@@ -22,37 +22,33 @@
  * THE SOFTWARE.
  */
 
-package models;
+package utils;
 
 import play.db.jpa.Model;
-import utils.IdComparableModel;
-
-import javax.persistence.*;
 
 /**
- * Relation between two causes in an RCA tree.
+ * Class that supports play.db.jpa.Model and is Comparable.
  * @author Eero Laukkanen
  */
+public class IdComparableModel extends Model implements Comparable {
 
-@PersistenceUnit(name = "maindb")
-@Entity(name = "relation")
-public class Relation extends IdComparableModel {
-
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name="causeFrom")
-	public Cause causeFrom;
-
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name="causeTo")
-	public Cause causeTo;
-
-	/**
-	 * Creates a relation between two causes.
-	 * @param causeFrom cause that is the cause of the relation
-	 * @param causeTo cause that is the effect of the relation
-	 */
-	public Relation(Cause causeFrom, Cause causeTo) {
-		this.causeFrom = causeFrom;
-		this.causeTo = causeTo;
+		public int compareTo(Object o) {
+		Long oid = ((IdComparableModel)o).id;
+		if (this.id == null && oid != null) {
+			return 1;
+		}
+		if (this.id != null && oid == null) {
+			return -1;
+		}
+		if (this.id == null && oid == null) {
+			return 0;
+		}
+		if (this.id > oid) {
+			return -1;
+		} else if (this.id == oid) {
+			return 0;
+		} else {
+			return 1;
+		}
 	}
 }
