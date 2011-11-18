@@ -1,14 +1,31 @@
 #{extends 'main.html' /}
 #{set title:'Home' /}
-
+*{TODO: Creation date to links. MOdification of mouseovers. Overall layout revamp.}*
 <h1>&{'user.welcomeTitle', user.name}</h1>
 
 <h2>&{'user.myCases'}</h2>
 <ul>
-#{list items:cases, as:'rcaCase'}
-<li>#{a @RCACaseController.show(rcaCase.id)} ${rcaCase.caseName} #{/a}</li>
+#{list items:ownCases, as:'rcaCase'}
+<li>#{a @RCACaseController.show(rcaCase.id)} ${rcaCase.caseName} ${rcaCase.updated} #{/a} &{'user.created'} ${rcaCase
+.created}</li>
 #{/list}
 #{else}<li>&{'user.noRCACases'}</li>#{/else}
+</ul>
+
+<h2>&{'user.sharedCases'}</h2>
+        <ul>
+#{list items:privateCases, as:'rcaCase'}
+<li>#{a @RCACaseController.show(rcaCase.id)} ${rcaCase.caseName} #{/a}</li>
+#{/list}
+#{else}<li>&{'user.noPrivateCases'}</li>#{/else}
+</ul>
+
+<h2>&{'user.publicCases'}</h2>
+        <ul>
+#{list items:publicCases, as:'rcaCase'}
+<li>#{a @RCACaseController.show(rcaCase.id)} ${rcaCase.caseName} #{/a}</li>
+#{/list}
+#{else}<li>&{'user.noPublicCases'}</li>#{/else}
 </ul>
 
 #{a @RCACaseController.createRCACase()} &{'user.createRCACase'} #{/a}

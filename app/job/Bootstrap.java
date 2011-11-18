@@ -32,6 +32,8 @@ public class Bootstrap extends Job {
 
 	public static final String ADMIN_USER_EMAIL = "admin@local";
 	public static final String ADMIN_USER_PASSWORD = "admin";
+	public static final String TEST_USER_EMAIL = "tester@local";
+	public static final String TEST_USER_PASSWORD = "tester";
 
     public void doJob() {
         // Check if the database is empty
@@ -40,5 +42,10 @@ public class Bootstrap extends Job {
 	        admin.name = "Admin user";
 	        admin.save();
         }
+	    if(User.count() == 1){
+		    User tester = new User(TEST_USER_EMAIL, TEST_USER_PASSWORD);
+		    tester.name = "Test user";
+		    tester.save();
+	    }
     }
 }

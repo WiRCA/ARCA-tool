@@ -60,6 +60,7 @@ public class RCACaseTest extends UnitTest {
 		assertEquals(testCase.companyProducts, "Kaapelit ja johtimet");
 		assertFalse(testCase.isCasePublic);
 		assertTrue(testCase.isMultinational);
+		assertNotNull(testCase.created);
 		assertEquals(comparisonCase.caseName, "TestRCACase");
 	}
 

@@ -5,10 +5,7 @@ import play.db.jpa.Model;
 import utils.IdComparableModel;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * Cause in RCA case tree.
@@ -28,6 +25,11 @@ public class Cause extends IdComparableModel {
 
 	public Long creatorId;
 
+@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "updated", nullable = false)
+	private Date updated;
+
+
 	@OneToMany(mappedBy = "causeTo", cascade = CascadeType.ALL)
 	public Set<Relation> causeRelations;
 
@@ -45,6 +47,17 @@ public class Cause extends IdComparableModel {
 
 	@OneToMany(mappedBy = "cause", cascade = CascadeType.ALL)
 	public Set<Correction> corrections;
+
+	@PrePersist
+	protected void onCreate() {
+		updated = new Date();
+		rcaCase.updated = updated;
+	}
+	@PreUpdate
+	protected void onUpdate() {
+		updated = new Date();
+		rcaCase.updated = updated;
+	}
 
 	/**
 	 * Creates a new cause with name and creator.

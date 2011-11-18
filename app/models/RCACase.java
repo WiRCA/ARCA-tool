@@ -13,6 +13,7 @@ import play.libs.F.IndexedEvent;
 import play.libs.F.Promise;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -67,6 +68,19 @@ public class RCACase extends Model {
 
 	@OneToMany(mappedBy = "rcaCase", cascade = CascadeType.ALL)
 	public Set<Cause> causes;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "created", nullable = false)
+	public Date created;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "updated", nullable = false)
+	public Date updated;
+
+	@PrePersist
+	protected void onCreate() {
+		updated = created = new Date();
+	}
 
 	/**
 	 * Constructor for the form in create.html.

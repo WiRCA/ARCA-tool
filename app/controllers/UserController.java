@@ -27,6 +27,7 @@ import play.mvc.With;
 import models.User;
 import models.RCACase;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -38,7 +39,23 @@ public class UserController extends Controller {
 	public static void index() {
 		User user = SecurityController.getCurrentUser();
 		Set<RCACase> cases = user.getRCACases();
-		render(user, cases);
+		Set<RCACase> ownCases = new HashSet<RCACase>();
+		Set<RCACase> privateCases = new HashSet<RCACase>();
+		Set<RCACase> publicCases = new HashSet<RCACase>();
+
+		for(RCACase case1 : cases){
+			if (user.id == case1.ownerId){
+				ownCases.add(case1);
+			}
+			else if(!case1.isCasePublic){
+				privateCases.add(case1);
+			}
+			else{
+				publicCases.add(case1);
+			}
+
+		}
+		render(user, ownCases,privateCases,publicCases);
 	}
 
 	public static void registerUser() {
