@@ -59,7 +59,6 @@ public class RCACase extends Model {
 
 	public boolean isCasePublic;
 
-	@Required
 	public Long ownerId;
 
 	@OneToOne(cascade = CascadeType.PERSIST)
@@ -83,6 +82,13 @@ public class RCACase extends Model {
 	}
 
 	/**
+	 * Basic constructor
+	 */
+	public RCACase(User owner) {
+		this.ownerId = owner.id;
+	}
+
+	/**
 	 * Constructor for the form in create.html.
 	 *
 	 * @param caseName The name of the RCA case
@@ -99,11 +105,8 @@ public class RCACase extends Model {
 	 * problem The Cause object that represents the problem of the RCA case.
 	 */
 
-	public RCACase(@Valid String caseName, @Valid int caseTypeValue, @Valid String caseGoals,
-	               @Valid String description,
-	               boolean isMultinational,
-	               @Valid String companyName,
-	               @Valid int companySizeValue, @Valid String companyProducts, boolean isCasePublic,
+	public RCACase(String caseName, int caseTypeValue, String caseGoals, String description, boolean isMultinational,
+	               String companyName, int companySizeValue, String companyProducts, boolean isCasePublic,
 	               User owner) {
 		this.caseName = caseName;
 		this.caseTypeValue = caseTypeValue;

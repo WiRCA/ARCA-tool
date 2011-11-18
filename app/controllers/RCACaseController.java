@@ -48,26 +48,21 @@ import models.events.*;
 public class RCACaseController extends Controller {
 
 	public static void createRCACase() {
+		RCACase rcaCase = new RCACase(SecurityController.getCurrentUser());
 		RCACaseType[] types = RCACaseType.values();
 		CompanySize[] companySizes = CompanySize.values();
-		render(types, companySizes);
+		render(rcaCase, types, companySizes);
 	}
 
-	public static void create(@Valid String caseName, @Valid int caseTypeValue,
-	                          @Valid String caseGoals, @Valid String description,
-	                          boolean isMultinational,
-	               @Valid String companyName,
-	               @Valid int companySize, @Valid String companyProducts, boolean isCasePublic) {
+	public static void create(@Valid RCACase rcaCase) {
 		if (validation.hasErrors()) {
 			params.flash(); // add http parameters to the flash scope
 			validation.keep(); // keep the errors for the next request
 			createRCACase();
 		}
-
+		rcaCase.save();
 		User user = SecurityController.getCurrentUser();
-		RCACase rcaCase = user.addRCACase(caseName, caseTypeValue, caseGoals, description, isMultinational,
-	               companyName,
-	               companySize, companyProducts, isCasePublic);
+		user.addRCACase(rcaCase);
 		show(rcaCase.id);
 	}
 

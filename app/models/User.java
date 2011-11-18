@@ -27,6 +27,8 @@ public class User extends Model {
 	@Column(name = "caseId", nullable = false)
 	public Set<Long> caseIDs;
 
+
+
 	/**
 	 * @param email    User's email address
 	 * @param password User's password
@@ -54,6 +56,9 @@ public class User extends Model {
 	 * @return RCACase object that represents the existing RCA case that is added to User.
 	 */
 	public RCACase addRCACase(RCACase rcaCase) {
+		// Creating the new 'initial problem' for the RCACase with the case name.
+		rcaCase.problem = new Cause(rcaCase, rcaCase.caseName, this).save();
+		rcaCase.save();
 		this.caseIDs.add(rcaCase.id);
 		this.save();
 		return rcaCase;

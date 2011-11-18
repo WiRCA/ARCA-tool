@@ -1,7 +1,8 @@
 #{extends 'main.html' /}
 #{set title:'createRCA.title' /}
 <!--
-  ~ Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen, Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus
+  ~ Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen, Joona Koistinen,
+  Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus
   ~
   ~ Permission is hereby granted, free of charge, to any person obtaining a copy
   ~ of this software and associated documentation files (the "Software"), to deal
@@ -42,7 +43,7 @@ Yrityksen tiedot:
 
     #{if flash.error}
     <p class="error">RCA Case type
-        &{flash.error}
+                     &{flash.error}
     </p>
     #{/if}
     #{if flash.success}
@@ -51,71 +52,72 @@ Yrityksen tiedot:
     </p>
     #{/if}
 
+    <input type="hidden" name="rcaCase.ownerId" value="${rcaCase.ownerId}">
+
     <p id="caseName-field">
         <label for="caseName">&{'createRCA.caseName'}</label>
-        <input type="text" name="caseName" id="caseName" value="${flash.caseName}"/>
-        <span class="error">#{error 'name' /}</span>
+        <input type="text" name="rcaCase.caseName" id="caseName" value="${flash.rcaCase?.caseName}"/>
+        <span class="error">#{error 'rcaCase.caseName' /}</span>
     </p>
 
     <p id="RCACaseType">
         <label for="RCACaseType">&{'createRCA.rcaCaseType'}</label>
-        #{select 'caseTypeValue', value:"${flash.caseTypeValue}", id:'caseTypeValue'}
+        #{select 'rcaCase.caseTypeValue', value:"${flash.rcaCase?.caseTypeValue}", id:'caseTypeValue'}
         <option value="-1">SELECT</option>
         #{list types, as:'caseTypeValue'}
-            #{option caseTypeValue.value}${caseTypeValue.text}#{/option}
+        #{option caseTypeValue.value}${caseTypeValue.text}#{/option}
         #{/list}
         #{/select}
-        <span class="error">#{error 'caseTypeValue' /}</span>
+        <span class="error">#{error 'rcaCase.caseTypeValue' /}</span>
     </p>
 
     <p id="description-field">
         <label for="description">&{'createRCA.description'}</label><br>
-        <textarea rows = "4" cols = "40" name="description" id="description" value="${flash
-        .description}"></textarea>
-        <span class="error">#{error 'description' /}</span>
+        <textarea rows="4" cols="40" name="rcaCase.description" id="description">${flash.rcaCase?.description}</textarea>
+        <span class="error">#{error 'rcaCase.description' /}</span>
     </p>
 
     <p id="caseGoals-field">
         <label for="caseGoals">&{'createRCA.caseGoals'}</label> <br>
-        <textarea rows = "4" cols = "40" name="caseGoals" id="caseGoals" value="${flash.caseGoals}"></textarea>
-        <span class="error">#{error 'caseGoals' /}</span>
+        <textarea rows="4" cols="40" name="rcaCase.caseGoals" id="caseGoals" >${flash.rcaCase?.caseGoals}</textarea>
+        <span class="error">#{error 'rcaCase.caseGoals' /}</span>
     </p>
 
     <p id="company-field">
         <label for="companyName">&{'createRCA.companyName'}</label>
-        <input type="text" name="companyName" id="companyName" value="${flash.companyName}"/>
-        <span class="error">#{error 'companyName' /}</span>
+        <input type="text" name="rcaCase.companyName" id="companyName" value="${flash.rcaCase?.companyName}"/>
+        <span class="error">#{error 'rcaCase.companyName' /}</span>
     </p>
 
     <p id="sizeDropDown">
-    <label for="sizeDropDown">&{'createRCA.companySize'}</label>
-    #{select 'companySize', value:"${flash.companySize}", id:'companySize'}
-    <option value="-1">SELECT</option>
-     #{list companySizes, as:'size'}
+        <label for="sizeDropDown">&{'createRCA.companySize'}</label>
+        #{select 'rcaCase.companySizeValue', value:"${flash.rcaCase?.companySizeValue}", id:'companySize'}
+        <option value="-1">SELECT</option>
+        #{list companySizes, as:'size'}
         #{option size.value}${size.text}#{/option}
-    #{/list}
-    #{/select}
-    <span class="error">#{error 'companySize' /}</span>
+        #{/list}
+        #{/select}
+        <span class="error">#{error 'rcaCase.companySize' /}</span>
     </p>
 
     <p id="companyProducts-field">
         <label for="companyProducts">&{'createRCA.companyProducts'}</label> <br>
-        <textarea rows = "4" cols = "40" name="companyProducts" id="companyProducts" value="${flash
-        .companyProducts}"></textarea>
-        <span class="error">#{error 'companyProducts' /}</span>
+        <textarea rows="4" cols="40" name="rcaCase.companyProducts" id="companyProducts" value="${flash
+        .rcaCase?.companyProducts}"></textarea>
+        <span class="error">#{error 'rcaCase.companyProducts' /}</span>
     </p>
 
     <p id="isMultinational-field">
-        <input type="checkbox" name="isMultinational" id="isMultinational" value="true" ${flash.isMultinational ?
-        'checked="true"' : ''}/>
-        <span class="error">#{error 'isMultinational' /}</span>
+        <input type="checkbox" name="rcaCase.isMultinational" id="isMultinational" value="true"
+        ${flash.rcaCase?.isMultinational ? 'checked="true"' : ''}/>
+        <span class="error">#{error 'rcaCase.isMultinational' /}</span>
         <label for="isMultinational">&{'createRCA.isMultinational'}</label>
     </p>
 
     <p id="public-field">
-        <input type="checkbox" name="isCasePublic" id="isCasePublic" value="true" ${flash.isCasePublic ? 'checked="true"' :
-        ''} />
-        <span class="error">#{error 'isCasePublic' /}</span>
+        <input type="checkbox" name="rcaCase.isCasePublic" id="isCasePublic" value="true"
+        ${flash.rcaCase?.isCasePublic ? 'checked="true"' :''} />
+        <span class="error">#{error 'rcaCase.isCasePublic' /}</span>
         <label for="isCasePublic">&{'createRCA.public'}</label>
     </p>
 
