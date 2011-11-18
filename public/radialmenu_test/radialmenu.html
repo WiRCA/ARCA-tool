@@ -1,0 +1,46 @@
+<html>
+<head>
+	<script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js'></script>
+
+<script type='text/javascript' src='jQuery.radmenu.js'></script>
+</head>
+	
+<body>
+<link rel="stylesheet" media="screen" href="arcaeditor.css" type="text/css">
+<div id='radial_container'>
+	<ul class='list'>
+		<li class='item'>	<div class='my_class'>  0  </div>	</li>
+		<li class='item'>	<div class='my_class'>  1  </div>	</li>
+		<li class='item'>	<div class='my_class'>  2  </div>	</li>
+		<li class='item'>	<div class='my_class'>  3  </div>	</li>
+
+	</ul>
+</div>
+
+<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+<a href="#" onClick='jQuery("#radial_container").radmenu("show")'>
+<div class="node">
+	This is node
+</div>
+</a>
+
+
+
+
+<script type='text/javascript'>
+jQuery("#radial_container").radmenu({
+	listClass: 'list', // the list class to look within for items
+	itemClass: 'item', // the items - NOTE: the HTML inside the item is copied into the menu item
+	radius: 100, // radius in pixels
+	animSpeed:400, // animation speed in millis
+	centerX: 0, // the center x axis offset
+	centerY: 0, // the center y axis offset
+	selectEvent: "click", // the select event (click)
+	onSelect: function($selected){ // show what is returned 
+		alert("you clicked on .. " + $selected.index());
+	},
+	angleOffset: 0 // in degrees
+});
+</script>
+</body>
+</html>
