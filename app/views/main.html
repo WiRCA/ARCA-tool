@@ -21,12 +21,7 @@
         	</div>
 
             <div class="span-4 last">
-                #{if session.username}
-                    <p>User's name: ${session.userFullname} #{a @Secure.logout(), id:'logout-link'}Logout#{/a}</p>
-                #{/if}
-                #{else}
-                    <p>#{a @Secure.login(), id:'login-link'}Login#{/a}</p>
-                #{/else}
+              	#{login /}
             </div>
 
         	<div class="span-4">
