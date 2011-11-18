@@ -23,6 +23,7 @@
 package controllers;
 
 import play.i18n.Lang;
+import play.libs.OpenID;
 import play.mvc.Controller;
 import play.mvc.With;
 import models.User;
@@ -63,6 +64,28 @@ public class UserController extends Controller {
 
 	}
 
+	public static void regUs() {
+		if (OpenID.isAuthenticationResponse()) {
+			OpenID.UserInfo verifiedUser = OpenID.getVerifiedID();
+			if (verifiedUser == null) {
+				flash.error("Oops. Authentication has failed");
+				index();
+			}
+			session.put("user", verifiedUser.id);
+			String email = verifiedUser.extensions.get("email");
+			index();
+		} else {
+			if (!OpenID.id("https://www.google.com/accounts/o8/id") // will redirect the user
+					.required("openid.ax.type.email", "http://axschema.org/contact/email")
+					.required("openid.ax.type.firstname", "http://axschema.org/namePerson/first")
+					.required("openid.ax.type.lastname", "http://axschema.org/namePerson/last")
+					.verify()) {
+				flash.error("Cannot verify your OpenID");
+				index();
+			}
+		}
+	}
+
 	public static void register(String name, String email, String password) {
 
 	}
@@ -75,4 +98,5 @@ public class UserController extends Controller {
 		Lang.change(lang);
 		redirect("/" + url);
 	}
+
 }

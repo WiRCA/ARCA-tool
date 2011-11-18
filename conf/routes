@@ -7,7 +7,7 @@
 
 # Language change
 GET     /language/{lang}/{url}                      UserController.changeLanguage
-
+GET     /regUs                                      UserController.regUs
 # Home page
 GET     /                                           ApplicationController.index
 GET     /user                                       UserController.index
