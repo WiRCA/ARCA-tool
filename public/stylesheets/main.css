@@ -1,0 +1,13 @@
+a.lang-select {
+    font-size: 0;
+    line-height: 0;
+    margin: 0 2px;
+    padding: 0;
+}
+
+a.lang-select img {
+    margin: 0;
+    padding: 1px;
+    border: 1px solid lightgray;
+    height: 11px;
+}

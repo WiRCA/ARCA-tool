@@ -22,6 +22,7 @@
 
 package controllers;
 
+import play.i18n.Lang;
 import play.mvc.Controller;
 import play.mvc.With;
 import models.User;
@@ -68,5 +69,10 @@ public class UserController extends Controller {
 
 	public static void addRCACaseForUser(Long caseId, Long userId) {
 
+	}
+
+	public static void changeLanguage(String lang, String url) {
+		Lang.change(lang);
+		redirect("/" + url);
 	}
 }

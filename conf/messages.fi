@@ -1,6 +1,6 @@
 #
 # Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
-# Joona Koistinen, Pekka Rihtniemi, Mika Kek‰le, Roope Hovi, Mikko Valjus,
+# Joona Koistinen, Pekka Rihtniemi, Mika Kek√§le, Roope Hovi, Mikko Valjus,
 # Timo Lehtinen, Jaakko Harjuhahto
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -22,8 +22,8 @@
 # THE SOFTWARE.
 #
 
-createRCA.title = Create a new RCA case
-createRCA.caseName = Case name
+createRCA.title = Luo uusi RCA tapaus
+createRCA.caseName = Tapauksen nimi
 createRCA.rcaCaseType = Case type
 createRCA.caseGoals = Case goals
 createRCA.description = Short description of the problem
@@ -47,7 +47,7 @@ user.createRCACase = Create new RCA case
 user.noRCACases = No RCA cases
 user.noPrivateCases = No private cases to show
 user.noPublicCases = You're not following any public cases
-user.created = Case created:
+user.created = Tapaus luotu:
 user.myCases = My cases
 user.sharedCases = Private cases shared with me
 user.publicCases = Public cases I'm following
