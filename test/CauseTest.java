@@ -23,8 +23,11 @@
  */
 
 import models.Cause;
+import models.RCACase;
 import models.User;
-import org.junit.Test;
+import models.enums.CompanySize;
+import models.enums.RCACaseType;
+import org.junit.*;
 import play.test.UnitTest;
 
 import java.util.Set;
@@ -34,12 +37,28 @@ import java.util.Set;
  */
 public class CauseTest extends UnitTest {
 
+	private User user;
+	private RCACaseType rcaCaseType;
+	private CompanySize size;
+	private RCACase testCase;
+
+	@Before
+	public void setUp(){
+		user = User.find("byEmail", "admin@local").first();
+		rcaCaseType = RCACaseType.valueOf(2);
+		size = CompanySize.valueOf(2);
+		testCase = user.addRCACase("TestRCACase", rcaCaseType.value, "Kaapelissa ei vikaa",
+		                                   "Kaapelissa vikaa", true,
+				"Keijon Kaapeli ja Kaivanto Oy",
+		                           size.value, "Kaapelit ja johtimet", false);
+	}
+
+
 	@Test
 	public void isParentTest() {
-		User user = new User("test@test", "test");
-		Cause cause1 = new Cause(null, "test cause1", user);
-		Cause cause2 = new Cause(null, "test cause2", user);
-		Cause cause3 = new Cause(null, "test cause3", user);
+		Cause cause1 = new Cause(testCase, "test cause1", user);
+		Cause cause2 = new Cause(testCase, "test cause2", user);
+		Cause cause3 = new Cause(testCase, "test cause3", user);
 		cause1.addCause(cause2);
 		assertTrue(cause2.isChildOf(cause1));
 		cause3.addCause(cause2);
@@ -48,11 +67,10 @@ public class CauseTest extends UnitTest {
 
 	@Test
 	public void getCausesTest() {
-		User user = new User("test@test", "test");
-		Cause cause1 = new Cause(null, "test cause1", user);
-		Cause cause2 = new Cause(null, "test cause2", user);
-		Cause cause3 = new Cause(null, "test cause3", user);
-		Cause cause4 = new Cause(null, "test cause4", user);
+		Cause cause1 = new Cause(testCase, "test cause1", user);
+		Cause cause2 = new Cause(testCase, "test cause2", user);
+		Cause cause3 = new Cause(testCase, "test cause3", user);
+		Cause cause4 = new Cause(testCase, "test cause4", user);
 		cause1.addCause(cause2);
 		cause1.addCause(cause3);
 		Set<Cause> causes = cause1.causes;
@@ -63,9 +81,8 @@ public class CauseTest extends UnitTest {
 
 	@Test
 	public void deleteTest() {
-		User user = new User("test@test", "test");
-		Cause cause1 = new Cause(null, "test cause1", user);
-		Cause cause2 = new Cause(null, "test cause2", user);
+		Cause cause1 = new Cause(testCase, "test cause1", user);
+		Cause cause2 = new Cause(testCase, "test cause2", user);
 		cause1.addCause(cause2);
 		cause2.deleteCause();
 		assertFalse(cause1.causes.contains(cause2));
