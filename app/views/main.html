@@ -16,21 +16,30 @@
     </head>
     <body>
       <div class="container">
-        	<div class="span-24">
-        		ARCA-tool
+        	<div class="span-16 prepend-4">
+        		<h1>ARCA-tool</h1>
         	</div>
+
+            <div class="span-4 last">
+                #{if session.username}
+                    <p>User's name: ${session.userFullname} #{a @Secure.logout(), id:'logout-link'}Logout#{/a}</p>
+                #{/if}
+                #{else}
+                    <p>#{a @Secure.login(), id:'login-link'}Login#{/a}</p>
+                #{/else}
+            </div>
 
         	<div class="span-4">
-        		The first column
+               <p>#{a @RCACaseController.createRCACase(), id:'createRCACase-link'}New Case#{/a}</p>
+               <p>#{a @userController.index(), id:'showRCACases-link'}All Cases#{/a}</p>
+               <p>My Cases</p>
+               <p>Cases shared with me</p>
         	</div>
-        	<div class="span-16">
+        	<div class="span-20 last">
         		#{doLayout /}
         	</div>
-        	<div class="span-4 last loginDiv">
-        		#{login /}
-        	</div>
 
-        	<div class="span-24">
+        	<div class="span-24 prepend-20">
         		The footer
         	</div>
         </div>
