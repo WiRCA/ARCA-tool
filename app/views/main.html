@@ -5,17 +5,34 @@
         <title>#{get 'title' /}</title>
         <meta charset="${_response_encoding}">
         <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/main.css'}">
+        <link rel="stylesheet" href="@{'/public/stylesheets/screen.css'}" type="text/css" media="screen, projection">
+        <!--[if lt IE 8]>
+          <link rel="stylesheet" href="@{'/public/stylesheets/ie.css'}" type="text/css" media="screen, projection">
+        <![endif]-->
         #{get 'moreStyles' /}
         <link rel="shortcut icon" type="image/png" href="@{'/public/images/favicon.png'}">
         <script src="@{'/public/javascripts/jquery-1.6.4.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
         #{get 'moreScripts' /}
     </head>
     <body>
-        <div class="loginDiv" style="float:right;">
-            #{login /}
-        </div>
-        <div>
-            #{doLayout /}
+      <div class="container">
+        	<div class="span-24">
+        		ARCA-tool
+        	</div>
+
+        	<div class="span-4">
+        		The first column
+        	</div>
+        	<div class="span-16">
+        		#{doLayout /}
+        	</div>
+        	<div class="span-4 last loginDiv">
+        		#{login /}
+        	</div>
+
+        	<div class="span-24">
+        		The footer
+        	</div>
         </div>
     </body>
 </html>
