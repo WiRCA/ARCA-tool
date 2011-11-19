@@ -23,7 +23,7 @@ public class Cause extends IdComparableModel {
 
 	public Long creatorId;
 
-@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "updated", nullable = false)
 	private Date updated;
 
@@ -51,6 +51,7 @@ public class Cause extends IdComparableModel {
 		updated = new Date();
 		rcaCase.updated = updated;
 	}
+
 	@PreUpdate
 	protected void onUpdate() {
 		updated = new Date();
@@ -60,6 +61,7 @@ public class Cause extends IdComparableModel {
 	/**
 	 * Creates a new cause with name and creator.
 	 *
+	 * @param rcaCase
 	 * @param name    name for the created cause.
 	 * @param creator creator of the cause
 	 *
@@ -73,23 +75,6 @@ public class Cause extends IdComparableModel {
 		causeRelations = new TreeSet<Relation>();
 		effectRelations = new TreeSet<Relation>();
 		corrections = new TreeSet<Correction>();
-	}
-
-	/**
-	 * Deprecated method, use addCorrection(name, description) instead.
-	 * Adds a corrective action for a cause.
-	 *
-	 * @param name name of the corrective action.
-	 *
-	 * @return returns the Cause object.
-	 */
-	@Deprecated
-	public Cause addCorrection(String name) {
-		Correction action = new Correction(name, "");
-		action.save();
-		this.corrections.add(action);
-		this.save();
-		return this;
 	}
 
 	/**
@@ -175,7 +160,7 @@ public class Cause extends IdComparableModel {
 	 * @return the children of this cause.
 	 */
 	public Set<Cause> getCauses() {
-		TreeSet<Cause> children = new TreeSet<Cause>();
+		Set<Cause> children = new TreeSet<Cause>();
 		for (Relation relation : this.causeRelations) {
 			if (relation.causeFrom.isChildOf(this)) {
 				children.add(relation.causeFrom);

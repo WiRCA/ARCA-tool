@@ -96,6 +96,7 @@ public class RCACase extends Model {
 	 *
 	 * @param caseName The name of the RCA case
 	 * @param caseTypeValue The type of the RCA case. Enums are found in models/enums/RCACaseType.
+	 * @param caseGoals
 	 * @param description
 	 * @param isMultinational The boolean value whether the company related to the RCA case is multinational.
 	 * @param companyName The name of the company related to the RCA case.
@@ -107,7 +108,6 @@ public class RCACase extends Model {
 	 * ownerId The ID of the user who creates the case.
 	 * problem The Cause object that represents the problem of the RCA case.
 	 */
-
 	public RCACase(String caseName, int caseTypeValue, String caseGoals, String description, boolean isMultinational,
 	               String companyName, int companySizeValue, String companyProducts, boolean isCasePublic,
 	               User owner) {

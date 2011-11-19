@@ -47,10 +47,10 @@ public class CauseTest extends UnitTest {
 		user = User.find("byEmail", "admin@local").first();
 		rcaCaseType = RCACaseType.valueOf(2);
 		size = CompanySize.valueOf(2);
-		testCase = user.addRCACase("TestRCACase", rcaCaseType.value, "Kaapelissa ei vikaa",
-		                                   "Kaapelissa vikaa", true,
-				"Keijon Kaapeli ja Kaivanto Oy",
-		                           size.value, "Kaapelit ja johtimet", false);
+		RCACase rcaCase = new RCACase("TestRCACase", rcaCaseType.value, "Kaapelissa ei vikaa", "Kaapelissa vikaa",
+		                              true, "Keijon Kaapeli ja Kaivanto Oy", size.value, "Kaapelit ja johtimet",
+		                              false, user);
+		testCase = user.addRCACase(rcaCase);
 	}
 
 
