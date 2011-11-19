@@ -24,14 +24,12 @@
 package controllers;
 
 import models.RCACase;
-import models.User;
 import play.mvc.Controller;
 import play.mvc.With;
 import models.Cause;
 import models.events.*;
 import models.events.AddCauseEvent;
 import models.events.DeleteCauseEvent;
-import play.cache.Cache;
 
 /**
  * @author Eero Laukkanen

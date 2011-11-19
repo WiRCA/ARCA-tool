@@ -7,7 +7,6 @@ import models.events.Event;
 import play.cache.Cache;
 import play.data.validation.Min;
 import play.data.validation.Required;
-import play.data.validation.Valid;
 import play.db.jpa.Model;
 import play.libs.F.IndexedEvent;
 import play.libs.F.Promise;
@@ -32,6 +31,8 @@ import models.events.*;
 public class RCACase extends Model {
 
 	private static final String CAUSE_STREAM_NAME_IN_CACHE = "causeStream";
+	private static final int NUMBER_OF_EVENTS_STORED_IN_EVENT_STREAM = 100;
+	private static final String EXPIRATION_TIME_FOR_CAUSE_STREAM_IN_CACHE = "30mn";
 
 	@Required
 	@Column(name = "name")
@@ -78,7 +79,9 @@ public class RCACase extends Model {
 
 	@PrePersist
 	protected void onCreate() {
-		updated = created = new Date();
+		Date current = new Date();
+		updated = current;
+		created = current;
 	}
 
 	/**
@@ -146,8 +149,8 @@ public class RCACase extends Model {
 	}
 
 	public CauseStream setCauseStream() {
-		CauseStream causeEvents = new CauseStream(100);
-		Cache.set(CAUSE_STREAM_NAME_IN_CACHE + this.id, causeEvents, "30mn");
+		CauseStream causeEvents = new CauseStream(NUMBER_OF_EVENTS_STORED_IN_EVENT_STREAM);
+		Cache.set(CAUSE_STREAM_NAME_IN_CACHE + this.id, causeEvents, EXPIRATION_TIME_FOR_CAUSE_STREAM_IN_CACHE);
 		return causeEvents;
 	}
 

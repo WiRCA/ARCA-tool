@@ -22,9 +22,9 @@
   ~ THE SOFTWARE.
   -->
 #{a @UserController.changeLanguage("fi", request.url.replaceFirst("/", "")), class:"lang-select"}
-<img src="@{'/public/images/flag-fi.png'}">
+<img src="@{'/public/images/flag-fi.png'}" alt="Suomi">
 #{/a}
 
 #{a @UserController.changeLanguage("en", request.url.replaceFirst("/", "")), class:"lang-select"}
-<img src="@{'/public/images/flag-uk.png'}">
+<img src="@{'/public/images/flag-uk.png'}" alt="English">
 #{/a}

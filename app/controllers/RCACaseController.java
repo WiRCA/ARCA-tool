@@ -24,14 +24,10 @@
 package controllers;
 
 import com.google.gson.reflect.TypeToken;
-import models.Cause;
 import models.RCACase;
 import models.User;
 import models.enums.CompanySize;
 import models.enums.RCACaseType;
-import play.Logger;
-import play.data.validation.Min;
-import play.data.validation.Required;
 import play.data.validation.Valid;
 import play.mvc.Controller;
 import play.mvc.With;
@@ -40,6 +36,8 @@ import java.util.*;
 
 import play.libs.F.*;
 import models.events.*;
+
+import static play.data.validation.Validation.hasErrors;
 
 /**
  * @author Mikko Valjus

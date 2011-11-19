@@ -1,7 +1,5 @@
 package models;
 
-import org.hibernate.annotations.Cascade;
-import play.db.jpa.Model;
 import utils.IdComparableModel;
 
 import javax.persistence.*;
@@ -191,7 +189,7 @@ public class Cause extends IdComparableModel {
 	 * @return the relations
 	 */
 	public Set<Cause> getRelations() {
-		TreeSet<Cause> relations = new TreeSet<Cause>();
+		Set<Cause> relations = new TreeSet<Cause>();
 		for (Relation relation : this.causeRelations) {
 			if (!relation.causeFrom.isChildOf(this)) {
 				relations.add(relation.causeFrom);
@@ -219,10 +217,6 @@ public class Cause extends IdComparableModel {
 	 * @return true if the given cause is the parent of this cause.
 	 */
 	public boolean isChildOf(Cause cause) {
-		if (this.parent.equals(cause)) {
-			return true;
-		} else {
-			return false;
-		}
+		return this.parent.equals(cause);
 	}
 }

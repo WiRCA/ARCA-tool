@@ -24,9 +24,12 @@
 
 package models;
 
+import play.Logger;
 import play.db.jpa.Model;
 
 import javax.persistence.*;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -38,6 +41,9 @@ import java.util.Set;
 @PersistenceUnit(name="userdb")
 @Entity(name="invitation")
 public class Invitation extends Model {
+
+    private static final String SECURE_RANDOM_ALGORITHM = "SHA1PRNG";
+	private static final int HASH_MIN_VALUE_LENGTH = 8;
 
 	public String hash;
 
@@ -53,9 +59,18 @@ public class Invitation extends Model {
 	 * @param email email where the invitation is send to.
 	 */
 	public Invitation(String email) {
-		this.email = email;
-		this.hash = "abcde1234"; //TODO
-		this.caseIds = new HashSet<Long>();
+		try {
+			this.email = email;
+			SecureRandom secureRandom = SecureRandom.getInstance(SECURE_RANDOM_ALGORITHM);
+			this.hash = Integer.toHexString(secureRandom.nextInt()).toUpperCase();
+			while (this.hash.length() < HASH_MIN_VALUE_LENGTH) {
+				this.hash = "0" + this.hash;
+			}
+			this.caseIds = new HashSet<Long>();
+		} catch (NoSuchAlgorithmException e) {
+			// Should not happen
+			Logger.error(e, "Invitation hash generation failed");
+		}
 	}
 
 	/**

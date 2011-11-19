@@ -24,6 +24,7 @@
 package utils;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.binary.Hex;
 import play.Logger;
 
 import java.security.MessageDigest;
@@ -45,26 +46,18 @@ public final class EncodingUtils {
 	public static String encodeSHA(String text, String algorithm, boolean encodeBase64) {
 		try {
 			if (text != null) {
-				MessageDigest md = null;
-
-				md = MessageDigest.getInstance(algorithm);
-
-				md.update(text.getBytes());
-
+				MessageDigest md = MessageDigest.getInstance(algorithm);
+				md.update(text.getBytes("utf-8"));
 				byte byteData[] = md.digest();
-
-				StringBuilder sb = new StringBuilder();
-				for (byte aByteData : byteData) {
-					sb.append(Integer.toString((aByteData & 0xff) + 0x100, 16).substring(1));
-				}
+				String encoded = String.valueOf(Hex.encodeHex(byteData));
 
 				if (encodeBase64) {
-					return new String(Base64.encodeBase64(sb.toString().getBytes()));
+					return new String(Base64.encodeBase64(encoded.getBytes()));
 				}
 
-				return sb.toString();
+				return encoded;
 			}
-		} catch (NoSuchAlgorithmException e) {
+		} catch (Exception e) {
 			Logger.error(e, "SHA encode failed");
 		}
 

@@ -72,7 +72,6 @@ public class UserController extends Controller {
 				index();
 			}
 			session.put("user", verifiedUser.id);
-			String email = verifiedUser.extensions.get("email");
 			index();
 		} else {
 			if (!OpenID.id("https://www.google.com/accounts/o8/id") // will redirect the user
