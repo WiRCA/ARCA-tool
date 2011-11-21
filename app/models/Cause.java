@@ -127,7 +127,7 @@ public class Cause extends IdComparableModel {
 	 * @return cause the cause created when added.
 	 */
 	public Cause addCause(String name, User creator) {
-		Cause newCause = new Cause(rcaCase, name, creator);
+		Cause newCause = new Cause(rcaCase, name, creator).save();
 		Relation newRelation = new Relation(newCause, this);
 		this.causeRelations.add(newRelation);
 		newCause.effectRelations.add(newRelation);
