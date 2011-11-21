@@ -1,8 +1,7 @@
-#{extends 'main.html' /}
-#{set title:'createRCA.title' /}
 <!--
-  ~ Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen, Joona Koistinen,
-  Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus
+  ~ Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
+  ~ Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus,
+  ~ Timo Lehtinen, Jaakko Harjuhahto
   ~
   ~ Permission is hereby granted, free of charge, to any person obtaining a copy
   ~ of this software and associated documentation files (the "Software"), to deal
@@ -22,19 +21,9 @@
   ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
   ~ THE SOFTWARE.
   -->
+#{extends 'main.html' /}
+#{set title:'createRCA.title' /}
 
-<!-- Lomakkeeseen Casen tiedot
--Nimi
--tyyppi             int     pudotusvalikko  1 = software, 0 = other
--private            bit     0=public 1=private
-Luodaan lomake, jossa kysytään seuraavat tiedot
-
-Yrityksen tiedot:
--Yrityksen nimi,    Varchar(100)
--yrityksen koko     int     pudotusvalikko 1-10, 11-50, 51-100, 101-300, 301->
--globaali vai ei    bit     checkbox
-
--->
 <div id="createRCACase">
 
     <h1>&{'createRCA.title'}</h1>

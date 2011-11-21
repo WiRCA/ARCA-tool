@@ -1,15 +1,7 @@
-#{extends 'main.html' /}
-#{set title:'showRCACase.title' /}
-#{set 'moreStyles'}
-    <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/base.css'}">
-    <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/ForceDirected.css'}">
-#{/set}
-#{set 'moreScripts'}
-    <script src="@{'/public/javascripts/smalljit.js'}" type="text/javascript" charset="${_response_encoding}"></script>
-#{/set}
-
 <!--
-  ~ Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen, Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus
+  ~ Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
+  ~ Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus,
+  ~ Timo Lehtinen, Jaakko Harjuhahto
   ~
   ~ Permission is hereby granted, free of charge, to any person obtaining a copy
   ~ of this software and associated documentation files (the "Software"), to deal
@@ -29,6 +21,15 @@
   ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
   ~ THE SOFTWARE.
   -->
+#{extends 'main.html' /}
+#{set title:'showRCACase.title' /}
+#{set 'moreStyles'}
+    <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/base.css'}">
+    <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/ForceDirected.css'}">
+#{/set}
+#{set 'moreScripts'}
+    <script src="@{'/public/javascripts/smalljit.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+#{/set}
 *{
 <h1>&{'showRCACase.title', rcaCase.name}</h1>
 
