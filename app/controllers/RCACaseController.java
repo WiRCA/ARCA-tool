@@ -24,11 +24,18 @@
 package controllers;
 
 import com.google.gson.reflect.TypeToken;
+import models.Invitation;
 import models.RCACase;
 import models.User;
 import models.enums.CompanySize;
 import models.enums.RCACaseType;
+import org.apache.commons.mail.EmailException;
+import org.apache.commons.mail.SimpleEmail;
+import play.Logger;
+import play.data.validation.Email;
+import play.data.validation.Required;
 import play.data.validation.Valid;
+import play.libs.Mail;
 import play.mvc.Controller;
 import play.mvc.With;
 
@@ -36,8 +43,6 @@ import java.util.*;
 
 import play.libs.F.*;
 import models.events.*;
-
-import static play.data.validation.Validation.hasErrors;
 
 /**
  * @author Mikko Valjus
@@ -81,5 +86,80 @@ public class RCACaseController extends Controller {
 		}.getType());
 	}
 
+	public static void getUsers(Long rcaCaseId) {
+		RCACase rcaCase = RCACase.findById(rcaCaseId);
+		notFoundIfNull(rcaCase);
+		List<User> existingUsers = User.find("Select u from user as u inner join u.caseIds as caseIds" +
+		                             " where ? in caseIds", rcaCaseId).fetch();
+		List<Invitation> invitedUsers = Invitation.find("Select iu from invitation as iu join iu.caseIds as caseIds" +
+		                                                " where ? in caseIds", rcaCaseId).fetch();
+		request.format = "json";
+		render(existingUsers, invitedUsers);
+	}
+
+	public static void inviteUser(Long rcaCaseId, @Required @Email String invitedEmail) {
+		User current = SecurityController.getCurrentUser();
+		RCACase rcaCase = RCACase.findById(rcaCaseId);
+		notFoundIfNull(rcaCase);
+		if (invitedEmail == null || invitedEmail.isEmpty()) {
+			notFound();
+		}
+		if (validation.hasErrors()) {
+			renderJSON("{\"invalidEmail\":\"true\"}");
+		}
+		// Check if user the owner of the RCA case
+		if (rcaCase.ownerId.equals(current.id)) {
+			request.format = "json";
+			User invitedUser = User.find("byEmail", invitedEmail).first();
+			if (invitedUser != null) {
+				invitedUser.addRCACase(rcaCase);
+				render(invitedUser);
+			} else {
+				Invitation invitation = Invitation.find("byEmail", invitedEmail).first();
+				if (invitation == null) {
+					try {
+						invitation = new Invitation(invitedEmail);
+
+						SimpleEmail email = new SimpleEmail();
+						email.setFrom("no-reply@arcatool.fi");
+						email.addTo(invitedEmail);
+						email.setSubject("JEPA!");
+						email.setMsg("Come and play!");
+						Mail.send(email);
+					} catch (EmailException e) {
+						Logger.error(e, "User invitation failed");
+						renderJSON("{\"invalidEmail\":\"true\"}");
+					}
+				}
+				invitation.addCase(rcaCase);
+				render(invitation);
+			}
+		}
+	}
+
+	public static void removeUser(Long rcaCaseId, Boolean isInvitedUser, String email) {
+		User current = SecurityController.getCurrentUser();
+		RCACase rcaCase = RCACase.findById(rcaCaseId);
+		notFoundIfNull(rcaCase);
+		// Check if user the owner of the RCA case
+		if (rcaCase.ownerId.equals(current.id)) {
+			if (isInvitedUser) {
+				Invitation invitation = Invitation.find("byEmail", email).first();
+				notFoundIfNull(invitation);
+				if (invitation.caseIds.contains(rcaCaseId)) {
+					invitation.removeRCACase(rcaCase);
+					renderJSON("{\"success\":\"true\"}");
+				}
+			} else {
+				User user = User.find("byEmail", email).first();
+				notFoundIfNull(user);
+				if (!rcaCase.ownerId.equals(user.id) && user.caseIds.contains(rcaCaseId)) {
+					user.removeRCACase(rcaCase);
+					renderJSON("{\"success\":\"true\"}");
+				}
+			}
+		}
+		renderJSON("{\"success\":\"false\"}");
+	}
 
 }

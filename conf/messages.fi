@@ -22,32 +22,51 @@
 # THE SOFTWARE.
 #
 
-createRCA.title = Luo uusi RCA tapaus
-createRCA.caseName = Tapauksen nimi
-createRCA.rcaCaseType = Case type
-createRCA.caseGoals = Case goals
-createRCA.description = Short description of the problem
-createRCA.companyName = Company name
-createRCA.companySize = What is the amount of personnel in your company?
-createRCA.companyProducts = What are the main products or product types of the company?
-createRCA.public = Is this a public case?
-createRCA.create = Create the new RCA case!
-createRCA.isMultinational = Multinational company?
+since.seconds=%d sekuntia sitten
+since.minutes=%d minuuttia sitten
+since.hours=%d tuntia sitten
+since.days=%d päivää sitten
+since.months=%d kuukautta sitten
+since.years=%d vuotta sitten
 
-showRCACase.title = RCA Case %s
-showRCACase.owner = RCA case owner
-showRCACase.back = Back to my cases
+createRCA.title=Luo uusi RCA tapaus
+createRCA.caseName=Tapauksen nimi
+createRCA.rcaCaseType=Case type
+createRCA.caseGoals=Case goals
+createRCA.description=Short description of the problem
+createRCA.companyName=Company name
+createRCA.companySize=What is the amount of personnel in your company?
+createRCA.companyProducts=What are the main products or product types of the company?
+createRCA.public=Is this a public case?
+createRCA.create=Create the new RCA case!
+createRCA.isMultinational=Multinational company?
 
-RCACaseType.softwareProject = Software project
-RCACaseType.hr = Human resouces related problem
-RCACaseType.other = Other
+showRCACase.title=RCA Case %s
+showRCACase.owner=RCA case owner
+showRCACase.back=Back to my cases
 
-user.welcomeTitle = Welcome %s!
-user.createRCACase = Create new RCA case
-user.noRCACases = No RCA cases
-user.noPrivateCases = No private cases to show
-user.noPublicCases = You're not following any public cases
-user.created = Tapaus luotu:
-user.myCases = My cases
-user.sharedCases = Private cases shared with me
-user.publicCases = Public cases I'm following
+RCACaseType.softwareProject=Software project
+RCACaseType.hr=Human resouces related problem
+RCACaseType.other=Other
+
+user.welcomeTitle=Welcome %s!
+user.createRCACase=Create new RCA case
+user.noRCACases=No RCA cases
+user.noPrivateCases=No private cases to show
+user.noPublicCases=You're not following any public cases
+user.created=Tapaus luotu:
+user.myCases=My cases
+user.sharedCases=Private cases shared with me
+user.publicCases=Public cases I'm following
+rcacase.lastmodified=muokattu viimeksi
+rcacase.share=Jaa..
+
+rcacase.share.dialog.title=Jakamisasetukset
+rcacase.share.dialog.whoHasAccess=Seuraavilla henkilöillä on käyttöoikeudet
+rcacase.share.dialog.inviteEmail=Kutsu sähköpostilla:
+rcacase.share.dialog.submitForm=Kutsu
+rcacase.share.dialog.name=Nimi
+rcacase.share.dialog.email=Sähköposti
+rcacase.share.dialog.actions=Toiminnot
+rcacase.share.dialog.remove=Poista
+rcacase.share.dialog.close=Sulje

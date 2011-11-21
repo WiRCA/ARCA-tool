@@ -43,7 +43,7 @@ import java.util.Set;
 public class Invitation extends Model {
 
     private static final String SECURE_RANDOM_ALGORITHM = "SHA1PRNG";
-	private static final int HASH_MIN_VALUE_LENGTH = 8;
+	private static final int HASH_VALUE_LENGTH = 10;
 
 	public String hash;
 
@@ -63,9 +63,10 @@ public class Invitation extends Model {
 			this.email = email;
 			SecureRandom secureRandom = SecureRandom.getInstance(SECURE_RANDOM_ALGORITHM);
 			this.hash = Integer.toHexString(secureRandom.nextInt()).toUpperCase();
-			while (this.hash.length() < HASH_MIN_VALUE_LENGTH) {
+			while (this.hash.length() < HASH_VALUE_LENGTH) {
 				this.hash = "0" + this.hash;
 			}
+			this.hash = this.hash.substring(0, HASH_VALUE_LENGTH);
 			this.caseIds = new HashSet<Long>();
 		} catch (NoSuchAlgorithmException e) {
 			// Should not happen
@@ -75,12 +76,21 @@ public class Invitation extends Model {
 
 	/**
 	 * Adds rights to an RCA case for the invitation.
-	 * @param rcaCase
-	 * @return
+	 * @param rcaCase RCA case which for rights are added
+	 * @return Added RCA case
 	 */
 	public RCACase addCase(RCACase rcaCase) {
 		this.caseIds.add(rcaCase.id);
 		this.save();
 		return rcaCase;
+	}
+
+	/**
+	 * Removes RCACase from the cases of the invitation
+	 * @param rcaCase the RCA case to be removed
+	 */
+	public void removeRCACase(RCACase rcaCase) {
+		this.caseIds.remove(rcaCase.id);
+		this.save();
 	}
 }

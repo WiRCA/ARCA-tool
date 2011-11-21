@@ -1,0 +1,18 @@
+[
+#{list existingUsers, as:'user'}
+    {
+        "invitedUser": "false",
+        "id": "${user.id}",
+        "name": "${user.name}",
+        "email": "${user.email}"
+    }${user_isLast && !invitedUsers ? '' : ','}
+#{/list}
+#{list invitedUsers, as:'user'}
+    {
+        "invitedUser": "true",
+        "id": "${user.id}",
+        "name": "",
+        "email": "${user.email}"
+    }${user_isLast ? '' : ','}
+#{/list}
+]

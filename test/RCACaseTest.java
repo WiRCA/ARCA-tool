@@ -49,7 +49,7 @@ public class RCACaseTest extends UnitTest {
 		                               true, "Keijon Kaapeli ja Kaivanto Oy", size.value, "Kaapelit ja johtimet",
 		                               false, user);
 		user.addRCACase(testCase);
-		assertTrue(user.caseIDs.contains(testCase.id));
+		assertTrue(user.caseIds.contains(testCase.id));
 		RCACase comparisonCase = RCACase.find("byID", testCase.id).first();
 		assertEquals(comparisonCase.companyName, "Keijon Kaapeli ja Kaivanto Oy");
 		assertEquals(testCase.getRCACaseType(), RCACaseType.valueOf(2));

@@ -28,7 +28,6 @@ import org.apache.commons.codec.binary.Hex;
 import play.Logger;
 
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 /**
  * @author Risto Virtanen

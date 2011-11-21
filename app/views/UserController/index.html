@@ -1,13 +1,119 @@
 #{extends 'main.html' /}
 #{set title:'Home' /}
+
+<script type="text/javascript">
+    var getRCACaseUsers = #{jsAction @RCACaseController.getUsers(':rcaCaseId') /}
+    var inviteUserAction = #{jsAction @RCACaseController.inviteUser(':rcaCaseId', ':invitedEmail') /}
+    var removeUserAction = #{jsAction @RCACaseController.removeUser(':rcaCaseId', ':isInvitedUser', ':email') /}
+
+    $(function() {
+        $("#rcacase-share-dialog").dialog({
+			autoOpen: false,
+			height: 400,
+			width: 500,
+			modal: true,
+			buttons: {
+				"&{'rcacase.share.dialog.close'}": function() {
+					$( this ).dialog( "close" );
+				}
+			},
+			close: function() {
+				$("table#rcacase-share-dialog-persons").remove();
+                $("#rcacase-share-dialog-invitedEmail-input").val("");
+                $("#rcacase-share-dialog-rcaCaseId-input").val("");
+                $("#rcacase-share-dialog-invitedEmail-error").hide();
+			}
+		});
+
+        $("#rcacase-share-dialog-share-form").submit(function() {
+            var rcaId = $("#rcacase-share-dialog-rcaCaseId-input").val();
+            var email = $("#rcacase-share-dialog-invitedEmail-input").val();
+
+            /* Check if user exists already */
+            if ($('#rcacase-share-dialog-persons tr').find('td[name="' + email + '"]').length > 0) {
+                $("#rcacase-share-dialog-invitedEmail-input").val("");
+                $("#rcacase-share-dialog-invitedEmail-error").hide();
+                return false
+            }
+
+            $.getJSON(inviteUserAction({rcaCaseId: rcaId, invitedEmail: email}), function(data) {
+                if (data.invalidEmail == "true") {
+                    $("#rcacase-share-dialog-invitedEmail-error").html("&{'rcacase.share.dialog.invalidEmail'}");
+                    $("#rcacase-share-dialog-invitedEmail-error").show();
+                } else {
+                    var invited = data.invited == "true" ? "invited-" : "";
+                    $('<tr id="user-' + invited + data.id + '">'+
+                            '<td>'+data.name+'</td>'+
+                            '<td name="' + data.email + '">'+data.email+'</td>'+
+                            '<td><a href="#" style="color:red;" id="remove-user-share">'+
+                                '&{"rcacase.share.dialog.remove"}'+
+                            '</a></td>'+
+                            '</tr>').appendTo("table#rcacase-share-dialog-persons");
+                    $("#rcacase-share-dialog-invitedEmail-input").val("");
+                    $("#rcacase-share-dialog-invitedEmail-error").hide();
+                }
+            });
+            return false;
+        });
+    });
+
+    $("a[id^='rcacase-share-']").live("click", function () {
+        var id = this.id.replace("rcacase-share-", "");
+        $.getJSON(getRCACaseUsers({rcaCaseId: id}), function(data) {
+            var users = [];
+            for (i in data) {
+                var user = data[i];
+                var removeLink = "${session.username}" == user.email ? "" :
+                        '<a href="#" style="color:red;" id="remove-user-share">&{"rcacase.share.dialog.remove"}</a>';
+                var invited = user.invitedUser == "true" ? "invited-" : "";
+                users.push('<tr id="user-' + invited + user.id + '">'+
+                            '<td>'+user.name+'</td>'+
+                            '<td name="' + user.email + '">'+user.email+'</td>'+
+                            '<td>' + removeLink + '</td>'+
+                            '</tr>');
+            }
+            $("<table />", {
+                'id': 'rcacase-share-dialog-persons',
+                'html': "<tr><th>&{'rcacase.share.dialog.name'}</th>" +
+                        "<th>&{'rcacase.share.dialog.email'}</th>" +
+                        "<th>&{'rcacase.share.dialog.actions'}</th></tr>"+
+                        users.join('')
+            }).appendTo("#rcacase-share-dialog");
+
+            $("#rcacase-share-dialog-invitedEmail-error").hide();
+            $("#rcacase-share-dialog-rcaCaseId-input").val(id);
+            $("#rcacase-share-dialog").dialog( "open" );
+            var width = $("table#rcacase-share-dialog-persons").width();
+            $("#rcacase-share-dialog").dialog( "option", "width", width+100 );
+            $("#rcacase-share-dialog").css("height", "auto");
+        });
+    });
+
+    $("a#remove-user-share").live("click", function() {
+        var rcaId = $("#rcacase-share-dialog-rcaCaseId-input").val();
+        var email = $(this).parent().prev().html();
+        var tr = $(this).parents("tr");
+        var trId = $(tr).attr("id");
+        var isInvitedUser = trId.indexOf("user-invited-") != -1;
+        $.getJSON(removeUserAction({rcaCaseId: rcaId, isInvitedUser: isInvitedUser, email: email}), function(data) {
+            if (data.success == "true") {
+                $(tr).remove();
+            }
+        });
+    });
+</script>
+
 *{TODO: Creation date to links. MOdification of mouseovers. Overall layout revamp.}*
 <h1>&{'user.welcomeTitle', user.name}</h1>
 
 <h2>&{'user.myCases'}</h2>
 <ul>
 #{list items:ownCases, as:'rcaCase'}
-<li>#{a @RCACaseController.show(rcaCase.id)} ${rcaCase.caseName} ${rcaCase.updated} #{/a} &{'user.created'} ${rcaCase
-.created}</li>
+<li>#{a @RCACaseController.show(rcaCase.id)}${rcaCase.caseName}#{/a}
+    &{'rcacase.lastmodified'} ${rcaCase.updated.since(true)}
+    &{'user.created'} ${rcaCase.created.since(true)}
+    <a id="rcacase-share-${rcaCase.id}" href="#">&{'rcacase.share'}</a>
+</li>
 #{/list}
 #{else}<li>&{'user.noRCACases'}</li>#{/else}
 </ul>
@@ -29,3 +135,15 @@
 </ul>
 
 #{a @RCACaseController.createRCACase()} &{'user.createRCACase'} #{/a}
+
+
+<div id="rcacase-share-dialog" title="&{'rcacase.share.dialog.title'}">
+    #{form @RCACaseController.inviteUser(), id:'rcacase-share-dialog-share-form' }
+        <input id="rcacase-share-dialog-rcaCaseId-input" type="hidden" name="rcaCaseId" />
+        <label for="rcacase-share-dialog-invitedEmail-input">&{'rcacase.share.dialog.inviteEmail'}</label>
+        <input id="rcacase-share-dialog-invitedEmail-input" type="text" name="invitedEmail" />
+        <span id="rcacase-share-dialog-invitedEmail-error" class="error"></span>
+        <input type="submit" value="&{'rcacase.share.dialog.submitForm'}" />
+    #{/form}
+    <span>&{'rcacase.share.dialog.whoHasAccess'}</span>
+</div>

@@ -57,7 +57,7 @@ Yrityksen tiedot:
     <p id="caseName-field">
         <label for="caseName">&{'createRCA.caseName'}</label>
         <input type="text" name="rcaCase.caseName" id="caseName" value="${flash.rcaCase?.caseName}"/>
-        <span class="error">#{error 'rcaCase.caseName' /}</span>
+        #{if errors.forKey('rcaCase.caseName')}<span class="error">#{error 'rcaCase.caseName' /}</span>#{/if}
     </p>
 
     <p id="RCACaseType">
@@ -68,25 +68,25 @@ Yrityksen tiedot:
         #{option caseTypeValue.value}${caseTypeValue.text}#{/option}
         #{/list}
         #{/select}
-        <span class="error">#{error 'rcaCase.caseTypeValue' /}</span>
+        #{if errors.forKey('rcaCase.caseTypeValue')}<span class="error">#{error 'rcaCase.caseTypeValue' /}</span>#{/if}
     </p>
 
     <p id="description-field">
         <label for="description">&{'createRCA.description'}</label><br>
         <textarea rows="4" cols="40" name="rcaCase.description" id="description">${flash.rcaCase?.description}</textarea>
-        <span class="error">#{error 'rcaCase.description' /}</span>
+        #{if errors.forKey('rcaCase.description')}<span class="error">#{error 'rcaCase.description' /}</span>#{/if}
     </p>
 
     <p id="caseGoals-field">
         <label for="caseGoals">&{'createRCA.caseGoals'}</label> <br>
         <textarea rows="4" cols="40" name="rcaCase.caseGoals" id="caseGoals" >${flash.rcaCase?.caseGoals}</textarea>
-        <span class="error">#{error 'rcaCase.caseGoals' /}</span>
+        #{if errors.forKey('rcaCase.caseGoals')}<span class="error">#{error 'rcaCase.caseGoals' /}</span>#{/if}
     </p>
 
     <p id="company-field">
         <label for="companyName">&{'createRCA.companyName'}</label>
         <input type="text" name="rcaCase.companyName" id="companyName" value="${flash.rcaCase?.companyName}"/>
-        <span class="error">#{error 'rcaCase.companyName' /}</span>
+        #{if errors.forKey('rcaCase.companyName')}<span class="error">#{error 'rcaCase.companyName' /}</span>#{/if}
     </p>
 
     <p id="sizeDropDown">
@@ -97,28 +97,28 @@ Yrityksen tiedot:
         #{option size.value}${size.text}#{/option}
         #{/list}
         #{/select}
-        <span class="error">#{error 'rcaCase.companySize' /}</span>
+        #{if errors.forKey('rcaCase.companySizeValue')}<span class="error">#{error 'rcaCase.companySizeValue' /}</span>#{/if}
     </p>
 
     <p id="companyProducts-field">
         <label for="companyProducts">&{'createRCA.companyProducts'}</label> <br>
         <textarea rows="4" cols="40" name="rcaCase.companyProducts" id="companyProducts" value="${flash
         .rcaCase?.companyProducts}"></textarea>
-        <span class="error">#{error 'rcaCase.companyProducts' /}</span>
+        #{if errors.forKey('rcaCase.companyProducts')}<span class="error">#{error 'rcaCase.companyProducts' /}</span>#{/if}
     </p>
 
     <p id="isMultinational-field">
         <input type="checkbox" name="rcaCase.isMultinational" id="isMultinational" value="true"
         ${flash.rcaCase?.isMultinational ? 'checked="true"' : ''}/>
-        <span class="error">#{error 'rcaCase.isMultinational' /}</span>
         <label for="isMultinational">&{'createRCA.isMultinational'}</label>
+        #{if errors.forKey('rcaCase.isMultinational')}<span class="error">#{error 'rcaCase.isMultinational' /}</span>#{/if}
     </p>
 
     <p id="public-field">
         <input type="checkbox" name="rcaCase.isCasePublic" id="isCasePublic" value="true"
         ${flash.rcaCase?.isCasePublic ? 'checked="true"' :''} />
-        <span class="error">#{error 'rcaCase.isCasePublic' /}</span>
         <label for="isCasePublic">&{'createRCA.public'}</label>
+        #{if errors.forKey('rcaCase.isCasePublic')}<span class="error">#{error 'rcaCase.isCasePublic' /}</span>#{/if}
     </p>
 
     <p id="create-field">

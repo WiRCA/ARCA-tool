@@ -22,32 +22,52 @@
 # THE SOFTWARE.
 #
 
-createRCA.title = Create a new RCA case
-createRCA.caseName = Case name
-createRCA.rcaCaseType = Case type
-createRCA.caseGoals = Case goals
-createRCA.description = Short description of the problem
-createRCA.companyName = Company name
-createRCA.companySize = What is the amount of personnel in your company?
-createRCA.companyProducts = What are the main products or product types of the company?
-createRCA.public = Is this a public case?
-createRCA.create = Create the new RCA case!
-createRCA.isMultinational = Multinational company?
+createRCA.title=Create a new RCA case
+createRCA.caseName=Case name
+createRCA.rcaCaseType=Case type
+createRCA.caseGoals=Case goals
+createRCA.description=Short description of the problem
+createRCA.companyName=Company name
+createRCA.companySize=What is the amount of personnel in your company?
+createRCA.companyProducts=What are the main products or product types of the company?
+createRCA.public=Is this a public case?
+createRCA.create=Create the new RCA case!
+createRCA.isMultinational=Multinational company?
 
-showRCACase.title = RCA Case %s
-showRCACase.owner = RCA case owner
-showRCACase.back = Back to my cases
+showRCACase.title=RCA Case %s
+showRCACase.owner=RCA case owner
+showRCACase.back=Back to my cases
 
-RCACaseType.softwareProject = Software project
-RCACaseType.hr = Human resouces related problem
-RCACaseType.other = Other
+RCACaseType.softwareProject=Software project
+RCACaseType.hr=Human resouces related problem
+RCACaseType.other=Other
 
-user.welcomeTitle = Welcome %s!
-user.createRCACase = Create new RCA case
-user.noRCACases = No RCA cases
-user.noPrivateCases = No private cases to show
-user.noPublicCases = You're not following any public cases
-user.created = Case created:
-user.myCases = My cases
-user.sharedCases = Private cases shared with me
-user.publicCases = Public cases I'm following
+user.welcomeTitle=Welcome %s!
+user.createRCACase=Create new RCA case
+user.noRCACases=No RCA cases
+user.noPrivateCases=No private cases to show
+user.noPublicCases=You're not following any public cases
+user.created=Case created:
+user.myCases=My cases
+user.sharedCases=Private cases shared with me
+user.publicCases=Public cases I'm following
+
+rcacase.lastmodified=last modified
+rcacase.share=Share
+
+since.seconds=%d seconds ago
+since.minutes=%d minutes ago
+since.hours=%d hours ago
+since.days=%d days ago
+since.months=%d months ago
+since.years=%d years ago
+
+rcacase.share.dialog.title=Sharing settings
+rcacase.share.dialog.whoHasAccess=Who has access
+rcacase.share.dialog.inviteEmail=Invite by email:
+rcacase.share.dialog.submitForm=Submit
+rcacase.share.dialog.name=Name
+rcacase.share.dialog.email=Email
+rcacase.share.dialog.actions=Action
+rcacase.share.dialog.remove=Remove
+rcacase.share.dialog.close=Close

@@ -1,0 +1,6 @@
+#{if invitedUser}
+{"invited": "false", "id": "${invitedUser.id}", "name": "${invitedUser.name}", "email": "${invitedUser.email}}
+#{/if}
+#{elseif invitation}
+{"invited": "true", "id": "${invitation.id}", "name": "", "email": "${invitation.email}"}
+#{/elseif}

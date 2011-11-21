@@ -11,3 +11,7 @@ a.lang-select img {
     border: 1px solid lightgray;
     height: 11px;
 }
+
+div#rcacase-share-dialog form {
+    margin-bottom: 20px;
+}
