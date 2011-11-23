@@ -65,50 +65,6 @@ public class UserController extends Controller {
 		render(user, ownCases,privateCases,publicCases);
 	}
 
-	public static void registerUser() {
-		render();
-	}
-
-	public static void regUs() {
-		if (OpenID.isAuthenticationResponse()) {
-			OpenID.UserInfo verifiedUser = OpenID.getVerifiedID();
-			if (verifiedUser == null) {
-				flash.error("Oops. Authentication has failed");
-				index();
-			}
-			session.put("user", verifiedUser.id);
-			index();
-		} else {
-			if (!OpenID.id("https://www.google.com/accounts/o8/id") // will redirect the user
-					.required("openid.ax.type.email", "http://axschema.org/contact/email")
-					.required("openid.ax.type.firstname", "http://axschema.org/namePerson/first")
-					.required("openid.ax.type.lastname", "http://axschema.org/namePerson/last")
-					.verify()) {
-				flash.error("Cannot verify your OpenID");
-				index();
-			}
-		}
-	}
-
-	public static void register(@Valid User user, @Required String password,
-	                            @Required String password2, @Required String firstName, @Required String lastName) {
-
-		validation.isTrue(User.find("byEmail", user.email).first() == null &&
-		                  Invitation.find("byEmail", user.email).first() == null ).message("register.emailExists");
-		validation.equals(password, password2);
-
-		if (validation.hasErrors()) {
-			params.flash(); // add http parameters to the flash scope
-			validation.keep(); // keep the errors for the next request
-			registerUser();
-		}
-
-		user.name = firstName + " " + lastName;
-		user.save();
-
-		index();
-	}
-
 	public static void addRCACaseForUser(Long caseId, Long userId) {
 
 	}

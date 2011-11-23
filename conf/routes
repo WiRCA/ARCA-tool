@@ -7,14 +7,15 @@
 
 # Language change
 GET     /language/{lang}/{url}                      UserController.changeLanguage
-GET     /regUs                                      UserController.regUs
+
 # Home page
 GET     /                                           ApplicationController.index
 GET     /user                                       UserController.index
 
 #Register
-GET     /register                                   UserController.registerUser
-POST    /register                                   UserController.register
+GET     /register                                   RegisterController.registerUser
+POST    /register                                   RegisterController.register
+GET     /regUs                                      RegisterController.regUs
 
 # Create RCACase -page
 GET     /CreateRCACase                              RCACaseController.createRCACase

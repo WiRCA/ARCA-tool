@@ -77,5 +77,5 @@ register.firstName=First Name
 register.lastName=Last Name
 register.email=Your Email
 register.password=Password
-register.passwordRe=Re-enter Password
+register.password2=Re-enter Password
 register.emailExists=The given email already exists.
