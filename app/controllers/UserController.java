@@ -24,6 +24,9 @@
 
 package controllers;
 
+import models.Invitation;
+import play.data.validation.Required;
+import play.data.validation.Valid;
 import play.i18n.Lang;
 import play.libs.OpenID;
 import play.mvc.Controller;
@@ -63,7 +66,7 @@ public class UserController extends Controller {
 	}
 
 	public static void registerUser() {
-
+		render();
 	}
 
 	public static void regUs() {
@@ -87,8 +90,23 @@ public class UserController extends Controller {
 		}
 	}
 
-	public static void register(String name, String email, String password) {
+	public static void register(@Valid User user, @Required String password,
+	                            @Required String password2, @Required String firstName, @Required String lastName) {
 
+		validation.isTrue(User.find("byEmail", user.email).first() == null &&
+		                  Invitation.find("byEmail", user.email).first() == null ).message("register.emailExists");
+		validation.equals(password, password2);
+
+		if (validation.hasErrors()) {
+			params.flash(); // add http parameters to the flash scope
+			validation.keep(); // keep the errors for the next request
+			registerUser();
+		}
+
+		user.name = firstName + " " + lastName;
+		user.save();
+
+		index();
 	}
 
 	public static void addRCACaseForUser(Long caseId, Long userId) {

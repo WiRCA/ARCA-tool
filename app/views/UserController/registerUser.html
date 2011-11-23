@@ -1,0 +1,75 @@
+<!--
+  ~ Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
+  ~ Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus,
+  ~ Timo Lehtinen, Jaakko Harjuhahto
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in
+  ~ all copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+  ~ THE SOFTWARE.
+  -->
+#{extends 'main.html' /}
+#{set title:'register.title' /}
+
+<div id="registerUser">
+
+    <h1>&{'register.title'}</h1>
+
+    #{form @UserController.register()}
+
+    #{if flash.error}
+    <p class="error">&{flash.error}</p>
+    #{/if}
+    #{if flash.success}
+    <p class="success">&{flash.success}</p>
+    #{/if}
+
+    <p id="firstNameField">
+        <label for="firstName">&{'register.firstName'}</label>
+        <input type="text" name="register.firstName" id="firstName" value="${flash.register?.firstName}"/>
+        #{if errors.forKey('register.lastName')}<span class="error">#{error 'register.lastName' /}</span>#{/if}
+    </p>
+
+    <p id="lastNameField">
+        <label for="lastName">&{'register.lastName'}</label>
+        <input type="text" name="register.lastName" id="lastName" value="${flash.register?.lastName}"/>
+        #{if errors.forKey('register.lastName')}<span class="error">#{error 'register.lastName' /}</span>#{/if}
+    </p>
+
+    <p id="emailField">
+        <label for="email">&{'register.email'}</label>
+        <input type="email" name="register.email" id="email" value="${flash.register?.email}"/>
+        #{if errors.forKey('register.email')}<span class="error">#{error 'register.email' /}</span>#{/if}
+    </p>
+
+    <p id="passwordField">
+        <label for="password">&{'register.password'}</label>
+        <input type="password" name="register.password" id="password" value="${flash.register?.password}"/>
+        #{if errors.forKey('register.password')}<span class="error">#{error 'register.password' /}</span>#{/if}
+    </p>
+
+    <p id="password2Field">
+        <label for="password2">&{'register.passwordRe'}</label>
+        <input type="password" name="register.passwordRe" id="password2" value="${flash.register?.password2}"/>
+        #{if errors.forKey('register.passwordRe')}<span class="error">#{error 'register.passwordRe' /}</span>#{/if}
+    </p>
+
+    <p id="registerButtonField">
+        <input type="submit" id="register" value="&{'register.title'}"/>
+    </p>
+
+    #{/form}
+</div>

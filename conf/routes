@@ -12,6 +12,10 @@ GET     /regUs                                      UserController.regUs
 GET     /                                           ApplicationController.index
 GET     /user                                       UserController.index
 
+#Register
+GET     /register                                   UserController.registerUser
+POST    /register                                   UserController.register
+
 # Create RCACase -page
 GET     /CreateRCACase                              RCACaseController.createRCACase
 POST    /CreateRCACase                              RCACaseController.create

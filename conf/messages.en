@@ -1,6 +1,6 @@
 #
 # Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
-# Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus,
+# Joona Koistinen, Pekka Rihtniemi, Mika Kekï¿½le, Roope Hovi, Mikko Valjus,
 # Timo Lehtinen, Jaakko Harjuhahto
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -71,3 +71,11 @@ rcacase.share.dialog.email=Email
 rcacase.share.dialog.actions=Action
 rcacase.share.dialog.remove=Remove
 rcacase.share.dialog.close=Close
+
+register.title=Register
+register.firstName=First Name
+register.lastName=Last Name
+register.email=Your Email
+register.password=Password
+register.passwordRe=Re-enter Password
+register.emailExists=The given email already exists.
