@@ -30,40 +30,27 @@
 
     #{form @RegisterController.register()}
 
-    #{if flash.error}
-    <p class="error">&{flash.error}</p>
-    #{/if}
-    #{if flash.success}
-    <p class="success">&{flash.success}</p>
-    #{/if}
-
-    <p id="firstNameField">
-        <label for="firstName">&{'register.firstName'}</label>
-        <input type="text" name="firstName" id="firstName" value="${flash.firstName}"/>
-        #{if errors.forKey('lastName')}<span class="error">#{error 'lastName' /}</span>#{/if}
-    </p>
-
-    <p id="lastNameField">
-        <label for="lastName">&{'register.lastName'}</label>
-        <input type="text" name="lastName" id="lastName" value="${flash.lastName}"/>
-        #{if errors.forKey('lastName')}<span class="error">#{error 'lastName' /}</span>#{/if}
+    <p id="nameField">
+        <label for="name">&{'register.name'}</label>
+        <input type="text" name="user.name" id="name" value="${flash['user.name']}" />
+        #{if errors.forKey('user.name')}<span class="error">#{error 'user.name' /}</span>#{/if}
     </p>
 
     <p id="emailField">
         <label for="email">&{'register.email'}</label>
-        <input type="email" name="user.email" id="email" value="${flash['user.email']}"/>
+        <input type="text" name="user.email" id="email" value="${flash['user.email']}"/>
         #{if errors.forKey('user.email')}<span class="error">#{error 'user.email' /}</span>#{/if}
     </p>
 
     <p id="passwordField">
         <label for="password">&{'register.password'}</label>
-        <input type="password" name="user.password" id="password" value="${flash['user.password']}"/>
+        <input type="password" name="user.password" id="password"/>
         #{if errors.forKey('user.password')}<span class="error">#{error 'user.password' /}</span>#{/if}
     </p>
 
     <p id="password2Field">
         <label for="password2">&{'register.password2'}</label>
-        <input type="password" name="password2" id="password2" value="${flash.password2}"/>
+        <input type="password" name="password2" id="password2"/>
         #{if errors.forKey('password2')}<span class="error">#{error 'password2' /}</span>#{/if}
     </p>
 

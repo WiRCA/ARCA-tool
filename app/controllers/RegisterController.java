@@ -60,12 +60,12 @@ public class RegisterController extends Controller {
 		}
 	}
 
-	public static void register(@Valid User user, @Required String password2,
-	                            @Required String firstName, @Required String lastName) {
+	public static void register(@Valid User user, @Required String password2) {
 
 		validation.isTrue(User.find("byEmail", user.email).first() == null &&
-		                  Invitation.find("byEmail", user.email).first() == null ).message("register.emailExists");
-		validation.equals(user.password, password2);
+		                  Invitation.find("byEmail", user.email).first() == null )
+		          .key("user.email").message("register.emailExists");
+		validation.equals(user.password, password2).key("user.password").message("register.passwordsDidNotMatch");
 
 		if (validation.hasErrors()) {
 			params.flash(); // add http parameters to the flash scope
@@ -73,9 +73,11 @@ public class RegisterController extends Controller {
 			registerUser();
 		}
 
-		user.name = firstName + " " + lastName;
+		user.changePassword(password2);
 		user.save();
 
+        // Mark user as connected
+        session.put("username", user.email);
 		ApplicationController.index();
 	}
 }
