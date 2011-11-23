@@ -78,7 +78,7 @@ rcacase.share.dialog.actions=Action
 rcacase.share.dialog.remove=Remove
 rcacase.share.dialog.close=Close
 
-register.title=Register
+register.title=Sign up
 register.name=Name
 register.email=Email
 register.password=Password

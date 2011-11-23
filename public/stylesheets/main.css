@@ -12,6 +12,46 @@ a.lang-select img {
     height: 11px;
 }
 
+div#login .fieldset {
+    height: 38px;
+    width: 460px;
+}
+
+div#login div.fieldset div {
+    position: relative;
+    display: inline;
+}
+
+div#login div.fieldset div span.inputTip {
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+    position: absolute;
+    top: 11px;
+    left: 6px;
+    clear: right;
+}
+*:first-child+div#login div.fieldset div span.inputTip {
+    top: -2px;
+}
+
+div#login div.fieldset div input[type="text"],
+div#login div.fieldset div input[type="password"] {
+    font-size: 13px;
+    height: 15px;
+    padding: 6px;
+    width: 130px;
+    position: relative;
+    top: 0px;
+    left: 0px;
+}
+
+div#login div#register {
+    margin-left: 45px;
+}
+
 div#rcacase-share-dialog form {
     margin-bottom: 20px;
 }

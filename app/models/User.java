@@ -26,6 +26,7 @@ package models;
 
 import play.data.validation.Email;
 import play.data.validation.Password;
+import play.data.validation.Required;
 import play.db.jpa.Model;
 import utils.EncodingUtils;
 
@@ -41,11 +42,14 @@ import java.util.Set;
 @Entity(name = "user")
 public class User extends Model {
 
+	@Required
 	@Email
 	public String email;
 
+	@Required
 	public String name;
 
+	@Required
 	@Password
 	public String password;
 
