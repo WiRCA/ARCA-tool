@@ -70,3 +70,11 @@ rcacase.share.dialog.email=Sähköposti
 rcacase.share.dialog.actions=Toiminnot
 rcacase.share.dialog.remove=Poista
 rcacase.share.dialog.close=Sulje
+
+register.title=Rekisteröi
+register.firstName=Etunimi
+register.lastName=Sukunimi
+register.email=Sähköpostiosoite
+register.password=Salasana
+register.password2=Syötä uudelleen salasana
+register.emailExists=Antamasi sähköpostiosoite on jo rekisteröity.
