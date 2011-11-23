@@ -24,12 +24,13 @@
 
 package controllers;
 
+import play.i18n.Lang;
 import play.mvc.Controller;
 import play.mvc.Before;
 
 public class ApplicationController extends Controller {
 
-    @Before
+    @Before(unless = "changeLanguage")
     public static void isConnected() {
         if (SecurityController.connected() != null) {
             UserController.index();
@@ -38,6 +39,11 @@ public class ApplicationController extends Controller {
 
 	public static void index() {
 		render();
+	}
+
+	public static void changeLanguage(String lang, String url) {
+		Lang.change(lang);
+		redirect("/" + url);
 	}
 
 

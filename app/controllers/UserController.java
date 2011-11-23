@@ -43,6 +43,7 @@ import java.util.Set;
 
 @With(Secure.class)
 public class UserController extends Controller {
+
 	public static void index() {
 		User user = SecurityController.getCurrentUser();
 		Set<RCACase> cases = user.getRCACases();
@@ -51,13 +52,13 @@ public class UserController extends Controller {
 		Set<RCACase> publicCases = new HashSet<RCACase>();
 
 		for(RCACase case1 : cases){
-			if (user.id == case1.ownerId){
+			if (user.id.equals(case1.ownerId)){
 				ownCases.add(case1);
 			}
-			else if(!case1.isCasePublic){
+			else if (!case1.isCasePublic){
 				privateCases.add(case1);
 			}
-			else{
+			else {
 				publicCases.add(case1);
 			}
 
@@ -67,11 +68,6 @@ public class UserController extends Controller {
 
 	public static void addRCACaseForUser(Long caseId, Long userId) {
 
-	}
-
-	public static void changeLanguage(String lang, String url) {
-		Lang.change(lang);
-		redirect("/" + url);
 	}
 
 }
