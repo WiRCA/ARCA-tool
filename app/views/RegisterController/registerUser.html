@@ -40,31 +40,31 @@
     <p id="firstNameField">
         <label for="firstName">&{'register.firstName'}</label>
         <input type="text" name="firstName" id="firstName" value="${flash.register?.firstName}"/>
-        #{if errors.forKey('register.lastName')}<span class="error">#{error 'register.lastName' /}</span>#{/if}
+        #{if errors.forKey('lastName')}<span class="error">#{error 'lastName' /}</span>#{/if}
     </p>
 
     <p id="lastNameField">
         <label for="lastName">&{'register.lastName'}</label>
         <input type="text" name="lastName" id="lastName" value="${flash.register?.lastName}"/>
-        #{if errors.forKey('register.lastName')}<span class="error">#{error 'register.lastName' /}</span>#{/if}
+        #{if errors.forKey('lastName')}<span class="error">#{error 'lastName' /}</span>#{/if}
     </p>
 
     <p id="emailField">
         <label for="email">&{'register.email'}</label>
         <input type="email" name="user.email" id="email" value="${flash.register?.email}"/>
-        #{if errors.forKey('register.email')}<span class="error">#{error 'register.email' /}</span>#{/if}
+        #{if errors.forKey('user.email')}<span class="error">#{error 'user.email' /}</span>#{/if}
     </p>
 
     <p id="passwordField">
         <label for="password">&{'register.password'}</label>
         <input type="password" name="user.password" id="password" value="${flash.register?.password}"/>
-        #{if errors.forKey('register.password')}<span class="error">#{error 'register.password' /}</span>#{/if}
+        #{if errors.forKey('user.password')}<span class="error">#{error 'user.password' /}</span>#{/if}
     </p>
 
     <p id="password2Field">
         <label for="password2">&{'register.password2'}</label>
         <input type="password" name="password2" id="password2" value="${flash.register?.password2}"/>
-        #{if errors.forKey('register.password2')}<span class="error">#{error 'register.password2' /}</span>#{/if}
+        #{if errors.forKey('password2')}<span class="error">#{error 'password2' /}</span>#{/if}
     </p>
 
     <p id="registerButtonField">
