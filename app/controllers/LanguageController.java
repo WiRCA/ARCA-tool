@@ -24,23 +24,21 @@
 
 package controllers;
 
+import play.i18n.Lang;
 import play.mvc.Before;
 import play.mvc.Controller;
-import play.mvc.With;
 
-@With(LanguageController.class)
-public class ApplicationController extends Controller {
+/**
+ * @author Risto Virtanen
+ */
+public class LanguageController extends Controller {
 
-    @Before
-    public static void isConnected() {
-        if (SecurityController.isConnected()) {
-            UserController.index();
-        }   
-    }
-
-	public static void index() {
-		render();
+	@Before
+	public static void changeLanguage() {
+		if (params._contains("language")) {
+			String lang = params.get("language");
+			Lang.change(lang);
+			request.url = request.url.replaceAll("[?|&]language=" + lang, "");
+		}
 	}
-
-
 }

@@ -41,7 +41,7 @@ import java.util.Set;
  * @author Eero Laukkanen
  */
 
-@With(Secure.class)
+@With({Secure.class, LanguageController.class})
 public class UserController extends Controller {
 
 	public static void index() {

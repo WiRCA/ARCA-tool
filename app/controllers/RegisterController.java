@@ -30,10 +30,12 @@ import play.data.validation.Required;
 import play.data.validation.Valid;
 import play.libs.OpenID;
 import play.mvc.Controller;
+import play.mvc.With;
 
 /**
  * @author Juha Viljanen
  */
+@With(LanguageController.class)
 public class RegisterController extends Controller {
 	public static void registerUser() {
 		render();

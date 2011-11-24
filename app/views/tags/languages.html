@@ -22,10 +22,10 @@
   ~ THE SOFTWARE.
   -->
 
-#{a @ApplicationController.changeLanguage("fi", request.url.replaceFirst("/", "")), class:"lang-select"}
+<a href="${request.url}?language=fi" class="lang-select">
 <img src="@{'/public/images/flag-fi.png'}" alt="Suomi">
-#{/a}
+</a>
 
-#{a @ApplicationController.changeLanguage("en", request.url.replaceFirst("/", "")), class:"lang-select"}
+<a href="${request.url}?language=en" class="lang-select">
 <img src="@{'/public/images/flag-uk.png'}" alt="English">
-#{/a}
+</a>

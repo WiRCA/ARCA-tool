@@ -27,6 +27,7 @@ secure.remember=Muista minut
 secure.signin=Kirjaudu
 secure.error=Hups, väärä käyttäjätunnus tai salasana.
 secure.logout=Kirjauduit ulos.
+logout=Kirjaudu ulos
 
 since.seconds=%d sekuntia sitten
 since.minutes=%d minuuttia sitten

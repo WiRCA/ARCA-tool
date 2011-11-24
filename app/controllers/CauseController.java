@@ -36,7 +36,7 @@ import models.events.DeleteCauseEvent;
  * @author Eero Laukkanen
  */
 
-@With(Secure.class)
+@With({Secure.class, LanguageController.class})
 public class CauseController extends Controller {
 
 	public static void addCause(String causeId, String name) {

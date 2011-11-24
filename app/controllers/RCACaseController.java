@@ -48,7 +48,7 @@ import models.events.*;
 /**
  * @author Mikko Valjus
  */
-@With(Secure.class)
+@With({Secure.class, LanguageController.class})
 public class RCACaseController extends Controller {
 
 	public static void createRCACase() {

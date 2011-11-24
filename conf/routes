@@ -5,9 +5,6 @@
 # Secure module
 *       /                                           module:secure
 
-# Language change
-GET     /language/{lang}/{url}                      ApplicationController.changeLanguage
-
 # Home page
 GET     /                                           ApplicationController.index
 GET     /user                                       UserController.index
