@@ -191,4 +191,8 @@ public class RCACase extends Model {
 		this.save();
 	}
 
+	@Override
+	public String toString() {
+		return caseName + " (" + id + ")";
+	}
 }

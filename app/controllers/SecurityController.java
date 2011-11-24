@@ -25,6 +25,7 @@
 package controllers;
 
 import models.User;
+import play.Logger;
 import utils.EncodingUtils;
 
 /**
@@ -37,11 +38,18 @@ public class SecurityController extends Secure.Security {
 		return found != null;
 	}
 
-	public static void onAuthenticated() {
+	static void onAuthenticated() {
+		User current = getCurrentUser();
+		Logger.info("User %s logged in", current);
 		UserController.index();
 	}
 
-	public static void onDisconnected() {
+	static void onDisconnect() {
+		User current = getCurrentUser();
+		Logger.info("User %s logged out", current);
+	}
+
+	static void onDisconnected() {
 		ApplicationController.index();
 	}
 

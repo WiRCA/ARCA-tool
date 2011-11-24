@@ -26,6 +26,7 @@ package controllers;
 
 import models.Invitation;
 import models.User;
+import play.Logger;
 import play.data.validation.Required;
 import play.data.validation.Valid;
 import play.libs.OpenID;
@@ -46,8 +47,7 @@ public class RegisterController extends Controller {
 
 	public static void register(@Valid User user, @Required String password2) {
 
-		validation.isTrue(RegisterController.canRegister(user.email))
-		          .key("user.email").message("register.emailExists");
+		validation.isTrue(RegisterController.canRegister(user.email)).key("user.email").message("register.emailExists");
 		validation.equals(user.password, password2).key("user.password").message("register.passwordsDidNotMatch");
 
 		if (validation.hasErrors()) {
@@ -58,6 +58,8 @@ public class RegisterController extends Controller {
 
 		user.changePassword(password2);
 		user.save();
+
+		Logger.info("User %s registered", user);
 
         // Mark user as connected
         session.put("username", user.email);
@@ -83,7 +85,9 @@ public class RegisterController extends Controller {
 				User user = new User(email, randomPasswd);
 				user.name = name;
 				user.save();
+				Logger.info("User %s registered via Google login", user);
 			}
+			Logger.info("User with email %s logged in via Google login", email);
 			session.put("username", email);
 			ApplicationController.index();
 		} else {
@@ -99,7 +103,6 @@ public class RegisterController extends Controller {
 	}
 
 	private static boolean canRegister(String email) {
-		return ( User.find("byEmail", email).first() == null &&
-		         Invitation.find("byEmail", email).first() == null );
+		return User.find("byEmail", email).first() == null && Invitation.find("byEmail", email).first() == null;
 	}
 }

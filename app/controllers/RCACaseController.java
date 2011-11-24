@@ -67,6 +67,7 @@ public class RCACaseController extends Controller {
 		rcaCase.save();
 		User user = SecurityController.getCurrentUser();
 		user.addRCACase(rcaCase);
+		Logger.info("User %s created new RCA case with name %s", user, rcaCase.caseName);
 		show(rcaCase.id);
 	}
 
@@ -149,6 +150,7 @@ public class RCACaseController extends Controller {
 				notFoundIfNull(invitation);
 				if (invitation.caseIds.contains(rcaCaseId)) {
 					invitation.removeRCACase(rcaCase);
+					Logger.info("User %s removed invitation for %s to RCA case %s", current, invitation, rcaCase);
 					renderJSON("{\"success\":\"true\"}");
 				}
 			} else {
@@ -156,6 +158,7 @@ public class RCACaseController extends Controller {
 				notFoundIfNull(user);
 				if (!rcaCase.ownerId.equals(user.id) && user.caseIds.contains(rcaCaseId)) {
 					user.removeRCACase(rcaCase);
+					Logger.info("User %s removed invitation for %s to RCA case %s", current, user, rcaCase);
 					renderJSON("{\"success\":\"true\"}");
 				}
 			}

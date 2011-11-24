@@ -93,4 +93,9 @@ public class Invitation extends Model {
 		this.caseIds.remove(rcaCase.id);
 		this.save();
 	}
+
+	@Override
+	public String toString() {
+		return "Invitation{" + "email='" + email + '\'' + '}';
+	}
 }
