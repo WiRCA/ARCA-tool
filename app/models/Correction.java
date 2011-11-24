@@ -25,6 +25,7 @@
 package models;
 
 import play.db.jpa.Model;
+import utils.IdComparableModel;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -37,7 +38,7 @@ import javax.persistence.PersistenceUnit;
  */
 @PersistenceUnit(name = "maindb")
 @Entity(name="correction")
-public class Correction extends Model {
+public class Correction extends IdComparableModel {
 
 	public String name;
 
@@ -51,10 +52,12 @@ public class Correction extends Model {
 	 * Creates a new correction with specified name and description.
 	 * @param name name of the correction
 	 * @param description description of the correction
+	 * @param correctionTo the cause this correction is directed to
 	 */
-	public Correction(String name, String description) {
+	public Correction(String name, String description, Cause correctionTo) {
 		this.name = name;
 		this.description = description;
+		this.cause = correctionTo;
 	}
 
 }

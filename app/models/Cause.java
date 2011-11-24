@@ -107,14 +107,23 @@ public class Cause extends IdComparableModel {
 	 * @param name name of the corrective action.
 	 * @param description description of the corrective action.
 	 *
-	 * @return returns the Cause object.
+	 * @return returns the created Correction object.
 	 */
-	public Cause addCorrection(String name, String description) {
-		Correction action = new Correction(name, description);
-		action.save();
+	public Correction addCorrection(String name, String description) {
+		Correction action = new Correction(name, description, this);
 		this.corrections.add(action);
 		this.save();
-		return this;
+		return action;
+	}
+
+	/**
+	 * Removes the given correction from the cause corrections.
+	 * @param correction correction to be removed
+	 */
+	public void removeCorrection(Correction correction) {
+		this.corrections.remove(correction);
+		correction.delete();
+		this.save();
 	}
 
 	/**
