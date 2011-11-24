@@ -1,0 +1,8 @@
+Hi,
+
+#{if user.name}${user.name}#{/if}#{else}${user.email}#{/else} has invited You to
+a Root Cause Analysis session ${rcaCase.caseName}.
+Click here: @@RegisterController.registerInvitation(invitedUser.id, rcaCase.id, inviteHash)}
+
+Br,
+ARCA-tool

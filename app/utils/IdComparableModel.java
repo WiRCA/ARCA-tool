@@ -30,7 +30,8 @@ import play.db.jpa.Model;
  * Class that supports play.db.jpa.Model and is Comparable.
  * @author Eero Laukkanen
  */
-public class IdComparableModel extends Model implements Comparable {
+
+public abstract class IdComparableModel extends Model implements Comparable {
 
 		public int compareTo(Object o) {
 		Long oid = ((IdComparableModel)o).id;

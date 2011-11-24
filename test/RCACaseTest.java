@@ -21,6 +21,7 @@
  * THE SOFTWARE.
  */
 
+import models.Cause;
 import models.RCACase;
 import models.User;
 import models.enums.CompanySize;
@@ -62,6 +63,36 @@ public class RCACaseTest extends UnitTest {
 		assertTrue(testCase.isMultinational);
 		assertNotNull(testCase.created);
 		assertEquals(comparisonCase.caseName, "TestRCACase");
+	}
+
+	@Test
+	public void getAndSetTest() {
+		RCACase testCase = new RCACase(user);
+		user.addRCACase(testCase);
+		assertTrue(testCase.getOwner() == user);
+		testCase.setRCACaseType(rcaCaseType);
+		assertTrue(testCase.getRCACaseType() == rcaCaseType);
+		testCase.setCompanySize(size);
+		assertTrue(testCase.getCompanySize() == size);
+		assertFalse(testCase.toString() == "");
+	}
+
+	@Test
+	public void deleteCauseTest() {
+		RCACase testCase = new RCACase(user).save();
+		testCase.problem = new Cause(testCase, "really unique test cause", user).save();
+		Cause cause1 = testCase.problem;
+		Cause cause2 = cause1.addCause("another unique test cause", user).save();
+		testCase.save();
+		assertTrue(testCase.causes.contains(cause1));
+		long count = Cause.count();
+		testCase.deleteCause(cause2);
+		assertFalse(testCase.causes.contains(cause2));
+		assertFalse(count == Cause.count());
+		Cause isFound = Cause.find("byName", "another unique test cause").first();
+		assertNull(isFound);
+		testCase.deleteCause(cause1);
+		assertTrue(testCase.causes.contains(cause1)); // cause1 is the problem, therefore not deleted
 	}
 
 }

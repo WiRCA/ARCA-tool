@@ -44,6 +44,8 @@ package job;/*
  * THE SOFTWARE.
  */
 
+import models.Cause;
+import models.RCACase;
 import models.User;
 import play.jobs.Job;
 import play.jobs.OnApplicationStart;
@@ -62,14 +64,34 @@ public class Bootstrap extends Job {
     public void doJob() {
         // Check if the database is empty
         if(User.count() == 0) {
+	        // Admin user
 	        User admin = new User(ADMIN_USER_EMAIL, ADMIN_USER_PASSWORD);
 	        admin.name = "Admin user";
 	        admin.save();
-        }
-	    if(User.count() == 1){
-		    User tester = new User(TEST_USER_EMAIL, TEST_USER_PASSWORD);
+
+	        // Tester user
+	        User tester = new User(TEST_USER_EMAIL, TEST_USER_PASSWORD);
 		    tester.name = "Test user";
 		    tester.save();
+
+	        // First RCA case
+	        RCACase firstRCACase = new RCACase(tester);
+	        firstRCACase.caseName = "";
+	        firstRCACase.caseName = "Test RCA case";
+			firstRCACase.caseTypeValue = 2;
+			firstRCACase.caseGoals = "Save the world";
+			firstRCACase.companySizeValue = 2;
+			firstRCACase.description = "We are going to save the world with our ARCA-tool!";
+			firstRCACase.isMultinational = true;
+			firstRCACase.companyName = "WiRCA";
+			firstRCACase.companyProducts = "ARCA-tool";
+			firstRCACase.isCasePublic = false;
+
+	        // Problem of the first RCA case
+	        firstRCACase.problem = new Cause(firstRCACase,  firstRCACase.caseName, tester).save();
+	        firstRCACase.save();
+	        tester.addRCACase(firstRCACase);
+	        tester.save();
 	    }
     }
 }

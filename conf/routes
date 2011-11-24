@@ -3,30 +3,31 @@
 # ~~~~
 
 # Secure module
-*       /                                           module:secure
+*       /                                                           module:secure
 
 # Home page
-GET     /                                           ApplicationController.index
-GET     /user                                       UserController.index
+GET     /                                                           ApplicationController.index
+GET     /user                                                       UserController.index
 
-#Register
-GET     /register                                   RegisterController.registerUser
-POST    /register                                   RegisterController.register
-GET     /gLogin                                      RegisterController.googleLogin
+# Register
+GET     /register                                                   RegisterController.registerUser
+POST    /register                                                   RegisterController.register
+GET     /gLogin                                                     RegisterController.googleLogin
+GET     /invitation/{invitationId}/{rcaCaseId}/{inviteHash}         RegisterController.registerInvitation
 
 # Create RCACase -page
-GET     /CreateRCACase                              RCACaseController.createRCACase
-POST    /CreateRCACase                              RCACaseController.create
+GET     /CreateRCACase                                              RCACaseController.createRCACase
+POST    /CreateRCACase                                              RCACaseController.create
 
 # Show RCA case
-GET     /case/{id}                                  RCACaseController.show
-GET     /case/{rcaCaseId}/update/{lastReceived}     RCACaseController.waitMessages
+GET     /case/{id}                                                  RCACaseController.show
+GET     /case/{rcaCaseId}/update/{lastReceived}                     RCACaseController.waitMessages
 
 # Ignore favicon requests
-GET     /favicon.ico                                404
+GET     /favicon.ico                                                404
 
 # Map static resources from the /app/public folder to the /public path
-GET     /public/                                    staticDir:public
+GET     /public/                                                    staticDir:public
 
 # Catch all
-*       /{controller}/{action}                      {controller}.{action}
+*       /{controller}/{action}                                      {controller}.{action}

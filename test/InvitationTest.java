@@ -22,52 +22,26 @@
  * THE SOFTWARE.
  */
 
-package controllers;
-
-import models.RCACase;
-import play.mvc.Controller;
-import play.mvc.With;
-import models.Cause;
-import models.events.*;
-import models.events.AddCauseEvent;
-import models.events.DeleteCauseEvent;
+import models.Invitation;
+import org.junit.Test;
 
 /**
  * @author Eero Laukkanen
  */
+public class InvitationTest extends GenericRCAUnitTest {
 
-@With({Secure.class, LanguageController.class})
-public class CauseController extends Controller {
+	@Test
+	public void createInvitationTest() {
+		Invitation invitation = new Invitation("blabla@blabla.blabla");
 
-	public static void addCause(String causeId, String name) {
-		// causeId is used later as a String
-		Cause cause = Cause.findById(Long.valueOf(causeId));
-		RCACase rcaCase = cause.rcaCase;
+		invitation.addCase(testCase);
 
-		Cause newCause = cause.addCause(name, SecurityController.getCurrentUser());
+		assertTrue(invitation.caseIds.contains(testCase.id));
 
-		AddCauseEvent event = new AddCauseEvent(newCause, causeId);
-		CauseStream causeEvents = rcaCase.getCauseStream();
-		causeEvents.getStream().publish(event);
-	}
+		invitation.removeRCACase(testCase);
 
-	public static void addRelation(Long fromId, Long toID) {
+		assertFalse(invitation.caseIds.contains(testCase.id));
 
-	}
-
-	public static void deleteCause(String causeId) {
-		Cause cause = Cause.findById(Long.valueOf(causeId));
-		RCACase rcaCase = cause.rcaCase;
-
-		if (cause.equals(rcaCase.problem)) {
-			//TODO: notify user that she cannot remove the problem cause
-			return;
-		}
-
-		rcaCase.deleteCause(cause);
-
-		DeleteCauseEvent deleteEvent = new DeleteCauseEvent(cause);
-		CauseStream causeEvents = rcaCase.getCauseStream();
-		causeEvents.getStream().publish(deleteEvent);
+		assertTrue(invitation.toString().contains("Invitation"));
 	}
 }

@@ -41,11 +41,11 @@ import javax.persistence.*;
 @Entity(name = "relation")
 public class Relation extends IdComparableModel {
 
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	@JoinColumn(name="causeFrom")
 	public Cause causeFrom;
 
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	@JoinColumn(name="causeTo")
 	public Cause causeTo;
 

@@ -22,52 +22,36 @@
  * THE SOFTWARE.
  */
 
-package controllers;
-
+import job.Bootstrap;
 import models.RCACase;
-import play.mvc.Controller;
-import play.mvc.With;
-import models.Cause;
-import models.events.*;
-import models.events.AddCauseEvent;
-import models.events.DeleteCauseEvent;
+import models.User;
+import models.enums.CompanySize;
+import models.enums.RCACaseType;
+import org.junit.Before;
+import play.test.Fixtures;
+import play.test.UnitTest;
 
 /**
  * @author Eero Laukkanen
  */
+public abstract class GenericRCAUnitTest extends UnitTest {
 
-@With({Secure.class, LanguageController.class})
-public class CauseController extends Controller {
+	protected User user;
+	protected RCACaseType rcaCaseType;
+	protected CompanySize size;
+	protected RCACase testCase;
 
-	public static void addCause(String causeId, String name) {
-		// causeId is used later as a String
-		Cause cause = Cause.findById(Long.valueOf(causeId));
-		RCACase rcaCase = cause.rcaCase;
-
-		Cause newCause = cause.addCause(name, SecurityController.getCurrentUser());
-
-		AddCauseEvent event = new AddCauseEvent(newCause, causeId);
-		CauseStream causeEvents = rcaCase.getCauseStream();
-		causeEvents.getStream().publish(event);
+	@Before
+	public void setUp() {
+		Fixtures.deleteAllModels();
+		new Bootstrap().doJob();
+		user = User.find("byEmail", "admin@local").first();
+		rcaCaseType = RCACaseType.valueOf(2);
+		size = CompanySize.valueOf(2);
+		RCACase rcaCase = new RCACase("TestRCACase", rcaCaseType.value, "Kaapelissa ei vikaa", "Kaapelissa vikaa",
+		                              true, "Keijon Kaapeli ja Kaivanto Oy", size.value, "Kaapelit ja johtimet",
+		                              false, user).save();
+		testCase = user.addRCACase(rcaCase);
 	}
 
-	public static void addRelation(Long fromId, Long toID) {
-
-	}
-
-	public static void deleteCause(String causeId) {
-		Cause cause = Cause.findById(Long.valueOf(causeId));
-		RCACase rcaCase = cause.rcaCase;
-
-		if (cause.equals(rcaCase.problem)) {
-			//TODO: notify user that she cannot remove the problem cause
-			return;
-		}
-
-		rcaCase.deleteCause(cause);
-
-		DeleteCauseEvent deleteEvent = new DeleteCauseEvent(cause);
-		CauseStream causeEvents = rcaCase.getCauseStream();
-		causeEvents.getStream().publish(deleteEvent);
-	}
 }

@@ -22,52 +22,39 @@
  * THE SOFTWARE.
  */
 
-package controllers;
+package notifiers;
 
+import models.Invitation;
 import models.RCACase;
-import play.mvc.Controller;
-import play.mvc.With;
-import models.Cause;
-import models.events.*;
-import models.events.AddCauseEvent;
-import models.events.DeleteCauseEvent;
+import models.User;
+import play.Logger;
+import play.Play;
+import play.mvc.Mailer;
+import utils.EncodingUtils;
 
 /**
- * @author Eero Laukkanen
+ * E-mail sender
+ * Documentation of play.mvc.Mailer can be found from http://www.playframework.org/documentation/1.2.3/emails
+ * @author Risto Virtanen
  */
+public class Mails extends Mailer {
 
-@With({Secure.class, LanguageController.class})
-public class CauseController extends Controller {
+	private final static String DEFAULT_SENDER = Play.configuration.getProperty("mail.from.name") +
+		        " <" + Play.configuration.getProperty("mail.from" +".address") + ">";
 
-	public static void addCause(String causeId, String name) {
-		// causeId is used later as a String
-		Cause cause = Cause.findById(Long.valueOf(causeId));
-		RCACase rcaCase = cause.rcaCase;
-
-		Cause newCause = cause.addCause(name, SecurityController.getCurrentUser());
-
-		AddCauseEvent event = new AddCauseEvent(newCause, causeId);
-		CauseStream causeEvents = rcaCase.getCauseStream();
-		causeEvents.getStream().publish(event);
+	/**
+	 * This e-mail is sent when a new user is invited to a RCA case
+	 * @param user User that invited new user
+	 * @param invitedUser User that is invited
+	 * @param rcaCase RCA case which the user is invited to
+	 */
+	public static void invite(User user, Invitation invitedUser, RCACase rcaCase) {
+		setFrom(DEFAULT_SENDER);
+		setSubject("%s invited You to Root Cause Analysis session %s", user.name, rcaCase.caseName);
+		addRecipient(invitedUser.email);
+		String inviteHash = EncodingUtils.encodeSHA1Base64(invitedUser.hash);
+		Logger.info("User %s sent an invitation mail to %s to share %s", user, invitedUser, rcaCase);
+		send(user, invitedUser, inviteHash, rcaCase);
 	}
 
-	public static void addRelation(Long fromId, Long toID) {
-
-	}
-
-	public static void deleteCause(String causeId) {
-		Cause cause = Cause.findById(Long.valueOf(causeId));
-		RCACase rcaCase = cause.rcaCase;
-
-		if (cause.equals(rcaCase.problem)) {
-			//TODO: notify user that she cannot remove the problem cause
-			return;
-		}
-
-		rcaCase.deleteCause(cause);
-
-		DeleteCauseEvent deleteEvent = new DeleteCauseEvent(cause);
-		CauseStream causeEvents = rcaCase.getCauseStream();
-		causeEvents.getStream().publish(deleteEvent);
-	}
 }

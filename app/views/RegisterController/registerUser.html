@@ -38,7 +38,15 @@
 
     <p id="emailField">
         <label for="email">&{'register.email'}</label>
-        <input type="text" name="user.email" id="email" value="${flash['user.email']}"/>
+        #{if invitation}
+        <span>${invitation.email}</span>
+        <input type="hidden" name="user.email" id="email" value="${invitation.email}" />
+        <input type="hidden" name="invitationId" value="${invitation.id}" />
+        <input type="hidden" name="rcaCaseId" value="${rcaCaseId}" />
+        #{/if}
+        #{else}
+        <input type="text" name="user.email" id="email" value="${flash['user.email']}" />
+        #{/else}
         #{if errors.forKey('user.email')}<span class="error">#{error 'user.email' /}</span>#{/if}
     </p>
 
