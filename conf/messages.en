@@ -30,6 +30,32 @@ secure.error=Oops, unknown username or password.
 secure.logout=You have been logged out.
 logout=Log out
 
+error.errorsInForm=Form contains error(s)
+
+# Validation messages
+validation.required=Required
+validation.minSize=Minimum size is %2$d
+validation.maxSize=Maximum size is %2$d
+validation.email=Invalid email address
+validation.range=Not in the range %2$d through %3$d
+validation.min=Cannot be lower than %2$d
+validation.max=Cannot be greater than %2$d
+validation.match=Must match %2$s
+validation.isTrue=Must be checked
+validation.equals=Must be equal to &{%2$s}
+validation.invalid=Incorrect value
+validation.future=Must be in the future
+validation.after=Must be after %2$s
+validation.past=Must be in the past
+validation.before=Must be before %2$s
+validation.object=Validation failed
+validation.notFound=Object not found for id %2$s
+validation.url=Not a valid URL
+validation.phone=Not a valid phone
+validation.ipv4=Not a valid IP address
+validation.ipv6=Not a valid IP v6 address
+validation.selectOne=Select one
+
 createRCA.title=Create a new RCA case
 createRCA.caseName=Case name
 createRCA.rcaCaseType=Case type

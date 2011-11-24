@@ -30,6 +30,32 @@ secure.error=Hups, väärä käyttäjätunnus tai salasana.
 secure.logout=Kirjauduit ulos.
 logout=Kirjaudu ulos
 
+error.errorsInForm=Lomake sisältää virheitä
+
+# Validation messages
+validation.required=Vaadittu kenttä
+validation.minSize=Minimi koko on %2$d
+validation.maxSize=Maksimi koko on %2$d
+validation.email=Virheellinen sähköpostiosoite
+validation.range=Ei ole välillä %2$d - %3$d
+validation.min=Ei voi olla alle %2$d
+validation.max=Ei voi olla yli %2$d
+validation.match=Täytyy olla sama kuin %2$s
+validation.isTrue=Täytyy olla valittu
+validation.equals=Täytyy olla sama kuin &{%2$s}
+validation.invalid=Virheellinen arvo
+validation.future=Täytyy olla tulevaisuudessa
+validation.after=Täytyy olla %2$s jälkeen
+validation.past=Täytyy olla menneisyydessä
+validation.before=Täytyy olla ennen %2$s
+validation.object=Ei ole hyväksytty arvo
+validation.notFound=Ei löydetty objektia id:lle %2$s
+validation.url=Virheellinen URL osoite
+validation.phone=Ei ole puhelinnumero
+validation.ipv4=Virhellinen IP osoite
+validation.ipv6=Virheellinen IP v6 osoite
+validation.selectOne=Valitse yksi
+
 since.seconds=%d sekuntia sitten
 since.minutes=%d minuuttia sitten
 since.hours=%d tuntia sitten

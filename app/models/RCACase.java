@@ -62,13 +62,13 @@ public class RCACase extends Model {
 	@Column(name = "name")
 	public String caseName;
 
-	@Required @Min(0)
+	@Required @Min(value = 0, message = "validation.selectOne")
 	public int caseTypeValue;
 
 	@Required
 	public String caseGoals;
 
-	@Required @Min(0)
+	@Required @Min(value = 0, message = "validation.selectOne")
 	public int companySizeValue;
 
 	@Required
