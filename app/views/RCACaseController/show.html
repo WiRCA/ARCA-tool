@@ -1,7 +1,5 @@
 <!--
-  ~ Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
-  ~ Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus,
-  ~ Timo Lehtinen, Jaakko Harjuhahto
+  ~ Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen, Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus
   ~
   ~ Permission is hereby granted, free of charge, to any person obtaining a copy
   ~ of this software and associated documentation files (the "Software"), to deal
@@ -101,7 +99,7 @@
           {
             "id": ${cause.id},
             "name": "${cause.name}",
-            "data": {"$color": "#83548B","$type": "circle","$dim":10},
+            "data": {"$color": "#83548B","$type": "circle","$dim":1},
             "adjacencies": [
             #{list cause.causes, as:'causedBy'}
             {
@@ -115,7 +113,7 @@
       ];
       //Running number for creating nodes
       var runningNumber = 0;
-      var lastReceived = 0
+      var lastReceived = 0;
       var waitMessages = #{jsAction @waitMessages(rcaCase.id,':lastReceived') /}
       var addCause = #{jsAction @CauseController.addCause(':causeId', ':name') /}
       var deleteCause = #{jsAction @CauseController.deleteCause(':causeId') /}
@@ -127,7 +125,7 @@
         //Enable zooming and panning
         //by scrolling and DnD
         Navigation: {
-          enable: true,
+          enable: false,
           //Enable panning events only if we're dragging the empty
           //canvas (and not a node).
           panning: 'avoid nodes',
@@ -141,7 +139,7 @@
         Node: {
           overridable: true,
           color: "#83548B",
-          dim:10
+          dim:1
         },
         Edge: {
           overridable: true,
@@ -150,21 +148,22 @@
         },
         //Native canvas text styling
         Label: {
-          type: labelType, //Native or HTML
+          type: 'HTML', //Native or HTML
           size: 10,
           style: 'bold'
+
         },
         //Add Tips
         Tips: {
-          enable: true,
-          onShow: function(tip, node) {
+          enable: false,
+          *{onShow: function(tip, node) {
             //count connections
             var count = 0;
             node.eachAdjacency(function() { count++; });
             //display node info in tooltip
             tip.innerHTML = '<div class="tip-title">' + node.name + '</div>'
               + '<div class="tip-text"><b>connections:</b> ' + count + '</div>';
-          }
+          }}*
         },
         // Add node events
         Events: {
@@ -180,6 +179,7 @@
           onDragMove: function(node, eventInfo, e) {
               var pos = eventInfo.getPos();
               node.pos.setc(pos.x, pos.y);
+              node.setPos(new $jit.Complex(pos.x, pos.y), 'end');
               fd.plot();
           },
           //Implement the same handler for touchscreens
@@ -209,7 +209,10 @@
         // Add text to the labels. This method is only triggered
         // on label creation and only for DOM labels (not native canvas ones).
         onCreateLabel: function(domElement, node){
-          domElement.innerHTML = node.name;
+          var nameContainer = document.createElement('span');
+          nameContainer.className = 'name';
+          nameContainer.innerHTML = '<div class="nodeBox">'+node.name+'</div>';
+          domElement.appendChild(nameContainer);
           var style = domElement.style;
           style.fontSize = "0.8em";
           style.color = "#ddd";
@@ -222,7 +225,7 @@
           var top = parseInt(style.top);
           var w = domElement.offsetWidth;
           style.left = (left - w / 2) + 'px';
-          style.top = (top + 10) + 'px';
+          style.top = (top-18) + 'px';
           style.display = '';
         }
       });
@@ -245,7 +248,16 @@
                             "name": this.data.text
                           };
                           fd.graph.addAdjacence(node,newNode);
-                          fd.computeIncremental({
+                          var nodePos = fd.graph.getNode(this.data.causeFrom).getPos();
+                          fd.graph.getNode(this.data.causeTo).setPos(new $jit.Complex(nodePos.x, nodePos.y), 'current');
+                          fd.graph.getNode(this.data.causeTo).setPos(new $jit.Complex(nodePos.x, nodePos.y+100), 'end');
+
+                          fd.animate({
+                                modes: ['linear'],
+                                transition: $jit.Trans.Elastic.easeOut,
+                                duration: 1500
+                              });
+                          *{fd.computeIncremental({
                             iter: 5,
                             property: 'end',
                             onStep: function(perc){
@@ -259,7 +271,7 @@
                                 duration: 1200
                               });
                             }
-                          });
+                          });}*
                         }
                         lastReceived = this.id
                     })
