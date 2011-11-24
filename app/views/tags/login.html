@@ -77,9 +77,9 @@
                 #{a @RegisterController.registerUser(), id:'register-link'}&{'register.title'}#{/a}
             </div>
             <div id="gLogin">
-                <label for="gLogin-link">&{'register.gLogin'}</label>
+                <label>&{'register.gLogin'}</label>
                 #{a @RegisterController.googleLogin(), id:'gLogin-link'}
-                    <img src="@{'/public/images/google_icon.png'}" class="center"/>
+                    <img src="@{'/public/images/google_icon.png'}" alt="Google" class="center"/>
                 #{/a}
             </div>
         </div>
