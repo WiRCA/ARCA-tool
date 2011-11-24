@@ -38,31 +38,13 @@ import java.util.Date;
 /**
  * @author Eero Laukkanen
  */
-public class CauseTest extends UnitTest {
-
-	private User user;
-	private RCACaseType rcaCaseType;
-	private CompanySize size;
-	private RCACase testCase;
-
-	@Before
-	public void setUp() {
-		Fixtures.deleteAllModels();
-		new Bootstrap().doJob();
-		user = User.find("byEmail", "admin@local").first();
-		rcaCaseType = RCACaseType.valueOf(2);
-		size = CompanySize.valueOf(2);
-		RCACase rcaCase = new RCACase("TestRCACase", rcaCaseType.value, "Kaapelissa ei vikaa", "Kaapelissa vikaa",
-		                              true, "Keijon Kaapeli ja Kaivanto Oy", size.value, "Kaapelit ja johtimet",
-		                              false, user);
-		testCase = user.addRCACase(rcaCase);
-	}
+public class CauseTest extends GenericRCAUnitTest {
 
 	@Test
 	public void getCreatorAndParentTest() {
 		Cause cause1 = new Cause(testCase, "test cause1", user);
 		assertTrue(cause1.getCreator().equals(user));
-		assertNull(cause1.parent);
+		assertNull(cause1.getParent());
 	}
 
 	@Test
@@ -82,8 +64,8 @@ public class CauseTest extends UnitTest {
 
 	@Test
 	public void addCauseTest() {
-		Cause cause1 = new Cause(testCase, "test cause1", user);
-		Cause cause2 = new Cause(testCase, "test cause2", user);
+		Cause cause1 = new Cause(testCase, "test cause1", user).save();
+		Cause cause2 = new Cause(testCase, "test cause2", user).save();
 		cause1.addCause(cause2);
 		assertTrue(cause2.isChildOf(cause1));
 		Cause cause3 = cause1.addCause("test cause3", user);
@@ -92,28 +74,28 @@ public class CauseTest extends UnitTest {
 
 	@Test
 	public void isParentTest() {
-		Cause cause1 = new Cause(testCase, "test cause1", user);
-		Cause cause2 = new Cause(testCase, "test cause2", user);
-		Cause cause3 = new Cause(testCase, "test cause3", user);
+		Cause cause1 = new Cause(testCase, "test cause1", user).save();
+		Cause cause2 = new Cause(testCase, "test cause2", user).save();
+		Cause cause3 = new Cause(testCase, "test cause3", user).save();
 		cause1.addCause(cause2);
 		assertTrue(cause2.isChildOf(cause1));
-		assertTrue(cause2.parent.equals(cause1));
+		assertTrue(cause2.getParent().equals(cause1));
 		cause3.addCause(cause2);
 		assertFalse(cause2.isChildOf(cause3));
 	}
 
 	@Test
 	public void getCausesAndRelationsTest() {
-		Cause cause1 = new Cause(testCase, "test cause1", user);
-		Cause cause2 = new Cause(testCase, "test cause2", user);
-		Cause cause3 = new Cause(testCase, "test cause3", user);
-		Cause cause4 = new Cause(testCase, "test cause4", user);
+		Cause cause1 = new Cause(testCase, "test cause1", user).save();
+		Cause cause2 = new Cause(testCase, "test cause2", user).save();
+		Cause cause3 = new Cause(testCase, "test cause3", user).save();
+		Cause cause4 = new Cause(testCase, "test cause4", user).save();
 		cause1.addCause(cause2);
 		cause1.addCause(cause3);
 		cause2.addCause(cause4);
 		cause1.addCause(cause4);
-		Set<Cause> causes = cause1.causes;
-		Set<Cause> relations = cause1.relations;
+		Set<Cause> causes = cause1.getCauses();
+		Set<Cause> relations = cause1.getRelations();
 		assertTrue(causes.contains(cause2));
 		assertTrue(causes.contains(cause3));
 		assertFalse(causes.contains(cause4));
@@ -123,13 +105,13 @@ public class CauseTest extends UnitTest {
 
 	@Test
 	public void deleteTest() {
-		Cause cause1 = new Cause(testCase, "test cause1", user);
-		Cause cause2 = new Cause(testCase, "test cause2", user);
-		Cause cause3 = new Cause(testCase, "test cause3", user);
+		Cause cause1 = new Cause(testCase, "test cause1", user).save();
+		Cause cause2 = new Cause(testCase, "test cause2", user).save();
+		Cause cause3 = new Cause(testCase, "test cause3", user).save();
 		cause1.addCause(cause2);
 		cause2.addCause(cause3);
 		cause2.deleteCause();
-		assertFalse(cause1.causes.contains(cause2));
+		assertFalse(cause1.getCauses().contains(cause2));
 		assertTrue(cause3.effectRelations.isEmpty());
 	}
 

@@ -41,7 +41,7 @@ public class Cause extends IdComparableModel {
 
 	public String name;
 
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "rcaCaseId")
 	public RCACase rcaCase;
 
@@ -57,15 +57,6 @@ public class Cause extends IdComparableModel {
 
 	@OneToMany(mappedBy = "causeFrom", cascade = CascadeType.ALL)
 	public Set<Relation> effectRelations;
-
-	@Transient
-	public Set<Cause> causes;
-
-	@Transient
-	public Set<Cause> relations;
-
-	@Transient
-	public Cause parent;
 
 	@OneToMany(mappedBy = "cause", cascade = CascadeType.ALL)
 	public Set<Correction> corrections;
@@ -143,6 +134,8 @@ public class Cause extends IdComparableModel {
 		newCause.save();
 		newRelation.save();
 		this.save();
+		this.rcaCase.causes.add(newCause);
+		this.rcaCase.save();
 		return newCause;
 	}
 
@@ -158,7 +151,6 @@ public class Cause extends IdComparableModel {
 		this.causeRelations.add(newRelation);
 		cause.effectRelations.add(newRelation);
 		cause.save();
-		newRelation.save();
 		this.save();
 		return cause;
 	}
@@ -170,13 +162,10 @@ public class Cause extends IdComparableModel {
 	public void deleteCause() {
 		for (Relation relation : causeRelations) {
 			relation.causeFrom.effectRelations.remove(relation);
-			this.causeRelations.remove(relation);
 		}
 		for (Relation relation : effectRelations) {
 			relation.causeTo.causeRelations.remove(relation);
-			this.effectRelations.remove(relation);
 		}
-		this.save();
 	}
 
 	/**
@@ -235,6 +224,6 @@ public class Cause extends IdComparableModel {
 	 * @return true if the given cause is the parent of this cause.
 	 */
 	public boolean isChildOf(Cause cause) {
-		return this.parent.equals(cause);
+		return this.getParent().equals(cause);
 	}
 }

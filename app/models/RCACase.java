@@ -39,6 +39,7 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import models.events.*;
 
@@ -81,7 +82,7 @@ public class RCACase extends Model {
 
 	public Long ownerId;
 
-	@OneToOne(cascade = CascadeType.PERSIST)
+	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="problemId")
 	public Cause problem;
 
@@ -109,6 +110,7 @@ public class RCACase extends Model {
 	 */
 	public RCACase(User owner) {
 		this.ownerId = owner.id;
+		this.causes = new TreeSet<Cause>();
 	}
 
 	/**
@@ -141,6 +143,7 @@ public class RCACase extends Model {
 		this.companyProducts = companyProducts;
 		this.isCasePublic = isCasePublic;
 		this.ownerId = owner.id;
+		this.causes = new TreeSet<Cause>();
 	}
 
 	public User getOwner() {
@@ -183,12 +186,32 @@ public class RCACase extends Model {
 	}
 
 	public void deleteCause(Cause cause) {
+		if (cause.equals(this.problem)) {
+			return;
+		}
 		this.causes.remove(cause);
+		cause.deleteCause();
+		cause.delete();
 		this.save();
 	}
 
 	@Override
 	public String toString() {
 		return caseName + " (id: " + id + ")";
+	}
+
+	/**
+	 * Sets the problem of this RCA case.
+	 * @param cause the problem
+	 */
+	public void setProblem(Cause cause) {
+		if (cause.rcaCase.equals(this)) {
+			this.problem = cause;
+			if (this.causes == null) {
+				this.causes = new TreeSet<Cause>();
+			}
+			this.causes.add(cause);
+			this.save();
+		}
 	}
 }
