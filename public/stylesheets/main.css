@@ -52,6 +52,10 @@ div#login div#register {
     margin-left: 45px;
 }
 
+div#login div#gLogin {
+    display:block;
+}
+
 div#rcacase-share-dialog form {
     margin-bottom: 20px;
 }

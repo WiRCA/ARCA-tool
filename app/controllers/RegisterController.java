@@ -39,27 +39,6 @@ public class RegisterController extends Controller {
 		render();
 	}
 
-	public static void regUs() {
-		if (OpenID.isAuthenticationResponse()) {
-			OpenID.UserInfo verifiedUser = OpenID.getVerifiedID();
-			if (verifiedUser == null) {
-				flash.error("Oops. Authentication has failed");
-				ApplicationController.index();
-			}
-			session.put("user", verifiedUser.id);
-			ApplicationController.index();
-		} else {
-			if (!OpenID.id("https://www.google.com/accounts/o8/id") // will redirect the user
-					.required("openid.ax.type.email", "http://axschema.org/contact/email")
-					.required("openid.ax.type.firstname", "http://axschema.org/namePerson/first")
-					.required("openid.ax.type.lastname", "http://axschema.org/namePerson/last")
-					.verify()) {
-				flash.error("Cannot verify your OpenID");
-				ApplicationController.index();
-			}
-		}
-	}
-
 	public static void register(@Valid User user, @Required String password2) {
 
 		validation.isTrue(User.find("byEmail", user.email).first() == null &&
@@ -79,5 +58,30 @@ public class RegisterController extends Controller {
         // Mark user as connected
         session.put("username", user.email);
 		ApplicationController.index();
+	}
+
+	public static void googleLogin() {
+		if (OpenID.isAuthenticationResponse()) {
+			OpenID.UserInfo verifiedUser = OpenID.getVerifiedID();
+			if (verifiedUser == null) {
+				flash.error("Oops. Authentication has failed");
+				ApplicationController.index();
+			}
+			String openid = verifiedUser.id;
+			String email = verifiedUser.extensions.get("email");
+			String firstName = verifiedUser.extensions.get("firstname");
+			String lastName = verifiedUser.extensions.get("lastname");
+			session.put("user", verifiedUser.id);
+			ApplicationController.index();
+		} else {
+			if (!OpenID.id("https://www.google.com/accounts/o8/id") // will redirect the user
+					.required("email", "http://axschema.org/contact/email")
+					.required("firstname", "http://axschema.org/namePerson/first")
+					.required("lastname", "http://axschema.org/namePerson/last")
+					.verify()) {
+				flash.error("Cannot verify your OpenID");
+				ApplicationController.index();
+			}
+		}
 	}
 }

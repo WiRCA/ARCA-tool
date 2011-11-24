@@ -15,7 +15,7 @@ GET     /user                                       UserController.index
 #Register
 GET     /register                                   RegisterController.registerUser
 POST    /register                                   RegisterController.register
-GET     /regUs                                      RegisterController.regUs
+GET     /gLogin                                      RegisterController.googleLogin
 
 # Create RCACase -page
 GET     /CreateRCACase                              RCACaseController.createRCACase

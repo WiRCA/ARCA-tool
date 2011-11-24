@@ -85,3 +85,4 @@ register.password=Password
 register.password2=Re-enter Password
 register.emailExists=The given email already exists.
 register.passwordsDidNotMatch=Passwords did not match
+register.gLogin=Or log in using your Google Account

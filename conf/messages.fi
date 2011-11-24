@@ -84,3 +84,4 @@ register.password=Salasana
 register.password2=Syötä uudelleen salasana
 register.emailExists=Antamasi sähköpostiosoite on jo rekisteröity.
 register.passwordsDidNotMatch=Salasanat eivät täsmänneet
+register.gLogin=Tai kirjaudu Google-tunnuksellasi
