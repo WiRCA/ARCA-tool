@@ -32,6 +32,9 @@ import play.libs.OpenID;
 import play.mvc.Controller;
 import play.mvc.With;
 
+import java.util.Date;
+import java.util.Random;
+
 /**
  * @author Juha Viljanen
  */
@@ -43,8 +46,7 @@ public class RegisterController extends Controller {
 
 	public static void register(@Valid User user, @Required String password2) {
 
-		validation.isTrue(User.find("byEmail", user.email).first() == null &&
-		                  Invitation.find("byEmail", user.email).first() == null )
+		validation.isTrue(RegisterController.canRegister(user.email))
 		          .key("user.email").message("register.emailExists");
 		validation.equals(user.password, password2).key("user.password").message("register.passwordsDidNotMatch");
 
@@ -69,11 +71,20 @@ public class RegisterController extends Controller {
 				flash.error("Oops. Authentication has failed");
 				ApplicationController.index();
 			}
-			String openid = verifiedUser.id;
+
 			String email = verifiedUser.extensions.get("email");
 			String firstName = verifiedUser.extensions.get("firstname");
 			String lastName = verifiedUser.extensions.get("lastname");
-			session.put("user", verifiedUser.id);
+			String name = firstName + " " + lastName;
+
+			if (RegisterController.canRegister(email)) {
+				long randomLong = new Random(new Date().getTime()).nextLong();
+				String randomPasswd = Long.toHexString(randomLong);
+				User user = new User(email, randomPasswd);
+				user.name = name;
+				user.save();
+			}
+			session.put("username", email);
 			ApplicationController.index();
 		} else {
 			if (!OpenID.id("https://www.google.com/accounts/o8/id") // will redirect the user
@@ -85,5 +96,10 @@ public class RegisterController extends Controller {
 				ApplicationController.index();
 			}
 		}
+	}
+
+	private static boolean canRegister(String email) {
+		return ( User.find("byEmail", email).first() == null &&
+		         Invitation.find("byEmail", email).first() == null );
 	}
 }
