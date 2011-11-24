@@ -285,10 +285,8 @@
                             iter: 5,
                             property: 'end',
                             onStep: function(perc){
-                              Log.write(perc + '% loaded...');
                             },
                             onComplete: function(){
-                              Log.write('done');
                               fd.animate({
                                 modes: ['linear'],
                                 transition: $jit.Trans.Elastic.easeOut,
@@ -313,10 +311,8 @@
         iter: 40,
         property: 'end',
         onStep: function(perc){
-          Log.write(perc + '% loaded...');
         },
         onComplete: function(){
-          Log.write('done');
           fd.animate({
             modes: ['linear'],
             transition: $jit.Trans.Elastic.easeOut,
