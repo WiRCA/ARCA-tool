@@ -30,39 +30,39 @@
 
     #{form @RegisterController.register()}
 
-    <p id="nameField">
-        <label for="name">&{'register.name'}</label>
-        <input type="text" name="user.name" id="name" value="${flash['user.name']}" />
+    <p id="nameFieldP">
+        <label for="nameFieldRegister">&{'register.name'}</label>
+        <input type="text" name="user.name" id="nameFieldRegister" value="${flash['user.name']}" />
         #{if errors.forKey('user.name')}<span class="error">#{error 'user.name' /}</span>#{/if}
     </p>
 
-    <p id="emailField">
-        <label for="email">&{'register.email'}</label>
+    <p id="emailFieldP">
+        <label for="emailFieldRegister">&{'register.email'}</label>
         #{if invitation}
         <span>${invitation.email}</span>
-        <input type="hidden" name="user.email" id="email" value="${invitation.email}" />
+        <input type="hidden" name="user.email" id="emailFieldRegister" value="${invitation.email}" />
         <input type="hidden" name="invitationId" value="${invitation.id}" />
         <input type="hidden" name="rcaCaseId" value="${rcaCaseId}" />
         #{/if}
         #{else}
-        <input type="text" name="user.email" id="email" value="${flash['user.email']}" />
+        <input type="text" name="user.email" id="emailFieldRegister" value="${flash['user.email']}" />
         #{/else}
         #{if errors.forKey('user.email')}<span class="error">#{error 'user.email' /}</span>#{/if}
     </p>
 
-    <p id="passwordField">
-        <label for="password">&{'register.password'}</label>
-        <input type="password" name="user.password" id="password"/>
+    <p id="passwordFieldP">
+        <label for="passwordFieldRegister">&{'register.password'}</label>
+        <input type="password" name="user.password" id="passwordFieldRegister"/>
         #{if errors.forKey('user.password')}<span class="error">#{error 'user.password' /}</span>#{/if}
     </p>
 
-    <p id="password2Field">
-        <label for="password2">&{'register.password2'}</label>
-        <input type="password" name="password2" id="password2"/>
+    <p id="password2FieldP">
+        <label for="password2FieldRegister">&{'register.password2'}</label>
+        <input type="password" name="password2" id="password2FieldRegister"/>
         #{if errors.forKey('password2')}<span class="error">#{error 'password2' /}</span>#{/if}
     </p>
 
-    <p id="registerButtonField">
+    <p id="registerButtonP">
         <input type="submit" id="registerButton" value="&{'register.title'}"/>
     </p>
 
