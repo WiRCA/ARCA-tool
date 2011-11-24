@@ -33,6 +33,8 @@ import play.libs.OpenID;
 import play.mvc.Controller;
 import play.mvc.With;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.Date;
 import java.util.Random;
 
@@ -41,6 +43,9 @@ import java.util.Random;
  */
 @With(LanguageController.class)
 public class RegisterController extends Controller {
+
+	private static final String SECURE_RANDOM_ALGORITHM = "SHA1PRNG";
+
 	public static void registerUser() {
 		render();
 	}
@@ -80,12 +85,18 @@ public class RegisterController extends Controller {
 			String name = firstName + " " + lastName;
 
 			if (RegisterController.canRegister(email)) {
-				long randomLong = new Random(new Date().getTime()).nextLong();
-				String randomPasswd = Long.toHexString(randomLong);
-				User user = new User(email, randomPasswd);
-				user.name = name;
-				user.save();
-				Logger.info("User %s registered via Google login", user);
+				try {
+					SecureRandom secureRandom = SecureRandom.getInstance(SECURE_RANDOM_ALGORITHM);
+					String randomPasswd = Integer.toHexString(secureRandom.nextInt());
+					User user = new User(email, randomPasswd);
+					user.name = name;
+					user.save();
+					Logger.info("User %s registered via Google login", user);
+				} catch (NoSuchAlgorithmException e) {
+					// Should not happen
+					Logger.error(e, "Password hash generation failed");
+					ApplicationController.index();
+				}
 			}
 			Logger.info("User with email %s logged in via Google login", email);
 			session.put("username", email);
