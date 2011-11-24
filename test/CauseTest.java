@@ -22,12 +22,12 @@
  * THE SOFTWARE.
  */
 
-import models.Cause;
-import models.RCACase;
-import models.User;
+import job.Bootstrap;
+import models.*;
 import models.enums.CompanySize;
 import models.enums.RCACaseType;
 import org.junit.*;
+import play.test.Fixtures;
 import play.test.UnitTest;
 
 import java.util.Set;
@@ -43,7 +43,9 @@ public class CauseTest extends UnitTest {
 	private RCACase testCase;
 
 	@Before
-	public void setUp(){
+	public void setUp() {
+		Fixtures.deleteAllModels();
+		new Bootstrap().doJob();
 		user = User.find("byEmail", "admin@local").first();
 		rcaCaseType = RCACaseType.valueOf(2);
 		size = CompanySize.valueOf(2);
@@ -53,6 +55,15 @@ public class CauseTest extends UnitTest {
 		testCase = user.addRCACase(rcaCase);
 	}
 
+	@Test
+	public void addCauseTest() {
+		Cause cause1 = new Cause(testCase, "test cause1", user);
+		Cause cause2 = new Cause(testCase, "test cause2", user);
+		cause1.addCause(cause2);
+		assertTrue(cause2.isChildOf(cause1));
+		Cause cause3 = cause1.addCause("test cause3", user);
+		assertTrue(cause3.isChildOf(cause1));
+	}
 
 	@Test
 	public void isParentTest() {
@@ -86,5 +97,18 @@ public class CauseTest extends UnitTest {
 		cause1.addCause(cause2);
 		cause2.deleteCause();
 		assertFalse(cause1.causes.contains(cause2));
+	}
+
+	@Test
+	public void correctionTest() {
+		Cause cause1 = new Cause(testCase, "test cause1", user);
+		Correction correction = cause1.addCorrection("new correction", "correction for a cause");
+		assertTrue(correction.cause.equals(cause1));
+		assertTrue(cause1.corrections.contains(correction));
+		Correction correction2 = Correction.find("byName", "new correction").first();
+		assertNotNull(correction2);
+		cause1.removeCorrection(correction);
+		Correction correction3 = Correction.find("byName", "new correction").first();
+		assertNull(correction3);
 	}
 }
