@@ -26,11 +26,14 @@ import job.Bootstrap;
 import models.*;
 import models.enums.CompanySize;
 import models.enums.RCACaseType;
+import org.codehaus.groovy.tools.shell.commands.ExitCommand;
 import org.junit.*;
+import play.Logger;
 import play.test.Fixtures;
 import play.test.UnitTest;
 
 import java.util.Set;
+import java.util.Date;
 
 /**
  * @author Eero Laukkanen
@@ -56,6 +59,28 @@ public class CauseTest extends UnitTest {
 	}
 
 	@Test
+	public void getCreatorAndParentTest() {
+		Cause cause1 = new Cause(testCase, "test cause1", user);
+		assertTrue(cause1.getCreator().equals(user));
+		assertNull(cause1.parent);
+	}
+
+	@Test
+	public void updateCauseTest() {
+		Cause cause1 = new Cause(testCase, "test cause1", user);
+		Date date1 = cause1.rcaCase.updated;
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			Logger.fatal("Sleep failed in a test");
+			assert true;
+		}
+		cause1.name = "test cause1 modified";
+		cause1.save();
+		assertTrue(cause1.rcaCase.updated.after(date1));
+	}
+
+	@Test
 	public void addCauseTest() {
 		Cause cause1 = new Cause(testCase, "test cause1", user);
 		Cause cause2 = new Cause(testCase, "test cause2", user);
@@ -72,31 +97,40 @@ public class CauseTest extends UnitTest {
 		Cause cause3 = new Cause(testCase, "test cause3", user);
 		cause1.addCause(cause2);
 		assertTrue(cause2.isChildOf(cause1));
+		assertTrue(cause2.parent.equals(cause1));
 		cause3.addCause(cause2);
 		assertFalse(cause2.isChildOf(cause3));
 	}
 
 	@Test
-	public void getCausesTest() {
+	public void getCausesAndRelationsTest() {
 		Cause cause1 = new Cause(testCase, "test cause1", user);
 		Cause cause2 = new Cause(testCase, "test cause2", user);
 		Cause cause3 = new Cause(testCase, "test cause3", user);
 		Cause cause4 = new Cause(testCase, "test cause4", user);
 		cause1.addCause(cause2);
 		cause1.addCause(cause3);
+		cause2.addCause(cause4);
+		cause1.addCause(cause4);
 		Set<Cause> causes = cause1.causes;
+		Set<Cause> relations = cause1.relations;
 		assertTrue(causes.contains(cause2));
 		assertTrue(causes.contains(cause3));
 		assertFalse(causes.contains(cause4));
+		assertTrue(relations.contains(cause4));
+		assertFalse(relations.contains(cause2));
 	}
 
 	@Test
 	public void deleteTest() {
 		Cause cause1 = new Cause(testCase, "test cause1", user);
 		Cause cause2 = new Cause(testCase, "test cause2", user);
+		Cause cause3 = new Cause(testCase, "test cause3", user);
 		cause1.addCause(cause2);
+		cause2.addCause(cause3);
 		cause2.deleteCause();
 		assertFalse(cause1.causes.contains(cause2));
+		assertTrue(cause3.effectRelations.isEmpty());
 	}
 
 	@Test
