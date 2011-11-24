@@ -45,13 +45,8 @@ import models.events.*;
 /**
  * @author Eero Laukkanen
  */
-
-/**
- * TODO   ENUMS
- */
 @PersistenceUnit(name = "maindb")
 @Entity(name = "rcacase")
-
 public class RCACase extends Model {
 
 	private static final String CAUSE_STREAM_NAME_IN_CACHE = "causeStream";
@@ -110,6 +105,7 @@ public class RCACase extends Model {
 
 	/**
 	 * Basic constructor
+	 * @param owner User who created this case
 	 */
 	public RCACase(User owner) {
 		this.ownerId = owner.id;
@@ -193,6 +189,6 @@ public class RCACase extends Model {
 
 	@Override
 	public String toString() {
-		return caseName + " (" + id + ")";
+		return caseName + " (id: " + id + ")";
 	}
 }
