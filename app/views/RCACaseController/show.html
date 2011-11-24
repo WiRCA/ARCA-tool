@@ -22,11 +22,14 @@
 #{extends 'main.html' /}
 #{set title:'showRCACase.title' /}
 #{set 'moreStyles'}
+    <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/arcaeditor.css'}">
     <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/base.css'}">
     <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/ForceDirected.css'}">
 #{/set}
 #{set 'moreScripts'}
     <script src="@{'/public/javascripts/smalljit.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+    <script src="@{'/public/javascripts/jQuery.radmenu.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+    
 #{/set}
 *{
 <h1>&{'showRCACase.title', rcaCase.name}</h1>
@@ -43,17 +46,23 @@
 }*
 <div id="container">
   <div id="center-container">
-    <div id="infovis"></div>
+    <div id="infovis">
+    </div>
   </div>
 </div>
-
-<div id="log"></div>
+  <div id='radial_menu' style="position: absolute; display: none;">
+    <ul class='list'>
+      <li class='item'><div class='my_class'>+</div></li>
+      <li class='item'><div class='my_class'>?</div></li>
+      <li class='item'><div class='my_class'>?</div></li>
+      <li class='item'><div class='my_class'>X</div></li>
+    </ul>
+  </div>
 
 <script type="text/javascript">
     $(document).ready(function() {
       init();
     });
-
     var labelType, useGradients, nativeTextSupport, animate;
 
     (function() {
@@ -70,27 +79,6 @@
       useGradients = nativeCanvasSupport;
       animate = !(iStuff || !nativeCanvasSupport);
     })();
-
-    var Log = {
-      elem: false,
-      write: function(text){
-        if (!this.elem)
-          this.elem = document.getElementById('log');
-        this.elem.innerHTML = text;
-        this.elem.style.left = (500 - this.elem.offsetWidth / 2) + 'px';
-      }
-    };
-    
-    var shiftDown = false;
-    var shiftDownHandler = function(e){
-      var evtObj = window.event? event:e;
-      if(evtObj.shiftKey){
-        shiftDown=true;
-      }else
-        shiftDown = false;
-    }
-    document.onkeydown = shiftDownHandler;
-
 
     function init(){
       // init data
@@ -118,6 +106,47 @@
       var addCause = #{jsAction @CauseController.addCause(':causeId', ':name') /}
       var deleteCause = #{jsAction @CauseController.deleteCause(':causeId') /}
       // end
+      var $radial_menu = $("#radial_menu"), menupos, menuwidth, selectedNode;
+      jQuery("#radial_menu").radmenu({
+        listClass: 'list', // the list class to look within for items
+        itemClass: 'item', // the items - NOTE: the HTML inside the item is copied into the menu item
+        radius: 55, // radius in pixels
+        animSpeed: 2000, // animation speed in millis
+        centerX: 0, // the center x axis offset
+        centerY: -20, // the center y axis offset
+        selectEvent: "click", // the select event (click)
+        onSelect: function($selected){ // show what is returned 
+            if($selected.html()=="<div class=\"my_class\">X</div>"){
+              $.post(deleteCause({causeId: selectedNode.id}));
+              jQuery("#radial_menu").radmenu("hide");
+              selectedNode.setData('alpha', 0, 'end');
+              fd.fx.animate({  
+                modes: ['node-property:alpha'],  
+                duration: 100  
+              });
+            }else if($selected.html()=="<div class=\"my_class\">+</div>"){
+              var name = prompt('Node name?');
+              runningNumber = runningNumber + 1;
+              if (name != null && name != "") {
+                $.post(addCause({causeId: selectedNode.id, name: name}));
+                jQuery("#radial_menu").radmenu("hide");
+              }
+            }
+          },
+        angleOffset: 45 // in degrees
+      });
+      function show_radial_menu(given_node){
+        selectedNode = given_node;
+        //get the position of the placeholder element
+          menupos   = $("#"+given_node.id).offset();
+          menuwidth = $("#"+given_node.id).width();
+          //show the menu directly over the placeholder
+          $radial_menu.css({ "left": (menupos.left + menuwidth/2 - 20) + "px", "top":menupos.top + "px" }).show();
+        jQuery("#radial_menu").radmenu("show", 
+          function(items){
+            items.fadeIn(400);
+          });
+      }
       // init ForceDirected
       var fd = new $jit.ForceDirected({
         //id of the visualization container
@@ -177,6 +206,7 @@
           },
           //Update node positions when dragged
           onDragMove: function(node, eventInfo, e) {
+              jQuery("#radial_menu").radmenu("hide");
               var pos = eventInfo.getPos();
               node.pos.setc(pos.x, pos.y);
               node.setPos(new $jit.Complex(pos.x, pos.y), 'end');
@@ -189,16 +219,10 @@
           },
           //Add also a click handler to nodes
           onClick: function(node){
-            if(!node) return;
-            // DELETE A NODE
-            if (shiftDown) {
-              $.post(deleteCause({causeId: node.id}));
-              return;  
-            }
-            var name = prompt('Node name?');
-            runningNumber = runningNumber + 1;
-            if (name != null && name != "") {
-                $.post(addCause({causeId: node.id, name: name}));
+            if(node){
+              show_radial_menu(node);
+            }else{
+              jQuery("#radial_menu").radmenu("hide");    
             }
           }
         },
@@ -211,7 +235,7 @@
         onCreateLabel: function(domElement, node){
           var nameContainer = document.createElement('span');
           nameContainer.className = 'name';
-          nameContainer.innerHTML = '<div class="nodeBox">'+node.name+'</div>';
+          nameContainer.innerHTML = '<div class="nodeBox" id='+node.id+'>'+node.name+'</div>';
           domElement.appendChild(nameContainer);
           var style = domElement.style;
           style.fontSize = "0.8em";
@@ -304,6 +328,6 @@
       // end
 
     }
-
+    
 </script>
 
