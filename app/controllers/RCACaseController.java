@@ -30,13 +30,11 @@ import models.RCACase;
 import models.User;
 import models.enums.CompanySize;
 import models.enums.RCACaseType;
-import org.apache.commons.mail.EmailException;
-import org.apache.commons.mail.SimpleEmail;
+import notifiers.Mails;
 import play.Logger;
 import play.data.validation.Email;
 import play.data.validation.Required;
 import play.data.validation.Valid;
-import play.libs.Mail;
 import play.mvc.Controller;
 import play.mvc.With;
 
@@ -47,6 +45,7 @@ import models.events.*;
 
 /**
  * @author Mikko Valjus
+ * @author Risto Virtanen
  */
 @With({Secure.class, LanguageController.class})
 public class RCACaseController extends Controller {
@@ -119,19 +118,8 @@ public class RCACaseController extends Controller {
 			} else {
 				Invitation invitation = Invitation.find("byEmail", invitedEmail).first();
 				if (invitation == null) {
-					try {
-						invitation = new Invitation(invitedEmail);
-
-						SimpleEmail email = new SimpleEmail();
-						email.setFrom("no-reply@arcatool.fi");
-						email.addTo(invitedEmail);
-						email.setSubject("JEPA!");
-						email.setMsg("Come and play!");
-						Mail.send(email);
-					} catch (EmailException e) {
-						Logger.error(e, "User invitation failed");
-						renderJSON("{\"invalidEmail\":\"true\"}");
-					}
+					invitation = new Invitation(invitedEmail).save();
+					Mails.invite(current, invitation, rcaCase);
 				}
 				invitation.addCase(rcaCase);
 				render(invitation);

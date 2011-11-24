@@ -71,6 +71,13 @@ public class User extends Model {
 	}
 
 	/**
+	 * Basic constructor
+	 */
+	public User() {
+		this.caseIds = new HashSet<Long>();
+	}
+
+	/**
 	 * Change user's password with new password
 	 *
 	 * @param newPassword User's new password

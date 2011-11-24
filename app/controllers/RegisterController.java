@@ -32,14 +32,14 @@ import play.data.validation.Valid;
 import play.libs.OpenID;
 import play.mvc.Controller;
 import play.mvc.With;
+import utils.EncodingUtils;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.Date;
-import java.util.Random;
 
 /**
  * @author Juha Viljanen
+ * @author Risto Virtanen
  */
 @With(LanguageController.class)
 public class RegisterController extends Controller {
@@ -50,15 +50,33 @@ public class RegisterController extends Controller {
 		render();
 	}
 
-	public static void register(@Valid User user, @Required String password2) {
+	public static void register(@Valid User user, @Required String password2, Long invitationId, Long rcaCaseId) {
 
-		validation.isTrue(RegisterController.canRegister(user.email)).key("user.email").message("register.emailExists");
+		Invitation invitation = null;
+		if (invitationId != null) {
+			invitation = Invitation.findById(invitationId);
+			if (!invitation.email.equals(user.email)) {
+				renderTemplate("RegisterController/registerUser.html", invitation, rcaCaseId);
+			}
+			validation.isTrue(User.find("byEmail", user.email).first() == null)
+			          .key("user.email").message("register" + ".emailExists");
+		} else {
+			validation.isTrue(RegisterController.canRegister(user.email)).key("user.email").message("register.emailExists");
+		}
 		validation.equals(user.password, password2).key("user.password").message("register.passwordsDidNotMatch");
 
 		if (validation.hasErrors()) {
 			params.flash(); // add http parameters to the flash scope
+			if (invitation != null) {
+				renderTemplate("RegisterController/registerUser.html", invitation, rcaCaseId);
+			}
 			validation.keep(); // keep the errors for the next request
 			registerUser();
+		}
+
+		if (invitation != null) {
+			user.caseIds.addAll(invitation.caseIds);
+			invitation.delete();
 		}
 
 		user.changePassword(password2);
@@ -68,6 +86,11 @@ public class RegisterController extends Controller {
 
         // Mark user as connected
         session.put("username", user.email);
+
+		if (rcaCaseId != null && user.caseIds.contains(rcaCaseId)) {
+			RCACaseController.show(rcaCaseId);
+		}
+
 		ApplicationController.index();
 	}
 
@@ -111,6 +134,21 @@ public class RegisterController extends Controller {
 				ApplicationController.index();
 			}
 		}
+	}
+
+	public static void registerInvitation(Long invitationId, Long rcaCaseId, String inviteHash) {
+		if (SecurityController.isConnected()) {
+			ApplicationController.index();
+		}
+		notFoundIfNull(invitationId);
+		notFoundIfNull(rcaCaseId);
+		notFoundIfNull(inviteHash);
+		Invitation invitation = Invitation.findById(invitationId);
+		notFoundIfNull(invitation);
+		if (!inviteHash.equals(EncodingUtils.encodeSHA1Base64(invitation.hash))) {
+			forbidden();
+		}
+		renderTemplate("RegisterController/registerUser.html", invitation, rcaCaseId);
 	}
 
 	private static boolean canRegister(String email) {

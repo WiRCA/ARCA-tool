@@ -1,0 +1,14 @@
+<p>Hi,</p>
+
+<p>
+    #{if user.name}${user.name}#{/if}#{else}${user.email}#{/else} has invited You to
+    a Root Cause Analysis session ${rcaCase.caseName}.
+</p>
+<p>
+Click #{a @@RegisterController.registerInvitation(invitedUser.id, rcaCase.id, inviteHash)}here#{/a}.
+</p>
+
+<p>
+Br,<br/>
+ARCA-tool
+</p>
