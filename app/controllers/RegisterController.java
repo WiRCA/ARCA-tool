@@ -58,12 +58,10 @@ public class RegisterController extends Controller {
 			if (!invitation.email.equals(user.email)) {
 				renderTemplate("RegisterController/registerUser.html", invitation, rcaCaseId);
 			}
-			validation.isTrue(User.find("byEmail", user.email).first() == null)
-			          .key("user.email").message("register" + ".emailExists");
 		} else {
-			//TODO: canRegister voidaan poistaa
-			validation.isTrue(RegisterController.canRegister(user.email)).key("user.email").message("register.emailExists");
+			RegisterController.validateUserIsNotInvited(user.email);
 		}
+		RegisterController.validateUserDoesNotExist(user.email);
 		validation.equals(user.password, password2).key("user.password").message("register.passwordsDidNotMatch");
 
 		if (validation.hasErrors()) {
@@ -75,10 +73,7 @@ public class RegisterController extends Controller {
 			registerUser();
 		}
 
-		if (invitation != null) {
-			user.caseIds.addAll(invitation.caseIds);
-			invitation.delete();
-		}
+		RegisterController.addCaseAndDeleteInvitationIfInvited(invitation, user);
 
 		user.changePassword(password2);
 		user.save();
@@ -88,11 +83,7 @@ public class RegisterController extends Controller {
         // Mark user as connected
         session.put("username", user.email);
 
-		// If user was invited to case, it will be shown after succesfull registration.
-		//TODO: tästä vois tehdä apumetodin showCaseIfInvited()
-		if (rcaCaseId != null && user.caseIds.contains(rcaCaseId)) {
-			RCACaseController.show(rcaCaseId);
-		}
+		RegisterController.showCaseIfInvited(rcaCaseId, user);
 
 		ApplicationController.index();
 	}
@@ -110,9 +101,7 @@ public class RegisterController extends Controller {
 			String lastName = verifiedUser.extensions.get("lastname");
 			String name = firstName + " " + lastName;
 
-			//TODO: tee iffin sisällöstä apumetodi: boolean userExists(String email)
-			//TODO: vastaavasti toisestaki: boolean userIsInvited(String email)
-			if (User.find("byEmail", email).first() == null) {
+			if (!RegisterController.userExists(email)) {
 				try {
 					// random password is generated for the user object, since it is required in the database
 					SecureRandom secureRandom = SecureRandom.getInstance(SECURE_RANDOM_ALGORITHM);
@@ -122,11 +111,8 @@ public class RegisterController extends Controller {
 					user.name = name;
 
 					Invitation invitation = Invitation.find("byEmail", email).first();
-					//TODO: tästä apumetodi handleInvitation, tms
-					if (invitation != null) {
-						user.caseIds.addAll(invitation.caseIds);
-						invitation.delete();
-					}
+
+					RegisterController.addCaseAndDeleteInvitationIfInvited(invitation, user);
 
 					user.save();
 					Logger.info("User %s registered via Google login", user);
@@ -140,14 +126,7 @@ public class RegisterController extends Controller {
 			session.put("username", email);
 			ApplicationController.index();
 		} else {
-			if (!OpenID.id("https://www.google.com/accounts/o8/id") // will redirect the user
-					.required("email", "http://axschema.org/contact/email")
-					.required("firstname", "http://axschema.org/namePerson/first")
-					.required("lastname", "http://axschema.org/namePerson/last")
-					.verify()) {
-				flash.error("Cannot verify your OpenID");
-				ApplicationController.index();
-			}
+			RegisterController.redirectToGoogleLogin();
 		}
 	}
 
@@ -167,7 +146,47 @@ public class RegisterController extends Controller {
 		renderTemplate("RegisterController/registerUser.html", invitation, rcaCaseId);
 	}
 
-	private static boolean canRegister(String email) {
-		return User.find("byEmail", email).first() == null && Invitation.find("byEmail", email).first() == null;
+	private static void redirectToGoogleLogin() {
+		if (!OpenID.id("https://www.google.com/accounts/o8/id") // will redirect the user
+					.required("email", "http://axschema.org/contact/email")
+					.required("firstname", "http://axschema.org/namePerson/first")
+					.required("lastname", "http://axschema.org/namePerson/last")
+					.verify()) {
+				flash.error("Cannot verify your OpenID");
+				ApplicationController.index();
+			}
+	}
+
+	private static boolean userExists(String email) {
+		return User.find("byEmail", email).first() != null;
+	}
+
+	private static boolean userIsInvited(String email) {
+		return Invitation.find("byEmail", email).first() != null;
+	}
+
+	private static void validateUserDoesNotExist(String email) {
+		RegisterController.doValidattonAndGiveMessage(!RegisterController.userExists(email));
+	}
+
+	private static void validateUserIsNotInvited(String email) {
+		RegisterController.doValidattonAndGiveMessage(!RegisterController.userIsInvited(email));
+	}
+
+	private static void doValidattonAndGiveMessage(boolean conditionToValidate) {
+		validation.isTrue(conditionToValidate).key("user.email").message("register.emailExists");
+	}
+
+	private static void addCaseAndDeleteInvitationIfInvited(Invitation invitation, User user) {
+		if (invitation != null) {
+			user.caseIds.addAll(invitation.caseIds);
+			invitation.delete();
+		}
+	}
+
+	private static void showCaseIfInvited(Long rcaCaseId, User user) {
+		if (rcaCaseId != null && user.caseIds.contains(rcaCaseId)) {
+			RCACaseController.show(rcaCaseId);
+		}
 	}
 }
