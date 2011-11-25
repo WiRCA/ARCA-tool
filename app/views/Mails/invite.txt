@@ -1,8 +1,12 @@
 Hi,
 
-#{if user.name}${user.name}#{/if}#{else}${user.email}#{/else} has invited You to
+#{if user.name}${user.name}#{/if}#{else}${user.email}#{/else} has invited you to
 a Root Cause Analysis session ${rcaCase.caseName}.
-Click here: @@RegisterController.registerInvitation(invitedUser.id, rcaCase.id, inviteHash)}
+Click here: @@RegisterController.registerInvitation(invitedUser.id, rcaCase.id, inviteHash)} to participate to the session.
 
-Br,
-ARCA-tool
+If you don't know the inviter or you have no idea of what this e-mail is all about, you can just ignore this email.
+
+Please note: ARCA-tool will never request your login information through email.
+
+Best of regards,
+The ARCA-tool Team
