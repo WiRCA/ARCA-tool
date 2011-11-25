@@ -26,6 +26,15 @@
 #{/if}
 #{else}
 <script type="text/javascript">
+    $(function() {
+        if ($("input.inputTipInput#username").val().length != 0) {
+            $("input.inputTipInput#username").next().hide();
+        }
+        if ($("input.inputTipInput#password").val().length != 0) {
+            $("input.inputTipInput#password").next().hide();
+        }
+    });
+
     $("span.inputTip").live("click", function() {
         $(this).prev().focus();
         $(this).hide();
