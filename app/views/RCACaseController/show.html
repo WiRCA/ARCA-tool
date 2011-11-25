@@ -53,7 +53,7 @@
   <div id='radial_menu' style="position: absolute; display: none;">
     <ul class='list'>
       <li class='item'><div class='my_class'>+</div></li>
-      <li class='item'><div class='my_class'>?</div></li>
+      <li class='item'><div class='my_class'>R</div></li>
       <li class='item'><div class='my_class'>?</div></li>
       <li class='item'><div class='my_class'>X</div></li>
     </ul>
@@ -105,8 +105,9 @@
       var waitMessages = #{jsAction @waitMessages(rcaCase.id,':lastReceived') /}
       var addCause = #{jsAction @CauseController.addCause(':causeId', ':name') /}
       var deleteCause = #{jsAction @CauseController.deleteCause(':causeId') /}
+      var addRelation = #{jsAction @CauseController.addRelation(':fromId', ':toID') /}
       // end
-      var $radial_menu = $("#radial_menu"), menupos, menuwidth, selectedNode;
+      var $radial_menu = $("#radial_menu"), menupos, menuwidth, selectedNode, relationFromNode;
       jQuery("#radial_menu").radmenu({
         listClass: 'list', // the list class to look within for items
         itemClass: 'item', // the items - NOTE: the HTML inside the item is copied into the menu item
@@ -131,6 +132,9 @@
                 $.post(addCause({causeId: selectedNode.id, name: name}));
                 jQuery("#radial_menu").radmenu("hide");
               }
+            }else if($selected.html()=="<div class=\"my_class\">R</div>"){
+              relationFromNode = selectedNode;
+              jQuery("#radial_menu").radmenu("hide");
             }
           },
         angleOffset: 45 // in degrees
@@ -220,7 +224,13 @@
           //Add also a click handler to nodes
           onClick: function(node){
             if(node){
+              if (relationFromNode) {
+                $.post(addRelation({fromId: relationFromNode.id, toID: node.id}));
+                relationFromNode = null;
+              }
+              else {
               show_radial_menu(node);
+              }
             }else{
               jQuery("#radial_menu").radmenu("hide");    
             }
@@ -260,6 +270,11 @@
                     $(events).each(function() {
                         if (this.data.type === 'deletecauseevent') {
                           fd.graph.removeNode(this.data.causeId);
+                          fd.plot();
+                        }
+                        if (this.data.type === 'addrelationevent') {
+                          //alert(this.data.causeFrom + " " + this.data.causeTo);
+                          fd.graph.addAdjacence(fd.graph.getNode(this.data.causeFrom), fd.graph.getNode(this.data.causeTo));
                           fd.plot();
                         }
                         else if(this.data.type === 'addcauseevent') {
