@@ -50,6 +50,8 @@ import models.events.*;
 @With({Secure.class, LanguageController.class})
 public class RCACaseController extends Controller {
 
+	private static final String FIND_BY_EMAIL = "byEmail";
+
 	public static void createRCACase() {
 		RCACase rcaCase = new RCACase(SecurityController.getCurrentUser());
 		RCACaseType[] types = RCACaseType.values();
@@ -111,12 +113,12 @@ public class RCACaseController extends Controller {
 		// Check if user the owner of the RCA case
 		if (rcaCase.ownerId.equals(current.id)) {
 			request.format = "json";
-			User invitedUser = User.find("byEmail", invitedEmail).first();
+			User invitedUser = User.find(FIND_BY_EMAIL, invitedEmail).first();
 			if (invitedUser != null) {
 				invitedUser.addRCACase(rcaCase);
 				render(invitedUser);
 			} else {
-				Invitation invitation = Invitation.find("byEmail", invitedEmail).first();
+				Invitation invitation = Invitation.find(FIND_BY_EMAIL, invitedEmail).first();
 				if (invitation == null) {
 					invitation = new Invitation(invitedEmail).save();
 					Mails.invite(current, invitation, rcaCase);
@@ -134,7 +136,7 @@ public class RCACaseController extends Controller {
 		// Check if user the owner of the RCA case
 		if (rcaCase.ownerId.equals(current.id)) {
 			if (isInvitedUser) {
-				Invitation invitation = Invitation.find("byEmail", email).first();
+				Invitation invitation = Invitation.find(FIND_BY_EMAIL, email).first();
 				notFoundIfNull(invitation);
 				if (invitation.caseIds.contains(rcaCaseId)) {
 					invitation.removeRCACase(rcaCase);
@@ -142,7 +144,7 @@ public class RCACaseController extends Controller {
 					renderJSON("{\"success\":\"true\"}");
 				}
 			} else {
-				User user = User.find("byEmail", email).first();
+				User user = User.find(FIND_BY_EMAIL, email).first();
 				notFoundIfNull(user);
 				if (!rcaCase.ownerId.equals(user.id) && user.caseIds.contains(rcaCaseId)) {
 					user.removeRCACase(rcaCase);

@@ -39,7 +39,7 @@ import utils.EncodingUtils;
  */
 public class Mails extends Mailer {
 
-	private final static String DEFAULT_SENDER = Play.configuration.getProperty("mail.from.name") +
+	private static final String DEFAULT_SENDER = Play.configuration.getProperty("mail.from.name") +
 		        " <" + Play.configuration.getProperty("mail.from" +".address") + ">";
 
 	/**

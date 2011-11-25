@@ -24,7 +24,6 @@
 
 package models;
 
-import play.db.jpa.Model;
 import utils.IdComparableModel;
 
 import javax.persistence.Entity;

@@ -24,11 +24,6 @@
 
 package controllers;
 
-import models.Invitation;
-import play.data.validation.Required;
-import play.data.validation.Valid;
-import play.i18n.Lang;
-import play.libs.OpenID;
 import play.mvc.Controller;
 import play.mvc.With;
 import models.User;
