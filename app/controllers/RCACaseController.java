@@ -74,6 +74,10 @@ public class RCACaseController extends Controller {
 
 
 	public static void show(Long id) {
+		User current = SecurityController.getCurrentUser();
+		if (!current.caseIds.contains(id)) {
+			forbidden();
+		}
 		RCACase rcaCase = RCACase.findById(id);
 		notFoundIfNull(rcaCase);
 		String size = rcaCase.getCompanySize().text;
