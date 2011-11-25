@@ -102,25 +102,7 @@ public class RegisterController extends Controller {
 			String name = firstName + " " + lastName;
 
 			if (!RegisterController.userExists(email)) {
-				try {
-					// random password is generated for the user object, since it is required in the database
-					SecureRandom secureRandom = SecureRandom.getInstance(SECURE_RANDOM_ALGORITHM);
-					String randomPasswd = Integer.toHexString(secureRandom.nextInt());
-
-					User user = new User(email, randomPasswd);
-					user.name = name;
-
-					Invitation invitation = Invitation.find("byEmail", email).first();
-
-					RegisterController.addCaseAndDeleteInvitationIfInvited(invitation, user);
-
-					user.save();
-					Logger.info("User %s registered via Google login", user);
-				} catch (NoSuchAlgorithmException e) {
-					// Should not happen
-					Logger.error(e, "Password hash generation failed");
-					ApplicationController.index();
-				}
+				RegisterController.createGoogleUser(email, name);
 			}
 			Logger.info("User with email %s logged in via Google login", email);
 			session.put("username", email);
@@ -144,6 +126,28 @@ public class RegisterController extends Controller {
 			forbidden();
 		}
 		renderTemplate("RegisterController/registerUser.html", invitation, rcaCaseId);
+	}
+
+	private static void createGoogleUser(String email, String name) {
+		try {
+			// random password is generated for the user object, since it is required in the database
+			SecureRandom secureRandom = SecureRandom.getInstance(SECURE_RANDOM_ALGORITHM);
+			String randomPasswd = Integer.toHexString(secureRandom.nextInt());
+
+			User user = new User(email, randomPasswd);
+			user.name = name;
+
+			Invitation invitation = Invitation.find("byEmail", email).first();
+
+			RegisterController.addCaseAndDeleteInvitationIfInvited(invitation, user);
+
+			user.save();
+			Logger.info("User %s registered via Google login", user);
+		} catch (NoSuchAlgorithmException e) {
+			// Should not happen
+			Logger.error(e, "Password hash generation failed");
+			ApplicationController.index();
+		}
 	}
 
 	private static void redirectToGoogleLogin() {
