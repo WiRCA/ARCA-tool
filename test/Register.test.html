@@ -23,6 +23,7 @@
   -->
 
 #{selenium}
+    #{fixture delete:'all' /}
     open('/')
     assertElementPresent('id=register')
     clickAndWait('id=register-link')
