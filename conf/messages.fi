@@ -94,6 +94,8 @@ user.sharedCases=Private cases shared with me
 user.publicCases=Public cases I'm following
 rcacase.lastmodified=muokattu viimeksi
 rcacase.share=Jaa..
+user.allPublicCases=Kaikki julkiset tapaukset
+user.noAnyPublicCases=Ei julkisia tapauksia
 
 rcacase.share.dialog.title=Jakamisasetukset
 rcacase.share.dialog.whoHasAccess=Seuraavilla henkilöillä on käyttöoikeudet
