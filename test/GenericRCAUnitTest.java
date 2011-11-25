@@ -23,8 +23,7 @@
  */
 
 import job.Bootstrap;
-import models.RCACase;
-import models.User;
+import models.*;
 import models.enums.CompanySize;
 import models.enums.RCACaseType;
 import org.junit.Before;
@@ -43,7 +42,7 @@ public abstract class GenericRCAUnitTest extends UnitTest {
 
 	@Before
 	public void setUp() {
-		Fixtures.deleteAllModels();
+		Fixtures.delete(RCACase.class, Invitation.class, Cause.class, Correction.class, Relation.class, User.class);
 		new Bootstrap().doJob();
 		user = User.find("byEmail", "admin@local").first();
 		rcaCaseType = RCACaseType.valueOf(2);

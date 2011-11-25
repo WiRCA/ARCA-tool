@@ -85,6 +85,8 @@ user.created=Case created:
 user.myCases=My cases
 user.sharedCases=Private cases shared with me
 user.publicCases=Public cases I'm following
+user.allPublicCases=All public cases
+user.noAnyPublicCases=No public cases
 
 rcacase.lastmodified=last modified
 rcacase.share=Share

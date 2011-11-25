@@ -125,9 +125,9 @@ public class RegisterController extends Controller {
 					Logger.error(e, "Password hash generation failed");
 					ApplicationController.index();
 				}
-				Logger.info("User with email %s logged in via Google login", email);
-				session.put("username", email);
 			}
+			Logger.info("User with email %s logged in via Google login", email);
+			session.put("username", email);
 			ApplicationController.index();
 		} else {
 			if (!OpenID.id("https://www.google.com/accounts/o8/id") // will redirect the user
