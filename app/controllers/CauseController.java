@@ -25,6 +25,7 @@
 package controllers;
 
 import models.RCACase;
+import play.Logger;
 import play.mvc.Controller;
 import play.mvc.With;
 import models.Cause;
@@ -49,6 +50,7 @@ public class CauseController extends Controller {
 		AddCauseEvent event = new AddCauseEvent(newCause, causeId);
 		CauseStream causeEvents = rcaCase.getCauseStream();
 		causeEvents.getStream().publish(event);
+		Logger.info("Cause %s added to cause %s", name, cause);
 	}
 
 	public static void addRelation(Long fromId, Long toID) {
@@ -64,6 +66,7 @@ public class CauseController extends Controller {
 		AddRelationEvent event = new AddRelationEvent(Long.toString(fromId), Long.toString(toID));
 		CauseStream causeEvents = rcaCase.getCauseStream();
 		causeEvents.getStream().publish(event);
+		Logger.info("Relation added between %s and %s", causeFrom, causeTo);
 	}
 
 	public static void deleteCause(String causeId) {
@@ -80,5 +83,6 @@ public class CauseController extends Controller {
 		DeleteCauseEvent deleteEvent = new DeleteCauseEvent(cause);
 		CauseStream causeEvents = rcaCase.getCauseStream();
 		causeEvents.getStream().publish(deleteEvent);
+		Logger.info("Cause %s deleted", cause);
 	}
 }
