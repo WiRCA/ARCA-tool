@@ -24,17 +24,13 @@
 
 package controllers;
 
-import models.Invitation;
-import play.data.validation.Required;
-import play.data.validation.Valid;
-import play.i18n.Lang;
-import play.libs.OpenID;
 import play.mvc.Controller;
 import play.mvc.With;
 import models.User;
 import models.RCACase;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -47,6 +43,7 @@ public class UserController extends Controller {
 	public static void index() {
 		User user = SecurityController.getCurrentUser();
 		Set<RCACase> cases = user.getRCACases();
+		List<RCACase> allPublicCases = RCACase.find("byIsCasePublic", true).fetch();
 		Set<RCACase> ownCases = new HashSet<RCACase>();
 		Set<RCACase> privateCases = new HashSet<RCACase>();
 		Set<RCACase> publicCases = new HashSet<RCACase>();
@@ -63,7 +60,7 @@ public class UserController extends Controller {
 			}
 
 		}
-		render(user, ownCases,privateCases,publicCases);
+		render(user, ownCases, privateCases, publicCases, allPublicCases);
 	}
 
 	public static void addRCACaseForUser(Long caseId, Long userId) {

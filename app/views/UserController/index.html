@@ -157,6 +157,14 @@
 #{else}<li>&{'user.noPublicCases'}</li>#{/else}
 </ul>
 
+<h2>&{'user.allPublicCases'}</h2>
+<ul>
+#{list items:allPublicCases, as:'rcaCase'}
+<li>#{a @RCACaseController.show(rcaCase.id)} ${rcaCase.caseName} #{/a}</li>
+#{/list}
+#{else}<li>&{'user.noAnyPublicCases'}</li>#{/else}
+</ul>
+
 #{a @RCACaseController.createRCACase()} &{'user.createRCACase'} #{/a}
 
 
