@@ -127,4 +127,15 @@ public class CauseTest extends GenericRCAUnitTest {
 		Correction correction3 = Correction.find("byName", "new correction").first();
 		assertNull(correction3);
 	}
+
+	@Test
+	public void circularCausesTest() {
+		Cause cause1 = new Cause(testCase, "test cause1", user).save();
+		Cause cause2 = cause1.addCause("test cause2", user).save();
+		cause2.addCause(cause1);
+		assertTrue(cause1.getCauses().contains(cause2));
+		assertTrue(cause2.getCauses().contains(cause1));
+		testCase.deleteCause(cause2);
+		assertFalse(cause1.getCauses().contains(cause2));
+	}
 }
