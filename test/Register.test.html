@@ -22,8 +22,8 @@
   ~ THE SOFTWARE.
   -->
 
+#{fixture delete:'all' /}
 #{selenium}
-    #{fixture delete:'all' /}
     open('/')
     assertElementPresent('id=register')
     clickAndWait('id=register-link')

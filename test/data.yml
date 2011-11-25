@@ -5,3 +5,8 @@
 #   email: bob@gmail.com
 #   password: secret
 #   fullname: Bob
+
+User(admin):
+    email: admin@local
+    password: d033e22ae348aeb5660fc2140aec35850c4da997
+    name: Admin user
