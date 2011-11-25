@@ -107,12 +107,17 @@ public class RegisterController extends Controller {
 			String lastName = verifiedUser.extensions.get("lastname");
 			String name = firstName + " " + lastName;
 
-			if (RegisterController.canRegister(email)) {
+			if (User.find("byEmail", email).first() == null) {
 				try {
 					SecureRandom secureRandom = SecureRandom.getInstance(SECURE_RANDOM_ALGORITHM);
 					String randomPasswd = Integer.toHexString(secureRandom.nextInt());
 					User user = new User(email, randomPasswd);
 					user.name = name;
+					Invitation invitation = Invitation.find("byEmail", email).first();
+					if (invitation != null) {
+						user.caseIds.addAll(invitation.caseIds);
+						invitation.delete();
+					}
 					user.save();
 					Logger.info("User %s registered via Google login", user);
 				} catch (NoSuchAlgorithmException e) {
@@ -120,9 +125,9 @@ public class RegisterController extends Controller {
 					Logger.error(e, "Password hash generation failed");
 					ApplicationController.index();
 				}
+				Logger.info("User with email %s logged in via Google login", email);
+				session.put("username", email);
 			}
-			Logger.info("User with email %s logged in via Google login", email);
-			session.put("username", email);
 			ApplicationController.index();
 		} else {
 			if (!OpenID.id("https://www.google.com/accounts/o8/id") // will redirect the user
