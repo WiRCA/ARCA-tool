@@ -52,7 +52,18 @@ public class CauseController extends Controller {
 	}
 
 	public static void addRelation(Long fromId, Long toID) {
-
+		Cause causeFrom = Cause.findById(Long.valueOf(fromId));
+		RCACase rcaCase = causeFrom.rcaCase;
+		
+		Cause causeTo = Cause.findById(Long.valueOf(toID));
+		
+		causeFrom.addCause(causeTo);
+		causeFrom.save();
+		causeTo.save();
+    
+		AddRelationEvent event = new AddRelationEvent(Long.toString(fromId), Long.toString(toID));
+		CauseStream causeEvents = rcaCase.getCauseStream();
+		causeEvents.getStream().publish(event);
 	}
 
 	public static void deleteCause(String causeId) {
