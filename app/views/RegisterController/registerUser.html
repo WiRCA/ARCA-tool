@@ -33,6 +33,7 @@
     <p id="nameFieldP">
         <label for="nameFieldRegister">&{'register.name'}</label>
         <input type="text" name="user.name" id="nameFieldRegister" value="${flash['user.name']}" />
+        <!-- TODO: lyhennä näitä if errors.forkey juttuja silleen ku ripa sano floukkarissa -->
         #{if errors.forKey('user.name')}<span class="error">#{error 'user.name' /}</span>#{/if}
     </p>
 
