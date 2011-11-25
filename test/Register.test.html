@@ -26,7 +26,7 @@
 #{selenium}
     open('/')
     assertElementPresent('id=register')
-    clickAndWait('id=register-link')
+    open('/register')
     verifyTextPresent('Sign up')
     type('id=nameFieldRegister','Reino')
     type('id=emailFieldRegister','reino@reino.reino')

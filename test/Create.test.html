@@ -21,14 +21,10 @@
   ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
   ~ THE SOFTWARE.
   -->
-
+#{fixture delete:'all',load:'data.yml' /}
 #{selenium}
     open('/')
     assertElementPresent('id=signin')
-    type('id=username','foobar')
-    type('id=password','foobar')
-    clickAndWait('id=signin')
-    verifyTextPresent('Oops, unknown username or password.')
     type('id=username','admin@local')
     type('id=password','admin')
     clickAndWait('id=signin')
@@ -51,4 +47,5 @@
     select('id=companySize','value=2')
     clickAndWait('id=create')
     verifyTextPresent('Testikeissi')
+    clickAndWait('id=logout-link')
 #{/selenium}
