@@ -514,8 +514,12 @@
 			
 			var rotationHTML = "transform:rotate("+coords.angle+"deg); ";
 			
-			ret.push("<div class='"+$.radmenu.container.itemClz+"' "); // outer container for the div
-			
+			ret.push("<div class='"+$.radmenu.container.itemClz+" " + this.className + "' "); // outer container for the div
+
+			if (this.id != "") {
+			    ret.push(" id='"+ this.id +"' ");
+			}
+
 			// after getting the coordinates, absolute position element at (x,y)
 			ret.push("style='");
 			ret.push("position:absolute;display:none;");

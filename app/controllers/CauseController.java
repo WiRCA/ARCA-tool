@@ -52,10 +52,10 @@ public class CauseController extends Controller {
 	}
 
 	public static void addRelation(Long fromId, Long toID) {
-		Cause causeFrom = Cause.findById(Long.valueOf(fromId));
+		Cause causeFrom = Cause.findById(fromId);
 		RCACase rcaCase = causeFrom.rcaCase;
 		
-		Cause causeTo = Cause.findById(Long.valueOf(toID));
+		Cause causeTo = Cause.findById(toID);
 		
 		causeFrom.addCause(causeTo);
 		causeFrom.save();

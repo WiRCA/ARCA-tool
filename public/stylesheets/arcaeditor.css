@@ -30,7 +30,7 @@
 .radial_div_item {
 	background-color:none;
 	height:30px;
-	padding:10px;
+	padding:7px;
 	color:#234;
 	-moz-border-radius:10px;
 	-webkit-border-radius:10px;
@@ -40,11 +40,11 @@
 	
 }
 .my_class {
-	font-size:1.5em;
+	font-size:13px;
 	color:#abc;
 	background-color:#def;
 	-moz-border-radius:30px;
-	width:30px;
-	height:30px;
+	width:20px;
+	height:20px;
 	-webkit-border-radius:30px;
-	}
+}

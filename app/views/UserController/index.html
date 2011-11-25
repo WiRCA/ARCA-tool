@@ -126,13 +126,13 @@
     });
 </script>
 
-*{TODO: Creation date to links. MOdification of mouseovers. Overall layout revamp.}*
+*{TODO: Creation date to links. Modification of mouseovers. Overall layout revamp.}*
 <h1>&{'user.welcomeTitle', user.name}</h1>
 
 <h2>&{'user.myCases'}</h2>
 <ul>
 #{list items:ownCases, as:'rcaCase'}
-<li>#{a @RCACaseController.show(rcaCase.id)}${rcaCase.caseName}#{/a}
+<li>#{a @RCACaseController.show(rcaCase.id), id:'show-rcacase-'+rcaCase.id+'-link'}${rcaCase.caseName}#{/a}
     &{'rcacase.lastmodified'} ${rcaCase.updated.since(true)}
     &{'user.created'} ${rcaCase.created.since(true)}
     <a id="rcacase-share-${rcaCase.id}" href="#">&{'rcacase.share'}</a>

@@ -29,7 +29,6 @@
 #{set 'moreScripts'}
     <script src="@{'/public/javascripts/smalljit.js'}" type="text/javascript" charset="${_response_encoding}"></script>
     <script src="@{'/public/javascripts/jQuery.radmenu.js'}" type="text/javascript" charset="${_response_encoding}"></script>
-    
 #{/set}
 *{
 <h1>&{'showRCACase.title', rcaCase.name}</h1>
@@ -50,12 +49,12 @@
     </div>
   </div>
 </div>
-  <div id='radial_menu' style="position: absolute; display: none;">
-    <ul class='list'>
-      <li class='item'><div class='my_class'>+</div></li>
-      <li class='item'><div class='my_class'>R</div></li>
-      <li class='item'><div class='my_class'>?</div></li>
-      <li class='item'><div class='my_class'>X</div></li>
+  <div id="radial_menu" style="position: absolute; display: none;">
+    <ul class="list">
+      <li class="item my_class" id="radmenu-event-addCause">+</li>
+      <li class="item my_class" id="radmenu-event-addRelation">R</li>
+      <li class="item my_class">?</li>
+      <li class="item my_class" id="radmenu-event-removeCause">X</li>
     </ul>
   </div>
 
@@ -114,10 +113,10 @@
         radius: 55, // radius in pixels
         animSpeed: 2000, // animation speed in millis
         centerX: 0, // the center x axis offset
-        centerY: -20, // the center y axis offset
+        centerY: -10, // the center y axis offset
         selectEvent: "click", // the select event (click)
         onSelect: function($selected){ // show what is returned 
-            if($selected.html()=="<div class=\"my_class\">X</div>"){
+            if($selected[0].id == "radmenu-event-removeCause"){
               $.post(deleteCause({causeId: selectedNode.id}));
               jQuery("#radial_menu").radmenu("hide");
               selectedNode.setData('alpha', 0, 'end');
@@ -125,16 +124,17 @@
                 modes: ['node-property:alpha'],  
                 duration: 100  
               });
-            }else if($selected.html()=="<div class=\"my_class\">+</div>"){
+            }else if($selected[0].id == "radmenu-event-addCause"){
               var name = prompt('Node name?');
               runningNumber = runningNumber + 1;
               if (name != null && name != "") {
-                $.post(addCause({causeId: selectedNode.id, name: name}));
-                jQuery("#radial_menu").radmenu("hide");
+                $.post(addCause({causeId: selectedNode.id, name: name}), function() {
+                    radmenu_fadeOut();
+                });
               }
-            }else if($selected.html()=="<div class=\"my_class\">R</div>"){
+            }else if($selected[0].id == "radmenu-event-addRelation"){
               relationFromNode = selectedNode;
-              jQuery("#radial_menu").radmenu("hide");
+              radmenu_fadeOut();
             }
           },
         angleOffset: 45 // in degrees
@@ -338,6 +338,22 @@
       });
       // end
 
+    }
+
+    radmenu_fadeIn = function() {
+        jQuery("#radial_menu").radmenu("show",
+            function(items){
+            items.fadeIn(4000);
+            }
+        );
+    }
+
+    radmenu_fadeOut = function() {
+        jQuery("#radial_menu").radmenu("show",
+            function(items){
+            items.fadeOut(4000);
+            }
+        );
     }
     
 </script>

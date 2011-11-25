@@ -26,7 +26,7 @@
 #{selenium}
     open('/')
     assertElementPresent('id=register')
-    open('/register')
+    open('/register?language=en')
     verifyTextPresent('Sign up')
     type('id=nameFieldRegister','Reino')
     type('id=emailFieldRegister','reino@reino.reino')
