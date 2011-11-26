@@ -41,8 +41,8 @@
     select('id=companySize','label=1-10')
     type('id=companyProducts','testgraph')
     clickAndWait('id=create')
-    verifyTextPresent('testgraph')
         *{ Selenium browser does not support canvas?
+    verifyTextPresent('testgraph')
     clickAt('//*[text()="testgraph"]')
     assertTextPresent('+')
     answerOnNextPrompt('foo')
