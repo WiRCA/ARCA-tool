@@ -100,7 +100,7 @@
       ];
       //Running number for creating nodes
       var runningNumber = 0;
-      var lastReceived = 0;
+      var lastReceived = ${lastMessage};
       var waitMessages = #{jsAction @waitMessages(rcaCase.id,':lastReceived') /}
       var addCause = #{jsAction @CauseController.addCause(':causeId', ':name') /}
       var deleteCause = #{jsAction @CauseController.deleteCause(':causeId') /}

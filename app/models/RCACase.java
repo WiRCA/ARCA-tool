@@ -171,17 +171,12 @@ public class RCACase extends Model {
 		this.caseTypeValue = rcaCaseType.value;
 	}
 
-	public CauseStream setCauseStream() {
-		CauseStream causeEvents = new CauseStream(NUMBER_OF_EVENTS_STORED_IN_EVENT_STREAM);
-		Cache.set(CAUSE_STREAM_NAME_IN_CACHE + this.id, causeEvents, EXPIRATION_TIME_FOR_CAUSE_STREAM_IN_CACHE);
-		return causeEvents;
-	}
-
 	public CauseStream getCauseStream() {
 		CauseStream stream = Cache.get(CAUSE_STREAM_NAME_IN_CACHE + this.id, CauseStream.class);
 		if (stream == null) {
-			stream = setCauseStream();
+			stream = new CauseStream(NUMBER_OF_EVENTS_STORED_IN_EVENT_STREAM);
 		}
+		Cache.set(CAUSE_STREAM_NAME_IN_CACHE + this.id, stream, EXPIRATION_TIME_FOR_CAUSE_STREAM_IN_CACHE);
 		return stream;
 	}
 

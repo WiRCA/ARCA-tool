@@ -82,7 +82,13 @@ public class RCACaseController extends Controller {
 		}
 		String size = rcaCase.getCompanySize().text;
 		String type = rcaCase.getRCACaseType().text;
-		render(rcaCase, type, size);
+		Long lastMessage = 0L;
+		List<IndexedEvent> archivedEvents = rcaCase.getCauseStream().eventStream.availableEvents(0);
+		if (archivedEvents.size() > 0) {
+			IndexedEvent last = archivedEvents.get(archivedEvents.size() - 1);
+			lastMessage = last.id;
+		}
+		render(rcaCase, type, size, lastMessage);
 	}
 
 	public static void waitMessages(Long id, Long lastReceived) {
@@ -96,10 +102,13 @@ public class RCACaseController extends Controller {
 	public static void getUsers(Long rcaCaseId) {
 		RCACase rcaCase = RCACase.findById(rcaCaseId);
 		notFoundIfNull(rcaCase);
-		List<User> existingUsers = User.find("Select u from user as u inner join u.caseIds as caseIds" +
-		                             " where ? in caseIds", rcaCaseId).fetch();
-		List<Invitation> invitedUsers = Invitation.find("Select iu from invitation as iu join iu.caseIds as caseIds" +
-		                                                " where ? in caseIds", rcaCaseId).fetch();
+		List<User> existingUsers =
+				User.find("Select u from user as u inner join u.caseIds as caseIds" + " where ? in caseIds",
+				          rcaCaseId)
+				    .fetch();
+		List<Invitation> invitedUsers = Invitation
+				.find("Select iu from invitation as iu join iu.caseIds as caseIds" + " where ? in caseIds", rcaCaseId)
+				.fetch();
 		request.format = "json";
 		render(existingUsers, invitedUsers);
 	}
