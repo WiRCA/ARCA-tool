@@ -90,8 +90,12 @@
             "adjacencies": [
             #{list cause.causes, as:'causedBy'}
             {
-              nodeTo: "${causedBy.id}",
-              data: {"weight": 3}
+              nodeTo: "${causedBy.id}"
+            }${causedBy_isLast && !cause.relations ? '' : ','}
+            #{/list}
+            #{list cause.relations, as:'relation'}
+            {
+              nodeTo: "${relation.id}"
             }${causedBy_isLast ? '' : ','}
             #{/list}
             ]
@@ -229,10 +233,20 @@
                 relationFromNode = null;
               }
               else {
+              defaultEdgesForSelectedNode(selectedNode);
               show_radial_menu(node);
+              node.eachAdjacency(function(adj) {
+                adj.setDataset('current', {
+                  lineWidth: '5',
+                  color: '#FF0000'
+                });
+              });
+              fd.plot();
               }
             }else{
-              jQuery("#radial_menu").radmenu("hide");    
+              defaultEdgesForSelectedNode(selectedNode);
+              jQuery("#radial_menu").radmenu("hide");
+              fd.plot();
             }
           }
         },
@@ -354,6 +368,17 @@
             items.fadeOut(4000);
             }
         );
+    }
+
+    defaultEdgesForSelectedNode = function(selectedNode) {
+      if (selectedNode != undefined) {
+        selectedNode.eachAdjacency(function(adj) {
+          adj.setDataset('current', {
+            lineWidth: '2',
+            color: '#23A4FF'
+          });
+        });
+      }
     }
     
 </script>
