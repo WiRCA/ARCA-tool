@@ -25,6 +25,7 @@
 package controllers;
 
 import models.RCACase;
+import models.User;
 import play.Logger;
 import play.mvc.Controller;
 import play.mvc.With;
@@ -35,6 +36,7 @@ import models.events.DeleteCauseEvent;
 
 /**
  * @author Eero Laukkanen
+ * @author Juha Viljanen
  */
 
 @With({Secure.class, LanguageController.class})
@@ -69,11 +71,11 @@ public class CauseController extends Controller {
 		Logger.info("Relation added between %s and %s", causeFrom, causeTo);
 	}
 
-	public static void deleteCause(String causeId) {
+	public static void deleteCause(String causeId, User deleter) {
 		Cause cause = Cause.findById(Long.valueOf(causeId));
 		RCACase rcaCase = cause.rcaCase;
 
-		if (cause.equals(rcaCase.problem)) {
+		if (!CauseController.userIsAllowedToDelete(cause, rcaCase)) {
 			//TODO: notify user that she cannot remove the problem cause
 			return;
 		}
@@ -84,5 +86,10 @@ public class CauseController extends Controller {
 		CauseStream causeEvents = rcaCase.getCauseStream();
 		causeEvents.getStream().publish(deleteEvent);
 		Logger.info("Cause %s deleted", cause);
+	}
+
+	private static boolean userIsAllowedToDelete(Cause cause, RCACase rcaCase) {
+		User current = SecurityController.getCurrentUser();
+		return !cause.equals(rcaCase.problem) && ( current == cause.getCreator() || current == rcaCase.getOwner() );
 	}
 }
