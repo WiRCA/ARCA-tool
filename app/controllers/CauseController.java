@@ -71,7 +71,7 @@ public class CauseController extends Controller {
 		Logger.info("Relation added between %s and %s", causeFrom, causeTo);
 	}
 
-	public static void deleteCause(String causeId, User deleter) {
+	public static void deleteCause(String causeId) {
 		Cause cause = Cause.findById(Long.valueOf(causeId));
 		RCACase rcaCase = cause.rcaCase;
 
