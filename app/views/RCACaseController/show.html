@@ -110,7 +110,7 @@
             #{list cause.relations, as:'relation'}
             {
               nodeTo: "${relation.id}"
-            }${causedBy_isLast ? '' : ','}
+            }${relation_isLast ? '' : ','}
             #{/list}
             ]
           }${cause_isLast ? '' : ','}
