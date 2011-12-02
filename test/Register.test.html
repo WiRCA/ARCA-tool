@@ -24,9 +24,9 @@
 
 #{fixture delete:'all' /}
 #{selenium}
-    open('/')
-    assertElementPresent('id=register')
-    open('/register?language=en')
+    open('/?language=en')
+    assertElementPresent('id=register-link')
+    clickAndWait('id=register-link')
     verifyTextPresent('Sign up')
     type('id=nameFieldRegister','Reino')
     type('id=emailFieldRegister','reino@reino.reino')

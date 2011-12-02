@@ -58,10 +58,10 @@
         </div>
     </div>
 
-    <div class="clearfix${errors.forKey('user.email') ? ' error' : ''}" id="passwordFieldP">
+    <div class="clearfix${errors.forKey('user.password') ? ' error' : ''}" id="passwordFieldP">
         <label for="passwordFieldRegister">&{'register.password'}</label>
         <div class="input">
-        <input type="password" name="user.email" id="passwordFieldRegister"/>
+        <input type="password" name="user.password" id="passwordFieldRegister"/>
         #{ifError 'user.password'}<span class="help-inline">#{error 'user.password' /}</span>#{/ifError}
         </div>
     </div>
