@@ -111,6 +111,7 @@ rcacase.share.dialog.remove=Remove
 rcacase.share.dialog.close=Close
 
 register.title=Sign up
+register.titleSmall=Fill the form
 register.name=Name
 register.email=Email
 register.password=Password

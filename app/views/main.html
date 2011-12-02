@@ -42,9 +42,9 @@
       <div class="topbar">
         <div class="fill">
           <div class="container">
-            <a class="brand" href="#">ARCA-Tool</a>
+            #{a @ApplicationController.index(), class:'brand'}ARCA-Tool#{/a}
             <ul class="nav">
-              <li class="active"><a href="#">Home</a></li>
+              <li class="active">#{a @ApplicationController.index()}Home#{/a}</li>
               <li><a href="#about">About</a></li>
               <li><a href="#contact">Contact</a></li>
             </ul>
@@ -58,7 +58,7 @@
 
             <div class="content">
               <div class="page-header">
-                <h1>Index page <small>Start by signing in or browse cases.</small></h1>
+                <h1>#{get 'pageHeader' /} <small>#{get 'pageHeaderSmall' /}</small></h1>
               </div>
               <div class="row">
                 <div class="span4">

@@ -22,11 +22,11 @@
   ~ THE SOFTWARE.
   -->
 #{extends 'main.html' /}
-#{set title:'register.title' /}
+#{set 'title'}&{'register.title'}#{/set}
+#{set 'pageHeader'}&{'register.title'}#{/set}
+#{set 'pageHeaderSmall'}&{'register.titleSmall'}#{/set}
 
 <div id="registerUser">
-
-    <h1>&{'register.title'}</h1>
 
     #{form @RegisterController.register()}
 

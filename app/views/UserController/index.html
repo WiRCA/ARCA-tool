@@ -23,6 +23,8 @@
   -->
 #{extends 'main.html' /}
 #{set title:'Home' /}
+#{set 'pageHeader'}&{'user.welcomeTitle', user.name}#{/set}
+#{set 'pageHeaderSmall'}#{/set}
 
 <script type="text/javascript">
     var getRCACaseUsers = #{jsAction @RCACaseController.getUsers(':rcaCaseId') /}
@@ -127,8 +129,6 @@
 </script>
 
 *{TODO: Creation date to links. Modification of mouseovers. Overall layout revamp.}*
-<h1>&{'user.welcomeTitle', user.name}</h1>
-
 <h2>&{'user.myCases'}</h2>
 <ul>
 #{list items:ownCases, as:'rcaCase'}

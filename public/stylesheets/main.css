@@ -1,3 +1,19 @@
+.page-header {
+    padding: 45px 0 0;
+}
+
+.topbar .btn {
+    border: 0 none;
+}
+
+.topbar a.btn {
+    color: #333333;
+    float: left;
+    margin: 5px 0 0;
+    opacity: 1;
+    position: relative;
+}
+
 #languageSelection {
     margin-bottom: 30px;
 }
@@ -14,22 +30,6 @@
     padding: 1px;
     border: 1px solid lightgray;
     height: 11px;
-}
-
-button a {
-  color: #FFF;
-}
-
-.topbar .btn {
-    border: 0 none;
-}
-
-.topbar a.btn {
-    color: #333333;
-    float: left;
-    margin: 5px 0 0;
-    opacity: 1;
-    position: relative;
 }
 
 div#rcacase-share-dialog form {
