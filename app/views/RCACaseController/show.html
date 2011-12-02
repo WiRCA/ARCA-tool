@@ -68,9 +68,9 @@
       <li class="item my_class" id="radmenu-event-addCause">+</li>
       <li class="item my_class" id="radmenu-event-addRelation">R</li>
       <li class="item my_class">?</li>
-        <!-- #{if current == rcaCase.getOwner() || current == cause.creator } -->
+        *{ #{if current == rcaCase.getOwner() || current == cause.creator } }*
       <li class="item my_class" id="radmenu-event-removeCause">X</li>
-        <!-- #{/if} -->
+        *{ #{/if} }*
     </ul>
   </div>
 
