@@ -68,7 +68,9 @@
       <li class="item my_class" id="radmenu-event-addCause">+</li>
       <li class="item my_class" id="radmenu-event-addRelation">R</li>
       <li class="item my_class">?</li>
+        *{ #{if current == rcaCase.getOwner() || current == cause.creator } }*
       <li class="item my_class" id="radmenu-event-removeCause">X</li>
+        *{ #{/if} }*
     </ul>
   </div>
 
@@ -164,10 +166,7 @@
         menuwidth = $("#"+given_node.id).width();
         //show the menu directly over the placeholder
         $radial_menu.css({ "left": (menupos.left + menuwidth/2 - 20) + "px", "top":menupos.top + "px" }).show();
-        jQuery("#radial_menu").radmenu("show", 
-          function(items){
-            items.fadeIn(400);
-          });
+        radmenu_fadeIn();
       }
       // init ForceDirected
       var fd = new $jit.ForceDirected({
@@ -223,8 +222,20 @@
               jQuery("#radial_menu").radmenu("hide");
               node.data.locked = "true";
               var pos = eventInfo.getPos();
+              var oldx = node.pos.x;
+              var oldy = node.pos.y;
               node.pos.setc(pos.x, pos.y);
               node.setPos(new $jit.Complex(pos.x, pos.y), 'end');
+              function moveSubnode(subnode) {
+                var newx = subnode.pos.x + pos.x - oldx;
+                var newy = subnode.pos.y + pos.y - oldy;
+                subnode.pos.setc(newx, newy);
+                subnode.setPos(new $jit.Complex(newx, newy), 'end');
+                if (subnode.getSubnodes().length > 0) {
+                    subnode.eachSubnode(moveSubnode);
+                }
+              }
+              node.eachSubnode(moveSubnode);
               fd.plot();
           },
           //Implement the same handler for touchscreens
@@ -390,7 +401,7 @@
     radmenu_fadeIn = function() {
         jQuery("#radial_menu").radmenu("show",
             function(items){
-            items.fadeIn(4000);
+            items.fadeIn(400);
             }
         );
     }
