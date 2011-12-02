@@ -22,7 +22,7 @@
   ~ THE SOFTWARE.
   -->
 #{if session.username}
-   <p>#{a @Secure.logout(), id:'logout-link'}&{'logout'}#{/a}</p>
+   #{a @Secure.logout(), id:'logout-link', class:'btn'}&{'logout'}#{/a}
 #{/if}
 #{else}
 <div id="login">

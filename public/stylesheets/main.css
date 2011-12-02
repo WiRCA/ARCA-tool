@@ -2,7 +2,6 @@
     margin-bottom: 30px;
 }
 
-
 #languageSelection a.lang-select {
     font-size: 0;
     line-height: 0;
@@ -25,47 +24,12 @@ button a {
     border: 0 none;
 }
 
-div#login div.fieldset div {
+.topbar a.btn {
+    color: #333333;
+    float: left;
+    margin: 5px 0 0;
+    opacity: 1;
     position: relative;
-    display: inline;
-}
-#remember-field label {
-    font-size: 12px;
-    color: #666;
-    float:right;
-}
-
-div#login div.fieldset div span.inputTip {
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -o-user-select: none;
-    user-select: none;
-    position: absolute;
-    top: 11px;
-    left: 6px;
-    clear: right;
-}
-*:first-child+div#login div.fieldset div span.inputTip {
-    top: -2px;
-}
-
-div#login div.fieldset div input[type="text"],
-div#login div.fieldset div input[type="password"] {
-    font-size: 13px;
-    height: 15px;
-    padding: 6px;
-    width: 130px;
-    position: relative;
-    top: 0px;
-    left: 0px;
-}
-
-div#login div#register {
-}
-
-div#login div#gLogin {
-    
 }
 
 div#rcacase-share-dialog form {
