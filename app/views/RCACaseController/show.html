@@ -102,7 +102,14 @@
           {
             "id": ${cause.id},
             "name": "${cause.name}",
-            "data": {"$color": "#83548B","$type": "circle","$dim":1},
+            "data": {"$color": "#83548B","$type": "circle","$dim":1, "parent":
+            #{if cause.parent}
+            ${cause.parent.id}
+            #{/if}
+            #{else}
+            ""
+            #{/else}
+            },
             "adjacencies": [
             #{list cause.causes, as:'causedBy'}
             {
@@ -224,8 +231,20 @@
           onDragMove: function(node, eventInfo, e) {
               jQuery("#radial_menu").radmenu("hide");
               var pos = eventInfo.getPos();
+              var oldx = node.pos.x;
+              var oldy = node.pos.y;
               node.pos.setc(pos.x, pos.y);
               node.setPos(new $jit.Complex(pos.x, pos.y), 'end');
+              function moveSubnode(subnode) {
+                var newx = subnode.pos.x + pos.x - oldx;
+                var newy = subnode.pos.y + pos.y - oldy;
+                subnode.pos.setc(newx, newy);
+                subnode.setPos(new $jit.Complex(newx, newy), 'end');
+                if (subnode.getSubnodes().length > 0) {
+                    subnode.eachSubnode(moveSubnode);
+                }
+              }
+              node.eachSubnode(moveSubnode);
               fd.plot();
           },
           //Implement the same handler for touchscreens
