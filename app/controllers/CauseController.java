@@ -25,6 +25,8 @@
 package controllers;
 
 import models.RCACase;
+import models.User;
+import play.Logger;
 import play.mvc.Controller;
 import play.mvc.With;
 import models.Cause;
@@ -34,6 +36,7 @@ import models.events.DeleteCauseEvent;
 
 /**
  * @author Eero Laukkanen
+ * @author Juha Viljanen
  */
 
 @With({Secure.class, LanguageController.class})
@@ -49,13 +52,14 @@ public class CauseController extends Controller {
 		AddCauseEvent event = new AddCauseEvent(newCause, causeId);
 		CauseStream causeEvents = rcaCase.getCauseStream();
 		causeEvents.getStream().publish(event);
+		Logger.info("Cause %s added to cause %s", name, cause);
 	}
 
 	public static void addRelation(Long fromId, Long toID) {
-		Cause causeFrom = Cause.findById(Long.valueOf(fromId));
+		Cause causeFrom = Cause.findById(fromId);
 		RCACase rcaCase = causeFrom.rcaCase;
 		
-		Cause causeTo = Cause.findById(Long.valueOf(toID));
+		Cause causeTo = Cause.findById(toID);
 		
 		causeFrom.addCause(causeTo);
 		causeFrom.save();
@@ -64,13 +68,14 @@ public class CauseController extends Controller {
 		AddRelationEvent event = new AddRelationEvent(Long.toString(fromId), Long.toString(toID));
 		CauseStream causeEvents = rcaCase.getCauseStream();
 		causeEvents.getStream().publish(event);
+		Logger.info("Relation added between %s and %s", causeFrom, causeTo);
 	}
 
 	public static void deleteCause(String causeId) {
 		Cause cause = Cause.findById(Long.valueOf(causeId));
 		RCACase rcaCase = cause.rcaCase;
 
-		if (cause.equals(rcaCase.problem)) {
+		if (!CauseController.userIsAllowedToDelete(cause, rcaCase)) {
 			//TODO: notify user that she cannot remove the problem cause
 			return;
 		}
@@ -80,5 +85,11 @@ public class CauseController extends Controller {
 		DeleteCauseEvent deleteEvent = new DeleteCauseEvent(cause);
 		CauseStream causeEvents = rcaCase.getCauseStream();
 		causeEvents.getStream().publish(deleteEvent);
+		Logger.info("Cause %s deleted", cause);
+	}
+
+	private static boolean userIsAllowedToDelete(Cause cause, RCACase rcaCase) {
+		User current = SecurityController.getCurrentUser();
+		return !cause.equals(rcaCase.problem) && ( current == cause.getCreator() || current == rcaCase.getOwner() );
 	}
 }

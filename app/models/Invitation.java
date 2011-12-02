@@ -54,10 +54,14 @@ public class Invitation extends Model {
 	@Column(name = "caseId")
 	public Set<Long> caseIds;
 
-	/**
+	/**    } catch (NoSuchAlgorithmException e) {
+			// Should not happen
+			Logger.error(e, "Invitation hash generation failed");
+		}
 	 * Creates invitation with email. Hash is generated automatically.
 	 * @param email email where the invitation is send to.
 	 */
+	//TODO: mikä hashin tehtävä on? ei selviä tästä -> doc
 	public Invitation(String email) {
 		try {
 			this.email = email;

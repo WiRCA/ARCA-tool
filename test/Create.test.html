@@ -21,18 +21,31 @@
   ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
   ~ THE SOFTWARE.
   -->
-
-#{fixture delete:'all' /}
+#{fixture delete:'all',load:'data.yml' /}
 #{selenium}
     open('/')
-    assertElementPresent('id=register')
-    open('/register?language=en')
-    verifyTextPresent('Sign up')
-    type('id=nameFieldRegister','Reino')
-    type('id=emailFieldRegister','reino@reino.reino')
-    type('id=passwordFieldRegister','reino')
-    type('id=password2FieldRegister', 'reino')
-    clickAndWait('id=registerButton')
-    verifyTextPresent('Welcome Reino!')
-    clickAndWait('id=logout-link')
+    assertElementPresent('id=signin')
+    type('id=username','admin@local')
+    type('id=password','admin')
+    clickAndWait('id=signin')
+    verifyTextPresent('Admin user')
+    open('/CreateRCACase')
+    assertElementPresent('id=create')
+    assertElementPresent('id=create')
+    assertElementPresent('id=caseName')
+    assertElementPresent('id=caseTypeValue')
+    assertElementPresent('id=description')
+    assertElementPresent('id=caseGoals')
+    assertElementPresent('id=companySize')
+    clickAndWait('id=create')
+    verifyTextPresent('Required')
+    type('id=caseName','Testikeissi')
+    type('id=description','Testdescription')
+    type('id=caseGoals','Testikeissin tavoitteet')
+    type('id=companyProducts','Testituotteet')
+    select('id=caseTypeValue','value=2')
+    select('id=companySize','value=2')
+    clickAndWait('id=create')
+    verifyTextPresent('Testikeissi')
+    open('/logout')
 #{/selenium}

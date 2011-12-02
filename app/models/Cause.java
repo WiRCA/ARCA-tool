@@ -226,4 +226,9 @@ public class Cause extends IdComparableModel {
 	public boolean isChildOf(Cause cause) {
 		return this.getParent().equals(cause);
 	}
+
+	@Override
+	public String toString() {
+		return name + " (id: " + id + ", rca case: " + rcaCase + ")";
+	}
 }

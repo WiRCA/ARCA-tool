@@ -19,18 +19,31 @@
   ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
   ~ THE SOFTWARE.
   -->
-#{extends 'main.html' /}
-#{set title:'showRCACase.title' /}
-#{set 'moreStyles'}
-    <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/arcaeditor.css'}">
-    <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/base.css'}">
-    <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/ForceDirected.css'}">
-#{/set}
-#{set 'moreScripts'}
-    <script src="@{'/public/javascripts/smalljit.js'}" type="text/javascript" charset="${_response_encoding}"></script>
-    <script src="@{'/public/javascripts/jQuery.radmenu.js'}" type="text/javascript" charset="${_response_encoding}"></script>
-    
-#{/set}
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>#{get 'showRCACase.title' /}</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta charset="${_response_encoding}">
+        <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/main.css'}">
+        <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/jquery-ui-1.8.16.custom.css'}">
+        <link rel="stylesheet" href="@{'/public/stylesheets/screen.css'}" type="text/css" media="screen, projection">
+        <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/arcaeditor.css'}">
+        <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/base.css'}">
+        <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/ForceDirected.css'}">
+        <!--[if lt IE 8]>
+          <link rel="stylesheet" href="@{'/public/stylesheets/ie.css'}" type="text/css" media="screen, projection">
+        <![endif]-->
+        #{get 'moreStyles' /}
+        <link rel="shortcut icon" type="image/png" href="@{'/public/images/favicon.png'}">
+        <script src="@{'/public/javascripts/jquery-1.6.4.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+        <script src="@{'/public/javascripts/jquery-ui-1.8.16.custom.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+        <script src="@{'/public/javascripts/smalljit.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+        <script src="@{'/public/javascripts/jQuery.radmenu.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+        #{get 'moreScripts' /}
+    </head>
+    <body>
 *{
 <h1>&{'showRCACase.title', rcaCase.name}</h1>
 
@@ -50,12 +63,12 @@
     </div>
   </div>
 </div>
-  <div id='radial_menu' style="position: absolute; display: none;">
-    <ul class='list'>
-      <li class='item'><div class='my_class'>+</div></li>
-      <li class='item'><div class='my_class'>R</div></li>
-      <li class='item'><div class='my_class'>?</div></li>
-      <li class='item'><div class='my_class'>X</div></li>
+  <div id="radial_menu" style="position: absolute; display: none;">
+    <ul class="list">
+      <li class="item my_class" id="radmenu-event-addCause">+</li>
+      <li class="item my_class" id="radmenu-event-addRelation">R</li>
+      <li class="item my_class">?</li>
+      <li class="item my_class" id="radmenu-event-removeCause">X</li>
     </ul>
   </div>
 
@@ -96,9 +109,13 @@
             "adjacencies": [
             #{list cause.causes, as:'causedBy'}
             {
-              nodeTo: "${causedBy.id}",
-              data: {"weight": 3}
-            }${causedBy_isLast ? '' : ','}
+              nodeTo: "${causedBy.id}"
+            }${causedBy_isLast && !cause.relations ? '' : ','}
+            #{/list}
+            #{list cause.relations, as:'relation'}
+            {
+              nodeTo: "${relation.id}"
+            }${relation_isLast ? '' : ','}
             #{/list}
             ]
           }${cause_isLast ? '' : ','}
@@ -106,7 +123,7 @@
       ];
       //Running number for creating nodes
       var runningNumber = 0;
-      var lastReceived = 0;
+      var lastReceived = ${lastMessage};
       var waitMessages = #{jsAction @waitMessages(rcaCase.id,':lastReceived') /}
       var addCause = #{jsAction @CauseController.addCause(':causeId', ':name') /}
       var deleteCause = #{jsAction @CauseController.deleteCause(':causeId') /}
@@ -119,27 +136,23 @@
         radius: 55, // radius in pixels
         animSpeed: 2000, // animation speed in millis
         centerX: 0, // the center x axis offset
-        centerY: -20, // the center y axis offset
+        centerY: -10, // the center y axis offset
         selectEvent: "click", // the select event (click)
         onSelect: function($selected){ // show what is returned 
-            if($selected.html()=="<div class=\"my_class\">X</div>"){
+            if($selected[0].id == "radmenu-event-removeCause"){
               $.post(deleteCause({causeId: selectedNode.id}));
               jQuery("#radial_menu").radmenu("hide");
-              selectedNode.setData('alpha', 0, 'end');
-              fd.fx.animate({  
-                modes: ['node-property:alpha'],  
-                duration: 100  
-              });
-            }else if($selected.html()=="<div class=\"my_class\">+</div>"){
+            }else if($selected[0].id == "radmenu-event-addCause"){
               var name = prompt('Node name?');
               runningNumber = runningNumber + 1;
               if (name != null && name != "") {
-                $.post(addCause({causeId: selectedNode.id, name: name}));
-                jQuery("#radial_menu").radmenu("hide");
+                $.post(addCause({causeId: selectedNode.id, name: name}), function() {
+                    radmenu_fadeOut();
+                });
               }
-            }else if($selected.html()=="<div class=\"my_class\">R</div>"){
+            }else if($selected[0].id == "radmenu-event-addRelation"){
               relationFromNode = selectedNode;
-              jQuery("#radial_menu").radmenu("hide");
+              radmenu_fadeOut();
             }
           },
         angleOffset: 45 // in degrees
@@ -163,7 +176,7 @@
         //Enable zooming and panning
         //by scrolling and DnD
         Navigation: {
-          enable: false,
+          enable: true,
           //Enable panning events only if we're dragging the empty
           //canvas (and not a node).
           panning: 'avoid nodes',
@@ -234,10 +247,20 @@
                 relationFromNode = null;
               }
               else {
-                show_radial_menu(node);
+              defaultEdgesForSelectedNode(selectedNode);
+              show_radial_menu(node);
+              node.eachAdjacency(function(adj) {
+                adj.setDataset('current', {
+                  lineWidth: '5',
+                  color: '#FF0000'
+                });
+              });
+              fd.plot();
               }
             }else{
-              jQuery("#radial_menu").radmenu("hide");    
+              defaultEdgesForSelectedNode(selectedNode);
+              jQuery("#radial_menu").radmenu("hide");
+              fd.plot();
             }
           }
         },
@@ -276,6 +299,7 @@
                         if (this.data.type === 'deletecauseevent') {
                           fd.graph.removeNode(this.data.causeId);
                           fd.plot();
+                          $("div.node#" + this.data.causeId).remove();
                         }
                         if (this.data.type === 'addrelationevent') {
                           //alert(this.data.causeFrom + " " + this.data.causeTo);
@@ -348,6 +372,35 @@
       // end
 
     }
+
+    radmenu_fadeIn = function() {
+        jQuery("#radial_menu").radmenu("show",
+            function(items){
+            items.fadeIn(4000);
+            }
+        );
+    }
+
+    radmenu_fadeOut = function() {
+        jQuery("#radial_menu").radmenu("show",
+            function(items){
+            items.fadeOut(4000);
+            }
+        );
+    }
+
+    defaultEdgesForSelectedNode = function(selectedNode) {
+      if (selectedNode != undefined) {
+        selectedNode.eachAdjacency(function(adj) {
+          adj.setDataset('current', {
+            lineWidth: '2',
+            color: '#23A4FF'
+          });
+        });
+      }
+    }
     
 </script>
+    </body>
+</html>
 

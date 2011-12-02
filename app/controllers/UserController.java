@@ -42,6 +42,11 @@ public class UserController extends Controller {
 
 	public static void index() {
 		User user = SecurityController.getCurrentUser();
+		if (user == null) {
+			session.remove("username");
+			redirect("/");
+		}
+		//TODO: checkki if user == null -> logout ja index-sivulle.
 		Set<RCACase> cases = user.getRCACases();
 		List<RCACase> allPublicCases = RCACase.find("byIsCasePublic", true).fetch();
 		Set<RCACase> ownCases = new HashSet<RCACase>();
