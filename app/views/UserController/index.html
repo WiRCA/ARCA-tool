@@ -164,9 +164,8 @@
 #{/list}
 #{else}<li>&{'user.noAnyPublicCases'}</li>#{/else}
 </ul>
-<button class="btn primary large">
-#{a @RCACaseController.createRCACase()} &{'user.createRCACase'} #{/a}
-</button>
+
+#{a @RCACaseController.createRCACase(), class:'btn primary large'} &{'user.createRCACase'} #{/a}
 
 
 <div id="rcacase-share-dialog" title="&{'rcacase.share.dialog.title'}">
