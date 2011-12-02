@@ -1,11 +1,16 @@
-a.lang-select {
+#languageSelection {
+    margin-bottom: 30px;
+}
+
+
+#languageSelection a.lang-select {
     font-size: 0;
     line-height: 0;
     margin: 0 2px;
     padding: 0;
 }
 
-a.lang-select img {
+#languageSelection a.lang-select img {
     margin: 0;
     padding: 1px;
     border: 1px solid lightgray;
@@ -16,8 +21,8 @@ button a {
   color: #FFF;
 }
 
-div#login .fieldset {
-  
+.topbar .btn {
+    border: 0 none;
 }
 
 div#login div.fieldset div {

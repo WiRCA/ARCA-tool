@@ -25,69 +25,14 @@
    <p>#{a @Secure.logout(), id:'logout-link'}&{'logout'}#{/a}</p>
 #{/if}
 #{else}
-<script type="text/javascript">
-    $(function() {
-        if ($("input.inputTipInput#username").val().length != 0) {
-            $("input.inputTipInput#username").next().hide();
-        }
-        if ($("input.inputTipInput#password").val().length != 0) {
-            $("input.inputTipInput#password").next().hide();
-        }
-    });
-
-    $("span.inputTip").live("click", function() {
-        $(this).prev().focus();
-        $(this).hide();
-    });
-    $("input.inputTipInput").live("blur", function() {
-        if ($(this).val().length == 0) {
-            $(this).next().show();
-        }
-    });
-    $("input.inputTipInput").live("focus", function() {
-        $(this).next().hide();
-    });
-</script>
-
 <div id="login">
 
 	#{form @Secure.authenticate()}
-		
-		#{if flash.error}
-			<p class="error">
-				&{flash.error}
-			</p>
-		#{/if}
-		#{if flash.success}
-			<p class="success">
-				&{flash.success}
-			</p>
-		#{/if}
 
-	    <div class="fieldset">
-            <div id="username-field">
-                <input class="inputTipInput" type="text" name="username" id="username" value="${flash.username}" />
-                <span class="inputTip">&{'secure.username'}</span>
-            </div>
-            <div id="password-field">
-                <input class="inputTipInput" type="password" name="password" id="password" value="" />
-                <span class="inputTip">&{'secure.password'}</span>
-            </div>
-            <div id="signin-field">
-                <input type="submit" id="signin" value="&{'secure.signin'}" />
-            </div>
-            <div id="gLogin">
-                 #{a @RegisterController.googleLogin(), id:'gLogin-link'}
-                     <img src="@{'/public/images/google_icon.png'}" alt="Google" class="center"/>
-                 #{/a}
-             </div>
-            <div id="remember-field">
-                <input type="checkbox" name="remember" id="remember" value="true" ${flash.remember ? 'checked="true"' : ''} />
-                <label for="remember">&{'secure.remember'}</label>
-            </div>
-            <div id="register">
-                #{a @RegisterController.registerUser(), id:'register-link'}&{'register.title'}#{/a}
-            </div>
+	    <input class="input-small" type="text" name="username" id="username" value="${flash.username}" placeholder="&{'secure.username'}" />
+        <input class="input-small" type="password" name="password" id="password" value="" placeholder="&{'secure.password'}" />
+        <button type="submit" id="signin" class="btn">&{'secure.signin'}</button>
+        #{a @RegisterController.googleLogin(), id:'gLogin-link'}<img src="@{'/public/images/google_icon.png'}" alt="Google" class="center"/>#{/a}
 
         </div>
 	#{/form}

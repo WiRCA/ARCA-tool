@@ -65,13 +65,15 @@
                   <div class="well">
 
                     #{languages /}
-                    <br/>
+                    #{if session.username}
                     <p>#{a @RCACaseController.createRCACase(), id:'createRCACase-link'}New Case#{/a}</p>
                     <p>#{a @userController.index(), id:'showRCACases-link'}All Cases#{/a}</p>
                     <p>My Cases</p>
                     <p>Cases shared with me</p>
-                    <br/>
-                    <br/>
+                    #{/if}
+                    #{else}
+                      #{a @RegisterController.registerUser(), id:'register-link', class:'btn primary'}&{'register.title'}#{/a}
+                    #{/else}
                   </div>
                 </div>
                 <div class="span10">
