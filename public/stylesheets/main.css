@@ -20,10 +20,6 @@ div#login .fieldset {
   
 }
 
-form label {
-  text-align: left;  
-}
-
 div#login div.fieldset div {
     position: relative;
     display: inline;
