@@ -12,14 +12,26 @@ a.lang-select img {
     height: 11px;
 }
 
+button a {
+  color: #FFF;
+}
+
 div#login .fieldset {
-    height: 38px;
-    width: 460px;
+  
+}
+
+form label {
+  text-align: left;  
 }
 
 div#login div.fieldset div {
     position: relative;
     display: inline;
+}
+#remember-field label {
+    font-size: 12px;
+    color: #666;
+    float:right;
 }
 
 div#login div.fieldset div span.inputTip {
@@ -49,11 +61,10 @@ div#login div.fieldset div input[type="password"] {
 }
 
 div#login div#register {
-    margin-left: 45px;
 }
 
 div#login div#gLogin {
-    display:block;
+    
 }
 
 div#rcacase-share-dialog form {
