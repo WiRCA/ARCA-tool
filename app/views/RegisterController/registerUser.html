@@ -30,42 +30,53 @@
 
     #{form @RegisterController.register()}
 
-    <p id="nameFieldP">
-        <label for="nameFieldRegister">&{'register.name'}</label>
-        <input type="text" name="user.name" id="nameFieldRegister" value="${flash['user.name']}" />
-        <!-- TODO: lyhennä näitä if errors.forkey juttuja silleen ku ripa sano floukkarissa -->
-        #{if errors.forKey('user.name')}<span class="error">#{error 'user.name' /}</span>#{/if}
-    </p>
+    #{ifErrors}
+    <p class="alert-message error">&{'error.errorsInForm'}</p>
+    #{/ifErrors}
 
-    <p id="emailFieldP">
+    <div class="clearfix${errors.forKey('user.name') ? ' error' : ''}" id="nameFieldP">
+        <label for="nameFieldRegister">&{'register.name'}</label>
+        <div class="input">
+        <input type="text" name="user.name" id="nameFieldRegister" value="${flash['user.name']}" />
+        #{ifError 'user.name'}<span class="help-inline">#{error 'user.name' /}</span>#{/ifError}
+        </div>
+    </div>
+
+    <div class="clearfix${errors.forKey('user.email') ? ' error' : ''}" id="emailFieldP">
         <label for="emailFieldRegister">&{'register.email'}</label>
+        <div class="input">
         #{if invitation}
         <span>${invitation.email}</span>
-        <input type="hidden" name="user.email" id="emailFieldRegister" value="${invitation.email}" />
+        <input type="hidden" name="user.email" value="${invitation.email}" />
         <input type="hidden" name="invitationId" value="${invitation.id}" />
         <input type="hidden" name="rcaCaseId" value="${rcaCaseId}" />
         #{/if}
         #{else}
         <input type="text" name="user.email" id="emailFieldRegister" value="${flash['user.email']}" />
         #{/else}
-        #{if errors.forKey('user.email')}<span class="error">#{error 'user.email' /}</span>#{/if}
-    </p>
+        #{ifError 'user.email'}<span class="help-inline">#{error 'user.email' /}</span>#{/ifError}
+        </div>
+    </div>
 
-    <p id="passwordFieldP">
+    <div class="clearfix${errors.forKey('user.email') ? ' error' : ''}" id="passwordFieldP">
         <label for="passwordFieldRegister">&{'register.password'}</label>
-        <input type="password" name="user.password" id="passwordFieldRegister"/>
-        #{if errors.forKey('user.password')}<span class="error">#{error 'user.password' /}</span>#{/if}
-    </p>
+        <div class="input">
+        <input type="password" name="user.email" id="passwordFieldRegister"/>
+        #{ifError 'user.password'}<span class="help-inline">#{error 'user.password' /}</span>#{/ifError}
+        </div>
+    </div>
 
-    <p id="password2FieldP">
+    <div class="clearfix${errors.forKey('password2') ? ' error' : ''}" id="password2FieldP">
         <label for="password2FieldRegister">&{'register.password2'}</label>
+        <div class="input">
         <input type="password" name="password2" id="password2FieldRegister"/>
-        #{if errors.forKey('password2')}<span class="error">#{error 'password2' /}</span>#{/if}
-    </p>
+        #{ifError 'password2'}<span class="help-inline">#{error 'password2' /}</span>#{/ifError}
+        </div>
+    </div>
 
-    <p id="registerButtonP">
+    <div class="actions" id="registerButtonP">
         <input class="btn primary small" type="submit" id="registerButton" value="&{'register.title'}"/>
-    </p>
+    </div>
 
     #{/form}
 </div>
