@@ -87,7 +87,12 @@
           {
             "id": ${cause.id},
             "name": "${cause.name}",
-            "data": {"$color": "#83548B","$type": "circle","$dim":1},
+            "data": {
+                    "$color": "#83548B",
+                    "$type": "circle",
+                    "$dim":1,
+                    "parent": #{if cause.parent}${cause.parent.id}#{/if}#{else}""#{/else}
+                    },
             "adjacencies": [
             #{list cause.causes, as:'causedBy'}
             {
@@ -142,10 +147,10 @@
       function show_radial_menu(given_node){
         selectedNode = given_node;
         //get the position of the placeholder element
-          menupos   = $("#"+given_node.id).offset();
-          menuwidth = $("#"+given_node.id).width();
-          //show the menu directly over the placeholder
-          $radial_menu.css({ "left": (menupos.left + menuwidth/2 - 20) + "px", "top":menupos.top + "px" }).show();
+        menupos   = $("#"+given_node.id).offset();
+        menuwidth = $("#"+given_node.id).width();
+        //show the menu directly over the placeholder
+        $radial_menu.css({ "left": (menupos.left + menuwidth/2 - 20) + "px", "top":menupos.top + "px" }).show();
         jQuery("#radial_menu").radmenu("show", 
           function(items){
             items.fadeIn(400);
@@ -229,7 +234,7 @@
                 relationFromNode = null;
               }
               else {
-              show_radial_menu(node);
+                show_radial_menu(node);
               }
             }else{
               jQuery("#radial_menu").radmenu("hide");    
@@ -321,21 +326,25 @@
 
       // load JSON data.
       fd.loadJSON(json);
-      // compute positions incrementally and animate.
-      fd.computeIncremental({
-        iter: 40,
-        property: 'end',
-        onStep: function(perc){
-        },
-        onComplete: function(){
-          fd.animate({
-            modes: ['linear'],
-            transition: $jit.Trans.Elastic.easeOut,
-            duration: 50
-          });
-          fd.plot();
+      // compute positions.
+      function countParentNodes(node){
+          if(node){
+            return countParentNodes(fd.graph.getNode(node.data.parent))+1;
+          }else{
+            return 0;
+          }
+      };
+      //First calculate levels (y-coordinates) for nodes.
+      fd.graph.eachNode(function(node){
+        var nodeLevel;
+        if(node.data.parent){
+          nodeLevel = countParentNodes(node);
+        }else{
+          nodeLevel = 1;
         }
+        node.setPos(new $jit.Complex(0, -300 + nodeLevel*80), 'current');
       });
+      fd.plot();
       // end
 
     }
