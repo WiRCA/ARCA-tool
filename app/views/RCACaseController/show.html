@@ -206,15 +206,7 @@
         },
         //Add Tips
         Tips: {
-          enable: false,
-          *{onShow: function(tip, node) {
-            //count connections
-            var count = 0;
-            node.eachAdjacency(function() { count++; });
-            //display node info in tooltip
-            tip.innerHTML = '<div class="tip-title">' + node.name + '</div>'
-              + '<div class="tip-text"><b>connections:</b> ' + count + '</div>';
-          }}*
+          enable: false
         },
         // Add node events
         Events: {
@@ -229,6 +221,7 @@
           //Update node positions when dragged
           onDragMove: function(node, eventInfo, e) {
               jQuery("#radial_menu").radmenu("hide");
+              node.data.locked = "true";
               var pos = eventInfo.getPos();
               node.pos.setc(pos.x, pos.y);
               node.setPos(new $jit.Complex(pos.x, pos.y), 'end');
@@ -307,37 +300,22 @@
                           fd.plot();
                         }
                         else if(this.data.type === 'addcauseevent') {
+                          defaultEdgesForSelectedNode(selectedNode)
                           var newNode = {
                             "id": this.data.causeTo,
                             "name": this.data.text
                           };
-                          var node = {
-                            "id": this.data.causeFrom,
-                            "name": this.data.text
-                          };
-                          fd.graph.addAdjacence(node,newNode);
-                          var nodePos = fd.graph.getNode(this.data.causeFrom).getPos();
-                          fd.graph.getNode(this.data.causeTo).setPos(new $jit.Complex(nodePos.x, nodePos.y), 'current');
-                          fd.graph.getNode(this.data.causeTo).setPos(new $jit.Complex(nodePos.x, nodePos.y+100), 'end');
-
+                          var oldNode = fd.graph.getNode(this.data.causeFrom);
+                          fd.graph.addAdjacence(oldNode,newNode);
+                          newNode = fd.graph.getNode(this.data.causeTo);
+                          newNode.data.nodeLevel = oldNode.data.nodeLevel+1;
+                          newNode.getPos('end').y = oldNode.getPos('end').y+80;
+                          placeChildsFromParent(oldNode);
                           fd.animate({
-                                modes: ['linear'],
-                                transition: $jit.Trans.Elastic.easeOut,
-                                duration: 1500
-                              });
-                          *{fd.computeIncremental({
-                            iter: 5,
-                            property: 'end',
-                            onStep: function(perc){
-                            },
-                            onComplete: function(){
-                              fd.animate({
-                                modes: ['linear'],
-                                transition: $jit.Trans.Elastic.easeOut,
-                                duration: 1200
-                              });
-                            }
-                          });}*
+                            modes: ['linear'],
+                            transition: $jit.Trans.Elastic.easeOut,
+                            duration: 1500
+                          });
                         }
                         lastReceived = this.id
                     })
@@ -358,21 +336,57 @@
             return 0;
           }
       };
+      var rootNode;
       //First calculate levels (y-coordinates) for nodes.
       fd.graph.eachNode(function(node){
         var nodeLevel;
         if(node.data.parent){
           nodeLevel = countParentNodes(node);
         }else{
+          rootNode = node;
           nodeLevel = 1;
         }
+        node.data.nodeLevel = nodeLevel;
         node.setPos(new $jit.Complex(0, -300 + nodeLevel*80), 'current');
+        node.setPos(new $jit.Complex(0, -300 + nodeLevel*80), 'end');
       });
-      fd.plot();
-      // end
-
+      traverseWholeTree(rootNode);
+      fd.animate({
+        modes: ['linear'],
+        transition: $jit.Trans.Elastic.easeOut,
+        duration: 1500
+      });
     }
-
+    traverseWholeTree = function(node){
+      placeChildsFromParent(node);
+      node.eachAdjacency(function(adj) {
+        if(adj.nodeTo.data.nodeLevel>node.data.nodeLevel){
+          traverseWholeTree(adj.nodeTo);
+        }
+      });
+    }
+    placeChildsFromParent = function(nodeFrom){
+      var childrens = [];
+      var childrensWidth = 0;
+      //count children
+      nodeFrom.eachAdjacency(function(adj) {
+        if(adj.nodeTo.data.nodeLevel>nodeFrom.data.nodeLevel){
+          childrens.push(adj.nodeTo);
+          childrensWidth += 130;//$("#"+adj.nodeTo.id).width();
+        }
+      });
+      //left-most side position for nodes
+      var nodePos = nodeFrom.getPos('end'); 
+      var leftSideX = nodePos.x-childrensWidth/2;
+      //place them
+      var runningWidth = 0;
+      for(var i = 0; i<childrens.length; ++i){
+        if(!childrens[i].data.locked){
+          childrens[i].setPos(new $jit.Complex(leftSideX + runningWidth, childrens[i].getPos('end').y), 'end');
+          runningWidth += 140;//$("#"+childrens[i].id).width() + 10;
+        }
+      }
+    }
     radmenu_fadeIn = function() {
         jQuery("#radial_menu").radmenu("show",
             function(items){
