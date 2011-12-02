@@ -28,13 +28,11 @@ import models.Cause;
 
 public class DeleteCauseEvent extends Event {
 
-	public final String user;
 	public final String text;
 	public final String causeId;
 
 	public DeleteCauseEvent(Cause cause) {
 		super("deletecauseevent");
-		this.user = cause.getCreator().toString();
 		this.text = cause.name;
 		this.causeId = Long.toString(cause.id);
 	}

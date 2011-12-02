@@ -39,7 +39,7 @@ import models.events.DeleteCauseEvent;
  * @author Juha Viljanen
  */
 
-@With({Secure.class, LanguageController.class})
+@With({LanguageController.class})
 public class CauseController extends Controller {
 
 	public static void addCause(String causeId, String name) {
@@ -90,6 +90,7 @@ public class CauseController extends Controller {
 
 	private static boolean userIsAllowedToDelete(Cause cause, RCACase rcaCase) {
 		User current = SecurityController.getCurrentUser();
-		return !cause.equals(rcaCase.problem) && ( current == cause.getCreator() || current == rcaCase.getOwner() );
+		return current != null && !cause.equals(rcaCase.problem) &&
+		       (current == cause.getCreator() || current == rcaCase.getOwner());
 	}
 }

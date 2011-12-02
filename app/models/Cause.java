@@ -76,7 +76,7 @@ public class Cause extends IdComparableModel {
 	/**
 	 * Creates a new cause with name and creator.
 	 *
-	 * @param rcaCase
+	 * @param rcaCase RCA case which this cause belongs to
 	 * @param name    name for the created cause.
 	 * @param creator creator of the cause
 	 *
@@ -86,7 +86,9 @@ public class Cause extends IdComparableModel {
 	public Cause(RCACase rcaCase, String name, User creator) {
 		this.rcaCase = rcaCase;
 		this.name = name;
-		this.creatorId = creator.id;
+		if (creator != null) {
+			this.creatorId = creator.id;
+		}
 		causeRelations = new TreeSet<Relation>();
 		effectRelations = new TreeSet<Relation>();
 		corrections = new TreeSet<Correction>();
@@ -174,7 +176,7 @@ public class Cause extends IdComparableModel {
 	 * @return the creator of the cause
 	 */
 	public User getCreator() {
-		return User.findById(creatorId);
+		return creatorId != null ? (User) User.findById(creatorId) : null;
 	}
 
 	/**

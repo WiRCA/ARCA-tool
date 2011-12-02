@@ -35,6 +35,7 @@ import play.Logger;
 import play.data.validation.Email;
 import play.data.validation.Required;
 import play.data.validation.Valid;
+import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.With;
 
@@ -47,10 +48,15 @@ import models.events.*;
  * @author Mikko Valjus
  * @author Risto Virtanen
  */
-@With({Secure.class, LanguageController.class})
+@With({LanguageController.class})
 public class RCACaseController extends Controller {
 
 	private static final String FIND_BY_EMAIL = "byEmail";
+
+	@Before(unless={"show", "waitMessages"})
+    static void checkAccess() throws Throwable {
+        Secure.checkAccess();
+    }
 
 	public static void createRCACase() {
 		RCACase rcaCase = new RCACase(SecurityController.getCurrentUser());
@@ -168,8 +174,8 @@ public class RCACaseController extends Controller {
 	public static void extractCSV(Long rcaCaseId) {
 		RCACase rcaCase = RCACase.findById(rcaCaseId);
 		checkIfCurrentUserHasRightsForRCACase(rcaCase);
-		response.setHeader("Content-Disposition",
-		                   "attachment;filename=" + rcaCase.caseName.replace(" ", "-") + ".csv");
+		response.setHeader("Content-Disposition", "attachment;filename=" + rcaCase.caseName.replace(" ",
+		                                                                                            "-") + ".csv");
 		request.format = "text/csv";
 		renderTemplate("RCACaseController/extractCSV.csv", rcaCase);
 	}

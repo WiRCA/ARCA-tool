@@ -1,6 +1,3 @@
-#{extends 'main.html' /}
-#{set title:'Home' /}
-
 <!--
   ~ Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
   ~ Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus,
@@ -24,8 +21,20 @@
   ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
   ~ THE SOFTWARE.
   -->
+#{extends 'main.html' /}
+#{set title:'Home' /}
+#{set pageHeader:'Index page' /}
+#{set pageHeaderSmall:'Start by signing in or browse cases.' /}
+
 <div class="hero-unit">
-  <h1>ARCA-tool</h1>
-  <p>Root cause analysis method
-    </p>
+    <h1>ARCA-tool</h1>
+    <p>Root cause analysis method</p>
+
+    <h2>&{'user.allPublicCases'}</h2>
+    <ul>
+    #{list items:allPublicCases, as:'rcaCase'}
+    <li>#{a @RCACaseController.show(rcaCase.id)} ${rcaCase.caseName} #{/a}</li>
+    #{/list}
+    #{else}<li>&{'user.noAnyPublicCases'}</li>#{/else}
+    </ul>
 </div>

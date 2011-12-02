@@ -24,9 +24,12 @@
 
 package controllers;
 
+import models.RCACase;
 import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.With;
+
+import java.util.List;
 
 @With(LanguageController.class)
 public class ApplicationController extends Controller {
@@ -39,7 +42,8 @@ public class ApplicationController extends Controller {
     }
 
 	public static void index() {
-		render();
+		List<RCACase> allPublicCases = RCACase.find("byIsCasePublic", true).fetch();
+		render(allPublicCases);
 	}
 
 
