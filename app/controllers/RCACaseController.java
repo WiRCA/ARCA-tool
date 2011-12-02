@@ -74,12 +74,8 @@ public class RCACaseController extends Controller {
 
 
 	public static void show(Long id) {
-		User current = SecurityController.getCurrentUser();
 		RCACase rcaCase = RCACase.findById(id);
-		notFoundIfNull(rcaCase);
-		if (!rcaCase.isCasePublic && !current.caseIds.contains(id)) {
-			forbidden();
-		}
+		checkIfCurrentUserHasRightsForRCACase(rcaCase);
 		String size = rcaCase.getCompanySize().text;
 		String type = rcaCase.getRCACaseType().text;
 		Long lastMessage = 0L;
@@ -93,7 +89,7 @@ public class RCACaseController extends Controller {
 
 	public static void waitMessages(Long id, Long lastReceived) {
 		RCACase rcaCase = RCACase.findById(id);
-		notFoundIfNull(rcaCase);
+		checkIfCurrentUserHasRightsForRCACase(rcaCase);
 		List messages = await(rcaCase.nextMessages(lastReceived));
 		renderJSON(messages, new TypeToken<List<IndexedEvent<Event>>>() {
 		}.getType());
@@ -101,7 +97,7 @@ public class RCACaseController extends Controller {
 
 	public static void getUsers(Long rcaCaseId) {
 		RCACase rcaCase = RCACase.findById(rcaCaseId);
-		notFoundIfNull(rcaCase);
+		checkIfCurrentUserHasRightsForRCACase(rcaCase);
 		List<User> existingUsers =
 				User.find("Select u from user as u inner join u.caseIds as caseIds" + " where ? in caseIds",
 				          rcaCaseId)
@@ -116,7 +112,7 @@ public class RCACaseController extends Controller {
 	public static void inviteUser(Long rcaCaseId, @Required @Email String invitedEmail) {
 		User current = SecurityController.getCurrentUser();
 		RCACase rcaCase = RCACase.findById(rcaCaseId);
-		notFoundIfNull(rcaCase);
+		checkIfCurrentUserHasRightsForRCACase(rcaCase);
 		if (invitedEmail == null || invitedEmail.isEmpty()) {
 			notFound();
 		}
@@ -145,7 +141,7 @@ public class RCACaseController extends Controller {
 	public static void removeUser(Long rcaCaseId, Boolean isInvitedUser, String email) {
 		User current = SecurityController.getCurrentUser();
 		RCACase rcaCase = RCACase.findById(rcaCaseId);
-		notFoundIfNull(rcaCase);
+		checkIfCurrentUserHasRightsForRCACase(rcaCase);
 		// Check if user the owner of the RCA case
 		if (rcaCase.ownerId.equals(current.id)) {
 			if (isInvitedUser) {
@@ -167,6 +163,22 @@ public class RCACaseController extends Controller {
 			}
 		}
 		renderJSON("{\"success\":\"false\"}");
+	}
+
+	public static void extractCSV(Long rcaCaseId) {
+		RCACase rcaCase = RCACase.findById(rcaCaseId);
+		checkIfCurrentUserHasRightsForRCACase(rcaCase);
+		response.setHeader("Content-Disposition",
+		                   "attachment;filename=" + rcaCase.caseName.replace(" ", "-") + ".csv");
+		request.format = "text/csv";
+		renderTemplate("RCACaseController/extractCSV.csv", rcaCase);
+	}
+
+	private static void checkIfCurrentUserHasRightsForRCACase(RCACase rcaCase) {
+		notFoundIfNull(rcaCase);
+		if(!rcaCase.isCasePublic && !SecurityController.getCurrentUser().caseIds.contains(rcaCase.id)) {
+			forbidden();
+		}
 	}
 
 }

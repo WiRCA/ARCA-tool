@@ -56,6 +56,8 @@ validation.ipv4=Not a valid IP address
 validation.ipv6=Not a valid IP v6 address
 validation.selectOne=Select one
 
+select.optionSelect=VALITSE
+
 createRCA.title=Create a new RCA case
 createRCA.caseName=Case name
 createRCA.rcaCaseType=Case type
@@ -73,7 +75,7 @@ showRCACase.owner=RCA case owner
 showRCACase.back=Back to my cases
 
 RCACaseType.softwareProject=Software project
-RCACaseType.hr=Human resouces related problem
+RCACaseType.hr=Human resources related problem
 RCACaseType.other=Other
 
 user.welcomeTitle=Welcome %s!
@@ -116,3 +118,10 @@ register.password2=Re-enter Password
 register.emailExists=The given email already exists.
 register.passwordsDidNotMatch=Passwords did not match
 register.gLogin=Or log in using your Google Account
+
+rcaCsae.csv.exportCSV=Export causes as CSV file
+rcaCase.csv.caseName=RCA case
+rcaCase.csv.causeID=Cause ID
+rcaCase.csv.causeName=Cause name
+rcaCase.csv.causedById=Sub causes
+rcaCase.csv.relationsFromId=Other causes

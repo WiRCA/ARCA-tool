@@ -23,6 +23,9 @@ POST    /CreateRCACase                                              RCACaseContr
 GET     /case/{id}                                                  RCACaseController.show
 GET     /case/{rcaCaseId}/update/{lastReceived}                     RCACaseController.waitMessages
 
+# Extract RCA case
+GET     /case/extract/csv/{rcaCaseId}                               RCACaseController.extractCSV
+
 # Ignore favicon requests
 GET     /favicon.ico                                                404
 

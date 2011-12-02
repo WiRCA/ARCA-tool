@@ -136,6 +136,7 @@
     &{'rcacase.lastmodified'} ${rcaCase.updated.since(true)}
     &{'user.created'} ${rcaCase.created.since(true)}
     <a id="rcacase-share-${rcaCase.id}" href="#">&{'rcacase.share'}</a>
+    #{a @RCACaseController.extractCSV(rcaCase.id)}&{'rcaCsae.csv.exportCSV'}#{/a}
 </li>
 #{/list}
 #{else}<li>&{'user.noRCACases'}</li>#{/else}

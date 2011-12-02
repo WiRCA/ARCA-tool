@@ -1,0 +1,4 @@
+&{'rcaCase.csv.caseName'};${rcaCase.caseName};
+
+&{'rcaCase.csv.causeID'};&{'rcaCase.csv.causeName'};&{'rcaCase.csv.causedById'};&{'rcaCase.csv.relationsFromId'};#{list rcaCase.causes, as:'cause'}
+${cause.id};${cause.name};#{list cause.causes, as:'causedBy'}${causedBy.id}${causedBy_isLast ? '' : ', '}#{/list};#{list cause.relations, as:'relation'}${relation.id}${relation_isLast ? '' : ', '}#{/list}#{/list}
