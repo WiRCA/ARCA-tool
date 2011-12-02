@@ -68,7 +68,9 @@
       <li class="item my_class" id="radmenu-event-addCause">+</li>
       <li class="item my_class" id="radmenu-event-addRelation">R</li>
       <li class="item my_class">?</li>
+        *{ #{if current == rcaCase.getOwner() || current == cause.creator } }*
       <li class="item my_class" id="radmenu-event-removeCause">X</li>
+        *{ #{/if} }*
     </ul>
   </div>
 
@@ -159,10 +161,7 @@
           menuwidth = $("#"+given_node.id).width();
           //show the menu directly over the placeholder
           $radial_menu.css({ "left": (menupos.left + menuwidth/2 - 20) + "px", "top":menupos.top + "px" }).show();
-        jQuery("#radial_menu").radmenu("show", 
-          function(items){
-            items.fadeIn(400);
-          });
+          radmenu_fadeIn();
       }
       // init ForceDirected
       var fd = new $jit.ForceDirected({
@@ -367,7 +366,7 @@
     radmenu_fadeIn = function() {
         jQuery("#radial_menu").radmenu("show",
             function(items){
-            items.fadeIn(4000);
+            items.fadeIn(400);
             }
         );
     }
