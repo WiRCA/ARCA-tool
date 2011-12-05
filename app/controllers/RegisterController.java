@@ -55,13 +55,14 @@ public class RegisterController extends Controller {
 		Invitation invitation = null;
 		if (invitationId != null) {
 			invitation = Invitation.findById(invitationId);
+			notFoundIfNull(invitation);
 			if (!invitation.email.equals(user.email)) {
 				renderTemplate("RegisterController/registerUser.html", invitation, rcaCaseId);
 			}
 		} else {
-			RegisterController.validateUserIsNotInvited(user.email);
+			validateUserIsNotInvited(user.email);
 		}
-		RegisterController.validateUserDoesNotExist(user.email);
+		validateUserDoesNotExist(user.email);
 		validation.equals(user.password, password2).key("user.password").message("register.passwordsDidNotMatch");
 
 		if (validation.hasErrors()) {
@@ -73,7 +74,7 @@ public class RegisterController extends Controller {
 			registerUser();
 		}
 
-		RegisterController.addCaseAndDeleteInvitationIfInvited(invitation, user);
+		addCaseAndDeleteInvitationIfInvited(invitation, user);
 
 		user.changePassword(password2);
 		user.save();
@@ -83,7 +84,7 @@ public class RegisterController extends Controller {
         // Mark user as connected
         session.put("username", user.email);
 
-		RegisterController.showCaseIfInvited(rcaCaseId, user);
+		showCaseIfInvited(rcaCaseId, user);
 
 		ApplicationController.index();
 	}
@@ -94,21 +95,21 @@ public class RegisterController extends Controller {
 			if (verifiedUser == null) {
 				flash.error("Oops. Authentication has failed");
 				ApplicationController.index();
-			}
+			} else {
+				String email = verifiedUser.extensions.get("email");
+				String firstName = verifiedUser.extensions.get("firstname");
+				String lastName = verifiedUser.extensions.get("lastname");
+				String name = firstName + " " + lastName;
 
-			String email = verifiedUser.extensions.get("email");
-			String firstName = verifiedUser.extensions.get("firstname");
-			String lastName = verifiedUser.extensions.get("lastname");
-			String name = firstName + " " + lastName;
-
-			if (!RegisterController.userExists(email)) {
-				RegisterController.createGoogleUser(email, name);
+				if (!userExists(email)) {
+					createGoogleUser(email, name);
+				}
+				Logger.info("User with email %s logged in via Google login", email);
+				session.put("username", email);
+				ApplicationController.index();
 			}
-			Logger.info("User with email %s logged in via Google login", email);
-			session.put("username", email);
-			ApplicationController.index();
 		} else {
-			RegisterController.redirectToGoogleLogin();
+			redirectToGoogleLogin();
 		}
 	}
 
@@ -139,7 +140,7 @@ public class RegisterController extends Controller {
 
 			Invitation invitation = Invitation.find("byEmail", email).first();
 
-			RegisterController.addCaseAndDeleteInvitationIfInvited(invitation, user);
+			addCaseAndDeleteInvitationIfInvited(invitation, user);
 
 			user.save();
 			Logger.info("User %s registered via Google login", user);
@@ -151,14 +152,12 @@ public class RegisterController extends Controller {
 	}
 
 	private static void redirectToGoogleLogin() {
-		if (!OpenID.id("https://www.google.com/accounts/o8/id") // will redirect the user
+		// will redirect the user
+		OpenID.id("https://www.google.com/accounts/o8/id")
 					.required("email", "http://axschema.org/contact/email")
 					.required("firstname", "http://axschema.org/namePerson/first")
 					.required("lastname", "http://axschema.org/namePerson/last")
-					.verify()) {
-				flash.error("Cannot verify your OpenID");
-				ApplicationController.index();
-			}
+					.verify();
 	}
 
 	private static boolean userExists(String email) {
@@ -170,14 +169,14 @@ public class RegisterController extends Controller {
 	}
 
 	private static void validateUserDoesNotExist(String email) {
-		RegisterController.doValidattonAndGiveMessage(!RegisterController.userExists(email));
+		doValidationAndGiveMessage(!userExists(email));
 	}
 
 	private static void validateUserIsNotInvited(String email) {
-		RegisterController.doValidattonAndGiveMessage(!RegisterController.userIsInvited(email));
+		doValidationAndGiveMessage(!userIsInvited(email));
 	}
 
-	private static void doValidattonAndGiveMessage(boolean conditionToValidate) {
+	private static void doValidationAndGiveMessage(boolean conditionToValidate) {
 		validation.isTrue(conditionToValidate).key("user.email").message("register.emailExists");
 	}
 
