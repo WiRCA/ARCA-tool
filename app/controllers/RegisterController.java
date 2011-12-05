@@ -89,7 +89,7 @@ public class RegisterController extends Controller {
 		ApplicationController.index();
 	}
 
-	public static void googleLogin() {
+	public static void googleLogin() throws NoSuchAlgorithmException {
 		if (OpenID.isAuthenticationResponse()) {
 			OpenID.UserInfo verifiedUser = OpenID.getVerifiedID();
 			if (verifiedUser == null) {
@@ -129,26 +129,20 @@ public class RegisterController extends Controller {
 		renderTemplate("RegisterController/registerUser.html", invitation, rcaCaseId);
 	}
 
-	private static void createGoogleUser(String email, String name) {
-		try {
-			// random password is generated for the user object, since it is required in the database
-			SecureRandom secureRandom = SecureRandom.getInstance(SECURE_RANDOM_ALGORITHM);
-			String randomPasswd = Integer.toHexString(secureRandom.nextInt());
+	private static void createGoogleUser(String email, String name) throws NoSuchAlgorithmException {
+		// random password is generated for the user object, since it is required in the database
+		SecureRandom secureRandom = SecureRandom.getInstance(SECURE_RANDOM_ALGORITHM);
+		String randomPasswd = Integer.toHexString(secureRandom.nextInt());
 
-			User user = new User(email, randomPasswd);
-			user.name = name;
+		User user = new User(email, randomPasswd);
+		user.name = name;
 
-			Invitation invitation = Invitation.find("byEmail", email).first();
+		Invitation invitation = Invitation.find("byEmail", email).first();
 
-			addCaseAndDeleteInvitationIfInvited(invitation, user);
+		addCaseAndDeleteInvitationIfInvited(invitation, user);
 
-			user.save();
-			Logger.info("User %s registered via Google login", user);
-		} catch (NoSuchAlgorithmException e) {
-			// Should not happen
-			Logger.error(e, "Password hash generation failed");
-			ApplicationController.index();
-		}
+		user.save();
+		Logger.info("User %s registered via Google login", user);
 	}
 
 	private static void redirectToGoogleLogin() {

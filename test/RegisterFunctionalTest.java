@@ -63,10 +63,10 @@ public class RegisterFunctionalTest extends FunctionalTest {
 		invitation.caseIds.add(rcaCase.id);
 		invitation.save();
 		String inviteHash = EncodingUtils.encodeSHA1Base64(invitation.hash);
-		//Map<String, Object> map = new HashMap<String, Object>();
-        response = GET(request, request.url);
+		response = GET(request, request.url);
 		assertStatus(302, response);
 
+		// log out admin user
 		response = GET("/logout");
 		assertStatus(302, response);
 		request.cookies = response.cookies;
@@ -164,5 +164,45 @@ public class RegisterFunctionalTest extends FunctionalTest {
 		params.put("password2", "same");
 		Http.Response response = POST("/register", params);
 		assertStatus(302, response);
+	}
+
+	@Test
+	public void googleLoginTest() {
+		String googleLoginUrl = Router.reverse("RegisterController.googleLogin").url;
+		Http.Request request = newRequest();
+		request.url = googleLoginUrl;
+		request.method = "GET";
+		request.params.put("notEmpty", "notEmpty");
+
+		// redirect to google openid
+		request.path = request.url;
+		Http.Response response = makeRequest(request);
+		assertStatus(302, response);
+
+		String wircamiesGoogleLoginUrl = response.getHeader("Location");
+
+		// false response from open id
+		request.params.put("openid.mode", "notNull");
+		response = makeRequest(request);
+		assertStatus(302, response);
+		assertHeaderEquals("Location", "/", response);
+
+		/* TODO try to login with google open id
+		request.params.remove("openid.mode");
+		request.url = wircamiesGoogleLoginUrl;
+		request.path = wircamiesGoogleLoginUrl;
+		response = makeRequest(request);
+		while(response.status == 302) {
+			request = newRequest();
+			wircamiesGoogleLoginUrl = response.getHeader("Location");
+			request.url = wircamiesGoogleLoginUrl;
+			request.path = wircamiesGoogleLoginUrl;
+			request.domain = "google.com";
+			request.secure = true;
+			request.cookies = response.cookies;
+			response = makeRequest(request);
+		}
+		assertIsOk(response);
+        */
 	}
 }
