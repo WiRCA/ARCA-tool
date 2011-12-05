@@ -165,7 +165,7 @@
         menupos   = $("#"+given_node.id).offset();
         menuwidth = $("#"+given_node.id).width();
         //show the menu directly over the placeholder
-        $radial_menu.css({ "left": (menupos.left + menuwidth/2 - 20) + "px", "top":menupos.top + "px" }).show();
+        $radial_menu.css({ "left": (menupos.left + menuwidth/2 - 5) + "px", "top":menupos.top + "px" }).show();
         radmenu_fadeIn();
       }
       // init ForceDirected
@@ -217,26 +217,24 @@
           onMouseLeave: function() {
             fd.canvas.getElement().style.cursor = '';
           },
+          *{onDragStart: function(node, eventInfo, e){
+            jQuery("#radial_menu").radmenu("hide");
+            //Because node has moved we lock its(+childs) position from our adding algoritms
+            node.data.locked = "true";
+            node.eachAdjacency(function(adj) {
+              if(adj.nodeTo.data.nodeLevel>node.data.nodeLevel){
+                adj.nodeTo.data.locked="true";
+              }
+            });
+          },}*
           //Update node positions when dragged
           onDragMove: function(node, eventInfo, e) {
-              jQuery("#radial_menu").radmenu("hide");
-              node.data.locked = "true";
-              var pos = eventInfo.getPos();
-              var oldx = node.pos.x;
-              var oldy = node.pos.y;
-              node.pos.setc(pos.x, pos.y);
-              node.setPos(new $jit.Complex(pos.x, pos.y), 'end');
-              function moveSubnode(subnode) {
-                var newx = subnode.pos.x + pos.x - oldx;
-                var newy = subnode.pos.y + pos.y - oldy;
-                subnode.pos.setc(newx, newy);
-                subnode.setPos(new $jit.Complex(newx, newy), 'end');
-                if (subnode.getSubnodes().length > 0) {
-                    subnode.eachSubnode(moveSubnode);
-                }
-              }
-              node.eachSubnode(moveSubnode);
-              fd.plot();
+            var pos = eventInfo.getPos();
+            var oldx = node.pos.x;
+            var oldy = node.pos.y;
+            node.pos.setc(pos.x, pos.y);
+            node.setPos(new $jit.Complex(pos.x, pos.y), 'end');
+            fd.plot();
           },
           //Implement the same handler for touchscreens
           onTouchMove: function(node, eventInfo, e) {
@@ -275,13 +273,8 @@
         // Add text to the labels. This method is only triggered
         // on label creation and only for DOM labels (not native canvas ones).
         onCreateLabel: function(domElement, node){
-          var nameContainer = document.createElement('span');
-          nameContainer.className = 'name';
-          nameContainer.innerHTML = '<div class="nodeBox" id='+node.id+'>'+node.name+'</div>';
-          domElement.appendChild(nameContainer);
-          var style = domElement.style;
-          style.fontSize = "0.8em";
-          style.color = "#ddd";
+          $(domElement).addClass('nodeBox');
+          $(domElement).html(node.name);
         },
         // Change node styles when DOM labels are placed
         // or moved.
@@ -320,7 +313,9 @@
                           fd.graph.addAdjacence(oldNode,newNode);
                           newNode = fd.graph.getNode(this.data.causeTo);
                           newNode.data.nodeLevel = oldNode.data.nodeLevel+1;
+                          newNode.setPos(oldNode.getPos('end'),'current');
                           newNode.getPos('end').y = oldNode.getPos('end').y+80;
+                          fd.plot();
                           placeChildsFromParent(oldNode);
                           fd.animate({
                             modes: ['linear'],
@@ -339,6 +334,7 @@
 
       // load JSON data.
       fd.loadJSON(json);
+      fd.plot();
       // compute positions.
       function countParentNodes(node){
           if(node){
@@ -381,21 +377,22 @@
       var childrensWidth = 0;
       //count children
       nodeFrom.eachAdjacency(function(adj) {
-        if(adj.nodeTo.data.nodeLevel>nodeFrom.data.nodeLevel){
+        if(adj.nodeTo.data.nodeLevel>nodeFrom.data.nodeLevel && !(adj.nodeTo.data.locked)){
           childrens.push(adj.nodeTo);
-          childrensWidth += 130;//$("#"+adj.nodeTo.id).width();
+          childrensWidth += $("#"+adj.nodeTo.id).width()+25;
         }
       });
+      childrensWidth -= 25;
       //left-most side position for nodes
       var nodePos = nodeFrom.getPos('end'); 
       var leftSideX = nodePos.x-childrensWidth/2;
       //place them
       var runningWidth = 0;
+      var iChildsWidth = 0;
       for(var i = 0; i<childrens.length; ++i){
-        if(!childrens[i].data.locked){
-          childrens[i].setPos(new $jit.Complex(leftSideX + runningWidth, childrens[i].getPos('end').y), 'end');
-          runningWidth += 140;//$("#"+childrens[i].id).width() + 10;
-        }
+          iChildsWidth = $("#"+childrens[i].id).width();
+          childrens[i].setPos(new $jit.Complex(leftSideX + runningWidth + iChildsWidth/2, childrens[i].getPos('end').y), 'end');
+          runningWidth += iChildsWidth+25;
       }
     }
     radmenu_fadeIn = function() {
