@@ -212,7 +212,10 @@ public class Cause extends IdComparableModel {
 	 * @return the parent of this cause
 	 */
 	public Cause getParent() {
-		if (this.effectRelations.size() > 0) {
+		if (this.equals(this.rcaCase.problem)) {
+			return null;
+		}
+		else if (this.effectRelations.size() > 0) {
 			return ((Relation)this.effectRelations.toArray()[0]).causeTo;
 		}
 		else {
@@ -226,7 +229,8 @@ public class Cause extends IdComparableModel {
 	 * @return true if the given cause is the parent of this cause.
 	 */
 	public boolean isChildOf(Cause cause) {
-		return this.getParent().equals(cause);
+		Cause parent = this.getParent();
+		return parent != null && parent.equals(cause);
 	}
 
 	@Override
