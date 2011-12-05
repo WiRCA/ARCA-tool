@@ -23,7 +23,7 @@
   -->
 #{fixture delete:'all',load:'data.yml' /}
 #{selenium}
-    open('/')
+    open('/?language=en')
     assertElementPresent('id=signin')
     type('id=username','admin@local')
     type('id=password','admin')
