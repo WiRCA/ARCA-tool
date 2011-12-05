@@ -56,7 +56,7 @@ validation.ipv4=Not a valid IP address
 validation.ipv6=Not a valid IP v6 address
 validation.selectOne=Select one
 
-select.optionSelect=VALITSE
+select.optionSelect=- SELECT -
 
 createRCA.title=Create a new RCA case
 createRCA.caseName=Case name

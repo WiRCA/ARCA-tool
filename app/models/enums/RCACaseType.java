@@ -31,9 +31,9 @@ import play.i18n.Messages;
  */
 public enum RCACaseType {
 
-	SOFT(1, Messages.get("RCACaseType.softwareProject")),
-	HR(2, Messages.get("RCACaseType.hr")),
-	OTHER(3, Messages.get("RCACaseType.other"));
+	SOFT(1, "RCACaseType.softwareProject"),
+	HR(2, "RCACaseType.hr"),
+	OTHER(3, "RCACaseType.other");
 
 	public int value;
 	public String text;
