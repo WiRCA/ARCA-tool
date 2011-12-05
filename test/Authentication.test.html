@@ -1,6 +1,6 @@
 #{fixture delete:'all', load:'data.yml' /}
 #{selenium}
-    open('/')
+    open('/?language=en')
     assertElementPresent('id=signin')
     type('id=username','foobar')
     type('id=password','foobar')
