@@ -104,6 +104,7 @@ public class Cause extends IdComparableModel {
 	 */
 	public Correction addCorrection(String name, String description) {
 		Correction action = new Correction(name, description, this);
+	  action.save();
 		this.corrections.add(action);
 		this.save();
 		return action;

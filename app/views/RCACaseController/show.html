@@ -210,7 +210,6 @@
         //show the menu directly over the placeholder
         $radial_menu.css({ "left": (menupos.left + menuwidth/2 - 5) + "px", "top":menupos.top + "px" }).show();
         var hasCorrections = #{jsAction @CauseController.hasCorrections(':causeId') /}
-        var hasItCorrections;
         $.get(hasCorrections({causeId: selectedNode.id}), function(data) {
           if (data == "true") {
             $corrections_link.css({ "left": (menupos.left-10) + "px", "top":menupos.top + "px" }).show(); 
@@ -358,8 +357,6 @@
                         }
                         if (this.data.type === 'addcorrectionevent') {
                           //alert(this.data.correctionTo + " " + this.data.name);
-                          htmlString = "moi";
-                          $("#my-modal-list").html(htmlString);
                           fd.plot();
                         }
                         else if(this.data.type === 'addcauseevent') {
