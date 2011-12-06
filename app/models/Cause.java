@@ -118,6 +118,14 @@ public class Cause extends IdComparableModel {
 		correction.delete();
 		this.save();
 	}
+	
+	public TreeSet<Correction> getCorrections() {
+	  TreeSet<Correction> corrections = new TreeSet<Correction>();
+		for (Correction correction : this.corrections) {
+		  corrections.add(correction);
+		}
+		return corrections;
+	}
 
 	/**
 	 * Adds a cause for a cause.

@@ -70,6 +70,29 @@ public class CauseController extends Controller {
 		causeEvents.getStream().publish(event);
 		Logger.info("Relation added between %s and %s", causeFrom, causeTo);
 	}
+	
+	public static boolean hasCorrections(Long causeId) {
+	  Cause cause = Cause.findById(causeId);
+	  return !cause.corrections.isEmpty();
+	}
+	
+	public static String getFirstCorrectionName(Long causeId) {
+	  Cause cause = Cause.findById(causeId);
+	  return cause.getCorrections().first().name;
+  }
+	
+	public static void addCorrection(Long toId, String name) {
+	  Cause causeTo = Cause.findById(toId);
+	  RCACase rcaCase = causeTo.rcaCase;
+	  
+	  causeTo.addCorrection(name, " ");
+	  causeTo.save();
+	  
+	  AddCorrectionEvent event = new AddCorrectionEvent(causeTo, name);
+		CauseStream causeEvents = rcaCase.getCauseStream();
+		causeEvents.getStream().publish(event);
+		Logger.info("Correction added to cause %s", causeTo.name);
+	}
 
 	public static void deleteCause(String causeId) {
 		Cause cause = Cause.findById(Long.valueOf(causeId));
