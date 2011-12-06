@@ -32,12 +32,14 @@
         <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/arcaeditor.css'}">
         <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/base.css'}">
         <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/ForceDirected.css'}">
+        <link rel="stylesheet" href="@{'/public/stylesheets/bootstrap.min.css'}">
         <!--[if lt IE 8]>
           <link rel="stylesheet" href="@{'/public/stylesheets/ie.css'}" type="text/css" media="screen, projection">
         <![endif]-->
         #{get 'moreStyles' /}
         <link rel="shortcut icon" type="image/png" href="@{'/public/images/favicon.png'}">
         <script src="@{'/public/javascripts/jquery-1.6.4.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+        <script src="@{'/public/javascripts/bootstrap-modal.js'}" type="text/javascript" charset="${_response_encoding}"></script>
         <script src="@{'/public/javascripts/jquery-ui-1.8.16.custom.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
         <script src="@{'/public/javascripts/smalljit.js'}" type="text/javascript" charset="${_response_encoding}"></script>
         <script src="@{'/public/javascripts/jQuery.radmenu.js'}" type="text/javascript" charset="${_response_encoding}"></script>
@@ -67,12 +69,34 @@
     <ul class="list">
       <li class="item my_class" id="radmenu-event-addCause">+</li>
       <li class="item my_class" id="radmenu-event-addRelation">R</li>
-      <li class="item my_class">?</li>
+      <li class="item my_class" id="radmenu-event-addCorrection" data-controls-modal="modal-from-dom" data-backdrop="static">C</li>
         *{ #{if current == rcaCase.getOwner() || current == cause.creator } }*
       <li class="item my_class" id="radmenu-event-removeCause">X</li>
         *{ #{/if} }*
     </ul>
   </div>
+  <div id="my-modal" class="modal-backdrop fade hide in">
+    <!-- Modal -->
+    <div class="modal" style="position: relative; top: auto; left: auto; margin: 0 auto; z-index: 1">
+      <div class="modal-header">
+        <a href="#" class="close">&times;</a>
+        <h3>Corrective action ideas</h3>
+      </div>
+      <div class="modal-body">
+        <p>List of corrections</p>
+        <div id="my_modal_body">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <a href="#" class="btn primary">Nappi</a>
+        <a href="#" class="btn secondary">Toinen nappi</a>
+      </div>
+    </div>
+  </div>
+  <div class="my_class" id="corrections_link" style="position: absolute; display:none;">
+    <a data-controls-modal="my-modal" data-backdrop="static" >+</a>
+  </div>
+  
 
 <script type="text/javascript">
     $(document).ready(function() {
@@ -130,8 +154,20 @@
       var addCause = #{jsAction @CauseController.addCause(':causeId', ':name') /}
       var deleteCause = #{jsAction @CauseController.deleteCause(':causeId') /}
       var addRelation = #{jsAction @CauseController.addRelation(':fromId', ':toID') /}
+      var addCorrection = #{jsAction @CauseController.addCorrection(':toId', ':name') /}
       // end
+      var $corrections_link = $("#corrections_link");
+      var $modal_body = $("#my_modal_body");
       var $radial_menu = $("#radial_menu"), menupos, menuwidth, selectedNode, relationFromNode;
+      jQuery("#corrections_link a").click(function(){
+        var getFirstCorrectionName = #{jsAction @CauseController.getFirstCorrectionName(':causeId') /}
+        $.get(getFirstCorrectionName({causeId: selectedNode.id}), function(data) {
+          if (data) {
+            $modal_body.html(" ");
+            $modal_body.append(data); 
+          }
+        });
+      });
       jQuery("#radial_menu").radmenu({
         listClass: 'list', // the list class to look within for items
         itemClass: 'item', // the items - NOTE: the HTML inside the item is copied into the menu item
@@ -144,6 +180,7 @@
             if($selected[0].id == "radmenu-event-removeCause"){
               $.post(deleteCause({causeId: selectedNode.id}));
               jQuery("#radial_menu").radmenu("hide");
+              jQuery("#corrections_link").hide();
             }else if($selected[0].id == "radmenu-event-addCause"){
               var name = prompt('Node name?');
               runningNumber = runningNumber + 1;
@@ -155,6 +192,12 @@
             }else if($selected[0].id == "radmenu-event-addRelation"){
               relationFromNode = selectedNode;
               radmenu_fadeOut();
+            }else if($selected[0].id == "radmenu-event-addCorrection"){
+              var name = prompt('Correction name?');
+              $.post(addCorrection({toId: selectedNode.id, name: name}), function () {
+                radmenu_fadeOut();
+                jQuery("#corrections_link").hide();
+              });
             }
           },
         angleOffset: 45 // in degrees
@@ -166,6 +209,12 @@
         menuwidth = $("#"+given_node.id).width();
         //show the menu directly over the placeholder
         $radial_menu.css({ "left": (menupos.left + menuwidth/2 - 5) + "px", "top":menupos.top + "px" }).show();
+        var hasCorrections = #{jsAction @CauseController.hasCorrections(':causeId') /}
+        $.get(hasCorrections({causeId: selectedNode.id}), function(data) {
+          if (data == "true") {
+            $corrections_link.css({ "left": (menupos.left-10) + "px", "top":menupos.top + "px" }).show(); 
+          }
+        });
         radmenu_fadeIn();
       }
       // init ForceDirected
@@ -219,6 +268,7 @@
           },
           *{onDragStart: function(node, eventInfo, e){
             jQuery("#radial_menu").radmenu("hide");
+            
             //Because node has moved we lock its(+childs) position from our adding algoritms
             node.data.locked = "true";
             node.eachAdjacency(function(adj) {
@@ -250,6 +300,7 @@
               }
               else {
               defaultEdgesForSelectedNode(selectedNode);
+              jQuery("#corrections_link").fadeOut(400);
               show_radial_menu(node);
               node.eachAdjacency(function(adj) {
                 adj.setDataset('current', {
@@ -262,6 +313,7 @@
             }else{
               defaultEdgesForSelectedNode(selectedNode);
               jQuery("#radial_menu").radmenu("hide");
+              jQuery("#corrections_link").fadeOut(400);
               fd.plot();
             }
           }
@@ -301,6 +353,10 @@
                         if (this.data.type === 'addrelationevent') {
                           //alert(this.data.causeFrom + " " + this.data.causeTo);
                           fd.graph.addAdjacence(fd.graph.getNode(this.data.causeFrom), fd.graph.getNode(this.data.causeTo));
+                          fd.plot();
+                        }
+                        if (this.data.type === 'addcorrectionevent') {
+                          //alert(this.data.correctionTo + " " + this.data.name);
                           fd.plot();
                         }
                         else if(this.data.type === 'addcauseevent') {
