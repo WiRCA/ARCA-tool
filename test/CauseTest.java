@@ -117,7 +117,7 @@ public class CauseTest extends GenericRCAUnitTest {
 
 	@Test
 	public void correctionTest() {
-		Cause cause1 = new Cause(testCase, "test cause1", user);
+		Cause cause1 = new Cause(testCase, "test cause1", user).save();
 		Correction correction = cause1.addCorrection("new correction", "correction for a cause");
 		assertTrue(correction.cause.equals(cause1));
 		assertTrue(cause1.corrections.contains(correction));
