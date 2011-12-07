@@ -104,6 +104,7 @@ public class Cause extends IdComparableModel {
 	 */
 	public Correction addCorrection(String name, String description) {
 		Correction action = new Correction(name, description, this);
+	  action.save();
 		this.corrections.add(action);
 		this.save();
 		return action;
@@ -117,6 +118,14 @@ public class Cause extends IdComparableModel {
 		this.corrections.remove(correction);
 		correction.delete();
 		this.save();
+	}
+	
+	public TreeSet<Correction> getCorrections() {
+	  TreeSet<Correction> corrections = new TreeSet<Correction>();
+		for (Correction correction : this.corrections) {
+		  corrections.add(correction);
+		}
+		return corrections;
 	}
 
 	/**

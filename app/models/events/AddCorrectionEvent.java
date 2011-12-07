@@ -22,33 +22,22 @@
  * THE SOFTWARE.
  */
 
-package models.enums;
+package models.events;
 
-import play.i18n.Messages;
+import models.Cause;
 
-/**
- * @author Juha Viljanen
- */
-public enum RCACaseType {
+public class AddCorrectionEvent extends Event {
 
-	SOFT(1, "RCACaseType.softwareProject"),
-	HR(2, "RCACaseType.hr"),
-	OTHER(3, "RCACaseType.other");
+	public final String name;
+	public final String correctionTo;
 
-	public int value;
-	public String text;
-
-	RCACaseType(int value, String text) {
-		this.value = value;
-		this.text = text;
+	public AddCorrectionEvent(Cause cause, String name) {
+		super("addcorrectionevent");
+		this.correctionTo = Long.toString(cause.id);
+		this.name = name;
 	}
 
-	public static RCACaseType valueOf(int id) {
-		for (RCACaseType caseType : RCACaseType.values()) {
-			if (caseType.value == id) {
-				return caseType;
-			}
-		}
-		return null;
-	}
 }
+
+
+

@@ -63,7 +63,7 @@ since.days=%d päivää sitten
 since.months=%d kuukautta sitten
 since.years=%d vuotta sitten
 
-select.optionSelect=VALITSE
+select.optionSelect=- VALITSE -
 
 createRCA.title=Luo uusi RCA analyysi
 createRCA.caseName=Analyysin nimi

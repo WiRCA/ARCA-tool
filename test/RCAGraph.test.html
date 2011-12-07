@@ -41,7 +41,6 @@
     select('id=companySize','label=1-10')
     type('id=companyProducts','testgraph')
     clickAndWait('id=create')
-        *{ Selenium browser does not support canvas?
     verifyTextPresent('testgraph')
     clickAt('//*[text()="testgraph"]')
     assertTextPresent('+')
@@ -67,6 +66,6 @@
     click('//div[@id='radmenu-event-removeCause']')
     clickAt('//*[text()="testgraph"]')
     click('//div[@id='radmenu-event-removeCause']')
-        }*
+    pause('500')
     open('/logout')
 #{/selenium}
