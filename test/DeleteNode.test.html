@@ -124,6 +124,7 @@
     assertTextPresent('X')
 
     // delete node
+    assertTextPresent('baz')
     click('//div[@id='radmenu-event-removeCause']')
     pause('500')
     assertTextNotPresent('baz')
