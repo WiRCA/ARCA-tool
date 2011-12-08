@@ -1,6 +1,6 @@
 #{fixture delete:'all',load:'data.yml' /}
 #{selenium}
-	open('/')
+	open('/?language=fi')
 	verifyTextPresent('Index page')
 	type('id=username','admin@local')
 	type('id=password','admin')
@@ -17,7 +17,7 @@
 	type('id=companyProducts','asd')
 	verifyTextPresent('Luo uusi RCA analyysi')
 	clickAndWait('id=create')
-	open('/')
+	open('/?language=fi')
 	verifyTextPresent('test case')
 	verifyTextPresent(' Jaa..')
 	clickAt('//*[text()="Jaa.."]')
@@ -77,7 +77,7 @@
 	clickAndWait('id=signin')
 	verifyTextPresent('test case ')
 	clickAndWait('link=test case')
-	open('/')
+	open('/?language=fi')
 	clickAndWait('id=logout-link')
 	type('id=username','admin@local')
 	type('id=password','admin')
