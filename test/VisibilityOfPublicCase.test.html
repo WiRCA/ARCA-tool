@@ -1,0 +1,21 @@
+#{fixture delete:'all',load:'data.yml' /}
+#{selenium}
+	open('/?language=en')
+	type('id=username','admin@local')
+	type('id=password','admin')
+	clickAndWait('id=signin')
+	clickAndWait('id=createRCACase-link')
+	type('id=caseName','asd')
+	select('id=caseTypeValue','value=2')
+	type('id=description','asd')
+	type('id=caseGoals','asd')
+	type('id=companyName','asd')
+	select('id=companySize','label=11-50')
+	type('id=companyProducts','asd')
+	click('id=isCasePublic')
+	clickAndWait('id=create')
+	open('/?language=en')
+	verifyTextPresent('Admin user')
+	clickAndWait('id=logout-link')
+	verifyTextPresent('All public cases')
+#{/selenium}
