@@ -89,9 +89,9 @@ public class Cause extends IdComparableModel {
 		if (creator != null) {
 			this.creatorId = creator.id;
 		}
-		causeRelations = new TreeSet<Relation>();
-		effectRelations = new TreeSet<Relation>();
-		corrections = new TreeSet<Correction>();
+		this.causeRelations = new TreeSet<Relation>();
+		this.effectRelations = new TreeSet<Relation>();
+		this.corrections = new TreeSet<Correction>();
 	}
 
 	/**
@@ -103,11 +103,11 @@ public class Cause extends IdComparableModel {
 	 * @return returns the created Correction object.
 	 */
 	public Correction addCorrection(String name, String description) {
-		Correction action = new Correction(name, description, this);
-	  action.save();
-		this.corrections.add(action);
+		Correction correction = new Correction(name, description, this);
+	    correction.save();
+		this.corrections.add(correction);
 		this.save();
-		return action;
+		return correction;
 	}
 
 	/**
@@ -120,8 +120,8 @@ public class Cause extends IdComparableModel {
 		this.save();
 	}
 	
-	public TreeSet<Correction> getCorrections() {
-	  TreeSet<Correction> corrections = new TreeSet<Correction>();
+	public Set<Correction> getCorrections() {
+	  Set<Correction> corrections = new TreeSet<Correction>();
 		for (Correction correction : this.corrections) {
 		  corrections.add(correction);
 		}

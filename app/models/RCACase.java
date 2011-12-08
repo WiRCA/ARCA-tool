@@ -44,6 +44,7 @@ import java.util.TreeSet;
 import models.events.*;
 
 /**
+ * This class represents an RCA case in the application.
  * @author Eero Laukkanen
  */
 @PersistenceUnit(name = "maindb")
@@ -146,31 +147,62 @@ public class RCACase extends Model {
 		this.causes = new TreeSet<Cause>();
 	}
 
+	/**
+	 * Returns the owner of the case.
+	 * @return the owner of the case.
+	 */
 	public User getOwner() {
 		return User.findById(ownerId);
 	}
 
+	/**
+	 * Calls for a "Promise"-job that returns list of events that have been sent after the parameter.
+	 * @param lastReceived the id of the last message that has been received.
+	 * @return asynchronous Promise job that can be run with await() that returns the list of events
+	 */
 	public Promise<List<IndexedEvent<Event>>> nextMessages(long lastReceived) {
 		CauseStream stream = this.getCauseStream();
 		return stream.getStream().nextEvents(lastReceived);
 	}
 
+	/**
+	 * Returns the size of the company of the RCA case.
+	 * @return company size enumeration
+	 */
 	public CompanySize getCompanySize() {
 		return CompanySize.valueOf(companySizeValue);
 	}
 
+	/**
+	 * Sets the companySize value.
+	 * @param companySize the size to be setted
+	 */
 	public void setCompanySize(CompanySize companySize) {
 		this.companySizeValue = companySize.value;
 	}
 
+	/**
+	 * Returns the type of the RCA case.
+	 * @return type of the RCA case
+	 */
 	public RCACaseType getRCACaseType() {
 		return RCACaseType.valueOf(caseTypeValue);
 	}
 
+	/**
+	 * Sets the type of the RCA case.
+	 * @param rcaCaseType the type to be set
+	 */
 	public void setRCACaseType(RCACaseType rcaCaseType) {
 		this.caseTypeValue = rcaCaseType.value;
 	}
 
+	/**
+	 * Returns the stream that handles the messages of one RCA case. Streams are stored in the Cache class. If stream
+	 * has not been created yet, it will be created in this method. Calling this method also updates the stream in
+	 * the Cache, increasing the time when the stream is saved.
+	 * @return the stream that has the messages
+	 */
 	public CauseStream getCauseStream() {
 		CauseStream stream = Cache.get(CAUSE_STREAM_NAME_IN_CACHE + this.id, CauseStream.class);
 		if (stream == null) {
@@ -180,6 +212,10 @@ public class RCACase extends Model {
 		return stream;
 	}
 
+	/**
+	 * Deletes a cause in an RCA case. The main problem cannot be deleted this way.
+	 * @param cause cause to be deleted.
+	 */
 	public void deleteCause(Cause cause) {
 		if (cause.equals(this.problem)) {
 			return;
