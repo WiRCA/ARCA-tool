@@ -130,7 +130,7 @@
                     "$type": "circle",
                     "$dim":1,
                     "parent": #{if cause.parent}${cause.parent.id}#{/if}#{else}""#{/else},
-                    "creatorId": ${cause.creatorId}
+                    "creatorId": '${cause.creatorId}'
                     },
             "adjacencies": [
             #{list cause.causes, as:'causedBy'}
@@ -473,8 +473,10 @@
             function(items){
                 items.fadeIn(400);
 
-                if ( selectedNode.data.parent == "" || !( selectedNode
-                .data.creatorId == ${currentUser.id} || ${currentUser.id} == ${rcaCase.ownerId} ) ) {
+                if ( selectedNode.data.parent == "" ||
+                    !( selectedNode.data.creatorId == ${currentUser == null ? 'null' : currentUser.id} ||
+                    ${currentUser == null ? 'null' : currentUser.id} == ${rcaCase.ownerId})
+                    ) {
                     jQuery("#radial_menu").radmenu("items")[3].style.visibility = "hidden";
                 }
             }
