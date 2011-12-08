@@ -462,7 +462,7 @@
       //place them
       var runningWidth = 0;
       var iChildsWidth = 0;
-      for(var i = 0; i<childrens.length; ++i){
+      for(var i = 0; i < childrens.length; ++i){
           iChildsWidth = $("#"+childrens[i].id).width();
           childrens[i].setPos(new $jit.Complex(leftSideX + runningWidth + iChildsWidth/2, childrens[i].getPos('end').y), 'end');
           runningWidth += iChildsWidth+25;
