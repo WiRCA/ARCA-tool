@@ -1,0 +1,135 @@
+<!--
+  ~ Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
+  ~ Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus,
+  ~ Timo Lehtinen, Jaakko Harjuhahto
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in
+  ~ all copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+  ~ THE SOFTWARE.
+  -->
+
+#{fixture delete:'all',load:'data.yml' /}
+#{selenium}
+
+    // open page and log in first user
+    open('/?language=en')
+	type('id=username','admin@local')
+	type('id=password','admin')
+	clickAndWait('id=signin')
+
+    // create new rca case
+    waitForTextPresent('Create new RCA case')
+    clickAndWait('link=Create new RCA case')
+    type('id=caseName','testgraph')
+    select('id=caseTypeValue','label=Software project')
+    type('id=description','testgraph')
+    type('id=caseGoals','testgraph')
+    type('id=companyName','testgraph')
+    select('id=companySize','label=1-10')
+    type('id=companyProducts','testgraph')
+    click('id=isCasePublic')
+    clickAndWait('id=create')
+
+    // check that delete button is not visible for root node
+    verifyTextPresent('testgraph')
+    clickAt('//*[text()="testgraph"]')
+    assertTextNotPresent('X')
+    assertTextPresent('+')
+
+    // add new node and check that delete button is visible for it
+    answerOnNextPrompt('foo')
+    clickAt('//div[@id='radmenu-event-addCause']')
+    assertPrompt('Node name?')
+    waitForTextPresent('foo')
+    clickAt('//*[text()="foo"]')
+    assertTextPresent('+')
+    assertTextPresent('X')
+
+    // add new node and delete it
+    answerOnNextPrompt('bar')
+    click('//div[@id='radmenu-event-addCause']')
+    assertPrompt('Node name?')
+    waitForTextPresent('bar')
+    clickAt('//*[text()="bar"]')
+    click('//div[@id='radmenu-event-removeCause']')
+    pause('500')
+    assertTextNotPresent('bar')
+
+    // logout
+    open('/logout')
+    pause('500')
+
+    // register as another user
+    open('/?language=en')
+    clickAndWait('id=register-link')
+    type('id=nameFieldRegister','rcagraphtester')
+    type('id=emailFieldRegister','rcagraphtester@te.st')
+    type('id=passwordFieldRegister','rcagraphtester')
+    type('id=password2FieldRegister','rcagraphtester')
+    clickAndWait('id=registerButton')
+
+    // open RCA case created above
+    clickAndWait('link=testgraph')
+
+    // check that delete button is not visible for root node
+    verifyTextPresent('testgraph')
+    clickAt('//*[text()="testgraph"]')
+    assertTextNotPresent('X')
+    assertTextPresent('+')
+
+    // check that delete button is not visible for other node
+    clickAt('//*[text()="foo"]')
+    assertTextNotPresent('X')
+    assertTextPresent('+')
+
+    // create new node and check that delete button is visible for it
+    answerOnNextPrompt('baz')
+    clickAt('//div[@id='radmenu-event-addCause']')
+    assertPrompt('Node name?')
+    waitForTextPresent('baz')
+    clickAt('//*[text()="baz"]')
+    assertTextPresent('+')
+    assertTextPresent('X')
+
+    // logout
+    pause('500')
+    open('/logout')
+
+    // open page and log in first user again
+    open('/?language=en')
+	type('id=username','admin@local')
+	type('id=password','admin')
+	clickAndWait('id=signin')
+
+     // open RCA case created above
+    clickAndWait('link=testgraph')
+
+    // check that delete button is visible for the node created by the other user
+    clickAt('//*[text()="baz"]')
+    assertTextPresent('+')
+    assertTextPresent('X')
+
+    // delete node
+    click('//div[@id='radmenu-event-removeCause']')
+    pause('500')
+    assertTextNotPresent('baz')
+
+    // logout
+    open('/logout')
+    pause('500')
+
+#{/selenium}
