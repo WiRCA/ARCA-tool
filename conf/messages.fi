@@ -119,7 +119,7 @@ register.emailExists=Antamasi sähköpostiosoite on jo rekisteröity.
 register.passwordsDidNotMatch=Salasanat eivät täsmänneet
 register.gLogin=Tai kirjaudu Google-tunnuksellasi
 
-rcaCsae.csv.exportCSV=Lataa syyt CSV:nä
+rcaCase.csv.exportCSV=Lataa syyt CSV:nä
 rcaCase.csv.caseName=RCA analyysi
 rcaCase.csv.causeID=Syyn ID
 rcaCase.csv.causeName=Syyn nimi
