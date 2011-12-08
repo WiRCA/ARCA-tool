@@ -24,6 +24,7 @@
 
 package controllers;
 
+import models.Correction;
 import models.RCACase;
 import models.User;
 import play.Logger;
@@ -33,6 +34,8 @@ import models.Cause;
 import models.events.*;
 import models.events.AddCauseEvent;
 import models.events.DeleteCauseEvent;
+
+import java.util.SortedSet;
 
 /**
  * @author Eero Laukkanen
@@ -79,7 +82,7 @@ public class CauseController extends Controller {
 	
 	public static String getFirstCorrectionName(Long causeId) {
 	  Cause cause = Cause.findById(causeId);
-	  return cause.getCorrections().first().name;
+	  return ((SortedSet<Correction>)cause.getCorrections()).first().name;
   }
 	
 	public static void addCorrection(Long toId, String name) {

@@ -69,10 +69,8 @@
     <ul class="list">
       <li class="item my_class" id="radmenu-event-addCause">+</li>
       <li class="item my_class" id="radmenu-event-addRelation">R</li>
-      <li class="item my_class" id="radmenu-event-addCorrection" data-controls-modal="modal-from-dom" data-backdrop="static">C</li>
-        *{ #{if current == rcaCase.getOwner() || current == cause.creator } }*
+      <li class="item my_class">?</li>
       <li class="item my_class" id="radmenu-event-removeCause">X</li>
-        *{ #{/if} }*
     </ul>
   </div>
   <div id="my-modal" class="modal-backdrop fade hide in">
@@ -130,7 +128,8 @@
                     "$color": "#83548B",
                     "$type": "circle",
                     "$dim":1,
-                    "parent": #{if cause.parent}${cause.parent.id}#{/if}#{else}""#{/else}
+                    "parent": #{if cause.parent}${cause.parent.id}#{/if}#{else}""#{/else},
+                    "creatorId": ${cause.creatorId}
                     },
             "adjacencies": [
             #{list cause.causes, as:'causedBy'}
@@ -215,7 +214,7 @@
             $corrections_link.css({ "left": (menupos.left-10) + "px", "top":menupos.top + "px" }).show(); 
           }
         });
-        radmenu_fadeIn();
+        radmenu_fadeIn(selectedNode);
       }
       // init ForceDirected
       var fd = new $jit.ForceDirected({
@@ -364,7 +363,11 @@
                           defaultEdgesForSelectedNode(selectedNode)
                           var newNode = {
                             "id": this.data.causeTo,
-                            "name": this.data.text
+                            "name": this.data.text,
+                            "data": {
+                                "parent": this.data.causeFrom,
+                                "creatorId": this.data.creatorId
+                            }
                           };
                           var oldNode = fd.graph.getNode(this.data.causeFrom);
                           fd.graph.addAdjacence(oldNode,newNode);
@@ -452,10 +455,15 @@
           runningWidth += iChildsWidth+25;
       }
     }
-    radmenu_fadeIn = function() {
+    radmenu_fadeIn = function(selectedNode) {
         jQuery("#radial_menu").radmenu("show",
             function(items){
-            items.fadeIn(400);
+                items.fadeIn(400);
+
+                if ( selectedNode.data.parent == "" || !( selectedNode
+                .data.creatorId == ${currentUser.id} || ${currentUser.id} == ${rcaCase.ownerId} ) ) {
+                    jQuery("#radial_menu").radmenu("items")[3].style.visibility = "hidden";
+                }
             }
         );
     }

@@ -91,7 +91,7 @@ user.noRCACases=Ei RCA analyysejä
 user.noPrivateCases=Ei yksityisiä analyysejä
 user.noPublicCases=Et seuraa mitään julkista analyysiä
 user.created=Analyysi luotu
-user.myCases=Minun analyysit
+user.myCases=Minun analyysini
 user.sharedCases=Minulle jaetut yksityiset analyysit
 user.publicCases=Julkiset analyysit joita seuraan
 rcacase.lastmodified=muokattu
@@ -119,7 +119,7 @@ register.emailExists=Antamasi sähköpostiosoite on jo rekisteröity.
 register.passwordsDidNotMatch=Salasanat eivät täsmänneet
 register.gLogin=Tai kirjaudu Google-tunnuksellasi
 
-rcaCsae.csv.exportCSV=Lataa syyt CSV:nä
+rcaCase.csv.exportCSV=Lataa syyt CSV:nä
 rcaCase.csv.caseName=RCA analyysi
 rcaCase.csv.causeID=Syyn ID
 rcaCase.csv.causeName=Syyn nimi

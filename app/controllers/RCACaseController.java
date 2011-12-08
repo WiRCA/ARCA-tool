@@ -90,7 +90,8 @@ public class RCACaseController extends Controller {
 			IndexedEvent last = archivedEvents.get(archivedEvents.size() - 1);
 			lastMessage = last.id;
 		}
-		render(rcaCase, type, size, lastMessage);
+		User currentUser = SecurityController.getCurrentUser();
+		render(rcaCase, type, size, lastMessage, currentUser);
 	}
 
 	public static void waitMessages(Long id, Long lastReceived) {
