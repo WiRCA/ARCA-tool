@@ -99,6 +99,7 @@
 <script type="text/javascript">
     $(document).ready(function() {
       init();
+      zoomLevel = 1;
     });
     var labelType, useGradients, nativeTextSupport, animate;
 
@@ -280,10 +281,22 @@
 			jQuery("#radial_menu").radmenu("hide");
 		
             var pos = eventInfo.getPos();
-            var oldx = node.pos.x;
-            var oldy = node.pos.y;
             node.pos.setc(pos.x, pos.y);
             node.setPos(new $jit.Complex(pos.x, pos.y), 'end');
+            fd.plot();
+          },
+          //Implement zooming for nodes
+          onMouseWheel: function(delta, e) {
+            console.log("scrolled!");
+            var zoom = (fd.config.Navigation.zooming / 1000 * delta) + 1;
+            console.log("zoom " + zoom);
+            zoomLevel = zoomLevel * zoom;
+            console.log("zoom level " + zoomLevel);
+            $(".node").css("-webkit-transform", "matrix(" + zoomLevel + ",0,0," + zoomLevel + ",0,0)");
+            $(".node").css("-moz-transform", "matrix(" + zoomLevel + ",0,0," + zoomLevel + ",0px,0px");
+            $(".node").css("-ms-transform", "matrix(" + zoomLevel + ",0,0," + zoomLevel + ",0,0)");
+            $(".node").css("-o-transform", "matrix(" + zoomLevel + ",0,0," + zoomLevel + ",0,0)");
+            $(".node").css("transform", "matrix(" + zoomLevel + ",0,0," + zoomLevel + ",0,0)");
             fd.plot();
           },
           //Implement the same handler for touchscreens
