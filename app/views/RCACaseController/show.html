@@ -267,7 +267,7 @@
           },
           *{onDragStart: function(node, eventInfo, e){
             
-            //Because node has moved we lock its(+childs) position from our adding algoritms
+            //Because node has moved we lock its(+childs) position from our adding algorithms
             node.data.locked = "true";
             node.eachAdjacency(function(adj) {
               if(adj.nodeTo.data.nodeLevel>node.data.nodeLevel){
