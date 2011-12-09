@@ -24,27 +24,44 @@
 
 #{fixture delete:'all' /}
 #{selenium}
+
+    // open register form
     open('/?language=en')
     assertElementPresent('id=register-link')
     clickAndWait('id=register-link')
+
+    // verify that returning empty form is not possible
     verifyTextPresent('Sign up')
     clickAndWait('id=registerButton')
     verifyTextPresent('Form contains error(s)')
+
+    // give only name -> error
     type('id=nameFieldRegister','Reino')
     clickAndWait('id=registerButton')
     verifyTextPresent('Form contains error(s)')
+
+    // give email (name is autofilled) -> error
     type('id=emailFieldRegister','reino@reino.reino')
     clickAndWait('id=registerButton')
     verifyTextPresent('Form contains error(s)')
+
+    // give password (name and email autofilled) -> error
     type('id=passwordFieldRegister','reino')
     clickAndWait('id=registerButton')
     verifyTextPresent('Form contains error(s)')
+
+    // give password2 (name, email autofilled. password field not autofilled.) -> error
     type('id=password2FieldRegister', 'reino')
     clickAndWait('id=registerButton')
     verifyTextPresent('Form contains error(s)')
+
+    // give password and password2 (name and email autofilled) -> success
     type('id=passwordFieldRegister','reino')
     type('id=password2FieldRegister', 'reino')
     clickAndWait('id=registerButton')
+
+    // verify successful registration
     verifyTextPresent('Welcome Reino!')
     clickAndWait('id=logout-link')
+
 #{/selenium}

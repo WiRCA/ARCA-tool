@@ -69,7 +69,7 @@
     <ul class="list">
       <li class="item my_class" id="radmenu-event-addCause">+</li>
       <li class="item my_class" id="radmenu-event-addRelation">R</li>
-      <li class="item my_class">?</li>
+      <li class="item my_class"id="radmenu-event-addCorrection" data-controls-modal="modal-from-dom" data-backdrop="static">C</li>
       <li class="item my_class" id="radmenu-event-removeCause">X</li>
     </ul>
   </div>
@@ -130,7 +130,7 @@
                     "$type": "circle",
                     "$dim":1,
                     "parent": #{if cause.parent}${cause.parent.id}#{/if}#{else}""#{/else},
-                    "creatorId": ${cause.creatorId}
+                    "creatorId": '${cause.creatorId}'
                     },
             "adjacencies": [
             #{list cause.causes, as:'causedBy'}
@@ -292,12 +292,16 @@
             console.log("zoom " + zoom);
             zoomLevel = zoomLevel * zoom;
             console.log("zoom level " + zoomLevel);
+
+			//hides a radial menu when zoomed as the scaling does not work yet.
+			jQuery("#radial_menu").radmenu("hide");
+			
             $(".node").css("-webkit-transform", "matrix(" + zoomLevel + ",0,0," + zoomLevel + ",0,0)");
             $(".node").css("-moz-transform", "matrix(" + zoomLevel + ",0,0," + zoomLevel + ",0px,0px");
             $(".node").css("-ms-transform", "matrix(" + zoomLevel + ",0,0," + zoomLevel + ",0,0)");
             $(".node").css("-o-transform", "matrix(" + zoomLevel + ",0,0," + zoomLevel + ",0,0)");
             $(".node").css("transform", "matrix(" + zoomLevel + ",0,0," + zoomLevel + ",0,0)");
-            fd.plot();
+			fd.plot();
           },
           //Implement the same handler for touchscreens
           onTouchMove: function(node, eventInfo, e) {
@@ -462,7 +466,7 @@
       //place them
       var runningWidth = 0;
       var iChildsWidth = 0;
-      for(var i = 0; i<childrens.length; ++i){
+      for(var i = 0; i < childrens.length; ++i){
           iChildsWidth = $("#"+childrens[i].id).width();
           childrens[i].setPos(new $jit.Complex(leftSideX + runningWidth + iChildsWidth/2, childrens[i].getPos('end').y), 'end');
           runningWidth += iChildsWidth+25;
@@ -473,8 +477,10 @@
             function(items){
                 items.fadeIn(400);
 
-                if ( selectedNode.data.parent == "" || !( selectedNode
-                .data.creatorId == ${currentUser.id} || ${currentUser.id} == ${rcaCase.ownerId} ) ) {
+                if ( selectedNode.data.parent == "" ||
+                    !( selectedNode.data.creatorId == ${currentUser == null ? 'null' : currentUser.id} ||
+                    ${currentUser == null ? 'null' : currentUser.id} == ${rcaCase.ownerId})
+                    ) {
                     jQuery("#radial_menu").radmenu("items")[3].style.visibility = "hidden";
                 }
             }

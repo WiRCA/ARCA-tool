@@ -38,7 +38,7 @@ public class AddCauseEvent extends Event {
 		this.causeTo = Long.toString(cause.id);
 		this.text = cause.name;
 		this.causeFrom = causeFrom;
-		this.creatorId = Long.toString(cause.creatorId);
+		this.creatorId = cause.creatorId == null ? null : Long.toString(cause.creatorId);
 	}
 
 }

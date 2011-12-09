@@ -1,3 +1,26 @@
+<!--
+  ~ Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
+  ~ Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus,
+  ~ Timo Lehtinen, Jaakko Harjuhahto
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in
+  ~ all copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+  ~ THE SOFTWARE.
+  -->
 #{fixture delete:'all',load:'data.yml' /}
 #{selenium}
 	open('/?language=fi')
@@ -5,6 +28,7 @@
 	type('id=username','admin@local')
 	type('id=password','admin')
 	clickAndWait('id=signin')
+	
 	verifyTextPresent('Admin user')
 	clickAndWait('id=createRCACase-link')
 	type('id=caseName','test case')
@@ -17,6 +41,7 @@
 	type('id=companyProducts','asd')
 	verifyTextPresent('Luo uusi RCA analyysi')
 	clickAndWait('id=create')
+	
 	open('/?language=fi')
 	verifyTextPresent('test case')
 	verifyTextPresent(' Jaa..')
@@ -25,16 +50,22 @@
 	verifyTextPresent('Kutsu sähköpostilla')
 	click('css=input[type="submit"]')
 	click('css=input[type="submit"]')
+	
+	// Tries to invite user to the case with an invalid email address
 	type('id=rcacase-share-dialog-invitedEmail-input','roope')
 	click('css=input[type="submit"]')
 	pause('1000')
 	verifyTextPresent('rcacase.share.dialog.invalidEmail')
+	// with another invalid email
 	type('id=rcacase-share-dialog-invitedEmail-input','roope@roope@roope')
 	click('css=input[type="submit"]')
 	verifyTextPresent('rcacase.share.dialog.invalidEmail')
+	// and with another
 	type('id=rcacase-share-dialog-invitedEmail-input','roope@roope')
 	click('css=input[type="submit"]')
 	verifyTextPresent('rcacase.share.dialog.invalidEmail')
+	
+	// Tries to invite user to the case to the case with a valid email address
 	type('id=rcacase-share-dialog-invitedEmail-input','roope@roope.xxx')
 	click('css=input[type="submit"]')
 	pause('1000')
@@ -43,6 +74,8 @@
 	verifyTextPresent('Admin user')
 	clickAndWait('id=logout-link')
 	verifyTextPresent('Index page')
+	
+	// Creates a new user for testing
 	clickAndWait('id=register-link')
 	type('id=nameFieldRegister','testikäyttäjä')
 	type('id=emailFieldRegister','roope@roope.xxx')
@@ -57,14 +90,18 @@
 	pause('1000')
 	verifyTextPresent('testikäyttäjä')
 	clickAndWait('id=logout-link')
+	
 	verifyTextPresent('Index page')
 	type('id=username','admin@local')
 	type('id=password','admin')
 	clickAndWait('id=signin')
 	verifyTextPresent('Admin user')
+	
 	clickAt('//*[text()="Jaa.."]')
 	pause('1000')
 	verifyTextPresent('Kutsu sähköpostilla')
+	
+	// Invites testikäyttäjä to the case
 	type('id=rcacase-share-dialog-invitedEmail-input','roope@roope.roope')
 	click('css=input[type="submit"]')
 	pause('1000')
@@ -72,6 +109,7 @@
 	verifyTextPresent('testikäyttäjä')
 	click('//button[@type='button']')
 	clickAndWait('id=logout-link')
+	
 	type('id=username','roope@roope.roope')
 	type('id=password','xxx')
 	clickAndWait('id=signin')
@@ -79,10 +117,13 @@
 	clickAndWait('link=test case')
 	open('/?language=fi')
 	clickAndWait('id=logout-link')
+	
 	type('id=username','admin@local')
 	type('id=password','admin')
 	clickAndWait('id=signin')
 	clickAt('//*[text()="Jaa.."]')
+	
+	// Tries to invite empty user to the case
 	click('css=input[type="submit"]')
 	click('css=input[type="submit"]')
 	click('//button[@type='button']')
