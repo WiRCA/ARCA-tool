@@ -23,7 +23,7 @@
   -->
 #{fixture delete:'all',load:'data.yml' /}
 #{selenium}
-    open('/')
+    open('/?language=en')
     type('id=username','admin@local')
     type('id=password','admin')
     clickAndWait('id=signin')
@@ -80,7 +80,7 @@
     verifyTextPresent('Admin user')
     clickAndWait('id=logout-link')
     
-	verifyTextPresent('Index page')
+	verifyTextPresent('Etusivu')
     type('id=username','admin@local')
     type('id=password','admin')
     clickAndWait('id=signin')
