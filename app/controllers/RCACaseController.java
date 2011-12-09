@@ -102,12 +102,13 @@ public class RCACaseController extends Controller {
 		checkIfCurrentUserHasRightsForRCACase(rcaCase);
 		String size = rcaCase.getCompanySize().text;
 		String type = rcaCase.getRCACaseType().text;
-		Long lastMessage = 0L;
-		List<IndexedEvent> archivedEvents = rcaCase.getCauseStream().eventStream.availableEvents(0);
+		Long lastMessage = rcaCase.getCauseStream().lastEvent;
+		/*List<IndexedEvent> archivedEvents = rcaCase.getCauseStream().eventStream.availableEvents(0);
 		if (archivedEvents.size() > 0) {
 			IndexedEvent last = archivedEvents.get(archivedEvents.size() - 1);
 			lastMessage = last.id;
-		}
+		}*/
+		Logger.info("Showing RCACase, last message id: %d", lastMessage);
 		User currentUser = SecurityController.getCurrentUser();
 		render(rcaCase, type, size, lastMessage, currentUser);
 	}
@@ -120,9 +121,8 @@ public class RCACaseController extends Controller {
 	public static void waitMessages(Long rcaCaseId, Long lastReceived) {
 		RCACase rcaCase = RCACase.findById(rcaCaseId);
 		checkIfCurrentUserHasRightsForRCACase(rcaCase);
-		User currentUser = SecurityController.getCurrentUser();
-		Logger.info("Sending case %s events to user %s", rcaCase, currentUser);
-		List messages = await(rcaCase.nextMessages(lastReceived));
+		List<IndexedEvent<Event>> messages = await(rcaCase.nextMessages(lastReceived));
+		rcaCase.getCauseStream().lastEvent = messages.get(messages.size() - 1).id;
 		renderJSON(messages, new TypeToken<List<IndexedEvent<Event>>>() {
 		}.getType());
 	}

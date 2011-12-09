@@ -32,9 +32,11 @@ import java.io.Serializable;
 public class CauseStream implements Serializable {
 
 	public final ArchivedEventStream<Event> eventStream;
+	public Long lastEvent;
 
 	public CauseStream(int size) {
 		this.eventStream = new ArchivedEventStream<Event>(size);
+		this.lastEvent = 0L;
 	}
 
 	public ArchivedEventStream<Event> getStream() {
