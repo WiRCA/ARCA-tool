@@ -42,11 +42,11 @@
       <div class="topbar">
         <div class="fill">
           <div class="container">
-            #{a @IndexPageController.index(), class:'brand'}ARCA-Tool#{/a}
+            #{a @IndexPageController.index(), class:'brand'}&{'applicationName'}#{/a}
             <ul class="nav">
-              <li class="active">#{a @IndexPageController.index()}Home#{/a}</li>
-              <li><a href="#about">About</a></li>
-              <li><a href="#contact">Contact</a></li>
+              <li class="active">#{a @IndexPageController.index()}&{'indexPage.title'}#{/a}</li>
+              <li><a href="#about">&{'aboutPage.title'}</a></li>
+              <li><a href="#contact">&{'contactPage.title'}</a></li>
             </ul>
             <div class="pull-right">
               #{login /}
@@ -66,10 +66,8 @@
 
                     #{languages /}
                     #{if session.username}
-                    <p>#{a @RCACaseController.createRCACase(), id:'createRCACase-link'}New Case#{/a}</p>
-                    <p>#{a @userController.index(), id:'showRCACases-link'}All Cases#{/a}</p>
-                    <p>My Cases</p>
-                    <p>Cases shared with me</p>
+                    <p>#{a @RCACaseController.createRCACase(), id:'createRCACase-link'}&{'user.createRCACase'}#{/a}</p>
+                    <p>#{a @userController.index(), id:'showRCACases-link'}&{'user.allCases'}#{/a}</p>
                     #{/if}
                     #{else}
                       #{a @RegisterController.registerUser(), id:'register-link', class:'btn primary'}&{'register.title'}#{/a}

@@ -30,6 +30,15 @@ secure.error=Hups, väärä käyttäjätunnus tai salasana.
 secure.logout=Kirjauduit ulos.
 logout=Kirjaudu ulos
 
+applicationName=ARCA-työkalu
+applicationDescription=Tapa tehdä juurisyyanalyysia
+indexPage.title=Etusivu
+indexPage.info=Aloita kirjautumalla sisään tai selaa analyysejä.
+
+aboutPage.title=RCA?
+
+contactPage.title=Ota yhteyttä
+
 error.errorsInForm=Lomake sisältää virheitä
 
 # Validation messages
@@ -72,7 +81,7 @@ createRCA.caseGoals=Analyysin tavoitteet
 createRCA.description=Ongelman lyhyt kuvaus
 createRCA.companyName=Yrityksen nimi
 createRCA.companySize=Työntekijöiden määrä yrityksessänne?
-createRCA.companyProducts=Mitkä ovat yrityksenne pää tuotteet tai tuote tyypit?
+createRCA.companyProducts=Mitkä ovat yrityksenne päätuotteet tai tuotetyypit?
 createRCA.public=Onko tämä julkinen analyysi?
 createRCA.create=Luo RCA analyysi!
 createRCA.isMultinational=Monikansallinen yritys?
@@ -98,6 +107,7 @@ rcacase.lastmodified=muokattu
 rcacase.share=Jaa..
 user.allPublicCases=Kaikki julkiset analyysit
 user.noAnyPublicCases=Ei julkisia analyysejä
+user.allCases=Kaikki analyysit
 
 rcacase.share.dialog.title=Jakamisasetukset
 rcacase.share.dialog.whoHasAccess=Seuraavilla henkilöillä on käyttöoikeudet

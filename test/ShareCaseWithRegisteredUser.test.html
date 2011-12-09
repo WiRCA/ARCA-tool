@@ -23,8 +23,9 @@
   -->
 #{fixture delete:'all',load:'data.yml' /}
 #{selenium}
+    open('/logout')
 	open('/?language=fi')
-	verifyTextPresent('Index page')
+	verifyTextPresent('Etusivu')
 	type('id=username','admin@local')
 	type('id=password','admin')
 	clickAndWait('id=signin')
@@ -73,7 +74,7 @@
 	click('//button[@type='button']')
 	verifyTextPresent('Admin user')
 	clickAndWait('id=logout-link')
-	verifyTextPresent('Index page')
+	verifyTextPresent('Etusivu')
 	
 	// Creates a new user for testing
 	clickAndWait('id=register-link')
@@ -91,7 +92,7 @@
 	verifyTextPresent('testikäyttäjä')
 	clickAndWait('id=logout-link')
 	
-	verifyTextPresent('Index page')
+	verifyTextPresent('Etusivu')
 	type('id=username','admin@local')
 	type('id=password','admin')
 	clickAndWait('id=signin')
