@@ -46,10 +46,20 @@ public class RegisterController extends Controller {
 
 	private static final String SECURE_RANDOM_ALGORITHM = "SHA1PRNG";
 
+	/**
+	 * Opens page containing user registration form.
+	 */
 	public static void registerUser() {
 		render();
 	}
 
+	/**
+	 * Registers user with values given in the user registration form.
+	 * @param user
+	 * @param password2
+	 * @param invitationId
+	 * @param rcaCaseId
+	 */
 	public static void register(@Valid User user, @Required String password2, Long invitationId, Long rcaCaseId) {
 
 		Invitation invitation = null;
@@ -89,6 +99,14 @@ public class RegisterController extends Controller {
 		ApplicationController.index();
 	}
 
+	/**
+	 * Handles Google login.
+	 * If user logs in for the first time with the email of his Google account, the user is registered.
+	 * In this case a random password is generated for the account.
+	 * Google login can also be used to log in a user that has registered with our systems sign up
+	 * feature.
+	 * @throws NoSuchAlgorithmException
+	 */
 	public static void googleLogin() throws NoSuchAlgorithmException {
 		if (OpenID.isAuthenticationResponse()) {
 			OpenID.UserInfo verifiedUser = OpenID.getVerifiedID();
@@ -113,7 +131,13 @@ public class RegisterController extends Controller {
 		}
 	}
 
-	//TODO: tälle jotain dokumentaatiota
+	/**
+	 * Redirects a invited user to the registration form.
+	 * The email address is already given in the registration form and cannot be changed.
+	 * @param invitationId
+	 * @param rcaCaseId
+	 * @param inviteHash
+	 */
 	public static void registerInvitation(Long invitationId, Long rcaCaseId, String inviteHash) {
 		if (SecurityController.isConnected()) {
 			ApplicationController.index();
