@@ -292,12 +292,16 @@
             console.log("zoom " + zoom);
             zoomLevel = zoomLevel * zoom;
             console.log("zoom level " + zoomLevel);
+
+			//hides a radial menu when zoomed as the scaling does not work yet.
+			jQuery("#radial_menu").radmenu("hide");
+			
             $(".node").css("-webkit-transform", "matrix(" + zoomLevel + ",0,0," + zoomLevel + ",0,0)");
             $(".node").css("-moz-transform", "matrix(" + zoomLevel + ",0,0," + zoomLevel + ",0px,0px");
             $(".node").css("-ms-transform", "matrix(" + zoomLevel + ",0,0," + zoomLevel + ",0,0)");
             $(".node").css("-o-transform", "matrix(" + zoomLevel + ",0,0," + zoomLevel + ",0,0)");
             $(".node").css("transform", "matrix(" + zoomLevel + ",0,0," + zoomLevel + ",0,0)");
-            fd.plot();
+			fd.plot();
           },
           //Implement the same handler for touchscreens
           onTouchMove: function(node, eventInfo, e) {
