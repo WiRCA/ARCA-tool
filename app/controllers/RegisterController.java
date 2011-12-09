@@ -38,6 +38,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 /**
+ * Methods related to user registration.
  * @author Juha Viljanen
  * @author Risto Virtanen
  */
@@ -55,6 +56,7 @@ public class RegisterController extends Controller {
 
 	/**
 	 * Registers user with values given in the user registration form.
+	 * An email can only be registered once.
 	 * @param user
 	 * @param password2
 	 * @param invitationId
@@ -96,7 +98,7 @@ public class RegisterController extends Controller {
 
 		showCaseIfInvited(rcaCaseId, user);
 
-		ApplicationController.index();
+		IndexPageController.index();
 	}
 
 	/**
@@ -112,7 +114,7 @@ public class RegisterController extends Controller {
 			OpenID.UserInfo verifiedUser = OpenID.getVerifiedID();
 			if (verifiedUser == null) {
 				flash.error("Oops. Authentication has failed");
-				ApplicationController.index();
+				IndexPageController.index();
 			} else {
 				String email = verifiedUser.extensions.get("email");
 				String firstName = verifiedUser.extensions.get("firstname");
@@ -124,7 +126,7 @@ public class RegisterController extends Controller {
 				}
 				Logger.info("User with email %s logged in via Google login", email);
 				session.put("username", email);
-				ApplicationController.index();
+				IndexPageController.index();
 			}
 		} else {
 			redirectToGoogleLogin();
@@ -140,7 +142,7 @@ public class RegisterController extends Controller {
 	 */
 	public static void registerInvitation(Long invitationId, Long rcaCaseId, String inviteHash) {
 		if (SecurityController.isConnected()) {
-			ApplicationController.index();
+			IndexPageController.index();
 		}
 		notFoundIfNull(invitationId);
 		notFoundIfNull(rcaCaseId);

@@ -29,30 +29,52 @@ import play.Logger;
 import utils.EncodingUtils;
 
 /**
+ * Methods related to authentication.
  * @author Risto Virtanen
  */
 public class SecurityController extends Secure.Security {
 
+	/**
+	 * Authenticates the log in attempt.
+	 * Checks whether a user with the given email and password has been registered.
+	 * @param username
+	 * @param password
+	 * @return
+	 */
 	public static boolean authenticate(String username, String password) {
 		User found = User.find("byEmailAndPassword", username, EncodingUtils.encodeSHA1(password)).first();
 		return found != null;
 	}
 
+	/**
+	 * This method is called after a successful authentication.
+	 */
 	static void onAuthenticated() {
 		User current = getCurrentUser();
 		Logger.info("User %s logged in", current);
 		UserController.index();
 	}
 
+	 /**
+	 * This method is called before a user tries to sign off.
+	 */
 	static void onDisconnect() {
 		User current = getCurrentUser();
 		Logger.info("User %s logged out", current);
 	}
 
+	 /**
+	 * This method is called after a successful sign off.
+	 * You need to override this method if you wish to perform specific actions (eg. Record the time the user signed off)
+	 */
 	static void onDisconnected() {
-		ApplicationController.index();
+		IndexPageController.index();
 	}
 
+	/**
+	 * Returns the user that is currently logged in.
+	 * @return
+	 */
 	public static User getCurrentUser() {
 		return User.find("byEmail", SecurityController.connected()).first();
 	}

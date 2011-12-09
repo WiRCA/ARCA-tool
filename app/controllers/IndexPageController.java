@@ -31,9 +31,15 @@ import play.mvc.With;
 
 import java.util.List;
 
+/**
+ * Methods related to the index page.
+ */
 @With(LanguageController.class)
-public class ApplicationController extends Controller {
+public class IndexPageController extends Controller {
 
+	/**
+	 * Checks whether the user has logged in.
+	 */
     @Before
     public static void isConnected() {
         if (SecurityController.isConnected()) {
@@ -41,6 +47,9 @@ public class ApplicationController extends Controller {
         }   
     }
 
+	/**
+	 * Open index page.
+	 */
 	public static void index() {
 		List<RCACase> allPublicCases = RCACase.find("byIsCasePublic", true).fetch();
 		render(allPublicCases);

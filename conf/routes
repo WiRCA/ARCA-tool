@@ -6,7 +6,7 @@
 *       /                                                           module:secure
 
 # Home page
-GET     /                                                           ApplicationController.index
+GET     /                                                           IndexPageController.index
 GET     /user                                                       UserController.index
 
 # Register

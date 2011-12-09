@@ -29,10 +29,14 @@ import play.mvc.Before;
 import play.mvc.Controller;
 
 /**
+ * Methods for changing the internationalization.
  * @author Risto Virtanen
  */
 public class LanguageController extends Controller {
 
+	/**
+	 * Changes the language of our service.
+	 */
 	@Before
 	public static void changeLanguage() {
 		if (params._contains("language")) {
