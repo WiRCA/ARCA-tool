@@ -77,7 +77,7 @@ public class RCACaseController extends Controller {
 
 	/**
 	 * Creates a new RCA case with the values given in the RCA case creation form.
-	 * @param rcaCase
+	 * @param rcaCase created RCA case
 	 */
 	public static void create(@Valid RCACase rcaCase) {
 		if (validation.hasErrors()) {
@@ -95,7 +95,7 @@ public class RCACaseController extends Controller {
 	/**
 	 * Shows the RCA case with the given id.
 	 * User has to have rights to view the case.
-	 * @param id
+	 * @param id ID of the RCA case
 	 */
 	public static void show(Long id) {
 		RCACase rcaCase = RCACase.findById(id);
@@ -115,7 +115,7 @@ public class RCACaseController extends Controller {
 
 	/**
 	 * Publishes new events to clients that are viewing the case.
-	 * @param rcaCaseId
+	 * @param rcaCaseId ID of the RCA case
 	 * @param lastReceived Last sent event for the client.
 	 */
 	public static void waitMessages(Long rcaCaseId, Long lastReceived) {
@@ -129,7 +129,7 @@ public class RCACaseController extends Controller {
 
 	/**
 	 * Views users that have access to the RCA case.
-	 * @param rcaCaseId
+	 * @param rcaCaseId ID of the RCA case
 	 */
 	public static void getUsers(Long rcaCaseId) {
 		RCACase rcaCase = RCACase.findById(rcaCaseId);
@@ -150,8 +150,8 @@ public class RCACaseController extends Controller {
 	 * Only the RCA case owner can invite new users.
 	 * If the invited user has registered to the system, the case is added to his cases.
 	 * Otherwise an invitation email is sent to the given email address.
-	 * @param rcaCaseId
-	 * @param invitedEmail
+	 * @param rcaCaseId ID of the RCA case
+	 * @param invitedEmail email that is invited
 	 */
 	public static void inviteUser(Long rcaCaseId, @Required @Email String invitedEmail) {
 		User current = SecurityController.getCurrentUser();
@@ -185,9 +185,9 @@ public class RCACaseController extends Controller {
 	/**
 	 * Removes a user from the RCA case.
 	 * Only the RCA case owner can remove users from his case.
-	 * @param rcaCaseId
-	 * @param isInvitedUser
-	 * @param email
+	 * @param rcaCaseId ID of the RCA case
+	 * @param isInvitedUser if the user is instance of Invitation
+	 * @param email email of the user
 	 */
 	public static void removeUser(Long rcaCaseId, Boolean isInvitedUser, String email) {
 		User current = SecurityController.getCurrentUser();
@@ -218,7 +218,7 @@ public class RCACaseController extends Controller {
 
 	/**
 	 * Exports the RCA case to csv format, that the user can download.
-	 * @param rcaCaseId
+	 * @param rcaCaseId ID of the RCA case
 	 */
 	public static void extractCSV(Long rcaCaseId) {
 		RCACase rcaCase = RCACase.findById(rcaCaseId);
