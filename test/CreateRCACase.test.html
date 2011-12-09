@@ -24,12 +24,18 @@
 
 #{fixture delete:'all',load:'data.yml' /}
 #{selenium}
+
+    open('/logout')
+
+    // log in user
     open('/?language=en')
     assertElementPresent('id=signin')
     type('id=username','admin@local')
     type('id=password','admin')
     clickAndWait('id=signin')
     verifyTextPresent('Admin user')
+
+    // open RCA case creation form and check that it looks ok, e.g. all needed elements are present.
     open('/CreateRCACase')
     assertElementPresent('id=create')
     assertElementPresent('id=companyName')
@@ -38,34 +44,95 @@
     assertElementPresent('id=description')
     assertElementPresent('id=caseGoals')
     assertElementPresent('id=companySize')
+
+    // Verify that creating RCA case with no given values is not possible.
     clickAndWait('id=create')
     verifyTextPresent('Required')
+
+    // Verify that creating RCA case with only case name given is not possible.
     type('id=caseName','Testikeissi')
     clickAndWait('id=create')
-
     verifyTextPresent('Select one')
+
     select('id=caseTypeValue','value=2')
     clickAndWait('id=create')
-
     verifyTextPresent('Required')
+
     type('id=description','Testdescription')
     clickAndWait('id=create')
 
     verifyTextPresent('Required')
     type('id=caseGoals','Testikeissin tavoitteet')
     clickAndWait('id=create')
-
     verifyTextPresent('Required')
+
     type('id=companyName','Test company')
     clickAndWait('id=create')
 
     verifyTextPresent('Select one')
     select('id=companySize','value=2')
     clickAndWait('id=create')
-
     verifyTextPresent('Required')
+
+    // successfully create new, public RCA case
     type('id=companyProducts','Testituotteet')
+    click('id=isCasePublic')
     clickAndWait('id=create')
+    verifyTextPresent('Testikeissi')
 
     open('/logout')
+    pause('500')
+
+    // open created RCA case with user that is not logged in
+    clickAndWait('link=Testikeissi')
+    verifyTextPresent('Testikeissi')
+    clickAt('//*[text()="Testikeissi"]')
+    assertTextPresent('+')
+
+    // Add a new node with user that is not logged in
+    answerOnNextPrompt('foo')
+    clickAt('//div[@id='radmenu-event-addCause']')
+    assertPrompt('Node name?')
+    waitForTextPresent('foo')
+    clickAt('//*[text()="foo"]')
+    assertTextPresent('+')
+
+    // Try to open a non-existent RCA case
+    open('/case/9999999')
+    verifyTextPresent('Not found')
+
+    // Try to create new RCA case when not logged in
+    open('/CreateRCACase')
+    verifyTextPresent('Or log in using your Google Account')
+
+    // log in as admin user again
+    open('/?language=en')
+    type('id=username','admin@local')
+    type('id=password','admin')
+    clickAndWait('id=signin')
+    verifyTextPresent('Admin user')
+
+    // create new, non-public RCA case
+    waitForTextPresent('Create new RCA case')
+    clickAndWait('link=Create new RCA case')
+    type('id=caseName','testgraph')
+    select('id=caseTypeValue','label=Software project')
+    type('id=description','testgraph')
+    type('id=caseGoals','testgraph')
+    type('id=companyName','testgraph')
+    select('id=companySize','label=1-10')
+    type('id=companyProducts','testgraph')
+    clickAndWait('id=create')
+    pause('500')
+    storeLocation(url)
+
+    open('/logout')
+    pause('500')
+
+    // Try to open a non-existent RCA case
+    // open('${url}')
+    // pause('500')
+    // verifyTextPresent('Access denied')
+
+
 #{/selenium}
