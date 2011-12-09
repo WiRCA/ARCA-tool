@@ -22,13 +22,13 @@
   ~ THE SOFTWARE.
   -->
 #{extends 'main.html' /}
-#{set title:'Home' /}
-#{set pageHeader:'Index page' /}
-#{set pageHeaderSmall:'Start by signing in or browse cases.' /}
+#{set 'title'}&{'indexPage.title'}#{/set}
+#{set 'pageHeader'}&{'indexPage.title'}#{/set}
+#{set 'pageHeaderSmall'}&{'indexPage.info'}#{/set}
 
 <div class="hero-unit">
-    <h1>ARCA-tool</h1>
-    <p>Root cause analysis method</p>
+    <h1>&{'applicationName'}</h1>
+    <p>&{'applicationDescription'}</p>
 
     <h2>&{'user.allPublicCases'}</h2>
     <ul>

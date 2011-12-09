@@ -63,12 +63,14 @@ public class RCACase extends Model {
 	public int caseTypeValue;
 
 	@Required
+	@Lob
 	public String caseGoals;
 
 	@Required @Min(value = 0, message = "validation.selectOne")
 	public int companySizeValue;
 
 	@Required
+	@Lob
 	public String description;
 
 	public boolean isMultinational;
@@ -77,6 +79,7 @@ public class RCACase extends Model {
 	public String companyName;
 
 	@Required
+	@Lob
 	public String companyProducts;
 
 	public boolean isCasePublic;

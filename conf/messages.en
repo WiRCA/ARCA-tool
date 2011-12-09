@@ -32,6 +32,15 @@ logout=Log out
 
 error.errorsInForm=Form contains error(s)
 
+applicationName=ARCA-tool
+applicationDescription=Root cause analysis method
+indexPage.title=Index page
+indexPage.info=Start by signing in or browse cases.
+
+aboutPage.title=About
+
+contactPage.title=Contact
+
 # Validation messages
 validation.required=Required
 validation.minSize=Minimum size is %2$d
@@ -89,6 +98,7 @@ user.sharedCases=Private cases shared with me
 user.publicCases=Public cases I'm following
 user.allPublicCases=All public cases
 user.noAnyPublicCases=No public cases
+user.allCases=All cases
 
 rcacase.lastmodified=last modified
 rcacase.share=Share
