@@ -24,6 +24,8 @@
 
 #{fixture delete:'all' /}
 #{selenium}
+
+    // register new user
     open('/?language=en')
     clickAndWait('id=register-link')
     type('id=nameFieldRegister','rcagraphtester')
@@ -31,6 +33,8 @@
     type('id=passwordFieldRegister','rcagraphtester')
     type('id=password2FieldRegister','rcagraphtester')
     clickAndWait('id=registerButton')
+
+    // create new RCA case
     waitForTextPresent('Create new RCA case')
     clickAndWait('link=Create new RCA case')
     type('id=caseName','testgraph')
@@ -41,6 +45,8 @@
     select('id=companySize','label=1-10')
     type('id=companyProducts','testgraph')
     clickAndWait('id=create')
+
+    // add new node
     verifyTextPresent('testgraph')
     clickAt('//*[text()="testgraph"]')
     assertTextPresent('+')
@@ -48,24 +54,36 @@
     clickAt('//div[@id='radmenu-event-addCause']')
     assertPrompt('Node name?')
     waitForTextPresent('foo')
+
+    // add new node
     clickAt('//*[text()="foo"]')
     answerOnNextPrompt('bar')
     click('//div[@id='radmenu-event-addCause']')
     assertPrompt('Node name?')
     waitForTextPresent('bar')
+
+    // add new node
     clickAt('//*[text()="bar"]')
     answerOnNextPrompt('foobar')
     click('//div[@id='radmenu-event-addCause']')
     assertPrompt('Node name?')
     waitForTextPresent('foobar')
+
+    // add new relation
     clickAt('//*[text()="foobar"]')
     waitForTextPresent('R')
     click('//div[@id='radmenu-event-addRelation']')
     clickAt('//*[text()="testgraph"]')
+
+    // remove 3rd node
     clickAt('//*[text()="bar"]')
     click('//div[@id='radmenu-event-removeCause']')
+
+    // verify that root node cannot be deleted
     clickAt('//*[text()="testgraph"]')
     click('//div[@id='radmenu-event-removeCause']')
+    verifyTextPresent('testgraph')
     pause('500')
     open('/logout')
+
 #{/selenium}
