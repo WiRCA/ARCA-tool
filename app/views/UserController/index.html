@@ -30,6 +30,15 @@
         charset="${_response_encoding}"></script>
 <script src="@{'/public/javascripts/bootstrap-popover.js'}" type="text/javascript"
         charset="${_response_encoding}"></script>
+
+<script type="text/javascript">
+        $(function () {
+        $("a[rel=popover]")
+        .popover({
+        offset: 10
+        })
+        })
+    </script>
 <script type="text/javascript">
     var getRCACaseUsers = #{jsAction @RCACaseController.getUsers(':rcaCaseId') /}
     var inviteUserAction = #{jsAction @RCACaseController.inviteUser(':rcaCaseId', ':invitedEmail') /}
@@ -71,22 +80,12 @@
     $("#rcacase-share-dialog-invitedEmail-error").show();
     } else {
     var invited = data.invited == "true" ? "invited-" : "";
-    $('
-    <tr id="user-' + invited + data.id + '">'+
-                                            '
-        <td>'+data.name+'</td>
-                                            '+
-                                            '
-        <td name="' + data.email + '">'+data.email+'</td>
-                                            '+
-                                            '
-        <td><a href="#" style="color:red;" id="remove-user-share">'+
-                                                                  '&{"rcacase.share.dialog.remove"}'+
-                                                                  '</a></td>
-                                            '+
-                                            '
-    </tr>
-    ').appendTo("table#rcacase-share-dialog-persons");
+    $('<tr id="user-' + invited + data.id + '">'+
+       '<td>'+data.name+'</td>'+
+        '<td name="' + data.email + '">'+data.email+'</td>'+
+        '<td><a href="#" style="color:red;" id="remove-user-share">'+
+        '&{"rcacase.share.dialog.remove"}'+'</a></td>'+
+        '</tr>').appendTo("table#rcacase-share-dialog-persons");
     $("#rcacase-share-dialog-invitedEmail-input").val("");
     $("#rcacase-share-dialog-invitedEmail-error").hide();
     }
@@ -104,36 +103,15 @@
     var removeLink = "${session.username}" == user.email ? "" :
     '<a href="#" style="color:red;" id="remove-user-share">&{"rcacase.share.dialog.remove"}</a>';
     var invited = user.invitedUser == "true" ? "invited-" : "";
-    users.push('
-    <tr id="user-' + invited + user.id + '">'+
-                                            '
-        <td>'+user.name+'</td>
-                                            '+
-                                            '
-        <td name="' + user.email + '">'+user.email+'</td>
-                                            '+
-                                            '
-        <td>' + removeLink + '</td>
-                                            '+
-                                            '
-    </tr>
-    ');
+    users.push('<tr id="user-' + invited + user.id + '">'+
+        '<td>'+user.name+'</td>'+
+        '<td name="' + user.email + '">'+user.email+'</td>'+
+        '<td>' + removeLink + '</td>'+'</tr>');
     }
-    $("
-    <table/>
-    ", {
-    'id': 'rcacase-share-dialog-persons',
-    'html': "
-    <tr>
-        <th>&{'rcacase.share.dialog.name'}</th>
-        " +
-        "
-        <th>&{'rcacase.share.dialog.email'}</th>
-        " +
-        "
-        <th>&{'rcacase.share.dialog.actions'}</th>
-    </tr>
-    "+
+    $("<table/>", {'id': 'rcacase-share-dialog-persons',
+    'html': "<tr><th>&{'rcacase.share.dialog.name'}</th>" +
+        "<th>&{'rcacase.share.dialog.email'}</th>" +
+        "<th>&{'rcacase.share.dialog.actions'}</th></tr>"+
     users.join('')
     }).appendTo("#rcacase-share-dialog");
 
@@ -168,17 +146,9 @@
         title:"${rcaCase.caseName}", 'data-content':"${rcaCase.description}"}${rcaCase.caseName}#{/a}
         &{'rcacase.lastmodified'} ${rcaCase.updated.since(true)}
         &{'user.created'} ${rcaCase.created.since(true)}
-        <a id="rcacase-share-${rcaCase.id}" href="#">&{'rcacase.share'}</a>
+        <a id="rcacase-share-${rcaCase.id}" href="javascript:;">&{'rcacase.share'}</a>
         #{a @RCACaseController.extractCSV(rcaCase.id)}&{'rcaCase.csv.exportCSV'}#{/a}
     </li>
-    <script>
-        $(function () {
-        $("a[rel=popover]")
-        .popover({
-        offset: 10
-        })
-        })
-    </script>
     #{/list}
     #{else}
     <li>&{'user.noRCACases'}</li>
@@ -193,14 +163,6 @@
         &{'rcacase.lastmodified'} ${rcaCase.updated.since(true)}
         &{'user.created'} ${rcaCase.created.since(true)}
     </li>
-    <script>
-        $(function () {
-        $("a[rel=popover]")
-        .popover({
-        offset: 10
-        })
-        })
-    </script>
     #{/list}
     #{else}
     <li>&{'user.noPrivateCases'}</li>
@@ -215,14 +177,6 @@
         &{'rcacase.lastmodified'} ${rcaCase.updated.since(true)}
         &{'user.created'} ${rcaCase.created.since(true)}
     </li>
-    <script>
-        $(function () {
-        $("a[rel=popover]")
-        .popover({
-        offset: 10
-        })
-        })
-    </script>
     #{/list}
     #{else}
     <li>&{'user.noPublicCases'}</li>
