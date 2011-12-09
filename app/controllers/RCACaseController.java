@@ -121,6 +121,8 @@ public class RCACaseController extends Controller {
 	public static void waitMessages(Long rcaCaseId, Long lastReceived) {
 		RCACase rcaCase = RCACase.findById(rcaCaseId);
 		checkIfCurrentUserHasRightsForRCACase(rcaCase);
+		User currentUser = SecurityController.getCurrentUser();
+		Logger.info("Sending case %s events to user %s", rcaCase, currentUser);
 		List messages = await(rcaCase.nextMessages(lastReceived));
 		renderJSON(messages, new TypeToken<List<IndexedEvent<Event>>>() {
 		}.getType());
