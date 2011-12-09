@@ -76,7 +76,6 @@ public class CauseController extends Controller {
 	
 	public static boolean hasCorrections(Long causeId) {
 	  Cause cause = Cause.findById(causeId);
-	  Logger.info("%s", cause.corrections.size());
 	  return !cause.corrections.isEmpty();
 	}
 	
