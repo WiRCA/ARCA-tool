@@ -57,8 +57,7 @@ public class RCACaseController extends Controller {
 
 	/**
 	 * Checks whether the user is logged in.
-	 * Users that are not logged in can view public RCA cases and get their events.
-	 * They cannot contribute to these cases.
+	 * Users that are not logged in can view and contribute to public RCA cases and get their events.
 	 * @throws Throwable
 	 */
 	@Before(unless={"show", "waitMessages"})
@@ -230,7 +229,12 @@ public class RCACaseController extends Controller {
 
 	private static void checkIfCurrentUserHasRightsForRCACase(RCACase rcaCase) {
 		notFoundIfNull(rcaCase);
-		if(!rcaCase.isCasePublic && !SecurityController.getCurrentUser().caseIds.contains(rcaCase.id)) {
+
+		User user = SecurityController.getCurrentUser();
+		if (rcaCase.isCasePublic) {
+			return;
+		}
+		else if (user == null || !user.caseIds.contains(rcaCase.id) ) {
 			forbidden();
 		}
 	}
