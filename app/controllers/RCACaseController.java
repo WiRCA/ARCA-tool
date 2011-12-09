@@ -45,19 +45,30 @@ import play.libs.F.*;
 import models.events.*;
 
 /**
+ * Methods related to RCA cases.
  * @author Mikko Valjus
  * @author Risto Virtanen
+ * @author Juha Viljanen
  */
 @With({LanguageController.class})
 public class RCACaseController extends Controller {
 
 	private static final String FIND_BY_EMAIL = "byEmail";
 
+	/**
+	 * Checks whether the user is logged in.
+	 * Users that are not logged in can view public RCA cases and get their events.
+	 * They cannot contribute to these cases.
+	 * @throws Throwable
+	 */
 	@Before(unless={"show", "waitMessages"})
     static void checkAccess() throws Throwable {
         Secure.checkAccess();
     }
 
+	/**
+	 * Opens the new RCA case creation form.
+	 */
 	public static void createRCACase() {
 		RCACase rcaCase = new RCACase(SecurityController.getCurrentUser());
 		RCACaseType[] types = RCACaseType.values();
@@ -65,6 +76,10 @@ public class RCACaseController extends Controller {
 		render(rcaCase, types, companySizes);
 	}
 
+	/**
+	 * Creates a new RCA case with the values given in the RCA case creation form.
+	 * @param rcaCase
+	 */
 	public static void create(@Valid RCACase rcaCase) {
 		if (validation.hasErrors()) {
 			params.flash(); // add http parameters to the flash scope
@@ -78,7 +93,11 @@ public class RCACaseController extends Controller {
 		show(rcaCase.id);
 	}
 
-
+	/**
+	 * Shows the RCA case with the given id.
+	 * User has to have rights to view the case.
+	 * @param id
+	 */
 	public static void show(Long id) {
 		RCACase rcaCase = RCACase.findById(id);
 		checkIfCurrentUserHasRightsForRCACase(rcaCase);
@@ -94,14 +113,23 @@ public class RCACaseController extends Controller {
 		render(rcaCase, type, size, lastMessage, currentUser);
 	}
 
-	public static void waitMessages(Long id, Long lastReceived) {
-		RCACase rcaCase = RCACase.findById(id);
+	/**
+	 * Publishes new events to clients that are viewing the case.
+	 * @param rcaCaseId
+	 * @param lastReceived Last sent event for the client.
+	 */
+	public static void waitMessages(Long rcaCaseId, Long lastReceived) {
+		RCACase rcaCase = RCACase.findById(rcaCaseId);
 		checkIfCurrentUserHasRightsForRCACase(rcaCase);
 		List messages = await(rcaCase.nextMessages(lastReceived));
 		renderJSON(messages, new TypeToken<List<IndexedEvent<Event>>>() {
 		}.getType());
 	}
 
+	/**
+	 * Views users that have access to the RCA case.
+	 * @param rcaCaseId
+	 */
 	public static void getUsers(Long rcaCaseId) {
 		RCACase rcaCase = RCACase.findById(rcaCaseId);
 		checkIfCurrentUserHasRightsForRCACase(rcaCase);
@@ -116,6 +144,14 @@ public class RCACaseController extends Controller {
 		render(existingUsers, invitedUsers);
 	}
 
+	/**
+	 * Invites the user with the given email address to the RCA case.
+	 * Only the RCA case owner can invite new users.
+	 * If the invited user has registered to the system, the case is added to his cases.
+	 * Otherwise an invitation email is sent to the given email address.
+	 * @param rcaCaseId
+	 * @param invitedEmail
+	 */
 	public static void inviteUser(Long rcaCaseId, @Required @Email String invitedEmail) {
 		User current = SecurityController.getCurrentUser();
 		RCACase rcaCase = RCACase.findById(rcaCaseId);
@@ -145,6 +181,13 @@ public class RCACaseController extends Controller {
 		}
 	}
 
+	/**
+	 * Removes a user from the RCA case.
+	 * Only the RCA case owner can remove users from his case.
+	 * @param rcaCaseId
+	 * @param isInvitedUser
+	 * @param email
+	 */
 	public static void removeUser(Long rcaCaseId, Boolean isInvitedUser, String email) {
 		User current = SecurityController.getCurrentUser();
 		RCACase rcaCase = RCACase.findById(rcaCaseId);
@@ -172,6 +215,10 @@ public class RCACaseController extends Controller {
 		renderJSON("{\"success\":\"false\"}");
 	}
 
+	/**
+	 * Exports the RCA case to csv format, that the user can download.
+	 * @param rcaCaseId
+	 */
 	public static void extractCSV(Long rcaCaseId) {
 		RCACase rcaCase = RCACase.findById(rcaCaseId);
 		checkIfCurrentUserHasRightsForRCACase(rcaCase);

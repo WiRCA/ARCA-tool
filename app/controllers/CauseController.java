@@ -38,6 +38,7 @@ import models.events.DeleteCauseEvent;
 import java.util.SortedSet;
 
 /**
+ * Methods related to causes.
  * @author Eero Laukkanen
  * @author Juha Viljanen
  */
@@ -45,6 +46,11 @@ import java.util.SortedSet;
 @With({LanguageController.class})
 public class CauseController extends Controller {
 
+	/**
+	 * Adds a sub-cause to a cause.
+	 * @param causeId
+	 * @param name
+	 */
 	public static void addCause(String causeId, String name) {
 		// causeId is used later as a String
 		Cause cause = Cause.findById(Long.valueOf(causeId));
@@ -58,6 +64,11 @@ public class CauseController extends Controller {
 		Logger.info("Cause %s added to cause %s", name, cause);
 	}
 
+	/**
+	 * Adds a relation between causes.
+	 * @param fromId
+	 * @param toID
+	 */
 	public static void addRelation(Long fromId, Long toID) {
 		Cause causeFrom = Cause.findById(fromId);
 		RCACase rcaCase = causeFrom.rcaCase;
@@ -73,17 +84,32 @@ public class CauseController extends Controller {
 		causeEvents.getStream().publish(event);
 		Logger.info("Relation added between %s and %s", causeFrom, causeTo);
 	}
-	
+
+	/**
+	 * Checks whether a cause has corrective actions added.
+	 * @param causeId
+	 * @return
+	 */
 	public static boolean hasCorrections(Long causeId) {
 	  Cause cause = Cause.findById(causeId);
 	  return !cause.corrections.isEmpty();
 	}
-	
+
+	/**
+	 * Gets the name of the first corrective action of a cause.
+	 * @param causeId
+	 * @return
+	 */
 	public static String getFirstCorrectionName(Long causeId) {
 	  Cause cause = Cause.findById(causeId);
 	  return ((SortedSet<Correction>)cause.getCorrections()).first().name;
-  }
-	
+    }
+
+	/**
+	 * Adds a corrective action for a cause.
+	 * @param toId
+	 * @param name
+	 */
 	public static void addCorrection(Long toId, String name) {
 	  Cause causeTo = Cause.findById(toId);
 	  RCACase rcaCase = causeTo.rcaCase;
@@ -97,6 +123,13 @@ public class CauseController extends Controller {
 		Logger.info("Correction added to cause %s", causeTo.name);
 	}
 
+	/**
+	 * Deletes the given cause, if the user has the permission to delete it.
+	 * The root node of an RCA case can not be deleted.
+	 * RCA case owner can delete all other nodes.
+	 * Other users can only delete nodes that they have created themselves.
+	 * @param causeId
+	 */
 	public static void deleteCause(String causeId) {
 		Cause cause = Cause.findById(Long.valueOf(causeId));
 		RCACase rcaCase = cause.rcaCase;

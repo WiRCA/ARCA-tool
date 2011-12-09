@@ -34,19 +34,23 @@ import java.util.List;
 import java.util.Set;
 
 /**
+ * Method to open users personal main page.
  * @author Eero Laukkanen
  */
 
 @With({Secure.class, LanguageController.class})
 public class UserController extends Controller {
 
+	/**
+	 * Opens the index page of a logged in user.
+	 */
 	public static void index() {
 		User user = SecurityController.getCurrentUser();
 		if (user == null) {
 			session.remove("username");
 			redirect("/");
 		}
-		//TODO: checkki if user == null -> logout ja index-sivulle.
+
 		Set<RCACase> cases = user.getRCACases();
 		List<RCACase> allPublicCases = RCACase.find("byIsCasePublic", true).fetch();
 		Set<RCACase> ownCases = new HashSet<RCACase>();
@@ -66,10 +70,6 @@ public class UserController extends Controller {
 
 		}
 		render(user, ownCases, privateCases, publicCases, allPublicCases);
-	}
-
-	public static void addRCACaseForUser(Long caseId, Long userId) {
-
 	}
 
 }
