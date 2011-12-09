@@ -38,6 +38,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 /**
+ * Methods related to user registration.
  * @author Juha Viljanen
  * @author Risto Virtanen
  */
