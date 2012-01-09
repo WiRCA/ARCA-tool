@@ -1,0 +1,76 @@
+%{
+    int __causesPerPage = 10;
+}%
+#{if causes.size().page(__causesPerPage) > 1}
+<div class="center pagination" id="pagination-causes">
+    <ul>
+        <li class="prev disabled"><a href="javascript:;">&larr; &{'button.prev'}</a></li>
+        %{for ( i in 1..causes.size().page(__causesPerPage) ) { }%
+            <li ${i == 1 ? "class=active" : ''}><a href="javascript:;">${i}</a></li>
+        %{ } }%
+        <li class="next"><a href="javascript:;">&{'button.next'} &rarr;</a></li>
+    </ul>
+</div>
+#{/if}
+<table class="zebra-striped condensed-table">
+    <thead>
+        <tr>
+            <th></th>
+            <th>&{'monitoring.causeName'}</th>
+            <th>&{'monitoring.relatedCase'}</th>
+            <th>&{'monitoring.status'}</th>
+            <th>&{'monitoring.score'}</th>
+        </tr>
+    </thead>
+    #{list causes, as:'cause'}
+    #{if cause_index % __causesPerPage == 1}
+    <tbody id="causes-page-${cause_index.page(__causesPerPage)}">
+    #{/if}
+        <tr class="cause">
+            #{if showCorrections && cause.corrections.size() > 0}
+            <td class="toggleCorrections">
+                <span class="ui-icon ui-icon-default ui-icon-plusthick"></span>
+            </td>
+            #{/if}
+            #{else}
+            <td></td>
+            #{/else}
+            <td>${cause.name}</td>
+            <td>${cause.rcaCase.caseName}</td>
+            <td></td>
+            <td></td>
+        </tr>
+        #{if showCorrections}
+        #{list cause.corrections, as:'correction'}
+        <tr class="correction">
+            <td></td>
+            <td>${correction.name}</td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        #{/list}
+        #{/if}
+    #{if cause_index % __causesPerPage == 0 || cause_isLast}
+    </tbody>
+    #{/if}
+    #{/list}
+</table>
+
+<script type="text/javascript">
+    $(function() {
+        $('.well .head').each(function() {
+            $(this).next().parent().css("padding", "10px 19px");
+        })
+
+        $('tbody[id^="causes-page-"]').hide();
+        $("tbody#causes-page-1").show();
+
+        $(".correction").hide();
+
+        $(".toggleCorrections").click(function() {
+            $(this).parent().nextUntil(".cause").toggle("fast");
+            $(this).find("span.ui-icon").toggleClass("ui-icon-plusthick").toggleClass("ui-icon-minusthick");
+        });
+    });
+</script>

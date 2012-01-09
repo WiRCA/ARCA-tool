@@ -1,3 +1,29 @@
+.center {
+    margin-left: auto;
+    margin-right: auto;
+    display: table;
+}
+
+.center.pagination {
+    height: 20px;
+    margin: 7px auto;
+}
+
+.pagination a {
+    line-height: 20px;
+}
+
+.well h3.head {
+    border-bottom: 1px solid #DDDDDD;
+    line-height: 100%;
+    margin-bottom: 11px;
+    padding-bottom: 5px;
+}
+
+table .cause .toggleCorrections {
+    cursor: pointer;
+}
+
 .page-header {
     padding: 45px 0 0;
 }

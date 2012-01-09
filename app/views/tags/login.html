@@ -32,7 +32,7 @@
 	    <input class="input-small" type="text" name="username" id="username" value="${flash.username}" placeholder="&{'secure.username'}" />
         <input class="input-small" type="password" name="password" id="password" value="" placeholder="&{'secure.password'}" />
         <button type="submit" id="signin" class="btn">&{'secure.signin'}</button>
-        #{a @RegisterController.googleLogin(), id:'gLogin-link'}<img src="@{'/public/images/google_icon.png'}" alt="Google" class="center"/>#{/a}
+        #{a @RegisterController.googleLogin(), id:'gLogin-link'}<img src="@{'/public/images/google_icon.png'}" alt="Google"/>#{/a}
 
     #{/form}
 </div>

@@ -1,0 +1,191 @@
+<!--
+  ~ Copyright (C) 2012 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
+  ~ Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus,
+  ~ Timo Lehtinen, Jaakko Harjuhahto
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in
+  ~ all copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+  ~ THE SOFTWARE.
+  -->
+#{extends 'main.html' /}
+#{set 'title'}&{'monitoringPage.title'}#{/set}
+#{set 'pageHeader'}&{'monitoringPage.title'}#{/set}
+#{set 'pageHeaderSmall'}#{/set}
+
+<div class="well" id="selectFilter">
+    <h3 class="head">
+        &{'monitoring.selectFilterTitle'}
+        <span class="ui-icon ui-icon-default ui-icon-circle-triangle-n pull-right"></span>
+    </h3>
+    <div class="row">
+        <div class="span5 input">
+            <ul class="inputs-list">
+                <li>
+                    <label>
+                        <input type="checkbox" value="causes" name="whatToShow" ${params.get("whatToShow")?.contains("causes") ? 'checked=checked' : ''}>
+                        <span>&{'monitoring.causesCheckbox'}</span>
+                    </label>
+                </li>
+                <li>
+                    <label>
+                        <input type="checkbox" value="corrections" name="whatToShow" ${params.get("whatToShow")?.contains("corrections") ? 'checked=checked' : ''}>
+                        <span>&{'monitoring.correctionsCheckbox'}</span>
+                    </label>
+                </li>
+            </ul>
+        </div>
+        <div class="span4 input">
+            <ul class="inputs-list">
+                <li>
+                    <label>
+                        <input type="checkbox" value="myCases" name="casesRadio">
+                        <span>&{'monitoring.myCasesRadio'}</span>
+                    </label>
+                </li>
+                <li>
+                    <label>
+                        <input type="checkbox" value="sharedCases" name="casesRadio">
+                        <span>&{'monitoring.casesSharedWithMeRadio'}</span>
+                    </label>
+                </li>
+                <li>
+                    <label>
+                        <input type="checkbox" value="publicCases" name="casesRadio">
+                        <span>&{'monitoring.publicCasesRadio'}</span>
+                    </label>
+                </li>
+                <li>
+                    <label>
+                        <input type="checkbox" value="allCases" name="casesRadio">
+                        <span>&{'monitoring.allCasesRadio'}</span>
+                    </label>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div id="rcaCaseSelect"></div>
+
+<div id="causesAndCorrections"></div>
+
+<script type="text/javascript">
+    $(function() {
+        $('.well .head').live("click", function() {
+            $(this).next().toggle();
+            return false;
+        })
+
+        $('.well .head').each(function() {
+            $(this).next().parent().css("padding", "10px 19px");
+        })
+
+        $("input[name='whatToShow'][value='corrections']").attr("disabled", "disabled");
+    });
+
+    $("input[name='casesRadio']").live("change", function(event) {
+        if ($(event.target).attr("value") == "allCases") {
+            if ($("input[name='casesRadio'][value='allCases']").attr("checked")) {
+                $("input[name='casesRadio']").each(function() {
+                    $(this).attr("checked", "checked");
+                });
+            }
+        } else {
+            if ($(event.target).attr("checked") != "checked") {
+                $("input[name='casesRadio'][value='allCases']").removeAttr("checked");
+            }
+        }
+
+        var caseSelections = "";
+        $("input[name='casesRadio']:checked").each(function() {
+            caseSelections += $(this).attr("value") + ",";
+        });
+        if (caseSelections != "") {
+            $("#rcaCaseSelect").html("<img src=\"@{'/public/images/wait-spinner.gif'}\">");
+            var rcaCaseSelectingAction = #{jsAction @MonitoringController.rcaCaseSelecting(':showCases') /}
+            $("#rcaCaseSelect").load(rcaCaseSelectingAction({showCases: caseSelections}));
+        } else {
+            $("#rcaCaseSelect").html("");
+            $("#causesAndCorrections").html("");
+        }
+    });
+
+    $("input[name='whatToShow'][value='causes']").change(function() {
+        var checked = $("input[name='whatToShow'][value='causes']").attr("checked") == "checked";
+        if (checked) {
+            $("input[name='whatToShow'][value='corrections']").removeAttr("disabled");
+        } else {
+            $("input[name='whatToShow'][value='corrections']").attr("disabled", "disabled");
+            $("input[name='whatToShow'][value='corrections']").removeAttr("checked");
+        }
+    });
+
+    $("input[name='whatToShow'],input[name='selectedCases'],input[name='casesRadio'][value='allCases']").live("change", function(event) {
+        var whatToShow = "";
+        $("input[name='whatToShow']:checked").each(function() {
+            whatToShow += $(this).attr("value") + ",";
+        });
+        var selectedCases = "";
+        $("input[name='selectedCases']:checked").each(function() {
+            selectedCases += $(this).attr("value") + ",";
+        });
+        var allCases = $("input[name='casesRadio'][value='allCases']:checked").length == 1;
+
+        if ((allCases || selectedCases != "") && whatToShow != "") {
+            $("#causesAndCorrections").html("<img src=\"@{'/public/images/wait-spinner.gif'}\">");
+            var causesAndCorrectionsAction = #{jsAction @MonitoringController.causesAndCorrections(':whatToShow', ':selectedCases', ':allCases') /}
+            $("#causesAndCorrections").load(causesAndCorrectionsAction({whatToShow: whatToShow, selectedCases: selectedCases, allCases: allCases}));
+        } else {
+            $("#causesAndCorrections").html("");
+        }
+    });
+
+    $(".pagination li a").live("click", function(event) {
+        var clickedPage = $(this);
+        var pagination = $(this).parents(".pagination");
+        var paginationId =  $(pagination).attr("id").replace("pagination-", "");
+        var currentPage = $(pagination).find("li.active a");
+        var nextButton = $(pagination).find("li.next");
+        var prevButton = $(pagination).find("li.prev");
+        var isNext = $(this).parent().hasClass("next");
+        var isPrev = $(this).parent().hasClass("prev");
+        if (isNext) {
+            clickedPage = $(currentPage).parent().next().children("a");
+        }
+        if (isPrev) {
+            clickedPage = $(currentPage).parent().prev().children("a");
+        }
+        var nextSelected = $(clickedPage).parent();
+        if ($(nextSelected).hasClass("next") || $(nextSelected).hasClass("prev")) {
+            return;
+        }
+        if ($(nextSelected).next().hasClass("next")) {
+            $(nextButton).addClass("disabled");
+        } else {
+            $(nextButton).removeClass("disabled");
+        }
+        if ($(nextSelected).prev().hasClass("prev")) {
+            $(prevButton).addClass("disabled");
+        } else {
+            $(prevButton).removeClass("disabled");
+        }
+        $(currentPage).parent().removeClass("active");
+        $("#" + paginationId + "-page-" + $(currentPage).html()).hide();
+        $(nextSelected).addClass("active");
+        $("#" + paginationId + "-page-" + $(clickedPage).html()).show();
+    });
+</script>

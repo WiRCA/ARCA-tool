@@ -74,6 +74,9 @@ since.years=%d vuotta sitten
 
 select.optionSelect=- VALITSE -
 
+button.prev=Edellinen
+button.next=Seuraava
+
 createRCA.title=Luo uusi RCA analyysi
 createRCA.caseName=Analyysin nimi
 createRCA.rcaCaseType=Analyysin tyyppi
@@ -135,3 +138,17 @@ rcaCase.csv.causeID=Syyn ID
 rcaCase.csv.causeName=Syyn nimi
 rcaCase.csv.causedById=Alasyyt
 rcaCase.csv.relationsFromId=Muut syyt
+
+monitoringPage.title=Monitorointi
+monitoring.selectFilterTitle=Valitse suodin
+monitoring.causesCheckbox=Syyt
+monitoring.correctionsCheckbox=Korjaavat toimenpiteet
+monitoring.myCasesRadio=Minun analyysit
+monitoring.casesSharedWithMeRadio=Jaetut minun kanssa
+monitoring.publicCasesRadio=Julkiset analyysit
+monitoring.allCasesRadio=Kaikki analyysit
+monitoring.selectCaseTitle=Valitse analyysi(t)
+monitoring.causeName=Syy
+monitoring.relatedCase=RCA analyysi
+monitoring.status=Tila
+monitoring.score=Pisteet

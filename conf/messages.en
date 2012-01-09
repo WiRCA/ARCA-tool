@@ -67,6 +67,9 @@ validation.selectOne=Select one
 
 select.optionSelect=- SELECT -
 
+button.prev=Previous
+button.next=Next
+
 createRCA.title=Create a new RCA case
 createRCA.caseName=Case name
 createRCA.rcaCaseType=Case type
@@ -136,3 +139,17 @@ rcaCase.csv.causeID=Cause ID
 rcaCase.csv.causeName=Cause name
 rcaCase.csv.causedById=Sub causes
 rcaCase.csv.relationsFromId=Other causes
+
+monitoringPage.title=Monitoring
+monitoring.selectFilterTitle=Select filter
+monitoring.causesCheckbox=Causes
+monitoring.correctionsCheckbox=Corrective actions
+monitoring.myCasesRadio=My cases
+monitoring.casesSharedWithMeRadio=Cases shared with me
+monitoring.publicCasesRadio=Public cases
+monitoring.allCasesRadio=All cases
+monitoring.selectCaseTitle=Select case(s)
+monitoring.causeName=Cause
+monitoring.relatedCase=Related case
+monitoring.status=Status
+monitoring.score=Score
