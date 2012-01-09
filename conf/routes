@@ -19,6 +19,9 @@ GET     /invitation/{invitationId}/{rcaCaseId}/{inviteHash}         RegisterCont
 GET     /CreateRCACase                                              RCACaseController.createRCACase
 POST    /CreateRCACase                                              RCACaseController.create
 
+# Monitoring
+GET     /monitoring                                                 MonitoringController.index
+
 # Show RCA case
 GET     /case/{id}                                                  RCACaseController.show
 GET     /case/{rcaCaseId}/update/{lastReceived}                     RCACaseController.waitMessages
