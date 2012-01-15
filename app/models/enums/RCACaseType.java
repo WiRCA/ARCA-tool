@@ -24,8 +24,6 @@
 
 package models.enums;
 
-import play.i18n.Messages;
-
 /**
  * @author Juha Viljanen
  */
