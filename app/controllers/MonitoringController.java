@@ -79,6 +79,7 @@ public class MonitoringController extends Controller {
 	public static void causesAndCorrections(@As(",") List<String> whatToShow, String selectedCases, Boolean allCases) {
 		Boolean showCorrections = whatToShow.contains("corrections");
 		if (allCases) {
+			selectedCases = "";
 			User user = SecurityController.getCurrentUser();
 			if (user != null) {
 				for (RCACase rcaCase : user.getRCACases()) {
@@ -89,6 +90,10 @@ public class MonitoringController extends Controller {
 			for (RCACase rcaCase : publicCases) {
 				selectedCases += rcaCase.id + ",";
 			}
+		}
+
+		if (selectedCases.isEmpty()) {
+			render(showCorrections);
 		}
 		
 		selectedCases = "(" + selectedCases.substring(0, selectedCases.lastIndexOf(",")) + ")";

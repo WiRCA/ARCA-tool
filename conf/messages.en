@@ -149,6 +149,7 @@ monitoring.casesSharedWithMeRadio=Cases shared with me
 monitoring.publicCasesRadio=Public cases
 monitoring.allCasesRadio=All cases
 monitoring.selectCaseTitle=Select case(s)
+monitoring.numberOfCorrections=# Ideas
 monitoring.causeName=Cause
 monitoring.relatedCase=Related case
 monitoring.status=Status

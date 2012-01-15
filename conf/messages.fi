@@ -148,6 +148,7 @@ monitoring.casesSharedWithMeRadio=Jaetut minun kanssa
 monitoring.publicCasesRadio=Julkiset analyysit
 monitoring.allCasesRadio=Kaikki analyysit
 monitoring.selectCaseTitle=Valitse analyysi(t)
+monitoring.numberOfCorrections=# Ideoita
 monitoring.causeName=Syy
 monitoring.relatedCase=RCA analyysi
 monitoring.status=Tila

@@ -1,3 +1,4 @@
+#{if causes != null}
 %{
     int __causesPerPage = 10;
 }%
@@ -12,29 +13,26 @@
     </ul>
 </div>
 #{/if}
-<table class="zebra-striped condensed-table">
+<table class="condensed-table bordered-table" id="cause-table">
     <thead>
         <tr>
-            <th></th>
+            #{if showCorrections}
+            <th>&{'monitoring.numberOfCorrections'}</th>
+            #{/if}
             <th>&{'monitoring.causeName'}</th>
             <th>&{'monitoring.relatedCase'}</th>
             <th>&{'monitoring.status'}</th>
             <th>&{'monitoring.score'}</th>
         </tr>
     </thead>
+    <tbody>
     #{list causes, as:'cause'}
-    #{if cause_index % __causesPerPage == 1}
-    <tbody id="causes-page-${cause_index.page(__causesPerPage)}">
-    #{/if}
-        <tr class="cause">
-            #{if showCorrections && cause.corrections.size() > 0}
+        <tr id="cause-${cause.id}" class="causes-page-${cause_index.page(__causesPerPage)}">
+            #{if showCorrections}
             <td class="toggleCorrections">
-                <span class="ui-icon ui-icon-default ui-icon-plusthick"></span>
+                <a href="javascript:" class="*{ui-icon ui-icon-default}* ui-icon-plusthick">${cause.corrections.size()}</a>
             </td>
             #{/if}
-            #{else}
-            <td></td>
-            #{/else}
             <td>${cause.name}</td>
             <td>${cause.rcaCase.caseName}</td>
             <td></td>
@@ -42,35 +40,74 @@
         </tr>
         #{if showCorrections}
         #{list cause.corrections, as:'correction'}
-        <tr class="correction">
-            <td></td>
-            <td>${correction.name}</td>
-            <td></td>
+        <tr id="correction-${correction.id}" class="correction-for-cause-${cause.id}">
+            <td colspan="3">${correction.name}</td>
             <td></td>
             <td></td>
         </tr>
         #{/list}
         #{/if}
-    #{if cause_index % __causesPerPage == 0 || cause_isLast}
-    </tbody>
-    #{/if}
     #{/list}
+    </tbody>
 </table>
 
 <script type="text/javascript">
+    var causesPerPage = '${__causesPerPage}';
+    $.tablesorter.addWidget({
+        id: "pagination",
+        format: function(table) {
+            $("span.ui-icon-minusthick").toggleClass("ui-icon-plusthick").toggleClass("ui-icon-minusthick");
+            $("tr[id^='correction-']").hide();
+
+            $(table).find("tbody tr[id^='cause']").each(function(index, element) {
+                var causeId = $(this).attr("id").replace("cause-", "");
+                $(this).alterClass("causes-page-*", "causes-page-" + Math.ceil(index / causesPerPage + 0.01));
+                $("tr.correction-for-cause-" + causeId)
+                        .alterClass("causes-page-*", "causes-page-" + Math.ceil(index / causesPerPage + 0.01))
+                        .insertAfter(this);
+            });
+
+            $('tr[class^="causes-page-"]').hide();
+            var currentPage = $("div#pagination-causes").find("li.active a").html();
+            if (currentPage == undefined) {
+                currentPage = 1;
+            }
+            $("tr.causes-page-" + currentPage).show();
+            $('tr[id^="correction-"]').removeClass("show").hide();
+        }
+    });
+
     $(function() {
         $('.well .head').each(function() {
             $(this).next().parent().css("padding", "10px 19px");
         })
 
-        $('tbody[id^="causes-page-"]').hide();
-        $("tbody#causes-page-1").show();
+        #{if showCorrections}
+        var sortList = [[4,1],[0,1]];
+        #{/if}
+        #{else}
+        var sortList = [[3,1]];
+        #{/else}
 
-        $(".correction").hide();
+        $("table#cause-table").tablesorter({ sortList: sortList, widgets: ['pagination'] });
+
+        $("tr[id^='correction']").hide();
 
         $(".toggleCorrections").click(function() {
-            $(this).parent().nextUntil(".cause").toggle("fast");
+            $(this).parent().nextUntil("tr[id^='cause']").toggleClass("show").toggle("fast");
             $(this).find("span.ui-icon").toggleClass("ui-icon-plusthick").toggleClass("ui-icon-minusthick");
         });
     });
+
+    $("#pagination-causes li a").live("click", function(event) {
+        var page = $(this).parent().parent().find("li.active a").html();
+        $('tr[id^="correction-"]').each(function() {
+            if ($(this).hasClass("causes-page-" + page) && $(this).hasClass("show")) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+    });
 </script>
+#{/if}

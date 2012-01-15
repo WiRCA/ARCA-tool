@@ -24,7 +24,7 @@
     #{/if}
     #{list items:cases, as:'rcaCase'}
         #{if rcaCase_index % __casesPerPage == 1}
-        <div id="cases-page-${rcaCase_index.page(__casesPerPage)}" class="row">
+        <div class="cases-page-${rcaCase_index.page(__casesPerPage)}" class="row">
         #{/if}
             #{if rcaCase_index % 3 == 1}
             <div class="row inputs-list">
@@ -52,7 +52,7 @@
             $(this).next().parent().css("padding", "10px 19px");
         })
 
-        $('div[id^="cases-page-"]').hide();
-        $("div#cases-page-1").show();
+        $('div[class^="cases-page-"]').hide();
+        $("div.cases-page-1").show();
     });
 </script>
