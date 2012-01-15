@@ -35,17 +35,17 @@ public enum CompanySize {
 	THREEHUNDRED(4, "101-300"),
 	MORE(5, "301->");
 
-	public int value;
+	public Integer value;
 	public String text;
 
-	CompanySize(int value, String text) {
+	CompanySize(Integer value, String text) {
 		this.value = value;
 		this.text = text;
 	}
 
-	public static CompanySize valueOf(int id) {
+	public static CompanySize valueOf(Integer id) {
 		for (CompanySize size : CompanySize.values()) {
-			if (size.value == id) {
+			if (size.value.equals(id)) {
 				return size;
 			}
 		}
