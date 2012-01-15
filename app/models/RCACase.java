@@ -60,20 +60,20 @@ public class RCACase extends Model {
 	public String caseName;
 
 	@Required @Min(value = 0, message = "validation.selectOne")
-	public int caseTypeValue;
+	public Integer caseTypeValue;
 
 	@Required
 	@Lob
 	public String caseGoals;
 
 	@Required @Min(value = 0, message = "validation.selectOne")
-	public int companySizeValue;
+	public Integer companySizeValue;
 
 	@Required
 	@Lob
 	public String description;
 
-	public boolean isMultinational;
+	public Boolean isMultinational;
 
 	@Required
 	public String companyName;
@@ -82,7 +82,7 @@ public class RCACase extends Model {
 	@Lob
 	public String companyProducts;
 
-	public boolean isCasePublic;
+	public Boolean isCasePublic;
 
 	public Long ownerId;
 
@@ -122,12 +122,12 @@ public class RCACase extends Model {
 	 *
 	 * @param caseName The name of the RCA case
 	 * @param caseTypeValue The type of the RCA case. Enums are found in models/enums/RCACaseType.
-	 * @param caseGoals
-	 * @param description
+	 * @param caseGoals Goals of the RCA case
+	 * @param description The description of the RCA case
 	 * @param isMultinational The boolean value whether the company related to the RCA case is multinational.
 	 * @param companyName The name of the company related to the RCA case.
 	 * @param companySizeValue The size of the company related to the RCA case. Enums are found in models/enums/CompanySize.
-	 * @param companyProducts
+	 * @param companyProducts Products of the company
 	 * @param isCasePublic The boolean value whether the RCA is public.
 	 * @param owner The User who owns the case.
 	 * 
@@ -238,6 +238,7 @@ public class RCACase extends Model {
 	 * Sets the problem of this RCA case.
 	 * @param cause the problem
 	 */
+	@Deprecated // Do we need this somewhere?
 	public void setProblem(Cause cause) {
 		if (cause.rcaCase.equals(this)) {
 			this.problem = cause;
