@@ -1,0 +1,142 @@
+<!--
+  ~ Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
+  ~ Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus,
+  ~ Timo Lehtinen, Jaakko Harjuhahto
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in
+  ~ all copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+  ~ THE SOFTWARE.
+  -->
+#{fixture delete:'all',load:'data.yml' /}
+#{selenium}
+	open('/?language=en')
+	clickAndWait('id=register-link')
+	type('id=nameFieldRegister','seppo')
+	type('id=emailFieldRegister','seppo@seppo.seppo')
+	type('id=passwordFieldRegister','seppo')
+	type('id=password2FieldRegister','seppo')
+	clickAndWait('id=registerButton')
+	pause('1000')
+	clickAndWait('//div[2]/a')
+	type('id=caseName','sepon oma keissi')
+	select('id=caseTypeValue','label=Human resources related problem')
+	type('id=description','seppo')
+	type('id=caseGoals','seppon tavoitteet')
+	type('id=companyName','sepon firma')
+	select('id=companySize','label=1-10')
+	type('id=companyProducts','seppo myy')
+	clickAndWait('id=create')
+	pause('1000')
+
+	//Creates new causes
+	clickAt('//*[text()="sepon oma keissi"]')
+	pause('1000')
+
+	//New cause
+	clickAt('//*[text()="+"]')
+	answerOnNextPrompt('seppo ei saa myytyä')
+	click('//div[@id='radmenu-event-addCause']')
+	assertPrompt('Node name?')
+	pause('1000')
+	clickAt('//*[text()="seppo ei saa myytyä"]')
+	pause('1000')
+	verifyTextPresent('X')
+	pause('1000')
+
+	//New cause
+	clickAt('//*[text()="+"]')
+	answerOnNextPrompt('kukaan ei osta')
+	click('//div[@id='radmenu-event-addCause']')
+	assertPrompt('Node name?')
+	pause('1000')
+	clickAt('//*[text()="kukaan ei osta"]')
+	pause('1000')
+
+	//New cause
+	clickAt('//*[text()="+"]')
+	answerOnNextPrompt('syy 3')
+	click('//div[@id='radmenu-event-addCause']')
+	assertPrompt('Node name?')
+	pause('1000')
+	clickAt('//*[text()="syy 3"]')
+	pause('1000')
+
+	//New cause
+	clickAt('//*[text()="+"]')
+	answerOnNextPrompt('adada')
+	click('//div[@id='radmenu-event-addCause']')
+	assertPrompt('Node name?')
+	pause('1000')
+	clickAt('//*[text()="seppo ei saa myytyä"]')
+	pause('1000')
+
+	//New correction
+	clickAt('//*[text()="C"]')
+	answerOnNextPrompt('hdhdh')
+	click('//div[@id='radmenu-event-addCorrection']')
+	assertPrompt('Correction name?')
+	pause('1000')
+	clickAt('//*[text()="seppo ei saa myytyä"]')
+	pause('1000')
+	verifyTextPresent('+')
+	pause('1000')
+	clickAt('//*[text()="kukaan ei osta"]')
+	pause('1000')
+
+	//Removes cause
+	click('//div[@id='radmenu-event-removeCause']')
+	pause('1000')
+	verifyTextNotPresent('kukaan ei osta')
+	clickAt('//*[text()="syy 3"]')
+	pause('1000')
+
+	//New cause
+	clickAt('//*[text()="+"]')
+	pause('1000')
+	answerOnNextPrompt('asdasdasd')
+	click('//div[@id='radmenu-event-addCause']')
+	assertPrompt('Node name?')
+	pause('1000')
+	clickAt('//*[text()="asdasdasd"]')
+	pause('1000')
+
+	//New relation
+	click('//div[@id='radmenu-event-addRelation']')
+	pause('1000')
+	clickAt('//*[text()="adada"]')
+	pause('1000')
+	clickAt('//*[text()="syy 3"]')
+	pause('1000')
+
+	//New relation
+	click('//div[@id='radmenu-event-addRelation']')
+	pause('1000')
+	clickAt('//*[text()="seppo ei saa myytyä"]')
+	pause('1000')
+
+	clickAndWait('link=Index page')
+	clickAt('//*[text()="sepon oma keissi"]')
+	pause('1000')
+	clickAt('//*[text()="adada"]')
+	pause('1000')
+
+	//Removes cause
+	click('//div[@id='radmenu-event-removeCause']')
+	pause('1000')
+	verifyTextNotPresent('adada')
+	clickAndWait('id=logout-link')
+#{/selenium}
