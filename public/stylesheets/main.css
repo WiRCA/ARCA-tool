@@ -61,3 +61,11 @@ table .cause .toggleCorrections {
 div#rcacase-share-dialog form {
     margin-bottom: 20px;
 }
+
+.editable {
+    color: #0069D6;
+}
+
+.editable form {
+    margin: 0;
+}

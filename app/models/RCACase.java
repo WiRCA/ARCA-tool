@@ -26,8 +26,8 @@ package models;
 
 import models.enums.CompanySize;
 import models.enums.RCACaseType;
+import models.events.CauseStream;
 import models.events.Event;
-
 import play.cache.Cache;
 import play.data.validation.Min;
 import play.data.validation.Required;
@@ -41,10 +41,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import models.events.*;
-
 /**
  * This class represents an RCA case in the application.
+ *
  * @author Eero Laukkanen
  */
 @PersistenceUnit(name = "maindb")
@@ -59,21 +58,23 @@ public class RCACase extends Model {
 	@Column(name = "name")
 	public String caseName;
 
-	@Required @Min(value = 0, message = "validation.selectOne")
+	@Required
+	@Min(value = 0, message = "validation.selectOne")
 	public Integer caseTypeValue;
 
 	@Required
 	@Lob
 	public String caseGoals;
 
-	@Required @Min(value = 0, message = "validation.selectOne")
+	@Required
+	@Min(value = 0, message = "validation.selectOne")
 	public Integer companySizeValue;
 
 	@Required
 	@Lob
 	public String description;
 
-	public Boolean isMultinational;
+	public boolean isMultinational;
 
 	@Required
 	public String companyName;
@@ -82,12 +83,12 @@ public class RCACase extends Model {
 	@Lob
 	public String companyProducts;
 
-	public Boolean isCasePublic;
+	public boolean isCasePublic;
 
 	public Long ownerId;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name="problemId")
+	@JoinColumn(name = "problemId")
 	public Cause problem;
 
 	@OneToMany(mappedBy = "rcaCase", cascade = CascadeType.ALL)
@@ -110,6 +111,7 @@ public class RCACase extends Model {
 
 	/**
 	 * Basic constructor
+	 *
 	 * @param owner User who created this case
 	 */
 	public RCACase(User owner) {
@@ -120,19 +122,20 @@ public class RCACase extends Model {
 	/**
 	 * Constructor for the form in create.html.
 	 *
-	 * @param caseName The name of the RCA case
-	 * @param caseTypeValue The type of the RCA case. Enums are found in models/enums/RCACaseType.
-	 * @param caseGoals Goals of the RCA case
-	 * @param description The description of the RCA case
-	 * @param isMultinational The boolean value whether the company related to the RCA case is multinational.
-	 * @param companyName The name of the company related to the RCA case.
-	 * @param companySizeValue The size of the company related to the RCA case. Enums are found in models/enums/CompanySize.
-	 * @param companyProducts Products of the company
-	 * @param isCasePublic The boolean value whether the RCA is public.
-	 * @param owner The User who owns the case.
-	 * 
-	 * ownerId The ID of the user who creates the case.
-	 * problem The Cause object that represents the problem of the RCA case.
+	 * @param caseName         The name of the RCA case
+	 * @param caseTypeValue    The type of the RCA case. Enums are found in models/enums/RCACaseType.
+	 * @param caseGoals        Goals of the RCA case
+	 * @param description      The description of the RCA case
+	 * @param isMultinational  The boolean value whether the company related to the RCA case is multinational.
+	 * @param companyName      The name of the company related to the RCA case.
+	 * @param companySizeValue The size of the company related to the RCA case. Enums are found in
+	 *                            models/enums/CompanySize.
+	 * @param companyProducts  Products of the company
+	 * @param isCasePublic     The boolean value whether the RCA is public.
+	 * @param owner            The User who owns the case.
+	 *                         <p/>
+	 *                         ownerId The ID of the user who creates the case.
+	 *                         problem The Cause object that represents the problem of the RCA case.
 	 */
 	public RCACase(String caseName, int caseTypeValue, String caseGoals, String description, boolean isMultinational,
 	               String companyName, int companySizeValue, String companyProducts, boolean isCasePublic,
@@ -152,6 +155,7 @@ public class RCACase extends Model {
 
 	/**
 	 * Returns the owner of the case.
+	 *
 	 * @return the owner of the case.
 	 */
 	public User getOwner() {
@@ -160,7 +164,9 @@ public class RCACase extends Model {
 
 	/**
 	 * Calls for a "Promise"-job that returns list of events that have been sent after the parameter.
+	 *
 	 * @param lastReceived the id of the last message that has been received.
+	 *
 	 * @return asynchronous Promise job that can be run with await() that returns the list of events
 	 */
 	public Promise<List<IndexedEvent<Event>>> nextMessages(long lastReceived) {
@@ -170,6 +176,7 @@ public class RCACase extends Model {
 
 	/**
 	 * Returns the size of the company of the RCA case.
+	 *
 	 * @return company size enumeration
 	 */
 	public CompanySize getCompanySize() {
@@ -178,6 +185,7 @@ public class RCACase extends Model {
 
 	/**
 	 * Sets the companySize value.
+	 *
 	 * @param companySize the size to be setted
 	 */
 	public void setCompanySize(CompanySize companySize) {
@@ -186,6 +194,7 @@ public class RCACase extends Model {
 
 	/**
 	 * Returns the type of the RCA case.
+	 *
 	 * @return type of the RCA case
 	 */
 	public RCACaseType getRCACaseType() {
@@ -194,6 +203,7 @@ public class RCACase extends Model {
 
 	/**
 	 * Sets the type of the RCA case.
+	 *
 	 * @param rcaCaseType the type to be set
 	 */
 	public void setRCACaseType(RCACaseType rcaCaseType) {
@@ -204,6 +214,7 @@ public class RCACase extends Model {
 	 * Returns the stream that handles the messages of one RCA case. Streams are stored in the Cache class. If stream
 	 * has not been created yet, it will be created in this method. Calling this method also updates the stream in
 	 * the Cache, increasing the time when the stream is saved.
+	 *
 	 * @return the stream that has the messages
 	 */
 	public CauseStream getCauseStream() {
@@ -217,6 +228,7 @@ public class RCACase extends Model {
 
 	/**
 	 * Deletes a cause in an RCA case. The main problem cannot be deleted this way.
+	 *
 	 * @param cause cause to be deleted.
 	 */
 	public void deleteCause(Cause cause) {
@@ -236,6 +248,7 @@ public class RCACase extends Model {
 
 	/**
 	 * Sets the problem of this RCA case.
+	 *
 	 * @param cause the problem
 	 */
 	@Deprecated // Do we need this somewhere?

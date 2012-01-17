@@ -29,6 +29,7 @@
 #{set 'moreScripts'}
 <script src="@{'/public/javascripts/jquery.tablesorter.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
 <script src="@{'/public/javascripts/jquery.alterclass.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+<script src="@{'/public/javascripts/jquery.jeditable.mini.js'}" type="text/javascript" charset="${_response_encoding}"></script>
 #{/set}
 
 <div class="well" id="selectFilter">
@@ -93,11 +94,11 @@
         $('.well .head').live("click", function() {
             $(this).next().toggle();
             return false;
-        })
+        });
 
         $('.well .head').each(function() {
             $(this).next().parent().css("padding", "10px 19px");
-        })
+        });
 
         $("input[name='whatToShow'][value='corrections']").attr("disabled", "disabled");
     });

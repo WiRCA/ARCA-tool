@@ -5,11 +5,11 @@
 #{if causes.size().page(__causesPerPage) > 1}
 <div class="center pagination" id="pagination-causes">
     <ul>
-        <li class="prev disabled"><a href="javascript:;">&larr; &{'button.prev'}</a></li>
+        <li class="prev disabled"><a href="javascript:">&larr; &{'button.prev'}</a></li>
         %{for ( i in 1..causes.size().page(__causesPerPage) ) { }%
-            <li ${i == 1 ? "class=active" : ''}><a href="javascript:;">${i}</a></li>
+            <li ${i == 1 ? "class=active" : ''}><a href="javascript:">${i}</a></li>
         %{ } }%
-        <li class="next"><a href="javascript:;">&{'button.next'} &rarr;</a></li>
+        <li class="next"><a href="javascript:">&{'button.next'} &rarr;</a></li>
     </ul>
 </div>
 #{/if}
@@ -35,14 +35,14 @@
             #{/if}
             <td>${cause.name}</td>
             <td>${cause.rcaCase.caseName}</td>
-            <td></td>
+            <td #{if cause.rcaCase.ownerId == currentUserId}class="editable cause-status"#{/if}>&{'monitoring.statusCause.' + cause.status?.name}</td>
             <td></td>
         </tr>
         #{if showCorrections}
         #{list cause.corrections, as:'correction'}
         <tr id="correction-${correction.id}" class="correction-for-cause-${cause.id}">
             <td colspan="3">${correction.name}</td>
-            <td></td>
+            <td #{if cause.rcaCase.ownerId == currentUserId}class="editable correction-status"#{/if}>&{'monitoring.statusCorrection.' + correction.status?.name}</td>
             <td></td>
         </tr>
         #{/list}
@@ -51,6 +51,7 @@
     </tbody>
 </table>
 
+#{i18n keys:['monitoring.statusC*'] /}
 <script type="text/javascript">
     var causesPerPage = '${__causesPerPage}';
     $.tablesorter.addWidget({
@@ -80,7 +81,7 @@
     $(function() {
         $('.well .head').each(function() {
             $(this).next().parent().css("padding", "10px 19px");
-        })
+        });
 
         #{if showCorrections}
         var sortList = [[4,1],[0,1]];
@@ -108,6 +109,52 @@
                 $(this).hide();
             }
         });
+    });
+
+    var causeStatusJson =
+        {
+        #{list causeStatuses, as:'status'}
+        "${status.name}":"&{'monitoring.statusCause.' + status.name}"#{if !status_isLast},#{/if}
+        #{/list}
+        };
+
+    $(".editable.cause-status").editable(function(value, settings) {
+        var causeId = $(this).parent().attr("id").replace("cause-", "");
+        var changeCauseStatusAction = #{jsAction @MonitoringController.changeCauseStatus(':causeId',':statusOfCause') /}
+        $.post(changeCauseStatusAction({causeId: causeId, statusOfCause: value}), function(resp) {
+            if (resp) {
+                $("#cause-"+causeId+" .editable.cause-status").html(i18n('monitoring.statusCause.' + value));
+                $("#cause-"+causeId+" .editable.cause-status").blur();
+                $("table#cause-table").trigger("update");
+            }
+        });
+    }, {
+        data : causeStatusJson,
+        type : 'select',
+        onblur : 'submit'
+    });
+
+    var correctionStatusJson =
+        {
+        #{list correctionStatuses, as:'status'}
+        "${status.name}":"&{'monitoring.statusCorrection.' + status.name}"#{if !status_isLast},#{/if}
+        #{/list}
+        };
+
+    $(".editable.correction-status").editable(function(value, settings) {
+        var correctionId = $(this).parent().attr("id").replace("correction-", "");
+        var changeCorrectionStatusAction = #{jsAction @MonitoringController.changeCorrectionStatus(':correctionId', ':statusOfCorrection') /}
+        $.post(changeCorrectionStatusAction({correctionId: correctionId, statusOfCorrection: value}), function(resp) {
+            if (resp) {
+                $("#correction-"+correctionId+" .editable.correction-status").html(i18n('monitoring.statusCorrection.' + value));
+                $("#correction-"+correctionId+" .editable.correction-status").blur();
+                $("table#cause-table").trigger("update");
+            }
+        });
+    }, {
+        data : correctionStatusJson,
+        type : 'select',
+        onblur : 'submit'
     });
 </script>
 #{/if}

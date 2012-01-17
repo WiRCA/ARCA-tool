@@ -24,10 +24,13 @@
 
 package models;
 
+import models.enums.StatusOfCause;
 import utils.IdComparableModel;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.Date;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Cause in RCA case tree.
@@ -61,6 +64,8 @@ public class Cause extends IdComparableModel {
 	@OneToMany(mappedBy = "cause", cascade = CascadeType.ALL)
 	public Set<Correction> corrections;
 
+	public Integer statusValue = StatusOfCause.DETECTED.getValue();
+
 	@PrePersist
 	protected void onCreate() {
 		updated = new Date();
@@ -79,9 +84,9 @@ public class Cause extends IdComparableModel {
 	 * @param rcaCase RCA case which this cause belongs to
 	 * @param name    name for the created cause.
 	 * @param creator creator of the cause
-	 *
-	 * causes The set of causes that explain the cause.
-	 * corrections List of corrections of the cause.
+	 *                <p/>
+	 *                causes The set of causes that explain the cause.
+	 *                corrections List of corrections of the cause.
 	 */
 	public Cause(RCACase rcaCase, String name, User creator) {
 		this.rcaCase = rcaCase;
@@ -97,14 +102,14 @@ public class Cause extends IdComparableModel {
 	/**
 	 * Adds a corrective action for a cause.
 	 *
-	 * @param name name of the corrective action.
+	 * @param name        name of the corrective action.
 	 * @param description description of the corrective action.
 	 *
 	 * @return returns the created Correction object.
 	 */
 	public Correction addCorrection(String name, String description) {
 		Correction correction = new Correction(name, description, this);
-	    correction.save();
+		correction.save();
 		this.corrections.add(correction);
 		this.save();
 		return correction;
@@ -112,6 +117,7 @@ public class Cause extends IdComparableModel {
 
 	/**
 	 * Removes the given correction from the cause corrections.
+	 *
 	 * @param correction correction to be removed
 	 */
 	public void removeCorrection(Correction correction) {
@@ -119,11 +125,11 @@ public class Cause extends IdComparableModel {
 		correction.delete();
 		this.save();
 	}
-	
+
 	public Set<Correction> getCorrections() {
-	  Set<Correction> corrections = new TreeSet<Correction>();
+		Set<Correction> corrections = new TreeSet<Correction>();
 		for (Correction correction : this.corrections) {
-		  corrections.add(correction);
+			corrections.add(correction);
 		}
 		return corrections;
 	}
@@ -131,8 +137,7 @@ public class Cause extends IdComparableModel {
 	/**
 	 * Adds a cause for a cause.
 	 *
-	 * @param name name to be used for the cause.
-	 *
+	 * @param name    name to be used for the cause.
 	 * @param creator creator of the cause
 	 *
 	 * @return cause the cause created when added.
@@ -168,7 +173,6 @@ public class Cause extends IdComparableModel {
 
 	/**
 	 * Deletes the cause from the relations of other causes.
-	 *
 	 */
 	public void deleteCause() {
 		for (Relation relation : causeRelations) {
@@ -190,6 +194,7 @@ public class Cause extends IdComparableModel {
 
 	/**
 	 * Returns the children of this cause.
+	 *
 	 * @return the children of this cause.
 	 */
 	public Set<Cause> getCauses() {
@@ -204,6 +209,7 @@ public class Cause extends IdComparableModel {
 
 	/**
 	 * Returns the relations to the causes that are not children of this cause.
+	 *
 	 * @return the relations
 	 */
 	public Set<Cause> getRelations() {
@@ -218,28 +224,47 @@ public class Cause extends IdComparableModel {
 
 	/**
 	 * returns the parent of this cause.
+	 *
 	 * @return the parent of this cause
 	 */
 	public Cause getParent() {
 		if (this.equals(this.rcaCase.problem)) {
 			return null;
-		}
-		else if (this.effectRelations.size() > 0) {
-			return ((Relation)this.effectRelations.toArray()[0]).causeTo;
-		}
-		else {
+		} else if (this.effectRelations.size() > 0) {
+			return ((Relation) this.effectRelations.toArray()[0]).causeTo;
+		} else {
 			return null;
 		}
 	}
 
 	/**
 	 * Checks if the cause is the parent of this cause.
+	 *
 	 * @param cause cause that can be the parent of this cause.
+	 *
 	 * @return true if the given cause is the parent of this cause.
 	 */
 	public boolean isChildOf(Cause cause) {
 		Cause parent = this.getParent();
 		return parent != null && parent.equals(cause);
+	}
+
+	/**
+	 * Returns the status of the cause
+	 *
+	 * @return StatusOfCause enum is returned. Null is returned if not found.
+	 */
+	public StatusOfCause getStatus() {
+		return StatusOfCause.valueOf(statusValue);
+	}
+
+	/**
+	 * Set the status of the cause
+	 *
+	 * @param status the status to be set
+	 */
+	public void setStatus(StatusOfCause status) {
+		this.statusValue = status.getValue();
 	}
 
 	@Override

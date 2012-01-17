@@ -154,3 +154,10 @@ monitoring.causeName=Cause
 monitoring.relatedCase=Related case
 monitoring.status=Status
 monitoring.score=Score
+
+monitoring.statusCause.DETECTED=Detected
+monitoring.statusCause.ELIMINATION=Elimination
+monitoring.statusCause.WILL_NOT_FIX=Won't fix
+monitoring.statusCorrection.IDEA=Idea
+monitoring.statusCorrection.IMPLEMENTED=Implemented
+monitoring.statusCorrection.WILL_BE_IMPLEMENTED=Will be implemented

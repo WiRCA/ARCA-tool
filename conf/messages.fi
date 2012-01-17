@@ -153,3 +153,10 @@ monitoring.causeName=Syy
 monitoring.relatedCase=RCA analyysi
 monitoring.status=Tila
 monitoring.score=Pisteet
+
+monitoring.statusCause.DETECTED=Havaittu
+monitoring.statusCause.ELIMINATION=Korjataan
+monitoring.statusCause.WILL_NOT_FIX=Ei korjata
+monitoring.statusCorrection.IDEA=Idea
+monitoring.statusCorrection.IMPLEMENTED=Toteutettu
+monitoring.statusCorrection.WILL_BE_IMPLEMENTED=Toteutetaan
