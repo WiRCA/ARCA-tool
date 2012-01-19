@@ -241,6 +241,8 @@
         },
         Edge: {
           overridable: true,
+	      type: 'line',
+		  dim: 15,
           color: '#23A4FF',
           lineWidth: 2
         },
@@ -341,7 +343,13 @@
         // Add text to the labels. This method is only triggered
         // on label creation and only for DOM labels (not native canvas ones).
         onCreateLabel: function(domElement, node){
-          $(domElement).addClass('nodeBox');
+		// Root node looks different.
+		  if (countParentNodes(node) == 1) {
+            $(domElement).addClass('rootNodeBox')
+		  }
+		  else {
+			$(domElement).addClass('nodeBox')
+		  }
           $(domElement).html(node.name);
         },
         // Change node styles when DOM labels are placed

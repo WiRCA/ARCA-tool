@@ -1,7 +1,33 @@
 .nodeBox { 
-  	color:rgb(255,255,255); 
+  	color:rgb(0,0,0); 
   	font-family:Helvetica; 
-  	font-size: 15pt;
+  	font-size: 10pt;
+	text-align: center;
+	border: solid;
+	border-radius: 10px;
+	border-width: 1px;
+	padding: 3px;
+	vertical-align: left;
+	border-top: 1px solid rgb(87,87,87);
+	border-right: 1px solid rgb(87,87,87);
+	border-left: 1px solid rgb(192,192,192);
+	border-bottom: 1px solid rgb(192,192,192);
+	background:#BCD2EE;
+	margin-left:auto;
+	margin-right:auto;
+	min-width:5em;
+	max-width:10em;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}
+
+.rootNodeBox {
+	color:rgb(255,255,255); 
+  	font-family:Helvetica; 
+  	font-size: 12pt;
 	text-align: center;
 	border: solid;
 	border-radius: 10px;
@@ -12,7 +38,7 @@
 	border-right: 1px solid rgb(87,87,87);
 	border-left: 1px solid rgb(192,192,192);
 	border-bottom: 1px solid rgb(192,192,192);
-	background:#8FBC8F;
+	background:#3579DC;
 	margin-left:auto;
 	margin-right:auto;
 	min-width:5em;
