@@ -189,7 +189,9 @@
 <h2>&{'user.allPublicCases'}</h2>
 <ul>
     #{list items:allPublicCases, as:'rcaCase'}
-    <li>#{a @RCACaseController.show(rcaCase.id)} ${rcaCase.caseName} #{/a}</li>
+    <li>#{a @RCACaseController.show(rcaCase.id), id:'show-rcacase-'+rcaCase.id+'-link', rel:'popover',
+    title:"${rcaCase.caseName}", 'data-content':"${rcaCase.description}"}${rcaCase.caseName}#{/a}
+        &{'rcacase.sharedBy'} ${rcaCase.owner.name}</li>
     #{/list}
     #{else}
     <li>&{'user.noAnyPublicCases'}</li>
