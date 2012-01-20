@@ -23,6 +23,7 @@
   -->
 #{fixture delete:'all',load:'data.yml' /}
 #{selenium}
+    open('/logout')
 	open('/?language=en')
 	clickAndWait('id=register-link')
 	type('id=nameFieldRegister','seppo')
