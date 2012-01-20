@@ -85,12 +85,61 @@ public class Bootstrap extends Job {
 			firstRCACase.isMultinational = true;
 			firstRCACase.companyName = "WiRCA";
 			firstRCACase.companyProducts = "ARCA-tool";
-			firstRCACase.isCasePublic = false;
+			firstRCACase.isCasePublic = true;
 
 	        // Problem of the first RCA case
 	        firstRCACase.problem = new Cause(firstRCACase,  firstRCACase.caseName, tester).save();
 	        firstRCACase.save();
 	        tester.addRCACase(firstRCACase);
+	        tester.save();
+	        
+	        Cause testNode1 = firstRCACase.problem.addCause("test node 1", tester);
+	        Cause testNode2 = firstRCACase.problem.addCause("test node 2", tester);
+	        Cause testNode3 = testNode1.addCause("test node 3", tester);
+	        Cause testNode4 = testNode1.addCause("test node 4", tester);
+	        Cause testNode5 = testNode1.addCause("test node 5", tester);
+	        Cause testNode6 = testNode2.addCause("test node 6", tester);
+	        Cause testNode7 = testNode5.addCause("test node 7", tester);
+	        Cause testNode8 = testNode5.addCause("test node 8", tester);
+	        Cause testNode9 = testNode8.addCause("test node 9", tester);
+	        Cause testNode10 = testNode9.addCause("test node 10", tester);
+	        testNode2.addCause(testNode7);
+	        testNode2.addCause(testNode8);
+
+	        RCACase adminsPrivateCase = new RCACase(admin);
+	        adminsPrivateCase.caseName = "";
+	        adminsPrivateCase.caseName = "Admin's private RCA case";
+	        adminsPrivateCase.caseTypeValue = 2;
+			adminsPrivateCase.caseGoals = "Test the program";
+			adminsPrivateCase.companySizeValue = 2;
+			adminsPrivateCase.description = "We are going to save the world with our ARCA-tool!";
+			adminsPrivateCase.isMultinational = true;
+			adminsPrivateCase.companyName = "WiRCA";
+			adminsPrivateCase.companyProducts = "ARCA-tool";
+	        adminsPrivateCase.isCasePublic = false;
+	        adminsPrivateCase.problem = new Cause(adminsPrivateCase, adminsPrivateCase.caseName, admin).save();
+	        adminsPrivateCase.save();
+	        admin.addRCACase(adminsPrivateCase);
+	        admin.save();
+	        tester.addRCACase(adminsPrivateCase);
+	        tester.save();
+
+	        RCACase adminsPublicCase = new RCACase(admin);
+	        adminsPublicCase.caseName = "";
+	        adminsPublicCase.caseName = "Admin's public RCA case";
+	        adminsPublicCase.caseTypeValue = 2;
+			adminsPublicCase.caseGoals = "Test the program";
+			adminsPublicCase.companySizeValue = 2;
+			adminsPublicCase.description = "We are going to save the world with our ARCA-tool!";
+			adminsPublicCase.isMultinational = true;
+			adminsPublicCase.companyName = "WiRCA";
+			adminsPublicCase.companyProducts = "ARCA-tool";
+	        adminsPublicCase.isCasePublic = true;
+	        adminsPublicCase.problem = new Cause(adminsPublicCase, adminsPublicCase.caseName, admin).save();
+	        adminsPublicCase.save();
+	        admin.addRCACase(adminsPublicCase);
+	        admin.save();
+	        tester.addRCACase(adminsPublicCase);
 	        tester.save();
 	    }
     }
