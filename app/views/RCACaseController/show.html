@@ -191,6 +191,7 @@
             }else if($selected[0].id == "radmenu-event-addRelation"){
               relationFromNode = selectedNode;
               radmenu_fadeOut();
+              defaultEdgesForSelectedNode(selectedNode);
             }else if($selected[0].id == "radmenu-event-addCorrection"){
               var name = prompt('Correction name?');
               $.post(addCorrection({toId: selectedNode.id, name: name}), function () {
