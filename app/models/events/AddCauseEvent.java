@@ -36,7 +36,7 @@ public class AddCauseEvent extends Event {
 	public AddCauseEvent(Cause cause, String causeFrom) {
 		super("addcauseevent");
 		this.causeTo = Long.toString(cause.id);
-		this.text = cause.name.replaceAll(">", "&gt;").replaceAll("<", "&lt;").replaceAll("&", "&amp;");
+		this.text = cause.name.replaceAll("&", "&amp;").replaceAll(">", "&gt;").replaceAll("<", "&lt;");
 		this.causeFrom = causeFrom;
 		this.creatorId = cause.creatorId == null ? null : Long.toString(cause.creatorId);
 	}
