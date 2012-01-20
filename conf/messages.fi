@@ -108,6 +108,7 @@ user.sharedCases=Minulle jaetut yksityiset analyysit
 user.publicCases=Julkiset analyysit joita seuraan
 rcacase.lastmodified=muokattu
 rcacase.share=Jaa..
+rcacase.sharedBy=Omistaja:
 user.allPublicCases=Kaikki julkiset analyysit
 user.noAnyPublicCases=Ei julkisia analyysejä
 user.allCases=Kaikki analyysit

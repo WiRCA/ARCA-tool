@@ -105,6 +105,7 @@ user.allCases=All cases
 
 rcacase.lastmodified=last modified
 rcacase.share=Share
+rcacase.sharedBy=Owner:
 
 since.seconds=%d seconds ago
 since.minutes=%d minutes ago
