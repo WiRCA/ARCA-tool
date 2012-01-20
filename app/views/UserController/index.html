@@ -157,13 +157,14 @@
 </ul>
 
 <h2>&{'user.sharedCases'}</h2>
-<ul>
-    #{list items:privateCases, as:'rcaCase'}
-    <li>#{a @RCACaseController.show(rcaCase.id), id:'show-rcacase-'+rcaCase.id+'-link', rel:'popover',
-        title:"${rcaCase.caseName}", 'data-content':"${rcaCase.description}"}${rcaCase.caseName}#{/a}
-        &{'rcacase.lastmodified'} ${rcaCase.updated.since(true)}
-        &{'user.created'} ${rcaCase.created.since(true)}
-    </li>
+        <ul>
+        #{list items:privateCases, as:'rcaCase'}
+        <li>#{a @RCACaseController.show(rcaCase.id), id:'show-rcacase-'+rcaCase.id+'-link', rel:'popover',
+            title:"${rcaCase.caseName}", 'data-content':"${rcaCase.description}"}${rcaCase.caseName}#{/a}
+            &{'rcacase.sharedBy'} <b>${rcaCase.owner.name}</b>
+            &{'rcacase.lastmodified'} ${rcaCase.updated.since(true)}
+            &{'user.created'} ${rcaCase.created.since(true)}
+        </li>
     #{/list}
     #{else}
     <li>&{'user.noPrivateCases'}</li>
@@ -175,6 +176,7 @@
     #{list items:publicCases, as:'rcaCase'}
     <li>#{a @RCACaseController.show(rcaCase.id), id:'show-rcacase-'+rcaCase.id+'-link', rel:'popover',
         title:"${rcaCase.caseName}", 'data-content':"${rcaCase.description}"}${rcaCase.caseName}#{/a}
+        &{'rcacase.sharedBy'} <b>${rcaCase.owner.name}</b>
         &{'rcacase.lastmodified'} ${rcaCase.updated.since(true)}
         &{'user.created'} ${rcaCase.created.since(true)}
     </li>
