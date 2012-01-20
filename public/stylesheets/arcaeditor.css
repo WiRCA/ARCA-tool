@@ -22,6 +22,7 @@
     -moz-user-select: none;
     -o-user-select: none;
     user-select: none;
+    word-wrap: break-word;
 }
 
 .rootNodeBox {
@@ -47,6 +48,7 @@
     -moz-user-select: none;
     -o-user-select: none;
     user-select: none;
+    word-wrap: break-word;
 }
 
 
