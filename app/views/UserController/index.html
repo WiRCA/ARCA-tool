@@ -147,7 +147,7 @@
         title:"${rcaCase.caseName}", 'data-content':"${rcaCase.description}"}${rcaCase.caseName}#{/a}
         &{'rcacase.lastmodified'} ${rcaCase.updated.since(true)}
         &{'user.created'} ${rcaCase.created.since(true)}
-        <a id="rcacase-share-${rcaCase.id}" href="javascript:;">&{'rcacase.share'}</a>
+        <a id="rcacase-share-${rcaCase.id}" href="javascript:;" class="btn small primary">&{'rcacase.share'}</a>
         #{a @RCACaseController.extractCSV(rcaCase.id)}&{'rcaCase.csv.exportCSV'}#{/a}
     </li>
     #{/list}
