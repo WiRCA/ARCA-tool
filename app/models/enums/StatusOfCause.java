@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
+ * Copyright (C) 2012 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
  * Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus,
  * Timo Lehtinen, Jaakko Harjuhahto
  *
@@ -25,30 +25,44 @@
 package models.enums;
 
 /**
- * @author Juha Viljanen
+ * @author Risto Virtanen
  */
-public enum CompanySize {
+public enum StatusOfCause {
 
-	TEN(1, "1-10"),
-	FIFTY(2, "11-50"),
-	HUNDRED(3, "51-100"),
-	THREEHUNDRED(4, "101-300"),
-	MORE(5, "301->");
+	DETECTED(1),
+	ELIMINATION(2),
+	WILL_NOT_FIX(3);
 
-	public Integer value;
-	public String text;
+	private Integer value;
 
-	CompanySize(Integer value, String text) {
+	private StatusOfCause(Integer value) {
 		this.value = value;
-		this.text = text;
 	}
 
-	public static CompanySize valueOf(Integer id) {
-		for (CompanySize size : CompanySize.values()) {
-			if (size.value.equals(id)) {
-				return size;
+	public static StatusOfCause valueOf(Integer id) {
+		for (StatusOfCause status : StatusOfCause.values()) {
+			if (status.value.equals(id)) {
+				return status;
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Get the name of enum
+	 *
+	 * @return the name of enum
+	 */
+	public String getName() {
+		return this.name();
+	}
+
+	/**
+	 * Get the value of enum
+	 *
+	 * @return the value of enum
+	 */
+	public Integer getValue() {
+		return value;
 	}
 }

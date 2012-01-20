@@ -25,8 +25,11 @@
 package controllers;
 
 import models.Cause;
+import models.Correction;
 import models.RCACase;
 import models.User;
+import models.enums.StatusOfCause;
+import models.enums.StatusOfCorrection;
 import play.data.binding.As;
 import play.mvc.Controller;
 import play.mvc.With;
@@ -45,7 +48,7 @@ public class MonitoringController extends Controller {
 	public static void index() {
 		render();
 	}
-	
+
 	public static void rcaCaseSelecting(@As(",") List<String> showCases) {
 		if (showCases.contains("allCases")) {
 			render();
@@ -76,10 +79,12 @@ public class MonitoringController extends Controller {
 		render(cases);
 	}
 
-	public static void causesAndCorrections(@As(",") List<String> whatToShow, String selectedCases, Boolean allCases) {
+	public static void causesAndCorrections(@As(",") List<String> whatToShow, String selectedCases,
+	                                        Boolean allCases) {
 		Boolean showCorrections = whatToShow.contains("corrections");
+		User user = SecurityController.getCurrentUser();
 		if (allCases) {
-			User user = SecurityController.getCurrentUser();
+			selectedCases = "";
 			if (user != null) {
 				for (RCACase rcaCase : user.getRCACases()) {
 					selectedCases += rcaCase.id + ",";
@@ -90,10 +95,43 @@ public class MonitoringController extends Controller {
 				selectedCases += rcaCase.id + ",";
 			}
 		}
-		
+
+		if (selectedCases.isEmpty()) {
+			render(showCorrections);
+		}
+
+		Long currentUserId = user != null ? user.id : -1;
+
 		selectedCases = "(" + selectedCases.substring(0, selectedCases.lastIndexOf(",")) + ")";
-		String query = "select c from cause c where rcaCaseId in (" + selectedCases + ")";
 		List<Cause> causes = Cause.find("rcaCaseId in " + selectedCases).fetch();
-		render(causes, showCorrections);
+
+		StatusOfCause[] causeStatuses = StatusOfCause.values();
+		StatusOfCorrection[] correctionStatuses = StatusOfCorrection.values();
+
+		render(currentUserId, causes, showCorrections, causeStatuses, correctionStatuses);
+	}
+
+	public static void changeCauseStatus(Long causeId, StatusOfCause statusOfCause) {
+		Cause cause = Cause.findById(causeId);
+		notFoundIfNull(cause);
+		User currentUser = SecurityController.getCurrentUser();
+		if (currentUser != null && currentUser.id.equals(cause.rcaCase.ownerId)) {
+			cause.setStatus(statusOfCause);
+			cause.save();
+			renderJSON(true);
+		}
+		renderJSON(false);
+	}
+
+	public static void changeCorrectionStatus(Long correctionId, StatusOfCorrection statusOfCorrection) {
+		Correction correction = Correction.findById(correctionId);
+		notFoundIfNull(correction);
+		User currentUser = SecurityController.getCurrentUser();
+		if (currentUser != null && currentUser.id.equals(correction.cause.rcaCase.ownerId)) {
+			correction.setStatus(statusOfCorrection);
+			correction.save();
+			renderJSON(true);
+		}
+		renderJSON(false);
 	}
 }

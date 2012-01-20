@@ -105,6 +105,7 @@ user.allCases=All cases
 
 rcacase.lastmodified=last modified
 rcacase.share=Share
+rcacase.sharedBy=Owner:
 
 since.seconds=%d seconds ago
 since.minutes=%d minutes ago
@@ -149,7 +150,15 @@ monitoring.casesSharedWithMeRadio=Cases shared with me
 monitoring.publicCasesRadio=Public cases
 monitoring.allCasesRadio=All cases
 monitoring.selectCaseTitle=Select case(s)
+monitoring.numberOfCorrections=# Ideas
 monitoring.causeName=Cause
 monitoring.relatedCase=Related case
 monitoring.status=Status
 monitoring.score=Score
+
+monitoring.statusCause.DETECTED=Detected
+monitoring.statusCause.ELIMINATION=Elimination
+monitoring.statusCause.WILL_NOT_FIX=Won't fix
+monitoring.statusCorrection.IDEA=Idea
+monitoring.statusCorrection.IMPLEMENTED=Implemented
+monitoring.statusCorrection.WILL_BE_IMPLEMENTED=Will be implemented

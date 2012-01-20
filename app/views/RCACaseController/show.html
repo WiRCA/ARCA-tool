@@ -170,9 +170,9 @@
       jQuery("#radial_menu").radmenu({
         listClass: 'list', // the list class to look within for items
         itemClass: 'item', // the items - NOTE: the HTML inside the item is copied into the menu item
-        radius: 55, // radius in pixels
+        radius: 50, // radius in pixels
         animSpeed: 2000, // animation speed in millis
-        centerX: 0, // the center x axis offset
+        centerX: -5, // the center x axis offset
         centerY: -10, // the center y axis offset
         selectEvent: "click", // the select event (click)
         onSelect: function($selected){ // show what is returned 
@@ -242,6 +242,8 @@
         },
         Edge: {
           overridable: true,
+	      type: 'arrow',
+		  dim: 30,
           color: '#23A4FF',
           lineWidth: 2
         },
@@ -342,7 +344,13 @@
         // Add text to the labels. This method is only triggered
         // on label creation and only for DOM labels (not native canvas ones).
         onCreateLabel: function(domElement, node){
-          $(domElement).addClass('nodeBox');
+				// Root node looks different.
+			  if (node.id == ${rcaCase.problem.id}) {
+        	$(domElement).addClass('rootNodeBox')
+		  	}
+		  	else {
+					$(domElement).addClass('nodeBox')
+		  	}
           $(domElement).html(node.name);
         },
         // Change node styles when DOM labels are placed
@@ -369,6 +377,7 @@
                         }
                         if (this.data.type === 'addrelationevent') {
                           //alert(this.data.causeFrom + " " + this.data.causeTo);
+						
                           fd.graph.addAdjacence(fd.graph.getNode(this.data.causeFrom), fd.graph.getNode(this.data.causeTo));
                           fd.plot();
                         }

@@ -24,8 +24,6 @@
 
 package models.enums;
 
-import play.i18n.Messages;
-
 /**
  * @author Juha Viljanen
  */
@@ -35,17 +33,17 @@ public enum RCACaseType {
 	HR(2, "RCACaseType.hr"),
 	OTHER(3, "RCACaseType.other");
 
-	public int value;
+	public Integer value;
 	public String text;
 
-	RCACaseType(int value, String text) {
+	RCACaseType(Integer value, String text) {
 		this.value = value;
 		this.text = text;
 	}
 
-	public static RCACaseType valueOf(int id) {
+	public static RCACaseType valueOf(Integer id) {
 		for (RCACaseType caseType : RCACaseType.values()) {
-			if (caseType.value == id) {
+			if (caseType.value.equals(id)) {
 				return caseType;
 			}
 		}

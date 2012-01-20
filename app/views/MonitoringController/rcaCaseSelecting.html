@@ -11,11 +11,11 @@
         #{if cases.size().page(__casesPerPage) > 1}
         <div class="center pagination" id="pagination-cases">
             <ul>
-                <li class="prev disabled"><a href="javascript:;">&larr; &{'button.prev'}</a></li>
+                <li class="prev disabled"><a href="javascript:">&larr; &{'button.prev'}</a></li>
                 %{for ( i in 1..cases.size().page(__casesPerPage) ) { }%
-                    <li ${i == 1 ? "class=active" : ''}><a href="javascript:;">${i}</a></li>
+                    <li ${i == 1 ? "class=active" : ''}><a href="javascript:">${i}</a></li>
                 %{ } }%
-                <li class="next"><a href="javascript:;">&{'button.next'} &rarr;</a></li>
+                <li class="next"><a href="javascript:">&{'button.next'} &rarr;</a></li>
             </ul>
         </div>
         #{/if}
@@ -24,7 +24,7 @@
     #{/if}
     #{list items:cases, as:'rcaCase'}
         #{if rcaCase_index % __casesPerPage == 1}
-        <div id="cases-page-${rcaCase_index.page(__casesPerPage)}" class="row">
+        <div class="cases-page-${rcaCase_index.page(__casesPerPage)}" class="row">
         #{/if}
             #{if rcaCase_index % 3 == 1}
             <div class="row inputs-list">
@@ -50,9 +50,9 @@
     $(function() {
         $('.well .head').each(function() {
             $(this).next().parent().css("padding", "10px 19px");
-        })
+        });
 
-        $('div[id^="cases-page-"]').hide();
-        $("div#cases-page-1").show();
+        $('div[class^="cases-page-"]').hide();
+        $("div.cases-page-1").show();
     });
 </script>

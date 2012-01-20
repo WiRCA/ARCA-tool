@@ -24,6 +24,7 @@
 
 package models;
 
+import models.enums.StatusOfCorrection;
 import utils.IdComparableModel;
 
 import javax.persistence.Entity;
@@ -33,15 +34,18 @@ import javax.persistence.PersistenceUnit;
 
 /**
  * Corrective action for a cause in RCA tree.
+ *
  * @author Eero Laukkanen
  */
 @PersistenceUnit(name = "maindb")
-@Entity(name="correction")
+@Entity(name = "correction")
 public class Correction extends IdComparableModel {
 
 	public String name;
 
 	public String description;
+
+	public Integer statusValue = StatusOfCorrection.IDEA.getValue();
 
 	@ManyToOne
 	@JoinColumn(name = "causeId")
@@ -49,14 +53,33 @@ public class Correction extends IdComparableModel {
 
 	/**
 	 * Creates a new correction with specified name and description.
-	 * @param name name of the correction
-	 * @param description description of the correction
+	 *
+	 * @param name         name of the correction
+	 * @param description  description of the correction
 	 * @param correctionTo the cause this correction is directed to
 	 */
 	public Correction(String name, String description, Cause correctionTo) {
 		this.name = name;
 		this.description = description;
 		this.cause = correctionTo;
+	}
+
+	/**
+	 * Returns the status of the correction
+	 *
+	 * @return StatusOfCorrection enum is returned. Null is returned if not found.
+	 */
+	public StatusOfCorrection getStatus() {
+		return StatusOfCorrection.valueOf(statusValue);
+	}
+
+	/**
+	 * Set the status of the correction
+	 *
+	 * @param status the status to be set
+	 */
+	public void setStatus(StatusOfCorrection status) {
+		this.statusValue = status.getValue();
 	}
 
 }
