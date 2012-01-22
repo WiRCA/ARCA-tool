@@ -29,7 +29,6 @@ import models.enums.RCACaseType;
 import models.events.CauseStream;
 import models.events.Event;
 import play.cache.Cache;
-import play.data.validation.Min;
 import play.data.validation.Required;
 import play.db.jpa.Model;
 import play.libs.F.IndexedEvent;
@@ -58,28 +57,22 @@ public class RCACase extends Model {
 	@Column(name = "name")
 	public String caseName;
 
-	@Required
-	@Min(value = 0, message = "validation.selectOne")
+	// @Min(value = 0, message = "validation.selectOne")
 	public Integer caseTypeValue;
 
-	@Required
 	@Lob
 	public String caseGoals;
 
-	@Required
-	@Min(value = 0, message = "validation.selectOne")
+	// @Min(value = 0, message = "validation.selectOne")
 	public Integer companySizeValue;
 
-	@Required
 	@Lob
 	public String description;
 
 	public boolean isMultinational;
 
-	@Required
 	public String companyName;
 
-	@Required
 	@Lob
 	public String companyProducts;
 

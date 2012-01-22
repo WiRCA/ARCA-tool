@@ -51,31 +51,6 @@
 
     // Verify that creating RCA case with only case name given is not possible.
     type('id=caseName','Testikeissi')
-    clickAndWait('id=create')
-    verifyTextPresent('Select one')
-
-    select('id=caseTypeValue','value=2')
-    clickAndWait('id=create')
-    verifyTextPresent('Required')
-
-    type('id=description','Testdescription')
-    clickAndWait('id=create')
-
-    verifyTextPresent('Required')
-    type('id=caseGoals','Testikeissin tavoitteet')
-    clickAndWait('id=create')
-    verifyTextPresent('Required')
-
-    type('id=companyName','Test company')
-    clickAndWait('id=create')
-
-    verifyTextPresent('Select one')
-    select('id=companySize','value=2')
-    clickAndWait('id=create')
-    verifyTextPresent('Required')
-
-    // successfully create new, public RCA case
-    type('id=companyProducts','Testituotteet')
     click('id=isCasePublic')
     clickAndWait('id=create')
     verifyTextPresent('Testikeissi')

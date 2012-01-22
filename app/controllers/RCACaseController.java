@@ -30,19 +30,18 @@ import models.RCACase;
 import models.User;
 import models.enums.CompanySize;
 import models.enums.RCACaseType;
+import models.events.Event;
 import notifiers.Mails;
 import play.Logger;
 import play.data.validation.Email;
 import play.data.validation.Required;
 import play.data.validation.Valid;
+import play.libs.F.IndexedEvent;
 import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.With;
 
-import java.util.*;
-
-import play.libs.F.*;
-import models.events.*;
+import java.util.List;
 
 /**
  * Methods related to RCA cases.
@@ -58,7 +57,7 @@ public class RCACaseController extends Controller {
 	/**
 	 * Checks whether the user is logged in.
 	 * Users that are not logged in can view and contribute to public RCA cases and get their events.
-	 * @throws Throwable
+	 * @throws Throwable Thrown from Play's Secure
 	 */
 	@Before(unless={"show", "waitMessages"})
     static void checkAccess() throws Throwable {
@@ -100,17 +99,10 @@ public class RCACaseController extends Controller {
 	public static void show(Long id) {
 		RCACase rcaCase = RCACase.findById(id);
 		checkIfCurrentUserHasRightsForRCACase(rcaCase);
-		String size = rcaCase.getCompanySize().text;
-		String type = rcaCase.getRCACaseType().text;
 		Long lastMessage = rcaCase.getCauseStream().lastEvent;
-		/*List<IndexedEvent> archivedEvents = rcaCase.getCauseStream().eventStream.availableEvents(0);
-		if (archivedEvents.size() > 0) {
-			IndexedEvent last = archivedEvents.get(archivedEvents.size() - 1);
-			lastMessage = last.id;
-		}*/
 		Logger.info("Showing RCACase, last message id: %d", lastMessage);
 		User currentUser = SecurityController.getCurrentUser();
-		render(rcaCase, type, size, lastMessage, currentUser);
+		render(rcaCase, lastMessage, currentUser);
 	}
 
 	/**
@@ -233,10 +225,7 @@ public class RCACaseController extends Controller {
 		notFoundIfNull(rcaCase);
 
 		User user = SecurityController.getCurrentUser();
-		if (rcaCase.isCasePublic) {
-			return;
-		}
-		else if (user == null || !user.caseIds.contains(rcaCase.id) ) {
+		if (!rcaCase.isCasePublic && (user == null || !user.caseIds.contains(rcaCase.id))) {
 			forbidden();
 		}
 	}
