@@ -97,8 +97,7 @@ public class RCACaseController extends Controller {
 	 * @param id ID of the RCA case
 	 */
 	public static void show(Long id) {
-		RCACase rcaCase = RCACase.findById(id);
-		checkIfCurrentUserHasRightsForRCACase(rcaCase);
+		RCACase rcaCase = checkIfCurrentUserHasRightsForRCACase(id);
 		Long lastMessage = rcaCase.getCauseStream().lastEvent;
 		Logger.info("Showing RCACase, last message id: %d", lastMessage);
 		User currentUser = SecurityController.getCurrentUser();
@@ -111,8 +110,7 @@ public class RCACaseController extends Controller {
 	 * @param lastReceived Last sent event for the client.
 	 */
 	public static void waitMessages(Long rcaCaseId, Long lastReceived) {
-		RCACase rcaCase = RCACase.findById(rcaCaseId);
-		checkIfCurrentUserHasRightsForRCACase(rcaCase);
+		RCACase rcaCase = checkIfCurrentUserHasRightsForRCACase(rcaCaseId);
 		List<IndexedEvent<Event>> messages = await(rcaCase.nextMessages(lastReceived));
 		rcaCase.getCauseStream().lastEvent = messages.get(messages.size() - 1).id;
 		renderJSON(messages, new TypeToken<List<IndexedEvent<Event>>>() {
@@ -124,8 +122,7 @@ public class RCACaseController extends Controller {
 	 * @param rcaCaseId ID of the RCA case
 	 */
 	public static void getUsers(Long rcaCaseId) {
-		RCACase rcaCase = RCACase.findById(rcaCaseId);
-		checkIfCurrentUserHasRightsForRCACase(rcaCase);
+		RCACase rcaCase = checkIfCurrentUserHasRightsForRCACase(rcaCaseId);
 		List<User> existingUsers =
 				User.find("Select u from user as u inner join u.caseIds as caseIds" + " where ? in caseIds",
 				          rcaCaseId)
@@ -147,8 +144,7 @@ public class RCACaseController extends Controller {
 	 */
 	public static void inviteUser(Long rcaCaseId, @Required @Email String invitedEmail) {
 		User current = SecurityController.getCurrentUser();
-		RCACase rcaCase = RCACase.findById(rcaCaseId);
-		checkIfCurrentUserHasRightsForRCACase(rcaCase);
+		RCACase rcaCase = checkIfCurrentUserHasRightsForRCACase(rcaCaseId);
 		if (invitedEmail == null || invitedEmail.isEmpty()) {
 			notFound();
 		}
@@ -183,8 +179,7 @@ public class RCACaseController extends Controller {
 	 */
 	public static void removeUser(Long rcaCaseId, Boolean isInvitedUser, String email) {
 		User current = SecurityController.getCurrentUser();
-		RCACase rcaCase = RCACase.findById(rcaCaseId);
-		checkIfCurrentUserHasRightsForRCACase(rcaCase);
+		RCACase rcaCase = checkIfCurrentUserHasRightsForRCACase(rcaCaseId);
 		// Check if user the owner of the RCA case
 		if (rcaCase.ownerId.equals(current.id)) {
 			if (isInvitedUser) {
@@ -213,20 +208,23 @@ public class RCACaseController extends Controller {
 	 * @param rcaCaseId ID of the RCA case
 	 */
 	public static void extractCSV(Long rcaCaseId) {
-		RCACase rcaCase = RCACase.findById(rcaCaseId);
-		checkIfCurrentUserHasRightsForRCACase(rcaCase);
-		response.setHeader("Content-Disposition", "attachment;filename=" + rcaCase.caseName.replace(" ",
-		                                                                                            "-") + ".csv");
+		RCACase rcaCase = checkIfCurrentUserHasRightsForRCACase(rcaCaseId);
+		response.setHeader("Content-Disposition", "attachment;filename=" +
+		                                          rcaCase.caseName.replace(" ", "-") + ".csv");
 		request.format = "text/csv";
 		renderTemplate("RCACaseController/extractCSV.csv", rcaCase);
 	}
 
-	private static void checkIfCurrentUserHasRightsForRCACase(RCACase rcaCase) {
+	private static RCACase checkIfCurrentUserHasRightsForRCACase(Long rcaCaseId) {
+		RCACase rcaCase = RCACase.findById(rcaCaseId);
 		notFoundIfNull(rcaCase);
 
 		User user = SecurityController.getCurrentUser();
 		if (!rcaCase.isCasePublic && (user == null || !user.caseIds.contains(rcaCase.id))) {
 			forbidden();
+			return null;
+		} else {
+			return rcaCase;
 		}
 	}
 
