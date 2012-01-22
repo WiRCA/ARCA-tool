@@ -100,11 +100,12 @@ public class Bootstrap extends Job {
 	        Cause testNode5 = testNode1.addCause("test node 5", tester);
 	        Cause testNode6 = testNode2.addCause("test node 6", tester);
 	        Cause testNode7 = testNode5.addCause("test node 7", tester);
-	        Cause testNode8 = testNode5.addCause("test node 8", tester);
-	        Cause testNode9 = testNode8.addCause("test node 9", tester);
+	        Cause testNode8 = testNode4.addCause("test node 8", tester);
+	        Cause testNode9 = testNode5.addCause("test node 9", tester);
 	        Cause testNode10 = testNode9.addCause("test node 10", tester);
-	        testNode2.addCause(testNode7);
-	        testNode2.addCause(testNode8);
+	        testNode7.addCause(testNode3);
+	        testNode8.addCause(testNode6);
+	        testNode10.addCause(testNode6);
 
 	        RCACase adminsPrivateCase = new RCACase(admin);
 	        adminsPrivateCase.caseName = "";
