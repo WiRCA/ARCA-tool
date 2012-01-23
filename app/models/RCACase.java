@@ -244,7 +244,6 @@ public class RCACase extends Model {
 	 *
 	 * @param cause the problem
 	 */
-	@Deprecated // Do we need this somewhere?
 	public void setProblem(Cause cause) {
 		if (cause.rcaCase.equals(this)) {
 			this.problem = cause;
