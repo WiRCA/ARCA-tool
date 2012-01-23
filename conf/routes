@@ -23,7 +23,7 @@ POST    /CreateRCACase                                              RCACaseContr
 GET     /monitoring                                                 MonitoringController.index
 
 # Show RCA case
-GET     /case/{id}                                                  RCACaseController.show
+GET     /case/{id}                                                  PublicRCACaseController.show
 GET     /case/{rcaCaseId}/update/{lastReceived}                     RCACaseController.waitMessages
 
 # Extract RCA case

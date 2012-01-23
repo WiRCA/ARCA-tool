@@ -125,6 +125,22 @@ public class Bootstrap extends Job {
 	        tester.addRCACase(adminsPrivateCase);
 	        tester.save();
 
+	        RCACase adminsOwnPrivateCase = new RCACase(admin);
+            adminsOwnPrivateCase.caseName = "";
+            adminsOwnPrivateCase.caseName = "Admin's own private RCA case";
+            adminsOwnPrivateCase.caseTypeValue = 2;
+            adminsOwnPrivateCase.caseGoals = "Test the program";
+            adminsOwnPrivateCase.companySizeValue = 2;
+            adminsOwnPrivateCase.description = "We are going to save the world with our ARCA-tool!";
+            adminsOwnPrivateCase.isMultinational = true;
+            adminsOwnPrivateCase.companyName = "WiRCA";
+	        adminsOwnPrivateCase.companyProducts = "ARCA-tool";
+            adminsOwnPrivateCase.isCasePublic = false;
+            adminsOwnPrivateCase.problem = new Cause(adminsOwnPrivateCase, adminsOwnPrivateCase.caseName, admin).save();
+            adminsOwnPrivateCase.save();
+            admin.addRCACase(adminsOwnPrivateCase);
+            admin.save();
+
 	        RCACase adminsPublicCase = new RCACase(admin);
 	        adminsPublicCase.caseName = "";
 	        adminsPublicCase.caseName = "Admin's public RCA case";

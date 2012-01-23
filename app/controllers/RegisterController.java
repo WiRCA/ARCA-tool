@@ -209,7 +209,7 @@ public class RegisterController extends Controller {
 
 	private static void showCaseIfInvited(Long rcaCaseId, User user) {
 		if (rcaCaseId != null && user.caseIds.contains(rcaCaseId)) {
-			RCACaseController.show(rcaCaseId);
+			PublicRCACaseController.show(rcaCaseId);
 		}
 	}
 }

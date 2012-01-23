@@ -24,13 +24,15 @@
 
 import job.Bootstrap;
 import models.RCACase;
+import models.User;
 import org.junit.Before;
 import org.junit.Test;
-import play.Logger;
 import play.mvc.Http;
 import play.mvc.Router;
 import play.test.Fixtures;
 import play.test.FunctionalTest;
+
+import java.util.HashSet;
 
 /**
  * @author Risto Virtanen
@@ -41,37 +43,35 @@ public class RCACaseFunctionalTest extends FunctionalTest {
 	public void setUp() {
 		Fixtures.deleteAllModels();
 		new Bootstrap().doJob();
-
-
 	}
 
 	@Test
 	public void testNullUserTest() {
 		Http.Response response = GET(Router.reverse("RCACaseController.createRCACase").url);
-		assertStatus(302, response);
+		assertStatus(Http.StatusCode.FOUND, response);
 		assertHeaderEquals("Location", "/login", response);
 	}
 
 	@Test
 	public void nonexistentRCACaseTest() {
 		Http.Request request = newRequest();
-		request.url = Router.reverse("RCACaseController.show").url;
+		request.url = Router.reverse("PublicRCACaseController.show").url;
 		request.method = "GET";
 
 		request.params.put("id", "9999");
 		Http.Response response = GET(request, request.url);
-		assertStatus(404, response);
+		assertStatus(Http.StatusCode.NOT_FOUND, response);
 	}
 
 	@Test
-	public void getCSVForRCACase() {
+	public void getCSVForRCACaseTest() {
 		RCACase rcaCase = RCACase.find("caseName", "Test RCA case").first();
 		assertNotNull(rcaCase);
 
 		Http.Request request = newRequest();
 		request.url = "/login";
-		request.params.put("username", "admin@local");
-		request.params.put("password", "admin");
+		request.params.put("username", Bootstrap.ADMIN_USER_EMAIL);
+		request.params.put("password", Bootstrap.ADMIN_USER_PASSWORD);
 		POST(request, request.url);
 
 		request = newRequest();
@@ -80,12 +80,86 @@ public class RCACaseFunctionalTest extends FunctionalTest {
 
 		request.params.put("rcaCaseId", "9999");
 		Http.Response response = GET(request, request.url);
-		Logger.info(response.headers.toString());
-		assertStatus(404, response);
+		assertStatus(Http.StatusCode.NOT_FOUND, response);
 
 		request.params.put("rcaCaseId", rcaCase.id.toString());
 		response = GET(request, request.url);
-		Logger.info(response.headers.toString());
-		assertStatus(200, response);
+		assertStatus(Http.StatusCode.OK, response);
+	}
+
+	@Test
+	public void checkIfCurrentUserHasRightsForRCACaseTest() {
+		RCACase privateRcaCase = RCACase.find("caseName", "Admin's own private RCA case").first();
+		assertNotNull(privateRcaCase);
+
+		Http.Request request = newRequest();
+		request.url = Router.reverse("PublicRCACaseController.show").url;
+		request.method = "GET";
+		request.params.put("id", privateRcaCase.id.toString());
+		Http.Response response = GET(request, request.url);
+		assertStatus(Http.StatusCode.FORBIDDEN, response);
+
+		request = newRequest();
+		request.url = "/login";
+		request.params.put("username", Bootstrap.TEST_USER_EMAIL);
+		request.params.put("password", Bootstrap.TEST_USER_PASSWORD);
+		POST(request, request.url);
+
+		request = newRequest();
+		request.url = Router.reverse("PublicRCACaseController.show").url;
+		request.method = "GET";
+		request.params.put("id", privateRcaCase.id.toString());
+		response = GET(request, request.url);
+		assertStatus(Http.StatusCode.FORBIDDEN, response);
+		
+		User tester = User.find("email", Bootstrap.TEST_USER_EMAIL).first();
+		tester.addRCACase(privateRcaCase);
+		tester.save();
+
+		request = newRequest();
+		request.url = Router.reverse("PublicRCACaseController.show").url;
+		request.method = "GET";
+		request.params.put("id", privateRcaCase.id.toString());
+		response = GET(request, request.url);
+		assertStatus(Http.StatusCode.OK, response);
+		
+		User newUser = new User("testing", "testing");
+		newUser.caseIds = null;
+		newUser.save();
+		response = GET("/logout");
+		assertStatus(Http.StatusCode.FOUND, response);
+		
+		request = newRequest();
+		request.url = "/login";
+		request.params.put("username", "testing");
+		request.params.put("password", "testing");
+		POST(request, request.url);		
+
+		request = newRequest();
+		request.url = Router.reverse("PublicRCACaseController.show").url;
+		request.method = "GET";
+		request.params.put("id", privateRcaCase.id.toString());
+		response = GET(request, request.url);
+		assertStatus(Http.StatusCode.FORBIDDEN, response);
+		
+		newUser.caseIds = new HashSet<Long>();
+		newUser.save();
+
+		request = newRequest();
+		request.url = Router.reverse("PublicRCACaseController.show").url;
+		request.method = "GET";
+		request.params.put("id", privateRcaCase.id.toString());
+		response = GET(request, request.url);
+		assertStatus(Http.StatusCode.FORBIDDEN, response);
+		
+		newUser.addRCACase(privateRcaCase);
+		newUser.save();
+
+		request = newRequest();
+		request.url = Router.reverse("PublicRCACaseController.show").url;
+		request.method = "GET";
+		request.params.put("id", privateRcaCase.id.toString());
+		response = GET(request, request.url);
+		assertStatus(Http.StatusCode.OK, response);
 	}
 }
