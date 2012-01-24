@@ -74,8 +74,6 @@ public class CauseController extends Controller {
 		Cause causeTo = Cause.findById(toID);
 
 		causeFrom.addCause(causeTo);
-		causeFrom.save();
-		causeTo.save();
 
 		AddRelationEvent event = new AddRelationEvent(Long.toString(fromId), Long.toString(toID));
 		CauseStream causeEvents = rcaCase.getCauseStream();

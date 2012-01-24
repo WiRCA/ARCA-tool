@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
+ * Copyright (C) 2012 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
  * Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus,
  * Timo Lehtinen, Jaakko Harjuhahto
  *
@@ -28,13 +28,21 @@ import play.db.jpa.Model;
 
 /**
  * Class that supports play.db.jpa.Model and is Comparable.
+ *
  * @author Eero Laukkanen
  */
 
 public abstract class IdComparableModel extends Model implements Comparable {
 
-		public int compareTo(Object o) {
-		Long oid = ((IdComparableModel)o).id;
+	/**
+	 * Compare method for objects with id's.
+	 *
+	 * @param o object to compare to
+	 *
+	 * @return 1 if this object is newer, 0 if objects are even (both have null id) and -1 if this object is older.
+	 */
+	public int compareTo(Object o) {
+		Long oid = ((IdComparableModel) o).id;
 		if (this.id == null && oid != null) {
 			return 1;
 		}
@@ -44,7 +52,7 @@ public abstract class IdComparableModel extends Model implements Comparable {
 		if (this.id == null && oid == null) {
 			return 0;
 		}
-		if (this.id > oid) {
+		if (this.id < oid) {
 			return -1;
 		} else if (this.id == oid) {
 			return 0;
