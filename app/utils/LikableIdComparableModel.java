@@ -27,6 +27,7 @@ package utils;
 import models.User;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -37,7 +38,7 @@ import java.util.TreeSet;
  */
 public abstract class LikableIdComparableModel extends IdComparableModel {
 
-	public abstract SortedSet<Long> getLikes();
+	public abstract List<Long> getLikes();
 
 	/**
 	 * Returns all users who have liked this object.
@@ -52,6 +53,10 @@ public abstract class LikableIdComparableModel extends IdComparableModel {
 			returnedLikes.add(User.<User>findById(like));
 		}
 		return returnedLikes;
+	}
+
+	public int countLikes() {
+		return getLikes().size();
 	}
 
 	/**

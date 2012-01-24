@@ -173,9 +173,9 @@ public class CauseTest extends GenericRCAUnitTest {
 		cause.like(user);
 		assertEquals(1, cause.likes.size());
 		cause.like(user);
-		assertEquals(1, cause.likes.size());
+		assertEquals(2, cause.likes.size());
 		cause.dislike(user);
-		assertEquals(0, cause.likes.size());
+		assertEquals(1, cause.likes.size());
 	}
 
 	@Test

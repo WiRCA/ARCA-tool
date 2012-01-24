@@ -31,6 +31,8 @@ import org.hibernate.annotations.SortType;
 import utils.LikableIdComparableModel;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -60,8 +62,7 @@ public class Correction extends LikableIdComparableModel {
 	@ElementCollection
 	@JoinTable(name = "correctionlikes", joinColumns = {@JoinColumn(name = "correctionId", nullable = false)})
 	@Column(name = "userId", nullable = false)
-	@Sort(type = SortType.NATURAL)
-	public SortedSet<Long> likes;
+	public List<Long> likes;
 
 	/**
 	 * Creates a new correction with specified name and description.
@@ -75,7 +76,7 @@ public class Correction extends LikableIdComparableModel {
 		this.description = description;
 		this.cause = correctionTo;
 		this.comments = new TreeSet<Comment>();
-		this.likes = new TreeSet<Long>();
+		this.likes = new ArrayList<Long>();
 	}
 
 	/**
@@ -83,7 +84,7 @@ public class Correction extends LikableIdComparableModel {
 	 *
 	 * @return set of ids of users who have liked this correction
 	 */
-	public SortedSet<Long> getLikes() {
+	public List<Long> getLikes() {
 		return this.likes;
 	}
 

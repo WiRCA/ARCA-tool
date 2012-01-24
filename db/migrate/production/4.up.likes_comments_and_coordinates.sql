@@ -9,9 +9,12 @@ USE `arcatool` ;
 -- Table `arcatool`.`causelikes`
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS `arcatool`.`causelikes` (
+  `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `causeId` BIGINT(20) UNSIGNED NOT NULL,
   `userId` BIGINT(20) UNSIGNED NOT NULL,
-  PRIMARY KEY (`causeId`, `userId`) )
+  PRIMARY KEY (`id`),
+  INDEX `fk_causelikes_causeId` (`causeId` ASC),
+  INDEX `fk_causelikes_userId` (`userId` ASC) )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
@@ -19,9 +22,12 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `arcatool`.`correctionlikes`
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS `arcatool`.`correctionlikes` (
+  `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `correctionId` BIGINT(20) UNSIGNED NOT NULL,
   `userId` BIGINT(20) UNSIGNED NOT NULL,
-  PRIMARY KEY (`correctionId`, `userId`) )
+  PRIMARY KEY (`id`),
+  INDEX `fk_correctionlikes_correctionId` (`correctionId` ASC),
+  INDEX `fk_correctionlikes_userId` (`userId` ASC) )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 

@@ -30,10 +30,7 @@ import org.hibernate.annotations.SortType;
 import utils.LikableIdComparableModel;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * Cause in RCA case tree.
@@ -79,8 +76,7 @@ public class Cause extends LikableIdComparableModel {
 	@ElementCollection
 	@JoinTable(name = "causelikes", joinColumns = {@JoinColumn(name = "causeId", nullable = false)})
 	@Column(name = "userId", nullable = false)
-	@Sort(type = SortType.NATURAL)
-	public SortedSet<Long> likes;
+	public List<Long> likes;
 
 	@PrePersist
 	protected void onCreate() {
@@ -113,7 +109,7 @@ public class Cause extends LikableIdComparableModel {
 		this.causeRelations = new TreeSet<Relation>();
 		this.effectRelations = new TreeSet<Relation>();
 		this.corrections = new TreeSet<Correction>();
-		this.likes = new TreeSet<Long>();
+		this.likes = new ArrayList<Long>();
 	}
 
 	/**
@@ -121,7 +117,7 @@ public class Cause extends LikableIdComparableModel {
 	 *
 	 * @return set of ids of users who have liked this cause
 	 */
-	public SortedSet<Long> getLikes() {
+	public List<Long> getLikes() {
 		return this.likes;
 	}
 
