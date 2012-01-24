@@ -277,16 +277,7 @@
           onMouseLeave: function() {
             fd.canvas.getElement().style.cursor = '';
           },
-          *{onDragStart: function(node, eventInfo, e){
-            
-            //Because node has moved we lock its(+childs) position from our adding algorithms
-            node.data.locked = "true";
-            node.eachAdjacency(function(adj) {
-              if(adj.nodeTo.data.nodeLevel>node.data.nodeLevel){
-                adj.nodeTo.data.locked="true";
-              }
-            });
-          },}*
+
           //Update node positions when dragged
           onDragMove: function(node, eventInfo, e) {
 			jQuery("#radial_menu").radmenu("hide");
