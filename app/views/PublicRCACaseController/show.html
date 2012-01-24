@@ -46,19 +46,7 @@
         <script src="@{'/public/javascripts/jQuery.radmenu.js'}" type="text/javascript" charset="${_response_encoding}"></script>
     </head>
     <body>
-*{
-<h1>&{'showRCACase.title', rcaCase.caseName}</h1>
 
-<p>&{'createRCA.caseName'}: ${rcaCase.caseName}</p>
-<p>&{'createRCA.rcaCaseType'}: &{''+rcaCase.RCACaseType?.text}</p>
-<p>&{'createRCA.company'}: ${rcaCase.companyName}</p>
-<p>&{'createRCA.companySize'}: &{''+rcaCase.companySize?.text}</p>
-<p>&{'createRCA.multinational'}: ${rcaCase.isMultinational}</p>
-<p>&{'createRCA.public'}: ${rcaCase.isCasePublic}</p>
-<p>&{'showRCACase.owner'}: ${rcaCase.owner.name}</p>
-
-#{a @UserController.index() } &{'showRCACase.back'} #{/a}
-}*
 #{navigation /}
 <div id="container">
   <div id="center-container">
