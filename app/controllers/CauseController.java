@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
+ * Copyright (C) 2012 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
  * Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus,
  * Timo Lehtinen, Jaakko Harjuhahto
  *
@@ -24,21 +24,17 @@
 
 package controllers;
 
-import models.Correction;
+import models.Cause;
 import models.RCACase;
 import models.User;
+import models.events.*;
 import play.Logger;
 import play.mvc.Controller;
 import play.mvc.With;
-import models.Cause;
-import models.events.*;
-import models.events.AddCauseEvent;
-import models.events.DeleteCauseEvent;
-
-import java.util.SortedSet;
 
 /**
  * Methods related to causes.
+ *
  * @author Eero Laukkanen
  * @author Juha Viljanen
  */
@@ -48,6 +44,7 @@ public class CauseController extends Controller {
 
 	/**
 	 * Adds a sub-cause to a cause.
+	 *
 	 * @param causeId
 	 * @param name
 	 */
@@ -66,19 +63,20 @@ public class CauseController extends Controller {
 
 	/**
 	 * Adds a relation between causes.
+	 *
 	 * @param fromId
 	 * @param toID
 	 */
 	public static void addRelation(Long fromId, Long toID) {
 		Cause causeFrom = Cause.findById(fromId);
 		RCACase rcaCase = causeFrom.rcaCase;
-		
+
 		Cause causeTo = Cause.findById(toID);
-		
+
 		causeFrom.addCause(causeTo);
 		causeFrom.save();
 		causeTo.save();
-    
+
 		AddRelationEvent event = new AddRelationEvent(Long.toString(fromId), Long.toString(toID));
 		CauseStream causeEvents = rcaCase.getCauseStream();
 		causeEvents.getStream().publish(event);
@@ -87,37 +85,42 @@ public class CauseController extends Controller {
 
 	/**
 	 * Checks whether a cause has corrective actions added.
+	 *
 	 * @param causeId
+	 *
 	 * @return
 	 */
 	public static boolean hasCorrections(Long causeId) {
-	  Cause cause = Cause.findById(causeId);
-	  return !cause.corrections.isEmpty();
+		Cause cause = Cause.findById(causeId);
+		return !cause.corrections.isEmpty();
 	}
 
 	/**
 	 * Gets the name of the first corrective action of a cause.
+	 *
 	 * @param causeId
+	 *
 	 * @return
 	 */
 	public static String getFirstCorrectionName(Long causeId) {
-	  Cause cause = Cause.findById(causeId);
-	  return ((SortedSet<Correction>)cause.getCorrections()).first().name;
-    }
+		Cause cause = Cause.findById(causeId);
+		return (cause.corrections).first().name;
+	}
 
 	/**
 	 * Adds a corrective action for a cause.
+	 *
 	 * @param toId
 	 * @param name
 	 */
 	public static void addCorrection(Long toId, String name) {
-	  Cause causeTo = Cause.findById(toId);
-	  RCACase rcaCase = causeTo.rcaCase;
-	  
-	  causeTo.addCorrection(name, " ");
-	  causeTo.save();
-	  
-	  AddCorrectionEvent event = new AddCorrectionEvent(causeTo, name);
+		Cause causeTo = Cause.findById(toId);
+		RCACase rcaCase = causeTo.rcaCase;
+
+		causeTo.addCorrection(name, " ");
+		causeTo.save();
+
+		AddCorrectionEvent event = new AddCorrectionEvent(causeTo, name);
 		CauseStream causeEvents = rcaCase.getCauseStream();
 		causeEvents.getStream().publish(event);
 		Logger.info("Correction added to cause %s", causeTo.name);
@@ -128,6 +131,7 @@ public class CauseController extends Controller {
 	 * The root node of an RCA case can not be deleted.
 	 * RCA case owner can delete all other nodes.
 	 * Other users can only delete nodes that they have created themselves.
+	 *
 	 * @param causeId
 	 */
 	public static void deleteCause(String causeId) {

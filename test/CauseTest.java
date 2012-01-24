@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
+ * Copyright (C) 2012 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
  * Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus,
  * Timo Lehtinen, Jaakko Harjuhahto
  *
@@ -22,18 +22,15 @@
  * THE SOFTWARE.
  */
 
-import job.Bootstrap;
-import models.*;
-import models.enums.CompanySize;
-import models.enums.RCACaseType;
-import org.codehaus.groovy.tools.shell.commands.ExitCommand;
-import org.junit.*;
+import models.Cause;
+import models.Comment;
+import models.Correction;
+import models.enums.CommentType;
+import org.junit.Test;
 import play.Logger;
-import play.test.Fixtures;
-import play.test.UnitTest;
 
-import java.util.Set;
 import java.util.Date;
+import java.util.Set;
 
 /**
  * @author Eero Laukkanen
@@ -85,6 +82,24 @@ public class CauseTest extends GenericRCAUnitTest {
 	}
 
 	@Test
+	public void anotherIsParentTest() {
+		Cause cause1 = new Cause(testCase, "test cause1", user).save();
+		Cause cause2 = new Cause(testCase, "test cause2", user).save();
+		Cause cause3 = new Cause(testCase, "test cause3", user).save();
+		cause1.addCause(cause2);
+		assertTrue(cause2.isChildOf(cause1));
+		assertTrue(cause2.getParent().equals(cause1));
+		cause1.addCause(cause3);
+		assertTrue(cause3.isChildOf(cause1));
+		assertTrue(cause3.getParent().equals(cause1));
+		cause3.addCause(cause2);
+		assertTrue(cause2.isChildOf(cause1));
+		assertTrue(cause2.getParent().equals(cause1));
+		assertTrue(cause3.isChildOf(cause1));
+		assertTrue(cause3.getParent().equals(cause1));
+	}
+
+	@Test
 	public void getCausesAndRelationsTest() {
 		Cause cause1 = new Cause(testCase, "test cause1", user).save();
 		Cause cause2 = new Cause(testCase, "test cause2", user).save();
@@ -126,6 +141,18 @@ public class CauseTest extends GenericRCAUnitTest {
 		cause1.removeCorrection(correction);
 		Correction correction3 = Correction.find("byName", "new correction").first();
 		assertNull(correction3);
+		correction = cause1.addCorrection("new correction", "correction for a cause");
+		correction.like(user);
+		assertEquals(1, correction.likes.size());
+		correction.dislike(user);
+		assertEquals(0, correction.likes.size());
+		correction.addComment(user, "hello world", CommentType.NEUTRAL);
+		Comment findComment = Comment.find("byComment", "hello world").first();
+		assertEquals(user.id, findComment.creatorId);
+		correction.removeComment(findComment);
+		int commentsSize = Comment.find("byComment", "hello world").fetch().size();
+		assertEquals(0, commentsSize);
+
 	}
 
 	@Test
@@ -137,5 +164,29 @@ public class CauseTest extends GenericRCAUnitTest {
 		assertTrue(cause2.getCauses().contains(cause1));
 		testCase.deleteCause(cause2);
 		assertFalse(cause1.getCauses().contains(cause2));
+	}
+
+	@Test
+	public void likeTest() {
+		Cause cause = new Cause(testCase, "test cause", user).save();
+		assertEquals(0, cause.likes.size());
+		cause.like(user);
+		assertEquals(1, cause.likes.size());
+		cause.like(user);
+		assertEquals(1, cause.likes.size());
+		cause.dislike(user);
+		assertEquals(0, cause.likes.size());
+	}
+
+	@Test
+	public void coordinateTest() {
+		Cause cause = new Cause(testCase, "test cause", user).save();
+		assertFalse(cause.areCoordinatesSet());
+		cause.xCoordinate = 0;
+		cause.save();
+		assertFalse(cause.areCoordinatesSet());
+		cause.yCoordinate = 0;
+		cause.save();
+		assertTrue(cause.areCoordinatesSet());
 	}
 }

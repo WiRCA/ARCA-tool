@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
+ * Copyright (C) 2012 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
  * Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus,
  * Timo Lehtinen, Jaakko Harjuhahto
  *
@@ -28,16 +28,18 @@ import models.enums.CompanySize;
 import models.enums.RCACaseType;
 import models.events.CauseStream;
 import models.events.Event;
+import org.hibernate.annotations.Sort;
+import org.hibernate.annotations.SortType;
 import play.cache.Cache;
 import play.data.validation.Required;
-import play.db.jpa.Model;
 import play.libs.F.IndexedEvent;
 import play.libs.F.Promise;
+import utils.IdComparableModel;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
+import java.util.SortedSet;
 import java.util.TreeSet;
 
 /**
@@ -47,7 +49,7 @@ import java.util.TreeSet;
  */
 @PersistenceUnit(name = "maindb")
 @Entity(name = "rcacase")
-public class RCACase extends Model {
+public class RCACase extends IdComparableModel {
 
 	private static final String CAUSE_STREAM_NAME_IN_CACHE = "causeStream";
 	private static final int NUMBER_OF_EVENTS_STORED_IN_EVENT_STREAM = 100;
@@ -85,7 +87,8 @@ public class RCACase extends Model {
 	public Cause problem;
 
 	@OneToMany(mappedBy = "rcaCase", cascade = CascadeType.ALL)
-	public Set<Cause> causes;
+	@Sort(type = SortType.NATURAL)
+	public SortedSet<Cause> causes;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "created", nullable = false)
@@ -122,7 +125,7 @@ public class RCACase extends Model {
 	 * @param isMultinational  The boolean value whether the company related to the RCA case is multinational.
 	 * @param companyName      The name of the company related to the RCA case.
 	 * @param companySizeValue The size of the company related to the RCA case. Enums are found in
-	 *                            models/enums/CompanySize.
+	 *                         models/enums/CompanySize.
 	 * @param companyProducts  Products of the company
 	 * @param isCasePublic     The boolean value whether the RCA is public.
 	 * @param owner            The User who owns the case.
@@ -131,8 +134,7 @@ public class RCACase extends Model {
 	 *                         problem The Cause object that represents the problem of the RCA case.
 	 */
 	public RCACase(String caseName, int caseTypeValue, String caseGoals, String description, boolean isMultinational,
-	               String companyName, int companySizeValue, String companyProducts, boolean isCasePublic,
-	               User owner) {
+	               String companyName, int companySizeValue, String companyProducts, boolean isCasePublic, User owner) {
 		this.caseName = caseName;
 		this.caseTypeValue = caseTypeValue;
 		this.caseGoals = caseGoals;

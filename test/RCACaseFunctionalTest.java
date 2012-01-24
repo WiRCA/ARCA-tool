@@ -32,7 +32,7 @@ import play.mvc.Router;
 import play.test.Fixtures;
 import play.test.FunctionalTest;
 
-import java.util.HashSet;
+import java.util.TreeSet;
 
 /**
  * @author Risto Virtanen
@@ -111,7 +111,7 @@ public class RCACaseFunctionalTest extends FunctionalTest {
 		request.params.put("id", privateRcaCase.id.toString());
 		response = GET(request, request.url);
 		assertStatus(Http.StatusCode.FORBIDDEN, response);
-		
+
 		User tester = User.find("email", Bootstrap.TEST_USER_EMAIL).first();
 		tester.addRCACase(privateRcaCase);
 		tester.save();
@@ -122,18 +122,18 @@ public class RCACaseFunctionalTest extends FunctionalTest {
 		request.params.put("id", privateRcaCase.id.toString());
 		response = GET(request, request.url);
 		assertStatus(Http.StatusCode.OK, response);
-		
+
 		User newUser = new User("testing", "testing");
 		newUser.caseIds = null;
 		newUser.save();
 		response = GET("/logout");
 		assertStatus(Http.StatusCode.FOUND, response);
-		
+
 		request = newRequest();
 		request.url = "/login";
 		request.params.put("username", "testing");
 		request.params.put("password", "testing");
-		POST(request, request.url);		
+		POST(request, request.url);
 
 		request = newRequest();
 		request.url = Router.reverse("PublicRCACaseController.show").url;
@@ -141,8 +141,8 @@ public class RCACaseFunctionalTest extends FunctionalTest {
 		request.params.put("id", privateRcaCase.id.toString());
 		response = GET(request, request.url);
 		assertStatus(Http.StatusCode.FORBIDDEN, response);
-		
-		newUser.caseIds = new HashSet<Long>();
+
+		newUser.caseIds = new TreeSet<Long>();
 		newUser.save();
 
 		request = newRequest();
@@ -151,7 +151,7 @@ public class RCACaseFunctionalTest extends FunctionalTest {
 		request.params.put("id", privateRcaCase.id.toString());
 		response = GET(request, request.url);
 		assertStatus(Http.StatusCode.FORBIDDEN, response);
-		
+
 		newUser.addRCACase(privateRcaCase);
 		newUser.save();
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
+ * Copyright (C) 2012 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
  * Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus,
  * Timo Lehtinen, Jaakko Harjuhahto
  *
@@ -24,6 +24,8 @@
 
 package models;
 
+import org.hibernate.annotations.Sort;
+import org.hibernate.annotations.SortType;
 import play.data.validation.Email;
 import play.data.validation.Password;
 import play.data.validation.Required;
@@ -31,11 +33,12 @@ import play.db.jpa.Model;
 import utils.EncodingUtils;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * This class represents a user in RCA application.
+ *
  * @author Eero Laukkanen
  */
 @PersistenceUnit(name = "userdb")
@@ -56,25 +59,26 @@ public class User extends Model {
 	@ElementCollection
 	@JoinTable(name = "usercases", joinColumns = {@JoinColumn(name = "userId", nullable = false)})
 	@Column(name = "caseId", nullable = false)
-	public Set<Long> caseIds;
+	@Sort(type = SortType.NATURAL)
+	public SortedSet<Long> caseIds;
 
 	/**
 	 * @param email    User's email address
 	 * @param password User's password
-	 *
-	 * caseIds The set of IDs of all the private RCA cases that the User can see.
+	 *                 <p/>
+	 *                 caseIds The set of IDs of all the private RCA cases that the User can see.
 	 */
 	public User(String email, String password) {
 		this.email = email;
 		this.password = EncodingUtils.encodeSHA1(password);
-		this.caseIds = new HashSet<Long>();
+		this.caseIds = new TreeSet<Long>();
 	}
 
 	/**
 	 * Basic constructor
 	 */
 	public User() {
-		this.caseIds = new HashSet<Long>();
+		this.caseIds = new TreeSet<Long>();
 	}
 
 	/**
@@ -104,6 +108,7 @@ public class User extends Model {
 
 	/**
 	 * Removes RCACase from the cases of the user
+	 *
 	 * @param rcaCase the RCA case to be removed
 	 */
 	public void removeRCACase(RCACase rcaCase) {
@@ -111,8 +116,13 @@ public class User extends Model {
 		this.save();
 	}
 
-	public Set<RCACase> getRCACases() {
-		HashSet<RCACase> cases = new HashSet<RCACase>();
+	/**
+	 * Return cases that this user has created or has been invited.
+	 *
+	 * @return sorted set of the cases
+	 */
+	public SortedSet<RCACase> getRCACases() {
+		TreeSet<RCACase> cases = new TreeSet<RCACase>();
 		for (Long id : caseIds) {
 			RCACase rcaCase = RCACase.findById(id);
 			cases.add(rcaCase);

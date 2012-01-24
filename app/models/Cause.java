@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
+ * Copyright (C) 2012 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
  * Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus,
  * Timo Lehtinen, Jaakko Harjuhahto
  *
@@ -25,11 +25,14 @@
 package models;
 
 import models.enums.StatusOfCause;
-import utils.IdComparableModel;
+import org.hibernate.annotations.Sort;
+import org.hibernate.annotations.SortType;
+import utils.LikableIdComparableModel;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.TreeSet;
 
 /**
@@ -40,7 +43,7 @@ import java.util.TreeSet;
 
 @PersistenceUnit(name = "maindb")
 @Entity(name = "cause")
-public class Cause extends IdComparableModel {
+public class Cause extends LikableIdComparableModel {
 
 	public String name;
 
@@ -56,15 +59,28 @@ public class Cause extends IdComparableModel {
 
 
 	@OneToMany(mappedBy = "causeTo", cascade = CascadeType.ALL)
-	public Set<Relation> causeRelations;
+	@Sort(type = SortType.NATURAL)
+	public SortedSet<Relation> causeRelations;
 
 	@OneToMany(mappedBy = "causeFrom", cascade = CascadeType.ALL)
-	public Set<Relation> effectRelations;
+	@Sort(type = SortType.NATURAL)
+	public SortedSet<Relation> effectRelations;
 
 	@OneToMany(mappedBy = "cause", cascade = CascadeType.ALL)
-	public Set<Correction> corrections;
+	@Sort(type = SortType.NATURAL)
+	public SortedSet<Correction> corrections;
 
 	public Integer statusValue = StatusOfCause.DETECTED.getValue();
+
+	public Integer xCoordinate = null;
+
+	public Integer yCoordinate = null;
+
+	@ElementCollection
+	@JoinTable(name = "causelikes", joinColumns = {@JoinColumn(name = "causeId", nullable = false)})
+	@Column(name = "userId", nullable = false)
+	@Sort(type = SortType.NATURAL)
+	public SortedSet<Long> likes;
 
 	@PrePersist
 	protected void onCreate() {
@@ -97,6 +113,16 @@ public class Cause extends IdComparableModel {
 		this.causeRelations = new TreeSet<Relation>();
 		this.effectRelations = new TreeSet<Relation>();
 		this.corrections = new TreeSet<Correction>();
+		this.likes = new TreeSet<Long>();
+	}
+
+	/**
+	 * Return users who have liked this cause.
+	 *
+	 * @return set of ids of users who have liked this cause
+	 */
+	public SortedSet<Long> getLikes() {
+		return this.likes;
 	}
 
 	/**
@@ -124,14 +150,6 @@ public class Cause extends IdComparableModel {
 		this.corrections.remove(correction);
 		correction.delete();
 		this.save();
-	}
-
-	public Set<Correction> getCorrections() {
-		Set<Correction> corrections = new TreeSet<Correction>();
-		for (Correction correction : this.corrections) {
-			corrections.add(correction);
-		}
-		return corrections;
 	}
 
 	/**
@@ -271,4 +289,14 @@ public class Cause extends IdComparableModel {
 	public String toString() {
 		return name + " (id: " + id + ", rca case: " + rcaCase + ")";
 	}
+
+	/**
+	 * Method to determine if both coordinates of the cause have been set.
+	 *
+	 * @return true if both coordinates have been set, false otherwise
+	 */
+	public boolean areCoordinatesSet() {
+		return (this.yCoordinate != null) && (this.xCoordinate != null);
+	}
+
 }

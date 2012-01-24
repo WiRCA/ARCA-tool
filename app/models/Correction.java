@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
+ * Copyright (C) 2012 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
  * Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus,
  * Timo Lehtinen, Jaakko Harjuhahto
  *
@@ -24,13 +24,15 @@
 
 package models;
 
+import models.enums.CommentType;
 import models.enums.StatusOfCorrection;
-import utils.IdComparableModel;
+import org.hibernate.annotations.Sort;
+import org.hibernate.annotations.SortType;
+import utils.LikableIdComparableModel;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.PersistenceUnit;
+import javax.persistence.*;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * Corrective action for a cause in RCA tree.
@@ -39,7 +41,7 @@ import javax.persistence.PersistenceUnit;
  */
 @PersistenceUnit(name = "maindb")
 @Entity(name = "correction")
-public class Correction extends IdComparableModel {
+public class Correction extends LikableIdComparableModel {
 
 	public String name;
 
@@ -50,6 +52,16 @@ public class Correction extends IdComparableModel {
 	@ManyToOne
 	@JoinColumn(name = "causeId")
 	public Cause cause;
+
+	@OneToMany(mappedBy = "correction", cascade = CascadeType.ALL)
+	@Sort(type = SortType.NATURAL)
+	public SortedSet<Comment> comments;
+
+	@ElementCollection
+	@JoinTable(name = "correctionlikes", joinColumns = {@JoinColumn(name = "correctionId", nullable = false)})
+	@Column(name = "userId", nullable = false)
+	@Sort(type = SortType.NATURAL)
+	public SortedSet<Long> likes;
 
 	/**
 	 * Creates a new correction with specified name and description.
@@ -62,6 +74,17 @@ public class Correction extends IdComparableModel {
 		this.name = name;
 		this.description = description;
 		this.cause = correctionTo;
+		this.comments = new TreeSet<Comment>();
+		this.likes = new TreeSet<Long>();
+	}
+
+	/**
+	 * Return users who have liked this correction.
+	 *
+	 * @return set of ids of users who have liked this correction
+	 */
+	public SortedSet<Long> getLikes() {
+		return this.likes;
 	}
 
 	/**
@@ -82,4 +105,27 @@ public class Correction extends IdComparableModel {
 		this.statusValue = status.getValue();
 	}
 
+	/**
+	 * Adds a new comment to the correction.
+	 *
+	 * @param user        user who adds the comment
+	 * @param comment     the added comment
+	 * @param commentType type of the comment - neutral, negative or positive
+	 */
+	public void addComment(User user, String comment, CommentType commentType) {
+		Comment newComment = new Comment(user, this, comment, commentType);
+		this.comments.add(newComment);
+		this.save();
+	}
+
+	/**
+	 * Remove a comment.
+	 *
+	 * @param comment the comment to be removed
+	 */
+	public void removeComment(Comment comment) {
+		this.comments.remove(comment);
+		this.save();
+		comment.delete();
+	}
 }
