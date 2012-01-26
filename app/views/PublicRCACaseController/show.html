@@ -48,12 +48,9 @@
     <body>
 
 #{navigation /}
-<div id="container">
-  <div id="center-container">
+
     <div id="infovis">
     </div>
-  </div>
-</div>
   <div id="radial_menu" style="position: absolute; display: none;">
     <ul class="list">
       <li class="item my_class" id="radmenu-event-addCause">+</li>
@@ -218,6 +215,8 @@
       var fd = new $jit.ForceDirected({
         //id of the visualization container
         injectInto: 'infovis',
+        'width': window.innerWidth,
+        'height':window.innerHeight,
         //Enable zooming and panning
         //by scrolling and DnD
         Navigation: {
