@@ -185,6 +185,8 @@ public class CauseController extends Controller {
 
 		cause.xCoordinate = x;
 		cause.yCoordinate = y;
+		
+		cause.save();
 
 		NodeMovedEvent movedEvent = new NodeMovedEvent(cause, x, y);
 
