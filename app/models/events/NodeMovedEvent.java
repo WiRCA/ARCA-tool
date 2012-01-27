@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
+ * Copyright (C) 2012 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
  * Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus,
  * Timo Lehtinen, Jaakko Harjuhahto
  *
@@ -26,22 +26,19 @@ package models.events;
 
 import models.Cause;
 
-public class AddCauseEvent extends Event {
+/**
+ * @author Eero Laukkanen
+ */
+public class NodeMovedEvent extends Event {
 
-	public final String text;
-	public final String causeFrom;
-	public final String causeTo;
-	public final String creatorId;
+	public final String x;
+	public final String y;
+	public final String causeId;
 
-	public AddCauseEvent(Cause cause, Long causeFrom) {
-		super("addcauseevent");
-		this.causeTo = Long.toString(cause.id);
-		this.text = cause.name.replaceAll("&", "&amp;").replaceAll(">", "&gt;").replaceAll("<", "&lt;");
-		this.causeFrom = String.valueOf(causeFrom);
-		this.creatorId = cause.creatorId == null ? null : Long.toString(cause.creatorId);
+	public NodeMovedEvent(Cause cause, int x, int y) {
+		super("nodemovedevent");
+		this.x = String.valueOf(x);
+		this.y = String.valueOf(y);
+		this.causeId = String.valueOf(cause.id);
 	}
-
 }
-
-
-

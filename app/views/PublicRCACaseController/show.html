@@ -1,5 +1,6 @@
 <!--
-  ~ Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen, Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus
+  ~ Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen, Joona Koistinen,
+  Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus
   ~
   ~ Permission is hereby granted, free of charge, to any person obtaining a copy
   ~ of this software and associated documentation files (the "Software"), to deal
@@ -22,499 +23,658 @@
 <!DOCTYPE html>
 
 <html>
-    <head>
-        <title>&{'showRCACase.title', rcaCase.caseName}</title>
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta charset="${_response_encoding}">
-        <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/main.css'}">
-        <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/jquery-ui-1.8.16.custom.css'}">
-        <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/arcaeditor.css'}">
-        <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/base.css'}">
-        <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/ForceDirected.css'}">
-        <link rel="stylesheet" href="@{'/public/stylesheets/bootstrap.min.css'}">
-        <!--[if lt IE 8]>
-          <link rel="stylesheet" href="@{'/public/stylesheets/ie.css'}" type="text/css" media="screen, projection">
-        <![endif]-->
-        <link rel="shortcut icon" type="image/png" href="@{'/public/images/favicon.png'}">
-        <!--[if lt IE 9]>
-        <script src="${'/public/javascripts/excanvas.compiled.js'}" type="text/javascript"></script>
-        <![endif]-->
-        <script src="@{'/public/javascripts/jquery-1.7.1.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
-        <script src="@{'/public/javascripts/bootstrap-modal.js'}" type="text/javascript" charset="${_response_encoding}"></script>
-        <script src="@{'/public/javascripts/jquery-ui-1.8.16.custom.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
-        <script src="@{'/public/javascripts/smalljit.js'}" type="text/javascript" charset="${_response_encoding}"></script>
-        <script src="@{'/public/javascripts/jQuery.radmenu.js'}" type="text/javascript" charset="${_response_encoding}"></script>
-    </head>
-    <body>
+<head>
+    <title>&{'showRCACase.title', rcaCase.caseName}</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="${_response_encoding}">
+    <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/main.css'}">
+    <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/jquery-ui-1.8.16.custom.css'}">
+    <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/arcaeditor.css'}">
+    <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/base.css'}">
+    <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/ForceDirected.css'}">
+    <link rel="stylesheet" href="@{'/public/stylesheets/bootstrap.min.css'}">
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="@{'/public/stylesheets/ie.css'}" type="text/css" media="screen, projection">
+    <![endif]-->
+    <link rel="shortcut icon" type="image/png" href="@{'/public/images/favicon.png'}">
+    <!--[if lt IE 9]>
+    <script src="${'/public/javascripts/excanvas.compiled.js'}" type="text/javascript"></script>
+    <![endif]-->
+    <script src="@{'/public/javascripts/jquery-1.7.1.min.js'}" type="text/javascript"
+            charset="${_response_encoding}"></script>
+    <script src="@{'/public/javascripts/bootstrap-modal.js'}" type="text/javascript"
+            charset="${_response_encoding}"></script>
+    <script src="@{'/public/javascripts/jquery-ui-1.8.16.custom.min.js'}" type="text/javascript"
+            charset="${_response_encoding}"></script>
+    <script src="@{'/public/javascripts/smalljit.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+    <script src="@{'/public/javascripts/jQuery.radmenu.js'}" type="text/javascript"
+            charset="${_response_encoding}"></script>
+</head>
+<body>
 
 #{navigation /}
 
-    <div id="infovis">
-    </div>
-  <div id="radial_menu" style="position: absolute; display: none;">
+<div id="infovis">
+</div>
+<div id="radial_menu" style="position: absolute; display: none;">
     <ul class="list">
-      <li class="item my_class" id="radmenu-event-addCause">+</li>
-      <li class="item my_class" id="radmenu-event-addRelation">R</li>
-      <li class="item my_class"id="radmenu-event-addCorrection" data-controls-modal="modal-from-dom" data-backdrop="static">C</li>
-      <li class="item my_class" id="radmenu-event-removeCause">X</li>
+        <li class="item my_class" id="radmenu-event-addCause">+</li>
+        <li class="item my_class" id="radmenu-event-addRelation">R</li>
+        <li class="item my_class" id="radmenu-event-addCorrection" data-controls-modal="modal-from-dom"
+            data-backdrop="static">C
+        </li>
+        <li class="item my_class" id="radmenu-event-removeCause">X</li>
     </ul>
-  </div>
-  <div id="my-modal" class="modal-backdrop fade hide in">
+</div>
+<div id="my-modal" class="modal-backdrop fade hide in">
     <!-- Modal -->
     <div class="modal" style="position: relative; top: auto; left: auto; margin: 0 auto; z-index: 1">
-      <div class="modal-header">
-        <a href="#" class="close">&times;</a>
-        <h3>Corrective action ideas</h3>
-      </div>
-      <div class="modal-body">
-        <p>List of corrections</p>
-        <div id="my_modal_body">
+        <div class="modal-header">
+            <a href="#" class="close">&times;</a>
+
+            <h3>Corrective action ideas</h3>
         </div>
-      </div>
-      <div class="modal-footer">
-        <a href="#" class="btn primary">Nappi</a>
-        <a href="#" class="btn secondary">Toinen nappi</a>
-      </div>
+        <div class="modal-body">
+            <p>List of corrections</p>
+
+            <div id="my_modal_body">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn primary">Nappi</a>
+            <a href="#" class="btn secondary">Toinen nappi</a>
+        </div>
     </div>
-  </div>
-  <div class="my_class" id="corrections_link" style="position: absolute; display:none;">
-    <a data-controls-modal="my-modal" data-backdrop="static" >+</a>
-  </div>
-  
+</div>
+<div class="my_class" id="corrections_link" style="position: absolute; display:none;">
+    <a data-controls-modal="my-modal" data-backdrop="static">+</a>
+</div>
+
 
 <script type="text/javascript">
-    $(document).ready(function() {
-      init();
-      zoomLevel = 1;
-    });
-    var labelType, useGradients, nativeTextSupport, animate;
+$(document).ready(function () {
+    init();
+    zoomLevel = 1;
+});
+var labelType, useGradients, nativeTextSupport, animate;
 
-    (function() {
-      var ua = navigator.userAgent,
-          iStuff = ua.match(/iPhone/i) || ua.match(/iPad/i),
-          typeOfCanvas = typeof HTMLCanvasElement,
-          nativeCanvasSupport = (typeOfCanvas == 'object' || typeOfCanvas == 'function'),
-          textSupport = nativeCanvasSupport
-            && (typeof document.createElement('canvas').getContext('2d').fillText == 'function');
-      //I'm setting this based on the fact that ExCanvas provides text support for IE
-      //and that as of today iPhone/iPad current text support is lame
-      labelType = (!nativeCanvasSupport || (textSupport && !iStuff))? 'Native' : 'HTML';
-      nativeTextSupport = labelType == 'Native';
-      useGradients = nativeCanvasSupport;
-      animate = !(iStuff || !nativeCanvasSupport);
-    })();
+(function () {
+    var ua = navigator.userAgent, iStuff = ua.match(/iPhone/i) ||
+                                           ua.match(/iPad/i), typeOfCanvas = typeof HTMLCanvasElement,
+            nativeCanvasSupport = (typeOfCanvas ==
 
-    function init(){
-      // init data
-      var json = [
-        #{list rcaCase.causes, as:'cause'}
-          {
-            "id": "${cause.id}",
-            "name": "${cause.name}",
-            "data": {
-                    "$color": "#83548B",
-                    "$type": "circle",
-                    "$dim":1,
-                    "parent": #{if cause.parent}${cause.parent.id}#{/if}#{else}""#{/else},
-                    "creatorId": '${cause.creatorId}'
-                    },
-            "adjacencies": [
-            #{list cause.causes, as:'causedBy'}
-            {
-              nodeTo: "${causedBy.id}"
-            }${causedBy_isLast && !cause.relations ? '' : ','}
-            #{/list}
-            #{list cause.relations, as:'relation'}
-            {
-              "nodeTo": "${relation.id}",
-							"data": {  
-			            "$type":"arrow",  
-			            "$direction": ["${cause.id}", "${relation.id}"],  
-			            "$dim":30,  
-			            "$color":"#FF0000",  
-			            "weight": 1  
-			        }
-            }${relation_isLast ? '' : ','}
-            #{/list}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                                                                              'object' ||
+                                                                                                                              typeOfCanvas ==
+                                                                                                                              'function'), textSupport = nativeCanvasSupport &&
+                                                                                                                                                         (typeof document.createElement('canvas').getContext('2d').fillText ==
+                                                                                                                                                          'function');
+    //I'm setting this based on the fact that ExCanvas provides text support for IE
+    //and that as of today iPhone/iPad current text support is lame
+    labelType = (!nativeCanvasSupport || (textSupport && !iStuff)) ? 'Native' : 'HTML';
+    nativeTextSupport = labelType == 'Native';
+    useGradients = nativeCanvasSupport;
+    animate = !(iStuff || !nativeCanvasSupport);
+})();
+
+function init() {
+    // init data
+    var json = [
+    #{list rcaCase.causes, as:'cause'}
+        {
+            "id":"${cause.id}",
+            "name":"${cause.name}",
+            "data":{
+                "$color":"#83548B",
+                "$type":"circle",
+                "$dim":1,
+            "parent": #{if cause.parent}${cause.parent.id}#{/if}#{else}""#{/else},
+                "creatorId":'${cause.creatorId}',
+            "xCoordinate": #{if cause.xCoordinate}${cause.xCoordinate}#{/if}#{else}""#{/else},
+            "yCoordinate": #{if cause.yCoordinate}${cause.yCoordinate}#{/if}#{else}""#{/else}
+            },
+            "adjacencies":[
+                #{list cause.causes, as:'causedBy'}
+                    {
+                        nodeTo:"${causedBy.id}"
+                    }${causedBy_isLast && !cause.relations ? '' : ','}
+                #{/list}
+                #{list cause.relations, as:'relation'}
+                    {
+                        "nodeTo":"${relation.id}",
+                        "data":{
+                            "$type":"arrow",
+                            "$direction":["${cause.id}", "${relation.id}"],
+                            "$dim":30,
+                            "$color":"#FF0000",
+                            "weight":1
+                        }
+                    }${relation_isLast ? '' : ','}
+                #{/list}
             ]
-          }${cause_isLast ? '' : ','}
-        #{/list}
-      ];
-      //Running number for creating nodes
-      var runningNumber = 0;
-      var lastReceived = ${lastMessage};
-      var waitMessages = #{jsAction @waitMessages(rcaCase.id,':lastReceived') /}
-      var addCause = #{jsAction @CauseController.addCause(':causeId', ':name') /}
-      var deleteCause = #{jsAction @CauseController.deleteCause(':causeId') /}
-      var addRelation = #{jsAction @CauseController.addRelation(':fromId', ':toID') /}
-      var addCorrection = #{jsAction @CauseController.addCorrection(':toId', ':name') /}
-      // end
-      var $corrections_link = $("#corrections_link");
-      var $modal_body = $("#my_modal_body");
-      var $radial_menu = $("#radial_menu"), menupos, menuwidth, selectedNode, relationFromNode;
-      jQuery("#corrections_link a").click(function(){
+        }${cause_isLast ? '' : ','}
+    #{/list}
+    ];
+    //Running number for creating nodes
+    var runningNumber = 0;
+    var lastReceived = ${lastMessage};
+    var waitMessages = #{jsAction @waitMessages(rcaCase.id,':lastReceived') /}
+    var addCause = #{jsAction @CauseController.addCause(':causeId', ':name') /}
+    var deleteCause = #{jsAction @CauseController.deleteCause(':causeId') /}
+    var addRelation = #{jsAction @CauseController.addRelation(':fromId', ':toID') /}
+    var addCorrection = #{jsAction @CauseController.addCorrection(':toId', ':name') /}
+    // end
+    var $corrections_link = $("#corrections_link");
+    var $modal_body = $("#my_modal_body");
+    var $radial_menu = $("#radial_menu"), menupos, menuwidth, selectedNode, relationFromNode;
+    jQuery("#corrections_link a").click(function () {
         var getFirstCorrectionName = #{jsAction @CauseController.getFirstCorrectionName(':causeId') /}
-        $.get(getFirstCorrectionName({causeId: selectedNode.id}), function(data) {
-          if (data) {
-            $modal_body.html(" ");
-            $modal_body.append(data); 
-          }
-        });
-      });
-      jQuery("#radial_menu").radmenu({
-        listClass: 'list', // the list class to look within for items
-        itemClass: 'item', // the items - NOTE: the HTML inside the item is copied into the menu item
-        radius: 50, // radius in pixels
-        animSpeed: 2000, // animation speed in millis
-        centerX: -5, // the center x axis offset
-        centerY: -10, // the center y axis offset
-        selectEvent: "click", // the select event (click)
-        onSelect: function($selected){ // show what is returned 
-            if($selected[0].id == "radmenu-event-removeCause"){
-              $.post(deleteCause({causeId: selectedNode.id}));
-              jQuery("#radial_menu").radmenu("hide");
-              jQuery("#corrections_link").hide();
-            }else if($selected[0].id == "radmenu-event-addCause"){
-              var name = prompt('Node name?');
-              runningNumber = runningNumber + 1;
-              if (name != null && name != "") {
-                $.post(addCause({causeId: selectedNode.id, name: encodeURIComponent(name)}), function() {
-                    radmenu_fadeOut();
+                $.get(getFirstCorrectionName({causeId:selectedNode.id}), function (data) {
+                    if (data) {
+                        $modal_body.html(" ");
+                        $modal_body.append(data);
+                    }
                 });
-              }
-            }else if($selected[0].id == "radmenu-event-addRelation"){
-              relationFromNode = selectedNode;
-              radmenu_fadeOut();
-              defaultEdgesForSelectedNode(selectedNode);
-            }else if($selected[0].id == "radmenu-event-addCorrection"){
-              var name = prompt('Correction name?');
-              $.post(addCorrection({toId: selectedNode.id, name: name}), function () {
-                radmenu_fadeOut();
-                jQuery("#corrections_link").hide();
-              });
-            }
-          },
-        angleOffset: 45 // in degrees
-      });
-      function show_radial_menu(given_node){
+    });
+    jQuery("#radial_menu").radmenu({
+                                       listClass:'list', // the list class to look within for items
+                                       itemClass:'item', // the items - NOTE: the HTML inside the item is copied into the menu item
+                                       radius:50, // radius in pixels
+                                       animSpeed:2000, // animation speed in millis
+                                       centerX:-5, // the center x axis offset
+                                       centerY:-10, // the center y axis offset
+                                       selectEvent:"click", // the select event (click)
+                                       onSelect:function ($selected) { // show what is returned
+                                           if ($selected[0].id == "radmenu-event-removeCause") {
+                                               $.post(deleteCause({causeId:selectedNode.id}));
+                                               jQuery("#radial_menu").radmenu("hide");
+                                               jQuery("#corrections_link").hide();
+                                           } else if ($selected[0].id == "radmenu-event-addCause") {
+                                               var name = prompt('Node name?');
+                                               runningNumber = runningNumber + 1;
+                                               if (name != null && name != "") {
+                                                   $.post(addCause({causeId:selectedNode.id, name:encodeURIComponent(name)}),
+                                                          function () {
+                                                              radmenu_fadeOut();
+                                                          });
+                                               }
+                                           } else if ($selected[0].id == "radmenu-event-addRelation") {
+                                               relationFromNode = selectedNode;
+                                               radmenu_fadeOut();
+                                               defaultEdgesForSelectedNode(selectedNode);
+                                           } else if ($selected[0].id == "radmenu-event-addCorrection") {
+                                               var name = prompt('Correction name?');
+                                               $.post(addCorrection({toId:selectedNode.id, name:name}), function () {
+                                                   radmenu_fadeOut();
+                                                   jQuery("#corrections_link").hide();
+                                               });
+                                           }
+                                       },
+                                       angleOffset:45 // in degrees
+                                   });
+    function show_radial_menu(given_node) {
         selectedNode = given_node;
         //get the position of the placeholder element
-        menupos   = $("#"+given_node.id).offset();
-        menuwidth = $("#"+given_node.id).width();
+        menupos = $("#" + given_node.id).offset();
+        menuwidth = $("#" + given_node.id).width();
         //show the menu directly over the placeholder
-        $radial_menu.css({ "left": (menupos.left + menuwidth/2 - 5) + "px", "top":menupos.top + "px" }).show();
+        $radial_menu.css({ "left":(menupos.left + menuwidth / 2 - 5) + "px", "top":menupos.top + "px" }).show();
         var hasCorrections = #{jsAction @CauseController.hasCorrections(':causeId') /}
-        $.get(hasCorrections({causeId: selectedNode.id}), function(data) {
-          if (data == "true") {
-            $corrections_link.css({ "left": (menupos.left-10) + "px", "top":menupos.top + "px" }).show(); 
-          }
-        });
-        radmenu_fadeIn(selectedNode);
-      }
-      // init ForceDirected
-      var fd = new $jit.ForceDirected({
-        //id of the visualization container
-        injectInto: 'infovis',
-        'width': window.innerWidth,
-        'height':window.innerHeight,
-        //Enable zooming and panning
-        //by scrolling and DnD
-        Navigation: {
-          enable: true,
-          //Enable panning events only if we're dragging the empty
-          //canvas (and not a node).
-          panning: 'avoid nodes',
-          zooming: 10 //zoom speed. higher is more sensible
-        },
-        // Change node and edge styles such as
-        // color and width.
-        // These properties are also set per node
-        // with dollar prefixed data-properties in the
-        // JSON structure.
-        Node: {
-          overridable: true,
-          color: "#83548B",
-          dim:1
-        },
-        Edge: {
-    			overridable: true,
-	      	type: 'line',
-		  		dim: 15,
-   				color: '#23A4FF',
-     			lineWidth: 2
-        },
-        //Native canvas text styling
-        Label: {
-          type: 'HTML', //Native or HTML
-          size: 10,
-          style: 'bold'
-
-        },
-        //Add Tips
-        Tips: {
-          enable: false
-        },
-        // Add node events
-        Events: {
-          enable: true,
-          //Change cursor style when hovering a node
-          onMouseEnter: function() {
-            fd.canvas.getElement().style.cursor = 'move';
-          },
-          onMouseLeave: function() {
-            fd.canvas.getElement().style.cursor = '';
-          },
-
-          //Update node positions when dragged
-          onDragMove: function(node, eventInfo, e) {
-			jQuery("#radial_menu").radmenu("hide");
-		
-            var pos = eventInfo.getPos();
-            node.pos.setc(pos.x, pos.y);
-            node.setPos(new $jit.Complex(pos.x, pos.y), 'end');
-            fd.plot();
-          },
-          //Implement zooming for nodes
-          onMouseWheel: function(delta, e) {
-            console.log("scrolled!");
-            var zoom = (fd.config.Navigation.zooming / 1000 * delta) + 1;
-            console.log("zoom " + zoom);
-            zoomLevel = zoomLevel * zoom;
-            console.log("zoom level " + zoomLevel);
-
-			//hides a radial menu when zoomed as the scaling does not work yet.
-			jQuery("#radial_menu").radmenu("hide");
-			
-            $(".node").css("-webkit-transform", "matrix(" + zoomLevel + ",0,0," + zoomLevel + ",0,0)");
-            $(".node").css("-moz-transform", "matrix(" + zoomLevel + ",0,0," + zoomLevel + ",0px,0px");
-            $(".node").css("-ms-transform", "matrix(" + zoomLevel + ",0,0," + zoomLevel + ",0,0)");
-            $(".node").css("-o-transform", "matrix(" + zoomLevel + ",0,0," + zoomLevel + ",0,0)");
-            $(".node").css("transform", "matrix(" + zoomLevel + ",0,0," + zoomLevel + ",0,0)");
-			fd.plot();
-          },
-          //Implement the same handler for touchscreens
-          onTouchMove: function(node, eventInfo, e) {
-            $jit.util.event.stop(e); //stop default touchmove event
-            this.onDragMove(node, eventInfo, e);
-          },
-          //Add also a click handler to nodes
-          onClick: function(node){
-            if(node){
-              if (relationFromNode) {
-                $.post(addRelation({fromId: relationFromNode.id, toID: node.id}));
-                relationFromNode = null;
-              }
-              else {
-              defaultEdgesForSelectedNode(selectedNode);
-              jQuery("#corrections_link").fadeOut(400);
-              show_radial_menu(node);
-              node.eachAdjacency(function(adj) {
-                adj.setDataset('current', {
-                  lineWidth: '5',
-                  color: '#4CC417'
+                $.get(hasCorrections({causeId:selectedNode.id}), function (data) {
+                    if (data == "true") {
+                        $corrections_link.css({ "left":(menupos.left - 10) + "px", "top":menupos.top + "px" }).show();
+                    }
                 });
-              });
-              fd.plot();
-              }
-            }else{
-              defaultEdgesForSelectedNode(selectedNode);
-              jQuery("#radial_menu").radmenu("hide");
-              jQuery("#corrections_link").fadeOut(400);
-              fd.plot();
-            }
-          }
-        },
-        //Number of iterations for the FD algorithm
-        iterations: 4,
-        //Edge length
-        levelDistance: 130,
-        // Add text to the labels. This method is only triggered
-        // on label creation and only for DOM labels (not native canvas ones).
-        onCreateLabel: function(domElement, node){
-				// Root node looks different.
-			  if (node.id == ${rcaCase.problem.id}) {
-        	$(domElement).addClass('rootNodeBox')
-		  	}
-		  	else {
-					$(domElement).addClass('nodeBox')
-		  	}
-          $(domElement).html(node.name);
-        },
-        // Change node styles when DOM labels are placed
-        // or moved.
-        onPlaceLabel: function(domElement, node){
-          var style = domElement.style;
-          var left = parseInt(style.left);
-          var top = parseInt(style.top);
-          var w = domElement.offsetWidth;
-          style.left = (left - w / 2) + 'px';
-          style.top = (top-18) + 'px';
-          style.display = '';
-        }
-      });
-      var getNodes = function() {
-          $.ajax({
-                url: waitMessages({lastReceived: lastReceived}),
-                success: function(events) {
-                    $(events).each(function() {
-                        if (this.data.type === 'deletecauseevent') {
-                          fd.graph.removeNode(this.data.causeId);
-                          fd.plot();
-                          $("div.node#" + this.data.causeId).remove();
-                        }
-                        if (this.data.type === 'addrelationevent') {
-                          //alert(this.data.causeFrom + " " + this.data.causeTo);
-													fd.graph.addAdjacence(fd.graph.getNode(this.data.causeFrom), 			fd.graph.getNode(this.data.causeTo), {  
-									            "$type":"arrow",  
-									            "$direction": [this.data.causeFrom, this.data.causeTo],  
-									            "$dim":30,  
-									            "$color":"#FF0000",  
-									            "weight": 1  
-									        });
-													
-                          fd.plot();
-                        }
-                        if (this.data.type === 'addcorrectionevent') {
-                          //alert(this.data.correctionTo + " " + this.data.name);
-                          fd.plot();
-                        }
-                        else if(this.data.type === 'addcauseevent') {
-                          defaultEdgesForSelectedNode(selectedNode)
-                          var newNode = {
-                            "id": this.data.causeTo,
-                            "name": this.data.text,
-                            "data": {
-                                "parent": this.data.causeFrom,
-                                "creatorId": this.data.creatorId
-                            }
-                          };
-                          var oldNode = fd.graph.getNode(this.data.causeFrom);
-                          fd.graph.addAdjacence(oldNode,newNode);
-                          newNode = fd.graph.getNode(this.data.causeTo);
-                          newNode.data.nodeLevel = oldNode.data.nodeLevel+1;
-                          newNode.setPos(oldNode.getPos('end'),'current');
-                          newNode.getPos('end').y = oldNode.getPos('end').y+80;
-                          fd.plot();
-                          placeChildsFromParent(oldNode);
-                          fd.animate({
-                            modes: ['linear'],
-                            transition: $jit.Trans.Elastic.easeOut,
-                            duration: 1500
-                          });
-                        }
-                        lastReceived = this.id
-                    })
-                    getNodes()
-                },
-                dataType: 'json'
-          });
-      }
-      getNodes();
+        radmenu_fadeIn(selectedNode);
+    }
 
-      // load JSON data.
-      fd.loadJSON(json);
-      fd.plot();
-      // compute positions.
-      function countParentNodes(node){
-          if(node){
-            return countParentNodes(fd.graph.getNode(node.data.parent))+1;
-          }else{
+    // init ForceDirected
+    var fd = new $jit.ForceDirected({
+                                        //id of the visualization container
+                                        injectInto:'infovis',
+                                        'width':window.innerWidth,
+                                        'height':window.innerHeight,
+                                        //Enable zooming and panning
+                                        //by scrolling and DnD
+                                        Navigation:{
+                                            enable:true,
+                                            //Enable panning events only if we're dragging the empty
+                                            //canvas (and not a node).
+                                            panning:'avoid nodes',
+                                            zooming:10 //zoom speed. higher is more sensible
+                                        },
+                                        // Change node and edge styles such as
+                                        // color and width.
+                                        // These properties are also set per node
+                                        // with dollar prefixed data-properties in the
+                                        // JSON structure.
+                                        Node:{
+                                            overridable:true,
+                                            color:"#83548B",
+                                            dim:1
+                                        },
+                                        Edge:{
+                                            overridable:true,
+                                            type:'line',
+                                            dim:15,
+                                            color:'#23A4FF',
+                                            lineWidth:2
+                                        },
+                                        //Native canvas text styling
+                                        Label:{
+                                            type:'HTML', //Native or HTML
+                                            size:10,
+                                            style:'bold'
+
+                                        },
+                                        //Add Tips
+                                        Tips:{
+                                            enable:false
+                                        },
+                                        // Add node events
+                                        Events:{
+                                            enable:true,
+                                            //Change cursor style when hovering a node
+                                            onMouseEnter:function () {
+                                                fd.canvas.getElement().style.cursor = 'move';
+                                            },
+                                            onMouseLeave:function () {
+                                                fd.canvas.getElement().style.cursor = '';
+                                            },
+
+                                            //Update node positions when dragged
+                                            onDragMove:function (node, eventInfo, e) {
+                                                jQuery("#radial_menu").radmenu("hide");
+
+                                                var pos = eventInfo.getPos();
+                                                node.pos.setc(pos.x, pos.y);
+                                                node.setPos(new $jit.Complex(pos.x, pos.y), 'end');
+                                                fd.plot();
+                                            },
+                                            //Implement zooming for nodes
+                                            onMouseWheel:function (delta, e) {
+                                                console.log("scrolled!");
+                                                var zoom = (fd.config.Navigation.zooming / 1000 * delta) + 1;
+                                                console.log("zoom " + zoom);
+                                                zoomLevel = zoomLevel * zoom;
+                                                console.log("zoom level " + zoomLevel);
+
+                                                //hides a radial menu when zoomed as the scaling does not work yet.
+                                                jQuery("#radial_menu").radmenu("hide");
+
+                                                $(".node").css("-webkit-transform",
+                                                               "matrix(" + zoomLevel + ",0,0," + zoomLevel + ",0,0)");
+                                                $(".node").css("-moz-transform",
+                                                               "matrix(" + zoomLevel + ",0,0," + zoomLevel +
+                                                               ",0px,0px");
+                                                $(".node").css("-ms-transform",
+                                                               "matrix(" + zoomLevel + ",0,0," + zoomLevel + ",0,0)");
+                                                $(".node").css("-o-transform",
+                                                               "matrix(" + zoomLevel + ",0,0," + zoomLevel + ",0,0)");
+                                                $(".node").css("transform",
+                                                               "matrix(" + zoomLevel + ",0,0," + zoomLevel + ",0,0)");
+                                                fd.plot();
+                                            },
+                                            //Implement the same handler for touchscreens
+                                            onTouchMove:function (node, eventInfo, e) {
+                                                $jit.util.event.stop(e); //stop default touchmove event
+                                                this.onDragMove(node, eventInfo, e);
+                                            },
+                                            //Add also a click handler to nodes
+                                            onClick:function (node) {
+                                                if (node) {
+                                                    if (relationFromNode) {
+                                                        $.post(addRelation({fromId:relationFromNode.id, toID:node.id}));
+                                                        relationFromNode = null;
+                                                    } else {
+                                                        defaultEdgesForSelectedNode(selectedNode);
+                                                        jQuery("#corrections_link").fadeOut(400);
+                                                        show_radial_menu(node);
+                                                        node.eachAdjacency(function (adj) {
+                                                            adj.setDataset('current', {
+                                                                lineWidth:'5',
+                                                                color:'#4CC417'
+                                                            });
+                                                        });
+                                                        fd.plot();
+                                                    }
+                                                } else {
+                                                    defaultEdgesForSelectedNode(selectedNode);
+                                                    jQuery("#radial_menu").radmenu("hide");
+                                                    jQuery("#corrections_link").fadeOut(400);
+                                                    fd.plot();
+                                                }
+                                            }
+                                        },
+                                        //Number of iterations for the FD algorithm
+                                        iterations:4,
+                                        //Edge length
+                                        levelDistance:130,
+                                        // Add text to the labels. This method is only triggered
+                                        // on label creation and only for DOM labels (not native canvas ones).
+                                        onCreateLabel:function (domElement, node) {
+                                            // Root node looks different.
+                                            if (node.id == ${rcaCase.problem.id}) {
+                                                $(domElement).addClass('rootNodeBox')
+                                            } else {
+                                                $(domElement).addClass('nodeBox')
+                                            }
+                                            $(domElement).html(node.name);
+                                        },
+                                        // Change node styles when DOM labels are placed
+                                        // or moved.
+                                        onPlaceLabel:function (domElement, node) {
+                                            var style = domElement.style;
+                                            var left = parseInt(style.left);
+                                            var top = parseInt(style.top);
+                                            var w = domElement.offsetWidth;
+                                            style.left = (left - w / 2) + 'px';
+                                            style.top = (top - 18) + 'px';
+                                            style.display = '';
+                                        }
+                                    });
+    var getNodes = function () {
+        $.ajax({
+                   url:waitMessages({lastReceived:lastReceived}),
+                   success:function (events) {
+                       $(events).each(function () {
+                           if (this.data.type === 'deletecauseevent') {
+                               fd.graph.removeNode(this.data.causeId);
+                               fd.plot();
+                               $("div.node#" + this.data.causeId).remove();
+                           }
+                           if (this.data.type === 'addrelationevent') {
+                               //alert(this.data.causeFrom + " " + this.data.causeTo);
+                               fd.graph.addAdjacence(fd.graph.getNode(this.data.causeFrom),
+                                                     fd.graph.getNode(this.data.causeTo), {
+                                           "$type":"arrow",
+                                           "$direction":[this.data.causeFrom, this.data.causeTo],
+                                           "$dim":30,
+                                           "$color":"#FF0000",
+                                           "weight":1
+                                       });
+
+                               fd.plot();
+                           }
+                           if (this.data.type === 'addcorrectionevent') {
+                               //alert(this.data.correctionTo + " " + this.data.name);
+                               fd.plot();
+                           } else if (this.data.type === 'addcauseevent') {
+                               defaultEdgesForSelectedNode(selectedNode)
+                               var newNode = {
+                                   "id":this.data.causeTo,
+                                   "name":this.data.text,
+                                   "data":{
+                                       "parent":this.data.causeFrom,
+                                       "creatorId":this.data.creatorId
+                                   }
+                               };
+                               var oldNode = fd.graph.getNode(this.data.causeFrom);
+                               fd.graph.addAdjacence(oldNode, newNode);
+                               newNode = fd.graph.getNode(this.data.causeTo);
+                               newNode.data.nodeLevel = oldNode.data.nodeLevel + 1;
+                               newNode.setPos(oldNode.getPos('end'), 'current');
+                               newNode.getPos('end').y = oldNode.getPos('end').y + 80;
+                               fd.plot();
+                               placeChildsFromParent(oldNode);
+                               fd.animate({
+                                              modes:['linear'],
+                                              transition:$jit.Trans.Elastic.easeOut,
+                                              duration:1500
+                                          });
+                           }
+                           lastReceived = this.id
+                       })
+                       getNodes()
+                   },
+                   dataType:'json'
+               });
+    }
+    getNodes();
+
+    // load JSON data.
+    fd.loadJSON(json);
+    fd.plot();
+    // compute positions.
+    function countParentNodes(node) {
+        if (node) {
+            return countParentNodes(fd.graph.getNode(node.data.parent)) + 1;
+        } else {
             return 0;
-          }
-      };
-      var rootNode;
-      //First calculate levels (y-coordinates) for nodes.
-      fd.graph.eachNode(function(node){
+        }
+    }
+
+    ;
+    var rootNode;
+    //First calculate levels (y-coordinates) for nodes.
+    fd.graph.eachNode(function (node) {
         var nodeLevel;
-        if(node.data.parent){
-          nodeLevel = countParentNodes(node);
-        }else{
-          rootNode = node;
-          nodeLevel = 1;
+        if (node.data.parent) {
+            nodeLevel = countParentNodes(node);
+        } else {
+            rootNode = node;
+            nodeLevel = 1;
         }
         node.data.nodeLevel = nodeLevel;
-        node.setPos(new $jit.Complex(0, -300 + nodeLevel*80), 'current');
-        node.setPos(new $jit.Complex(0, -300 + nodeLevel*80), 'end');
-      });
-      traverseWholeTree(rootNode);
-      fd.animate({
-        modes: ['linear'],
-        transition: $jit.Trans.Elastic.easeOut,
-        duration: 1500
-      });
-    }
-    traverseWholeTree = function(node){
-      placeChildsFromParent(node);
-      node.eachAdjacency(function(adj) {
-        if(adj.nodeTo.data.nodeLevel>node.data.nodeLevel){
-          traverseWholeTree(adj.nodeTo);
+        node.setPos(new $jit.Complex(0, -300 + nodeLevel * 80), 'current');
+        node.setPos(new $jit.Complex(0, -300 + nodeLevel * 80), 'end');
+    });
+    traverseWholeTree(rootNode);
+    fd.animate({
+                   modes:['linear'],
+                   transition:$jit.Trans.Elastic.easeOut,
+                   duration:1500
+               });
+}
+traverseWholeTree = function (node) {
+    placeChildsFromParent(node);
+    node.eachAdjacency(function (adj) {
+        if (adj.nodeTo.data.nodeLevel > node.data.nodeLevel) {
+            traverseWholeTree(adj.nodeTo);
         }
-      });
-    }
-    placeChildsFromParent = function(nodeFrom){
-      var childrens = [];
-      var childrensWidth = 0;
-      //count children
-      nodeFrom.eachAdjacency(function(adj) {
-        if(adj.nodeTo.data.nodeLevel>nodeFrom.data.nodeLevel && !(adj.nodeTo.data.locked)){
-          childrens.push(adj.nodeTo);
-          childrensWidth += $("#"+adj.nodeTo.id).width()+25;
+    });
+}
+placeChildsFromParent = function (nodeFrom) {
+    var childrens = [];
+    var childrensWidth = 0;
+    //count children
+    nodeFrom.eachAdjacency(function (adj) {
+        if (adj.nodeTo.data.nodeLevel > nodeFrom.data.nodeLevel && !(adj.nodeTo.data.locked)) {
+            childrens.push(adj.nodeTo);
+            childrensWidth += $("#" + adj.nodeTo.id).width() + 25;
         }
-      });
-      childrensWidth -= 25;
-      //left-most side position for nodes
-      var nodePos = nodeFrom.getPos('end'); 
-      var leftSideX = nodePos.x-childrensWidth/2;
-      //place them
-      var runningWidth = 0;
-      var iChildsWidth = 0;
-      for(var i = 0; i < childrens.length; ++i){
-          iChildsWidth = $("#"+childrens[i].id).width();
-          childrens[i].setPos(new $jit.Complex(leftSideX + runningWidth + iChildsWidth/2, childrens[i].getPos('end').y), 'end');
-          runningWidth += iChildsWidth+25;
-      }
+    });
+    childrensWidth -= 25;
+    //left-most side position for nodes
+    var nodePos = nodeFrom.getPos('end');
+    var leftSideX = nodePos.x - childrensWidth / 2;
+    //place them
+    var runningWidth = 0;
+    var iChildsWidth = 0;
+    for (var i = 0; i < childrens.length; ++i) {
+        iChildsWidth = $("#" + childrens[i].id).width();
+        childrens[i].setPos(new $jit.Complex(leftSideX + runningWidth + iChildsWidth / 2, childrens[i].getPos('end').y),
+                            'end');
+        runningWidth += iChildsWidth + 25;
     }
-    radmenu_fadeIn = function(selectedNode) {
-        jQuery("#radial_menu").radmenu("show",
-            function(items){
-                items.fadeIn(400);
+}
+radmenu_fadeIn = function (selectedNode) {
+    jQuery("#radial_menu").radmenu("show", function (items) {
+                                       items.fadeIn(400);
 
-                if ( selectedNode.data.parent == "" ||
-                    !( selectedNode.data.creatorId == ${currentUser == null ? 'null' : currentUser.id} ||
-                    ${currentUser == null ? 'null' : currentUser.id} == ${rcaCase.ownerId})
-                    ) {
-                    jQuery("#radial_menu").radmenu("items")[3].style.visibility = "hidden";
-                }
+                                       if (selectedNode.data.parent == "" ||
+                                           !( selectedNode.data.creatorId == ${currentUser == null ? 'null' : currentUser.id} ||
+                                           ${currentUser == null ? 'null' : currentUser.id} == ${rcaCase.ownerId}))
+                                       {
+                                           jQuery("#radial_menu").radmenu("items")[3].style.visibility = "hidden";
+                                       }
+                                   });
+}
+
+radmenu_fadeOut = function () {
+    jQuery("#radial_menu").radmenu("show", function (items) {
+                                       items.fadeOut(4000);
+                                   });
+}
+
+defaultEdgesForSelectedNode = function (selectedNode) {
+    if (selectedNode != undefined) {
+        selectedNode.eachAdjacency(function (adj) {
+            if (adj.data.$type == "arrow") {
+                adj.setDataset('current', {
+                    lineWidth:'2',
+                    color:'#F00000'
+                })
+            } else {
+                adj.setDataset('current', {
+                    lineWidth:'2',
+                    color:'#23A4FF'
+                });
             }
-        );
-    }
-
-    radmenu_fadeOut = function() {
-        jQuery("#radial_menu").radmenu("show",
-            function(items){
-            items.fadeOut(4000);
-            }
-        );
-    }
-
-    defaultEdgesForSelectedNode = function(selectedNode) {
-      if (selectedNode != undefined) {
-        selectedNode.eachAdjacency(function(adj) {
-					if(adj.data.$type == "arrow") {
-						adj.setDataset('current', {
-	            lineWidth: '2',
-	            color: '#F00000'
-	          })
-					}else
-          adj.setDataset('current', {
-            lineWidth: '2',
-            color: '#23A4FF'
-          });
         });
-      }
     }
-    
+}
+
 </script>
-    </body>
+</body>
 </html>
 

@@ -29,6 +29,8 @@ import models.RCACase;
 import models.User;
 import models.events.*;
 import play.Logger;
+import play.data.validation.Validation;
+import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.With;
 
@@ -43,12 +45,27 @@ import play.mvc.With;
 public class CauseController extends Controller {
 
 	/**
+	 * Check that user has rights to edit the cause.
+	 *
+	 * @param causeId causeId that will be edited
+	 */
+	@Before
+	public static void checkAuthentication(Long causeId) {
+		validation.required(causeId);
+		if (Validation.hasErrors()) {
+			forbidden();
+		}
+		Cause cause = Cause.findById(causeId);
+		PublicRCACaseController.checkIfCurrentUserHasRightsForRCACase(cause.rcaCase.id);
+	}
+
+	/**
 	 * Adds a sub-cause to a cause.
 	 *
 	 * @param causeId
 	 * @param name
 	 */
-	public static void addCause(String causeId, String name) {
+	public static void addCause(Long causeId, String name) {
 		// causeId is used later as a String
 		Cause cause = Cause.findById(Long.valueOf(causeId));
 		RCACase rcaCase = cause.rcaCase;
@@ -64,18 +81,18 @@ public class CauseController extends Controller {
 	/**
 	 * Adds a relation between causes.
 	 *
-	 * @param fromId
-	 * @param toID
+	 * @param causeId
+	 * @param toId
 	 */
-	public static void addRelation(Long fromId, Long toID) {
-		Cause causeFrom = Cause.findById(fromId);
+	public static void addRelation(Long causeId, Long toId) {
+		Cause causeFrom = Cause.findById(causeId);
 		RCACase rcaCase = causeFrom.rcaCase;
 
-		Cause causeTo = Cause.findById(toID);
+		Cause causeTo = Cause.findById(toId);
 
 		causeFrom.addCause(causeTo);
 
-		AddRelationEvent event = new AddRelationEvent(Long.toString(fromId), Long.toString(toID));
+		AddRelationEvent event = new AddRelationEvent(causeId, toId);
 		CauseStream causeEvents = rcaCase.getCauseStream();
 		causeEvents.getStream().publish(event);
 		Logger.info("Relation added between %s and %s", causeFrom, causeTo);
@@ -108,11 +125,11 @@ public class CauseController extends Controller {
 	/**
 	 * Adds a corrective action for a cause.
 	 *
-	 * @param toId
+	 * @param causeId
 	 * @param name
 	 */
-	public static void addCorrection(Long toId, String name) {
-		Cause causeTo = Cause.findById(toId);
+	public static void addCorrection(Long causeId, String name) {
+		Cause causeTo = Cause.findById(causeId);
 		RCACase rcaCase = causeTo.rcaCase;
 
 		causeTo.addCorrection(name, " ");
@@ -132,8 +149,8 @@ public class CauseController extends Controller {
 	 *
 	 * @param causeId
 	 */
-	public static void deleteCause(String causeId) {
-		Cause cause = Cause.findById(Long.valueOf(causeId));
+	public static void deleteCause(Long causeId) {
+		Cause cause = Cause.findById(causeId);
 		RCACase rcaCase = cause.rcaCase;
 
 		if (!CauseController.userIsAllowedToDelete(cause, rcaCase)) {
@@ -153,5 +170,26 @@ public class CauseController extends Controller {
 		User current = SecurityController.getCurrentUser();
 		return current != null && !cause.equals(rcaCase.problem) &&
 		       (current == cause.getCreator() || current == rcaCase.getOwner());
+	}
+
+	/**
+	 * Send an event that a node has moved.
+	 *
+	 * @param causeId id of the node that has moved
+	 * @param x       new relative x coordinate of the node
+	 * @param y       new relative y coordinate of the node
+	 */
+	public static void nodeMoved(Long causeId, int x, int y) {
+		Cause cause = Cause.findById(causeId);
+		RCACase rcaCase = cause.rcaCase;
+
+		cause.xCoordinate = x;
+		cause.yCoordinate = y;
+
+		NodeMovedEvent movedEvent = new NodeMovedEvent(cause, x, y);
+
+		CauseStream causeStream = rcaCase.getCauseStream();
+		causeStream.getStream().publish(movedEvent);
+		Logger.info("Cause %s moved to x:%d, y:%d", cause, x, y);
 	}
 }
