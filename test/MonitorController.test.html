@@ -27,10 +27,10 @@
 	open('/?language=en')
 	
   clickAndWait('link=Monitoring')
-  click('name=casesRadio')
-	pause('200')
+  click('//input[@name='casesRadio' and @value='sharedCases']')
+  pause('400')
   verifyTextPresent('no cases')
-  click('name=casesRadio')
+  click('//input[@name='casesRadio' and @value='sharedCases']')
   click('//input[@name='casesRadio' and @value='sharedCases']')
 	pause('200')
   verifyTextPresent('no cases')
@@ -135,7 +135,7 @@
 	answerOnNextPrompt('cause')
 	click('//div[@id='radmenu-event-addCause']')
 	assertPrompt('Node name?')
-	pause('250')
+	pause('1000')
 	clickAt('//*[text()="cause"]')
 	pause('250')
 	//second cause

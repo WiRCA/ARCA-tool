@@ -104,6 +104,7 @@ user.publicCases=Public cases I'm following
 user.allPublicCases=All public cases
 user.noAnyPublicCases=No public cases
 user.allCases=All cases
+user.publicCasesTab=Public cases
 
 rcacase.lastmodified=last modified
 rcacase.share=Share
