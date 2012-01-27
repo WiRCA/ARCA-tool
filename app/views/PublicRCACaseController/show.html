@@ -243,6 +243,23 @@ var labelType, useGradients, nativeTextSupport, animate;
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                                                                                                                               'object' ||
                                                                                                                               typeOfCanvas ==
                                                                                                                               'function'), textSupport = nativeCanvasSupport &&
@@ -367,8 +384,6 @@ function init() {
         radmenu_fadeIn(selectedNode);
     }
 
-    $("#infovis").css("width", window.innerWidth + 1000);
-    $("#infovis").css("height", window.innerHeight + 1000);
     // init ForceDirected
     var fd = new $jit.ForceDirected({
                                         //id of the visualization container
@@ -407,21 +422,45 @@ function init() {
                                             size:10,
                                             style:'bold'
 
-                                        },
-                                        //Add Tips
-                                        Tips:{
-                                            enable:false
-                                        },
-                                        // Add node events
-                                        Events:{
+                                            $("#infovis").css("width", window.innerWidth + 1000);
+    $("#infovis").css("height", window.innerHeight + 1000);
+    // init ForceDirected
+    var fd = new $jit.ForceDirected({
+                                        //id of the visualization container
+                                        injectInto:'infovis',
+                                        'width':window.innerWidth,
+                                        'height':window.innerHeight,
+                                        //Enable zooming and panning
+                                        //by scrolling and DnD
+                                        Navigation:{
                                             enable:true,
-                                            //Change cursor style when hovering a node
-                                            onMouseEnter:function () {
-                                                fd.canvas.getElement().style.cursor = 'move';
-                                            },
-                                            onMouseLeave:function () {
-                                                fd.canvas.getElement().style.cursor = '';
-                                            },
+                                            //Enable panning events only if we're dragging the empty
+                                            //canvas (and not a node).
+                                            panning:'avoid nodes',
+                                            zooming:10 //zoom speed. higher is more sensible
+                                        },
+                                        // Change node and edge styles such as
+                                        // color and width.
+                                        // These properties are also set per node
+                                        // with dollar prefixed data-properties in the
+                                        // JSON structure.
+                                        Node:{
+                                            overridable:true,
+                                            color:"#83548B",
+                                            dim:1
+                                        },
+                                        Edge:{
+                                            overridable:true,
+                                            type:'line',
+                                            dim:15,
+                                            color:'#23A4FF',
+                                            lineWidth:2
+                                        },
+                                        //Native canvas text styling
+                                        Label:{
+                                            type:'HTML', //Native or HTML
+                                            size:10,
+                                            style:'bold'
 
                                             //Update node positions when dragged
                                             onDragMove:function (node, eventInfo, e) {
