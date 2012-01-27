@@ -174,6 +174,7 @@
       var deleteCause = #{jsAction @CauseController.deleteCause(':causeId') /}
       var addRelation = #{jsAction @CauseController.addRelation(':fromId', ':toID') /}
       var addCorrection = #{jsAction @CauseController.addCorrection(':toId', ':name') /}
+      var moveNode = #{jsAction @CauseController.nodeMoved(':causeId', ':x', ':y') /}
       // end
       var $corrections_link = $("#corrections_link");
       var $modal_body = $("#my_modal_body");
@@ -302,20 +303,22 @@
 
           //Update node positions when dragged
           onDragMove: function(node, eventInfo, e) {
-      jQuery("#radial_menu").radmenu("hide");
-    
+            jQuery("#radial_menu").radmenu("hide");
             var pos = eventInfo.getPos();
             node.pos.setc(pos.x, pos.y);
             node.setPos(new $jit.Complex(pos.x, pos.y), 'end');
             fd.plot();
           },
+          onDragEnd: function(node, eventInfo, e){
+            var nodeParent = fd.graph.getNode(node.data.parent);
+            var xPos = node.getPos('end').x - nodeParent.getPos('end').x;
+            var yPos = node.getPos('end').y - nodeParent.getPos('end').y;
+            $.post(moveNode({causeId: node.id, x: xPos, y: yPos}));
+          },
           //Implement zooming for nodes
           onMouseWheel: function(delta, e) {
-            console.log("scrolled!");
             var zoom = (fd.config.Navigation.zooming / 1000 * delta) + 1;
-            console.log("zoom " + zoom);
             zoomLevel = zoomLevel * zoom;
-            console.log("zoom level " + zoomLevel);
 
       //hides a radial menu when zoomed as the scaling does not work yet.
       jQuery("#radial_menu").radmenu("hide");
@@ -400,7 +403,7 @@
                         }
                         if (this.data.type === 'addrelationevent') {
                           //alert(this.data.causeFrom + " " + this.data.causeTo);
-                          fd.graph.addAdjacence(fd.graph.getNode(this.data.causeFrom),      fd.graph.getNode(this.data.causeTo), {  
+                          fd.graph.addAdjacence(fd.graph.getNode(this.data.causeFrom), fd.graph.getNode(this.data.causeTo), {  
                               "$type":"arrow",  
                               "$direction": [this.data.causeFrom, this.data.causeTo],  
                               "$dim":30,  
@@ -432,6 +435,19 @@
                           newNode.getPos('end').y = oldNode.getPos('end').y+80;
                           fd.plot();
                           placeChildsFromParent(oldNode);
+                          fd.animate({
+                            modes: ['linear'],
+                            transition: $jit.Trans.Elastic.easeOut,
+                            duration: 1500
+                          });
+                        }
+                        else if(this.data.type === 'nodemovedevent'){
+                          var nodeToMove = fd.graph.getNode(this.data.causeId);
+                          var nodeParent = fd.graph.getNode(nodeToMove.data.parent);
+                          var xPos = nodeParent.getPos('end').x+parseInt(this.data.x);
+                          var yPos = nodeParent.getPos('end').y+parseInt(this.data.y);
+                          nodeToMove.setPos(new $jit.Complex(xPos,yPos), 'end');
+                            
                           fd.animate({
                             modes: ['linear'],
                             transition: $jit.Trans.Elastic.easeOut,
@@ -499,15 +515,19 @@
       });
       childrensWidth -= 25;
       //left-most side position for nodes
-      var nodePos = nodeFrom.getPos('end'); 
+      var nodePos = nodeFrom.getPos('end');
       var leftSideX = nodePos.x-childrensWidth/2;
       //place them
       var runningWidth = 0;
       var iChildsWidth = 0;
       for(var i = 0; i < childrens.length; ++i){
+        if(childrens[i].data.xCoordinate!=="" || childrens[i].data.yCoordinate!==""){
+          childrens[i].setPos(new $jit.Complex(nodePos.x+childrens[i].data.xCoordinate,nodePos.y+childrens[i].data.yCoordinate), 'end');
+        }else{
           iChildsWidth = $("#"+childrens[i].id).width();
           childrens[i].setPos(new $jit.Complex(leftSideX + runningWidth + iChildsWidth/2, childrens[i].getPos('end').y), 'end');
           runningWidth += iChildsWidth+25;
+        }
       }
     }
     radmenu_fadeIn = function(selectedNode) {
