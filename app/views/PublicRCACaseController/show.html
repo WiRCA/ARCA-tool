@@ -408,6 +408,12 @@
                             duration: 1500
                           });
                         }
+                        else if(this.data.type === 'nodemovedevent'){
+                          var nodeToMove = fd.graph.getNode(this.data.causeId);
+                          var xPos = nodeToMove.data.parent.getPos('end').x+this.data.xCoordinate;
+                          var yPos = nodeToMove.data.parent.getPos('end').y+this.data.yCoordinate;
+                          nodeToMove.setPos(new $jit.Complex(xPos,yPos), 'end');
+                        }
                         lastReceived = this.id
                     })
                     getNodes()
