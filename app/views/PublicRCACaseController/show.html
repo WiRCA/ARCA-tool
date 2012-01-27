@@ -218,10 +218,11 @@
               $("#addCorrectiveForm").popover('show');
               $("div.popover").css({ "left": (menupos.left-50) + "px", "top":(menupos.top+50) + "px" });
               $("div.popover").css("z-index", "100");
-              //$.post(addCorrection({toId: selectedNode.id, name: name}), function () {
-                //radmenu_fadeOut();
-                //jQuery("#corrections_link").hide();
-              //});
+              var name = prompt('Correction name?');
+              $.post(addCorrection({toId: selectedNode.id, name: name}), function () {
+                radmenu_fadeOut();
+                jQuery("#corrections_link").hide();
+              });
             }
           },
         angleOffset: 45 // in degrees
