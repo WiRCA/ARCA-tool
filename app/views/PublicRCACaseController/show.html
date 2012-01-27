@@ -314,6 +314,14 @@
             var xPos = node.getPos('end').x - nodeParent.getPos('end').x;
             var yPos = node.getPos('end').y - nodeParent.getPos('end').y;
             $.post(moveNode({causeId: node.id, x: xPos, y: yPos}));
+            //update childrens vectors
+            node.eachAdjacency(function(adj) {
+              if(adj.nodeTo.data.nodeLevel>node.data.nodeLevel && !(adj.nodeTo.data.locked)){
+                xPos = adj.nodeTo.getPos('end').x-node.getPos('end').x;
+                yPos = adj.nodeTo.getPos('end').y-node.getPos('end').y;
+                $.post(moveNode({causeId: adj.nodeTo.id, x: xPos, y: yPos}));
+              }
+            });
           },
           //Implement zooming for nodes
           onMouseWheel: function(delta, e) {
@@ -434,7 +442,7 @@
                           newNode.setPos(oldNode.getPos('end'),'current');
                           newNode.getPos('end').y = oldNode.getPos('end').y+80;
                           fd.plot();
-                          placeChildsFromParent(oldNode);
+                          //placeChildsFromParent(oldNode);
                           fd.animate({
                             modes: ['linear'],
                             transition: $jit.Trans.Elastic.easeOut,
@@ -451,7 +459,7 @@
                           fd.animate({
                             modes: ['linear'],
                             transition: $jit.Trans.Elastic.easeOut,
-                            duration: 1500
+                            duration: 900
                           });
                         }
                         lastReceived = this.id
