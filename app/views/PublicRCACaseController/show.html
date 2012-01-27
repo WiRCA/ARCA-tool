@@ -167,12 +167,12 @@
       jQuery("#radial_menu").radmenu({
         listClass: 'list', // the list class to look within for items
         itemClass: 'item', // the items - NOTE: the HTML inside the item is copied into the menu item
-        radius: 50, // radius in pixels
+        radius: 20, // radius in pixels
         animSpeed: 2000, // animation speed in millis
-        centerX: -5, // the center x axis offset
-        centerY: -10, // the center y axis offset
+        centerX: 0, // the center x axis offset
+        centerY: 0, // the center y axis offset
         selectEvent: "click", // the select event (click)
-        onSelect: function($selected){ // show what is returned 
+        onSelect: function($selected){ // show what is returned
             if($selected[0].id == "radmenu-event-removeCause"){
               $.post(deleteCause({causeId: selectedNode.id}));
               jQuery("#radial_menu").radmenu("hide");
@@ -204,12 +204,40 @@
         //get the position of the placeholder element
         menupos   = $("#"+given_node.id).offset();
         menuwidth = $("#"+given_node.id).width();
-        //show the menu directly over the placeholder
-        $radial_menu.css({ "left": (menupos.left + menuwidth/2 - 5) + "px", "top":menupos.top + "px" }).show();
+		menuheight = $("#"+given_node.id).height();
+				
+		///////////////////////////////////////////////////////
+		// As the radial menu is a square of four menu items //
+		// this is to find out what shape the menu is.       //
+		//    #  #					  ------                 //
+		//  --------                #|     |#                //
+		//  |      |        OR       |     |                 //
+		//  -------                 #|     |#                //
+		//    #  #                    -----                  //
+		///////////////////////////////////////////////////////
+		if(menuheight > menuwidth){
+			radius_Xcomp = menuwidth/2 + 20;
+			// cos(45) is about 0.70
+			newRadius = radius_Xcomp/0.7;
+		}
+		else {
+		    radius_Ycomp = menuheight/2 + 22;
+			// sin(45) is about 0.70
+			newRadius = radius_Ycomp/0.7;
+		}
+		jQuery("#radial_menu").radmenu("opts").radius = newRadius;
+        jQuery("#radial_menu").radmenu("opts").centerY = menuheight/2 - 30;
+				
+	    if(selectedNode.id == ${rcaCase.problem.id}) {
+			jQuery("#radial_menu").radmenu("opts").radius += 10;
+			jQuery("#radial_menu").radmenu("opts").centerY += 7;
+				}
+		 //show the menu directly over the placeholder
+        $radial_menu.css({ "left": (menupos.left + menuwidth/2 - 10) + "px", "top":menupos.top + "px" }).show();
         var hasCorrections = #{jsAction @CauseController.hasCorrections(':causeId') /}
         $.get(hasCorrections({causeId: selectedNode.id}), function(data) {
           if (data == "true") {
-            $corrections_link.css({ "left": (menupos.left-10) + "px", "top":menupos.top + "px" }).show(); 
+            $corrections_link.css({ "left": (menupos.left-20) + "px", "top":menupos.top + 4 + "px" }).show();
           }
         });
         radmenu_fadeIn(selectedNode);
