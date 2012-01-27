@@ -1,0 +1,120 @@
+#{fixture delete:'all', load:'data.yml' /}
+#{selenium}
+
+// Test init
+open('/logout')
+open('/?language=en')
+
+// Logging with admin
+type('id=username','admin@local')
+type('id=password','admin')
+clickAndWait('id=signin')
+
+// create new RCA case
+waitForTextPresent('Create new RCA case')
+clickAndWait('link=Create new RCA case')
+type('id=caseName','testgraph')
+select('id=caseTypeValue','label=Software project')
+type('id=description','testgraph')
+type('id=caseGoals','testgraph')
+type('id=companyName','testgraph')
+select('id=companySize','label=1-10')
+type('id=companyProducts','testgraph')
+clickAndWait('id=create')
+
+// share the case
+open('/user?language=fi')
+verifyTextPresent('testgraph')
+verifyTextPresent(' Jaa..')
+clickAt('//*[text()="Jaa.."]')
+pause('1000')
+verifyTextPresent('Kutsu sähköpostilla')
+click('css=input[type="submit"]')
+click('css=input[type="submit"]')
+
+type('id=rcacase-share-dialog-invitedEmail-input','email@local.fi')
+click('css=input[type="submit"]')
+pause('2000')
+verifyTextPresent('email@local.fi')
+click('//button[@type='button']')
+verifyTextPresent('Admin user')
+
+open('/user?language=en')
+
+// Go to monitoring page
+clickAndWait('link=Monitoring')
+
+// Show own cases and causes
+click('name=whatToShow')
+click('name=casesRadio')
+pause('100')
+click('name=selectedCases')
+pause('1000')
+
+// Verify that cause can be liked and like it
+verifyTextPresent('Like')
+verifyTextNotPresent('Dislike')
+verifyTextPresent('0')
+clickAt('//*[text()="Like"]')
+pause('100')
+
+// Verify that like is registered and dislike and like are still visible, because admin is case owner
+verifyTextPresent('1')
+verifyTextPresent('Dislike')
+verifyTextPresent('Like')
+
+// Add another like
+clickAt('//*[text()="Like"]')
+pause('100')
+verifyTextPresent('2')
+
+// Try dislike
+clickAt('//*[text()="Dislike"]')
+pause('100')
+verifyTextPresent('1')
+verifyTextPresent('Like')
+verifyTextPresent('Dislike')
+
+// Finally delete all likes
+clickAt('//*[text()="Dislike"]')
+pause('100')
+verifyTextNotPresent('Dislike')
+verifyTextPresent('0')
+verifyTextPresent('Like')
+
+// Login with another user
+clickAndWait('id=logout-link')
+type('id=username','email@local.fi')
+type('id=password','admin')
+clickAndWait('id=signin')
+
+// Show shared cases and causes in monitoring
+clickAndWait('link=Monitoring')
+click('name=whatToShow')
+click('//input[@name='casesRadio' and @value='sharedCases']')
+pause('100')
+click('name=selectedCases')
+pause('1000')
+
+// Verify that cause can be liked
+verifyTextPresent('Like')
+verifyTextNotPresent('Dislike')
+verifyTextPresent('0')
+
+// Like and verify things
+clickAt('//*[text()="Like"]')
+pause('100')
+verifyTextPresent('Dislike')
+verifyTextNotPresent('Like')
+verifyTextPresent('1')
+
+// Dislike and verify things
+clickAt('//*[text()="Dislike"]')
+pause('100')
+verifyTextPresent('Like')
+verifyTextNotPresent('Dislike')
+verifyTextPresent('0')
+
+// Logout
+clickAndWait('id=logout-link')
+#{/selenium}

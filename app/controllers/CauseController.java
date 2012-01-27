@@ -194,4 +194,47 @@ public class CauseController extends Controller {
 		causeStream.getStream().publish(movedEvent);
 		Logger.info("Cause %s moved to x:%d, y:%d", cause, x, y);
 	}
+
+	/**
+	 * Adds a like to the cause if user has rights to do it.
+	 * @param causeId cause to be liked
+	 */
+	public static void like(Long causeId) {
+		Cause cause = Cause.findById(causeId);
+		RCACase rcaCase = cause.rcaCase;
+		User user = SecurityController.getCurrentUser();
+		if (user == null) {
+			forbidden();
+		}
+		if (rcaCase.getOwner().equals(user)) {
+			cause.like(user);	
+		} else if (!cause.hasUserLiked(user)) {
+			cause.like(user);	
+		}
+		Logger.info("Cause %s liked by %s", cause, user);
+		
+		String likeData = String.format("{\"count\":%d,\"hasliked\":%b,\"isowner\":%b}", cause.countLikes(), 
+		                                cause.hasUserLiked(user), user.equals(rcaCase.getOwner()));
+		
+		renderJSON(likeData);
+	}
+
+	/**
+	 * Removes a like from the cause.
+	 * @param causeId cause to be disliked
+	 */
+	public static void dislike(Long causeId) {
+		Cause cause = Cause.findById(causeId);
+		RCACase rcaCase = cause.rcaCase;
+		User user = SecurityController.getCurrentUser();
+		if (user == null) {
+			forbidden();
+		}
+		cause.dislike(user);
+		Logger.info("Cause %s disliked by %s", cause, user);
+		String likeData = String.format("{\"count\":%d,\"hasliked\":%b,\"isowner\":%b}", cause.countLikes(),
+		                                cause.hasUserLiked(user), user.equals(rcaCase.getOwner()));
+
+		renderJSON(likeData);
+	}
 }

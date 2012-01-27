@@ -13,6 +13,37 @@
     </ul>
 </div>
 #{/if}
+
+<script type="text/javascript" charset="utf-8">
+    var likeAction = #{jsAction @CauseController.like(':causeId') /};
+    var dislikeAction = #{jsAction @CauseController.dislike(':causeId') /};
+
+    function checkLikes(causeId, data) {
+        $("#cause-" + parseInt(causeId) + "-likes").text(data.count);
+        if (data.hasliked) {
+            if (!data.isowner) {
+                $("#cause-" + parseInt(causeId) + "-likebutton").hide();
+            }
+            $("#cause-" + parseInt(causeId) + "-dislikebutton").show();
+        } else {
+            $("#cause-" + parseInt(causeId) + "-dislikebutton").hide();
+            $("#cause-" + parseInt(causeId) + "-likebutton").show();
+        }
+    }
+
+    function like(causeId) {
+        $.post(likeAction({causeId: causeId}), function(data) {
+            checkLikes(causeId, data);
+        });
+    };
+
+    function dislike(causeId) {
+        $.post(dislikeAction({causeId: causeId}), function(data) {
+            checkLikes(causeId, data);
+        });
+    };
+</script>
+
 <table class="condensed-table bordered-table" id="cause-table">
     <thead>
         <tr>
@@ -36,7 +67,19 @@
             <td>${cause.name}</td>
             <td>${cause.rcaCase.caseName}</td>
             <td #{if cause.rcaCase.ownerId == currentUserId}class="editable cause-status"#{/if}>&{'monitoring.statusCause.' + cause.status?.name}</td>
-            <td></td>
+            <td>
+                <span id="cause-${cause.id}-likes">${cause.countLikes()}</span>
+
+                <a href="javascript:" id="cause-${cause.id}-likebutton"
+                   class="btn success like" onclick="like(${cause.id})"
+                        #{if (user == null || !(cause.rcaCase.ownerId == currentUserId) && cause.hasUserLiked(user))}
+                            style="display:none;"
+                        #{/if}>Like</a>
+
+                <a href="javascript:" id="cause-${cause.id}-dislikebutton"
+                   class="btn danger like" onclick="dislike(${cause.id})"
+                        #{if (user == null || !cause.hasUserLiked(user))} style="display:none;" #{/if}>Dislike</a>
+            </td>
         </tr>
         #{if showCorrections}
         #{list cause.corrections, as:'correction'}
