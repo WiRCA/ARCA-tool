@@ -26,12 +26,14 @@
         <title>&{'showRCACase.title', rcaCase.caseName}</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta charset="${_response_encoding}">
-        <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/main.css'}">
-        <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/jquery-ui-1.8.16.custom.css'}">
-        <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/arcaeditor.css'}">
-        <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/base.css'}">
-        <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/ForceDirected.css'}">
-        <link rel="stylesheet" href="@{'/public/stylesheets/bootstrap.min.css'}">
+        #{press.stylesheet 'main.css' /}
+        #{press.stylesheet 'jquery-ui-1.8.16.custom.css' /}
+        #{press.stylesheet 'arcaeditor.css' /}
+        #{press.stylesheet 'base.css' /}
+        #{press.stylesheet 'ForceDirected.css' /}
+        #{press.stylesheet src:'bootstrap.min.css', compressed:false /}
+        #{press.compressed-stylesheet /}
+
         <!--[if lt IE 8]>
           <link rel="stylesheet" href="@{'/public/stylesheets/ie.css'}" type="text/css" media="screen, projection">
         <![endif]-->
@@ -39,13 +41,14 @@
         <!--[if lt IE 9]>
         <script src="${'/public/javascripts/excanvas.compiled.js'}" type="text/javascript"></script>
         <![endif]-->
-        <script src="@{'/public/javascripts/jquery-1.7.1.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
-        <script src="@{'/public/javascripts/bootstrap-modal.js'}" type="text/javascript" charset="${_response_encoding}"></script>
-        <script src="@{'/public/javascripts/bootstrap-twipsy.js'}" type="text/javascript" charset="${_response_encoding}"></script>
-        <script src="@{'/public/javascripts/bootstrap-popover.js'}" type="text/javascript" charset="${_response_encoding}"></script>
-        <script src="@{'/public/javascripts/jquery-ui-1.8.16.custom.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
-        <script src="@{'/public/javascripts/smalljit.js'}" type="text/javascript" charset="${_response_encoding}"></script>
-        <script src="@{'/public/javascripts/jQuery.radmenu.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+        #{press.script src:'jquery-1.7.1.min.js', compress:false /}
+        #{press.script 'bootstrap-modal.js' /}
+        #{press.script 'bootstrap-twipsy.js' /}
+        #{press.script 'bootstrap-popover.js' /}
+        #{press.script src:'jquery-ui-1.8.16.custom.min.js', compress:false /}
+        #{press.script 'smalljit.js' /}
+        #{press.script 'jQuery.radmenu.js' /}
+        #{press.compressed-script /}
     </head>
     <body>
 
@@ -66,7 +69,7 @@
     </ul>
   </div>
   <!-- Add corrective action popover form div -->
-  <div id="addCorrectiveForm" rel="popover" data-placement="right" style="position: absolute;"></div>
+  <div id="addCorrectiveForm" rel="popover" data-placement="below" style="position: absolute;"></div>
 
   
   <div id="my-modal" class="modal-backdrop fade hide in">
@@ -210,11 +213,11 @@
               radmenu_fadeOut();
               defaultEdgesForSelectedNode(selectedNode);
             }else if($selected[0].id == "radmenu-event-addCorrection") {
-              $("#addCorrectiveForm").attr('data-content', "moiii");
+              $("#addCorrectiveForm").attr("title", "Lisää korjaava toimenpide.")
+              $("#addCorrectiveForm").attr('data-content', "tähän corrective action form");
               $("#addCorrectiveForm").popover('show');
-              $("div.popover").css({ "left": (menupos.left+100) + "px", "top":(menupos.top+25) + "px" });
-              $("#div.popover").css("z-index", "100");
-              console.log("lol");
+              $("div.popover").css({ "left": (menupos.left-50) + "px", "top":(menupos.top+50) + "px" });
+              $("div.popover").css("z-index", "100");
               //$.post(addCorrection({toId: selectedNode.id, name: name}), function () {
                 //radmenu_fadeOut();
                 //jQuery("#corrections_link").hide();
@@ -351,6 +354,7 @@
               defaultEdgesForSelectedNode(selectedNode);
               jQuery("#radial_menu").radmenu("hide");
               jQuery("#corrections_link").fadeOut(400);
+              $("#addCorrectiveForm").popover('hide');
               fd.plot();
             }
           }
