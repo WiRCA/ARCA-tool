@@ -29,10 +29,10 @@ public class AddRelationEvent extends Event {
 	public final String causeFrom;
 	public final String causeTo;
 
-	public AddRelationEvent(String causeFrom, String causeTo) {
+	public AddRelationEvent(Long causeFrom, Long causeTo) {
 		super("addrelationevent");
-		this.causeTo = causeTo;
-		this.causeFrom = causeFrom;
+		this.causeTo = String.valueOf(causeTo);
+		this.causeFrom = String.valueOf(causeFrom);
 	}
 
 }
