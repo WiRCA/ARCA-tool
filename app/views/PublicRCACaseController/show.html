@@ -41,6 +41,8 @@
         <![endif]-->
         <script src="@{'/public/javascripts/jquery-1.7.1.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
         <script src="@{'/public/javascripts/bootstrap-modal.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+        <script src="@{'/public/javascripts/bootstrap-twipsy.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+        <script src="@{'/public/javascripts/bootstrap-popover.js'}" type="text/javascript" charset="${_response_encoding}"></script>
         <script src="@{'/public/javascripts/jquery-ui-1.8.16.custom.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
         <script src="@{'/public/javascripts/smalljit.js'}" type="text/javascript" charset="${_response_encoding}"></script>
         <script src="@{'/public/javascripts/jQuery.radmenu.js'}" type="text/javascript" charset="${_response_encoding}"></script>
@@ -49,8 +51,12 @@
 
 #{navigation /}
 
+
+    
     <div id="infovis">
+      
     </div>
+  
   <div id="radial_menu" style="position: absolute; display: none;">
     <ul class="list">
       <li class="item my_class" id="radmenu-event-addCause">+</li>
@@ -59,6 +65,10 @@
       <li class="item my_class" id="radmenu-event-removeCause">X</li>
     </ul>
   </div>
+  <!-- Add corrective action popover form div -->
+  <div id="addCorrectiveForm" rel="popover" data-placement="right" style="position: absolute;"></div>
+
+  
   <div id="my-modal" class="modal-backdrop fade hide in">
     <!-- Modal -->
     <div class="modal" style="position: relative; top: auto; left: auto; margin: 0 auto; z-index: 1">
@@ -81,7 +91,18 @@
     <a data-controls-modal="my-modal" data-backdrop="static" >+</a>
   </div>
   
-
+  <script>
+    $(function () {
+      $("div[rel=popover]")
+        .popover({
+          offset: 10,
+          html: true
+        })
+        .click(function(e) {
+          e.preventDefault()
+        })
+    })
+  </script>
 <script type="text/javascript">
     $(document).ready(function() {
       init();
@@ -188,12 +209,16 @@
               relationFromNode = selectedNode;
               radmenu_fadeOut();
               defaultEdgesForSelectedNode(selectedNode);
-            }else if($selected[0].id == "radmenu-event-addCorrection"){
-              var name = prompt('Correction name?');
-              $.post(addCorrection({toId: selectedNode.id, name: name}), function () {
-                radmenu_fadeOut();
-                jQuery("#corrections_link").hide();
-              });
+            }else if($selected[0].id == "radmenu-event-addCorrection") {
+              $("#addCorrectiveForm").attr('data-content', "moiii");
+              $("#addCorrectiveForm").popover('show');
+              $("div.popover").css({ "left": (menupos.left+100) + "px", "top":(menupos.top+25) + "px" });
+              $("#div.popover").css("z-index", "100");
+              console.log("lol");
+              //$.post(addCorrection({toId: selectedNode.id, name: name}), function () {
+                //radmenu_fadeOut();
+                //jQuery("#corrections_link").hide();
+              //});
             }
           },
         angleOffset: 45 // in degrees
