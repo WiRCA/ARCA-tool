@@ -114,6 +114,7 @@ rcacase.sharedBy=Omistaja:
 user.allPublicCases=Kaikki julkiset analyysit
 user.noAnyPublicCases=Ei julkisia analyysejä
 user.allCases=Kaikki analyysit
+user.publicCasesTab=Julkiset analyysit
 
 rcacase.share.dialog.title=Jakamisasetukset
 rcacase.share.dialog.whoHasAccess=Seuraavilla henkilöillä on käyttöoikeudet

@@ -128,17 +128,17 @@ public class CauseController extends Controller {
 	 * @param causeId
 	 * @param name
 	 */
-	public static void addCorrection(Long causeId, String name) {
+	public static void addCorrection(Long causeId, String name, String description) {
 		Cause causeTo = Cause.findById(causeId);
 		RCACase rcaCase = causeTo.rcaCase;
 
-		causeTo.addCorrection(name, " ");
+		causeTo.addCorrection(name, description);
 		causeTo.save();
 
-		AddCorrectionEvent event = new AddCorrectionEvent(causeTo, name);
+		AddCorrectionEvent event = new AddCorrectionEvent(causeTo, name, description);
 		CauseStream causeEvents = rcaCase.getCauseStream();
 		causeEvents.getStream().publish(event);
-		Logger.info("Correction added to cause %s", causeTo.name);
+		Logger.info("Correction added to cause %s with description %s", causeTo.name, description);
 	}
 
 	/**

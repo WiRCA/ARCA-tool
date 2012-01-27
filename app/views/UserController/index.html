@@ -31,6 +31,8 @@
         charset="${_response_encoding}"></script>
 <script src="@{'/public/javascripts/bootstrap-popover.js'}" type="text/javascript"
         charset="${_response_encoding}"></script>
+<script src="@{'/public/javascripts/bootstrap-tabs.js'}" type="text/javascript"
+        charset="${_response_encoding}"></script>
 
 <script type="text/javascript">
         $(function () {
@@ -139,7 +141,16 @@
     });
 </script>
 
-*{TODO: Creation date to links. Modification of mouseovers. Overall layout revamp.}*
+
+<ul class="tabs" data-tabs="tabs">
+    <li class="active"><a href="#mycases">&{'user.myCases'}</a></li>
+    <li><a href="#privatecases">&{'user.sharedCases'}</a></li>
+    <li><a href="#publiccases">&{'user.publicCasesTab'}</a></li>
+    </li>
+</ul>
+
+<div id="my-tab-content" class="tab-content">
+    <div class="active tab-pane" id="mycases">
 <h2>&{'user.myCases'}</h2>
 <ul>
     #{list items:ownCases, as:'rcaCase'}
@@ -155,7 +166,8 @@
     <li>&{'user.noRCACases'}</li>
     #{/else}
 </ul>
-
+    </div>
+    <div class="tab-pane" id="privatecases">
 <h2>&{'user.sharedCases'}</h2>
         <ul>
         #{list items:privateCases, as:'rcaCase'}
@@ -170,7 +182,8 @@
     <li>&{'user.noPrivateCases'}</li>
     #{/else}
 </ul>
-
+    </div>
+    <div class="tab-pane" id="publiccases">
 <h2>&{'user.publicCases'}</h2>
 <ul>
     #{list items:publicCases, as:'rcaCase'}
@@ -197,6 +210,8 @@
     <li>&{'user.noAnyPublicCases'}</li>
     #{/else}
 </ul>
+    </div>
+</div>
 
 #{a @RCACaseController.createRCACase(), class:'btn primary large'} &{'user.createRCACase'} #{/a}
 

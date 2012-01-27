@@ -29,12 +29,14 @@ import models.Cause;
 public class AddCorrectionEvent extends Event {
 
 	public final String name;
+	public final String description;
 	public final String correctionTo;
 
-	public AddCorrectionEvent(Cause cause, String name) {
+	public AddCorrectionEvent(Cause cause, String name, String description) {
 		super("addcorrectionevent");
 		this.correctionTo = Long.toString(cause.id);
 		this.name = name;
+		this.description = description;
 	}
 
 }
