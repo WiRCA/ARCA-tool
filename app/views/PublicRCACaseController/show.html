@@ -211,12 +211,15 @@
         });
         radmenu_fadeIn(selectedNode);
       }
+
+      $("#infovis").css("width", window.innerWidth + 1000);
+      $("#infovis").css("height", window.innerHeight + 1000);
       // init ForceDirected
       var fd = new $jit.ForceDirected({
         //id of the visualization container
         injectInto: 'infovis',
-        'width': window.innerWidth,
-        'height':window.innerHeight,
+        'width': window.innerWidth + 1000,
+        'height':window.innerHeight + 1000,
         //Enable zooming and panning
         //by scrolling and DnD
         Navigation: {
