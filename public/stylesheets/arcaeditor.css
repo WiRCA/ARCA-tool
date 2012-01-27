@@ -7,7 +7,6 @@
 	border-radius: 10px;
 	border-width: 1px;
 	padding: 3px;
-	vertical-align: left;
 	border-top: 1px solid rgb(87,87,87);
 	border-right: 1px solid rgb(87,87,87);
 	border-left: 1px solid rgb(192,192,192);
@@ -23,6 +22,11 @@
     -o-user-select: none;
     user-select: none;
     word-wrap: break-word;
+
+    -webkit-box-shadow: 0px 0px 4px hsl(208, 30%, 50%); /* Saf3-4, iOS 4.0.2 - 4.2, Android 2.3+ */
+    -moz-box-shadow: 0px 0px 4px hsl(208, 30%, 50%); /* FF3.5 - 3.6 */
+    box-shadow: 0px 0px 10px hsl(60, 99%, 80%); /* Opera 10.5, IE9, FF4+, Chrome 6+, iOS 5 */
+
 }
 
 .rootNodeBox {
@@ -34,7 +38,6 @@
 	border-radius: 10px;
 	border-width: 1px;
 	padding: 10px;
-	vertical-align: left;
 	border-top: 1px solid rgb(87,87,87);
 	border-right: 1px solid rgb(87,87,87);
 	border-left: 1px solid rgb(192,192,192);
