@@ -4,5 +4,6 @@ require:
     - play -> secure
     - play -> cobertura 2.4
     - play -> migrate 1.4
+    - play -> press 1.0.25
     - play -> webdrive 0.2:
         transitive: false

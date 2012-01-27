@@ -4,6 +4,7 @@
 
 # Secure module
 *       /                                                           module:secure
+*       /                                                           module:press
 
 # Home page
 GET     /                                                           IndexPageController.index
