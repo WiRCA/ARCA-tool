@@ -26,12 +26,14 @@
         <title>&{'showRCACase.title', rcaCase.caseName}</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta charset="${_response_encoding}">
-        <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/main.css'}">
-        <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/jquery-ui-1.8.16.custom.css'}">
-        <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/arcaeditor.css'}">
-        <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/base.css'}">
-        <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/ForceDirected.css'}">
-        <link rel="stylesheet" href="@{'/public/stylesheets/bootstrap.min.css'}">
+        #{press.stylesheet 'main.css' /}
+        #{press.stylesheet 'jquery-ui-1.8.16.custom.css' /}
+        #{press.stylesheet 'arcaeditor.css' /}
+        #{press.stylesheet 'base.css' /}
+        #{press.stylesheet 'ForceDirected.css' /}
+        #{press.stylesheet src:'bootstrap.min.css', compressed:false /}
+        #{press.compressed-stylesheet /}
+
         <!--[if lt IE 8]>
           <link rel="stylesheet" href="@{'/public/stylesheets/ie.css'}" type="text/css" media="screen, projection">
         <![endif]-->
@@ -39,11 +41,12 @@
         <!--[if lt IE 9]>
         <script src="${'/public/javascripts/excanvas.compiled.js'}" type="text/javascript"></script>
         <![endif]-->
-        <script src="@{'/public/javascripts/jquery-1.7.1.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
-        <script src="@{'/public/javascripts/bootstrap-modal.js'}" type="text/javascript" charset="${_response_encoding}"></script>
-        <script src="@{'/public/javascripts/jquery-ui-1.8.16.custom.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
-        <script src="@{'/public/javascripts/smalljit.js'}" type="text/javascript" charset="${_response_encoding}"></script>
-        <script src="@{'/public/javascripts/jQuery.radmenu.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+        #{press.script src:'jquery-1.7.1.min.js', compress:false /}
+        #{press.script 'bootstrap-modal.js' /}
+        #{press.script src:'jquery-ui-1.8.16.custom.min.js', compress:false /}
+        #{press.script 'smalljit.js' /}
+        #{press.script 'jQuery.radmenu.js' /}
+        #{press.compressed-script /}
     </head>
     <body>
 
