@@ -26,12 +26,14 @@
         <title>&{'showRCACase.title', rcaCase.caseName}</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta charset="${_response_encoding}">
-        <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/main.css'}">
-        <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/jquery-ui-1.8.16.custom.css'}">
-        <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/arcaeditor.css'}">
-        <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/base.css'}">
-        <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/ForceDirected.css'}">
-        <link rel="stylesheet" href="@{'/public/stylesheets/bootstrap.min.css'}">
+        #{press.stylesheet 'main.css' /}
+        #{press.stylesheet 'jquery-ui-1.8.16.custom.css' /}
+        #{press.stylesheet 'arcaeditor.css' /}
+        #{press.stylesheet 'base.css' /}
+        #{press.stylesheet 'ForceDirected.css' /}
+        #{press.stylesheet src:'bootstrap.min.css', compressed:false /}
+        #{press.compressed-stylesheet /}
+
         <!--[if lt IE 8]>
           <link rel="stylesheet" href="@{'/public/stylesheets/ie.css'}" type="text/css" media="screen, projection">
         <![endif]-->
@@ -39,18 +41,25 @@
         <!--[if lt IE 9]>
         <script src="${'/public/javascripts/excanvas.compiled.js'}" type="text/javascript"></script>
         <![endif]-->
-        <script src="@{'/public/javascripts/jquery-1.7.1.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
-        <script src="@{'/public/javascripts/bootstrap-modal.js'}" type="text/javascript" charset="${_response_encoding}"></script>
-        <script src="@{'/public/javascripts/jquery-ui-1.8.16.custom.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
-        <script src="@{'/public/javascripts/smalljit.js'}" type="text/javascript" charset="${_response_encoding}"></script>
-        <script src="@{'/public/javascripts/jQuery.radmenu.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+        #{press.script src:'jquery-1.7.1.min.js', compress:false /}
+        #{press.script 'bootstrap-modal.js' /}
+        #{press.script 'bootstrap-twipsy.js' /}
+        #{press.script 'bootstrap-popover.js' /}
+        #{press.script src:'jquery-ui-1.8.16.custom.min.js', compress:false /}
+        #{press.script 'smalljit.js' /}
+        #{press.script 'jQuery.radmenu.js' /}
+        #{press.compressed-script /}
     </head>
     <body>
 
 #{navigation /}
 
+
+    
     <div id="infovis">
+      
     </div>
+  
   <div id="radial_menu" style="position: absolute; display: none;">
     <ul class="list">
       <li class="item my_class" id="radmenu-event-addCause">+</li>
@@ -59,6 +68,10 @@
       <li class="item my_class" id="radmenu-event-removeCause">X</li>
     </ul>
   </div>
+  <!-- Add corrective action popover form div -->
+  <div id="addCorrectiveForm" rel="popover" data-placement="below" style="position: absolute;"></div>
+
+  
   <div id="my-modal" class="modal-backdrop fade hide in">
     <!-- Modal -->
     <div class="modal" style="position: relative; top: auto; left: auto; margin: 0 auto; z-index: 1">
@@ -81,7 +94,18 @@
     <a data-controls-modal="my-modal" data-backdrop="static" >+</a>
   </div>
   
-
+  <script>
+    $(function () {
+      $("div[rel=popover]")
+        .popover({
+          offset: 10,
+          html: true
+        })
+        .click(function(e) {
+          e.preventDefault()
+        })
+    })
+  </script>
 <script type="text/javascript">
     $(document).ready(function() {
       init();
@@ -148,9 +172,8 @@
       var waitMessages = #{jsAction @waitMessages(rcaCase.id,':lastReceived') /}
       var addCause = #{jsAction @CauseController.addCause(':causeId', ':name') /}
       var deleteCause = #{jsAction @CauseController.deleteCause(':causeId') /}
-      var addRelation = #{jsAction @CauseController.addRelation(':causeId', ':toId') /}
-      var addCorrection = #{jsAction @CauseController.addCorrection(':causeId', ':name') /}
-      var moveNode = #{jsAction @CauseController.nodeMoved(':causeId', ':x', ':y') /}
+      var addRelation = #{jsAction @CauseController.addRelation(':fromId', ':toID') /}
+      var addCorrection = #{jsAction @CauseController.addCorrection(':toId', ':name') /}
       // end
       var $corrections_link = $("#corrections_link");
       var $modal_body = $("#my_modal_body");
@@ -189,9 +212,14 @@
               relationFromNode = selectedNode;
               radmenu_fadeOut();
               defaultEdgesForSelectedNode(selectedNode);
-            }else if($selected[0].id == "radmenu-event-addCorrection"){
+            }else if($selected[0].id == "radmenu-event-addCorrection") {
+              $("#addCorrectiveForm").attr("title", "Lisää korjaava toimenpide.")
+              $("#addCorrectiveForm").attr('data-content', "tähän corrective action form");
+              $("#addCorrectiveForm").popover('show');
+              $("div.popover").css({ "left": (menupos.left-50) + "px", "top":(menupos.top+50) + "px" });
+              $("div.popover").css("z-index", "100");
               var name = prompt('Correction name?');
-              $.post(addCorrection({causeId: selectedNode.id, name: name}), function () {
+              $.post(addCorrection({toId: selectedNode.id, name: name}), function () {
                 radmenu_fadeOut();
                 jQuery("#corrections_link").hide();
               });
@@ -313,7 +341,7 @@
           onClick: function(node){
             if(node){
               if (relationFromNode) {
-                $.post(addRelation({causeId: relationFromNode.id, toId: node.id}));
+                $.post(addRelation({fromId: relationFromNode.id, toID: node.id}));
                 relationFromNode = null;
               }
               else {
@@ -332,6 +360,7 @@
               defaultEdgesForSelectedNode(selectedNode);
               jQuery("#radial_menu").radmenu("hide");
               jQuery("#corrections_link").fadeOut(400);
+              $("#addCorrectiveForm").popover('hide');
               fd.plot();
             }
           }
