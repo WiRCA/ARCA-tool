@@ -184,7 +184,7 @@ public class CauseController extends Controller {
 		RCACase rcaCase = cause.rcaCase;
 
 		cause.xCoordinate = x;
-		cause.yCoordinate = y
+		cause.yCoordinate = y;
 		
 		cause.save();
 
