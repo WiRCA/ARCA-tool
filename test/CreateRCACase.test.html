@@ -56,7 +56,6 @@
     verifyTextPresent('Testikeissi')
 
     open('/logout')
-    pause('500')
 
     // open created RCA case with user that is not logged in
     clickAndWait('link=Testikeissi')
@@ -98,16 +97,13 @@
     select('id=companySize','label=1-10')
     type('id=companyProducts','testgraph')
     clickAndWait('id=create')
-    pause('500')
     storeLocation(url)
 
     open('/logout')
-    pause('500')
 
     // Try to open a non-existent RCA case
     // open('${url}')
-    // pause('500')
-    // verifyTextPresent('Access denied')
+    // waitForTextPresent('Access denied')
 
 
 #{/selenium}

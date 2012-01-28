@@ -51,32 +51,28 @@
 
 	// Clicks share
     clickAt('//*[text()="Jaa.."]')
-    pause('1000')
-    verifyTextPresent('Kutsu sähköpostilla')
+    waitForTextPresent('Kutsu sähköpostilla')
     verifyTextPresent('admin@local')
 
 	// Invites kalevi
     type('id=rcacase-share-dialog-invitedEmail-input','kalevi@kalevi.kalevi')
     click('css=input[type="submit"]')
-    pause('1000')
 
 	// Verifies that kalevi is invited
-    verifyTextPresent('kalevi@kalevi.kalevi')
+    waitForTextPresent('kalevi@kalevi.kalevi')
     
 	// Unshares the case with kalevi
 	click('id=remove-user-share')
-    pause('1000')
     
 	// Verifies that kalevi is removed from the case
-	verifyTextNotPresent('kalevi@kalevi.kalevi')
+	waitForTextNotPresent('kalevi@kalevi.kalevi')
     
 	// Invites kalevi again
 	type('id=rcacase-share-dialog-invitedEmail-input','kalevi@kalevi.kalevi')
     click('css=input[type="submit"]')
-    pause('1000')
 
 	// Verifies that kalevi is invited
-    verifyTextPresent('kalevi@kalevi.kalevi')
+    waitForTextPresent('kalevi@kalevi.kalevi')
     click('//button[@type='button']')
     verifyTextPresent('Admin user')
     clickAndWait('id=logout-link')
@@ -89,16 +85,14 @@
     verifyTextPresent('Irmelin testikeissi')
 
     clickAt('//*[text()="Jaa.."]')
-    pause('1000')
 
 	// Verifies that kalevi is still invited after relogin
-    verifyTextPresent('kalevi@kalevi.kalevi')
+    waitForTextPresent('kalevi@kalevi.kalevi')
     verifyTextPresent('admin@local')
     
 	// Removes kalevi from the case
 	click('id=remove-user-share')
-    pause('1000')
-    verifyTextNotPresent('kalevi@kalevi.kalevi')
+    waitForTextNotPresent('kalevi@kalevi.kalevi')
     click('//button[@type='button']')
     clickAndWait('id=logout-link')
 
@@ -109,9 +103,7 @@
 
 	// Verifies that kalevi is still removed from the case after relogin
     verifyTextNotPresent('kalevi@kalevi.kalevi')
-    pause('1000')
-    verifyTextPresent('admin@local')
-    pause('1000')
+    waitForTextPresent('admin@local')
     click('//button[@type='button']')
     open('/logout')
 #{/selenium}

@@ -23,6 +23,7 @@
   -->
 #{fixture delete:'all',load:'data.yml' /}
 #{selenium}
+    setTimeout('5000')
     open('/logout')
 	open('/?language=en')
 	clickAndWait('id=register-link')
@@ -31,7 +32,6 @@
 	type('id=passwordFieldRegister','seppo')
 	type('id=password2FieldRegister','seppo')
 	clickAndWait('id=registerButton')
-	pause('1000')
 	clickAndWait('//div[2]/a')
 	type('id=caseName','sepon oma keissi')
 	select('id=caseTypeValue','label=Human resources related problem')
@@ -41,103 +41,89 @@
 	select('id=companySize','label=1-10')
 	type('id=companyProducts','seppo myy')
 	clickAndWait('id=create')
-	pause('1000')
 
 	//Creates new causes
 	clickAt('//*[text()="sepon oma keissi"]')
-	pause('1000')
+    waitForTextPresent('+')
 
 	//New cause
 	clickAt('//*[text()="+"]')
 	answerOnNextPrompt('seppo ei saa myytyä')
 	click('//div[@id='radmenu-event-addCause']')
 	assertPrompt('Node name?')
-	pause('1000')
+	waitForTextPresent('seppo ei saa myytyä')
 	clickAt('//*[text()="seppo ei saa myytyä"]')
-	pause('1000')
-	verifyTextPresent('X')
-	pause('1000')
+	waitForTextPresent('X')
 
 	//New cause
 	clickAt('//*[text()="+"]')
 	answerOnNextPrompt('kukaan ei osta')
 	click('//div[@id='radmenu-event-addCause']')
 	assertPrompt('Node name?')
-	pause('1000')
+	waitForTextPresent('kukaan ei osta')
 	clickAt('//*[text()="kukaan ei osta"]')
-	pause('1000')
+    waitForTextPresent('+')
 
 	//New cause
 	clickAt('//*[text()="+"]')
 	answerOnNextPrompt('syy 3')
 	click('//div[@id='radmenu-event-addCause']')
 	assertPrompt('Node name?')
-	pause('1000')
+	waitForTextPresent('syy 3')
 	clickAt('//*[text()="syy 3"]')
-	pause('1000')
+	waitForTextPresent('+')
 
 	//New cause
 	clickAt('//*[text()="+"]')
 	answerOnNextPrompt('adada')
 	click('//div[@id='radmenu-event-addCause']')
 	assertPrompt('Node name?')
-	pause('1000')
+	waitForTextPresent('adada')
 	clickAt('//*[text()="seppo ei saa myytyä"]')
-	pause('1000')
 
 	//New correction
 	clickAt('//*[text()="C"]')
 	answerOnNextPrompt('hdhdh')
 	click('//div[@id='radmenu-event-addCorrection']')
 	assertPrompt('Correction name?')
-	pause('1000')
 	clickAt('//*[text()="seppo ei saa myytyä"]')
-	pause('1000')
-	verifyTextPresent('+')
-	pause('1000')
+	waitForTextPresent('+')
 	clickAt('//*[text()="kukaan ei osta"]')
-	pause('1000')
+	waitForTextPresent('X')
 
 	//Removes cause
 	click('//div[@id='radmenu-event-removeCause']')
-	pause('1000')
-	verifyTextNotPresent('kukaan ei osta')
+	waitForTextNotPresent('kukaan ei osta')
 	clickAt('//*[text()="syy 3"]')
-	pause('1000')
+	waitForTextPresent('+')
 
 	//New cause
 	clickAt('//*[text()="+"]')
-	pause('1000')
 	answerOnNextPrompt('asdasdasd')
 	click('//div[@id='radmenu-event-addCause']')
 	assertPrompt('Node name?')
-	pause('1000')
+	waitForTextPresent('asdasdasd')
 	clickAt('//*[text()="asdasdasd"]')
-	pause('1000')
+	waitForTextPresent('R')
 
 	//New relation
 	click('//div[@id='radmenu-event-addRelation']')
-	pause('1000')
 	clickAt('//*[text()="adada"]')
-	pause('1000')
 	clickAt('//*[text()="syy 3"]')
-	pause('1000')
+	waitForTextPresent('R')
 
 	//New relation
 	click('//div[@id='radmenu-event-addRelation']')
-	pause('1000')
 	clickAt('//*[text()="seppo ei saa myytyä"]')
-	pause('1000')
 
 	clickAndWait('link=Index page')
 	clickAt('//*[text()="sepon oma keissi"]')
-	pause('2000')
+	waitForTextPresent('adada')
 	clickAt('//*[text()="adada"]')
-	pause('1000')
+    waitForTextPresent('X')
 
 	//Removes cause
 	click('//div[@id='radmenu-event-removeCause']')
-	pause('1000')
-	verifyTextNotPresent('adada')
+	waitForTextNotPresent('adada')
 	clickAndWait('id=logout-link')
 #{/selenium}

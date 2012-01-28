@@ -97,7 +97,7 @@ public class RCACaseFunctionalTest extends FunctionalTest {
 		request.method = "GET";
 		request.params.put("id", privateRcaCase.id.toString());
 		Http.Response response = GET(request, request.url);
-		assertStatus(Http.StatusCode.FORBIDDEN, response);
+		assertStatus(Http.StatusCode.FOUND, response);
 
 		request = newRequest();
 		request.url = "/login";

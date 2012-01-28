@@ -66,12 +66,10 @@
     waitForTextPresent('bar')
     clickAt('//*[text()="bar"]')
     click('//div[@id='radmenu-event-removeCause']')
-    pause('500')
-    assertTextNotPresent('bar')
+    waitForTextNotPresent('bar')
 
     // logout
     open('/logout')
-    pause('500')
 
     // register as another user
     open('/?language=en')
@@ -106,7 +104,6 @@
     assertTextPresent('X')
 
     // logout
-    pause('500')
     open('/logout')
 
     // open page and log in first user again
@@ -126,11 +123,9 @@
     // delete node
     assertTextPresent('baz')
     click('//div[@id='radmenu-event-removeCause']')
-    pause('500')
-    assertTextNotPresent('baz')
+    waitForTextNotPresent('baz')
 
     // logout
     open('/logout')
-    pause('500')
 
 #{/selenium}
