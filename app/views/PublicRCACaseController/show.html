@@ -60,7 +60,7 @@
       
     </div>
   
-  <div id="radial_menu" style="position: absolute; display: none;">
+  <div id="radial_menu" style="position: absolute; display: none; width: 0; height: 0;">
     <ul class="list">
       <li class="item my_class" id="radmenu-event-addCause">+</li>
       <li class="item my_class" id="radmenu-event-addRelation">R</li>
@@ -311,17 +311,12 @@
           },
           onDragEnd: function(node, eventInfo, e){
             var nodeParent = fd.graph.getNode(node.data.parent);
-            var xPos = node.getPos('end').x - nodeParent.getPos('end').x;
-            var yPos = node.getPos('end').y - nodeParent.getPos('end').y;
-            $.post(moveNode({causeId: node.id, x: xPos, y: yPos}));
-            //update childrens vectors
-            node.eachAdjacency(function(adj) {
-              if(adj.nodeTo.data.nodeLevel>node.data.nodeLevel && !(adj.nodeTo.data.locked)){
-                xPos = adj.nodeTo.getPos('end').x-node.getPos('end').x;
-                yPos = adj.nodeTo.getPos('end').y-node.getPos('end').y;
-                $.post(moveNode({causeId: adj.nodeTo.id, x: xPos, y: yPos}));
-              }
-            });
+            if (nodeParent != undefined) {
+              var xPos = node.getPos('end').x - nodeParent.getPos('end').x;
+              var yPos = node.getPos('end').y - nodeParent.getPos('end').y;
+              $.post(moveNode({causeId: node.id, x: xPos, y: yPos}));
+            }
+            updateChildrenVectors(node);
           },
           //Implement zooming for nodes
           onMouseWheel: function(delta, e) {
@@ -426,7 +421,7 @@
                           fd.plot();
                         }
                         else if(this.data.type === 'addcauseevent') {
-                          defaultEdgesForSelectedNode(selectedNode)
+                          defaultEdgesForSelectedNode(selectedNode);
                           var newNode = {
                             "id": this.data.causeTo,
                             "name": this.data.text,
@@ -441,6 +436,8 @@
                           newNode.data.nodeLevel = oldNode.data.nodeLevel+1;
                           newNode.setPos(oldNode.getPos('end'),'current');
                           newNode.getPos('end').y = oldNode.getPos('end').y+80;
+                          newNode.data.xCoordinate = newNode.getPos('end').x;
+                          newNode.data.yCoordinate = newNode.getPos('end').y;
                           fd.plot();
                           //placeChildsFromParent(oldNode);
                           fd.animate({
@@ -452,10 +449,15 @@
                         else if(this.data.type === 'nodemovedevent'){
                           var nodeToMove = fd.graph.getNode(this.data.causeId);
                           var nodeParent = fd.graph.getNode(nodeToMove.data.parent);
-                          var xPos = nodeParent.getPos('end').x+parseInt(this.data.x);
-                          var yPos = nodeParent.getPos('end').y+parseInt(this.data.y);
-                          nodeToMove.setPos(new $jit.Complex(xPos,yPos), 'end');
-                            
+                          var intX = parseInt(this.data.x);
+                          var intY = parseInt(this.data.y);
+                          nodeToMove.data.xCoordinate = intX;
+                          nodeToMove.data.yCoordinate = intY;
+                          var xPos = nodeParent.getPos('end').x + intX;
+                          var yPos = nodeParent.getPos('end').y + intY;
+                          var nodePos = new $jit.Complex(xPos,yPos);
+                          nodeToMove.setPos(nodePos, 'end');
+
                           fd.animate({
                             modes: ['linear'],
                             transition: $jit.Trans.Elastic.easeOut,
@@ -538,12 +540,26 @@
         }
       }
     }
+
+    updateChildrenVectors = function(node) {
+      node.eachAdjacency(function(adj) {
+        if(adj.data.$type != "arrow" &&
+                adj.nodeTo.data.nodeLevel>node.data.nodeLevel && !(adj.nodeTo.data.locked)){
+          var xAdjPos = node.getPos('end').x + adj.nodeTo.data.xCoordinate;
+          var yAdjPos = node.getPos('end').y + adj.nodeTo.data.yCoordinate;
+          adj.nodeTo.pos.setc(xAdjPos, yAdjPos);
+          adj.nodeTo.setPos(new $jit.Complex(xAdjPos, yAdjPos), 'end');
+          updateChildrenVectors(adj.nodeTo);
+        }
+      });
+    }
+
     radmenu_fadeIn = function(selectedNode) {
         jQuery("#radial_menu").radmenu("show",
             function(items){
                 items.fadeIn(400);
 
-                if ( selectedNode.data.parent == "" ||
+                if ( selectedNode.id == ${rcaCase.problem.id} ||
                     !( selectedNode.data.creatorId == ${currentUser == null ? 'null' : currentUser.id} ||
                     ${currentUser == null ? 'null' : currentUser.id} == ${rcaCase.ownerId})
                     ) {
@@ -554,7 +570,7 @@
     }
 
     radmenu_fadeOut = function() {
-        jQuery("#radial_menu").radmenu("show",
+        jQuery("#radial_menu").radmenu("hide",
             function(items){
             items.fadeOut(4000);
             }
