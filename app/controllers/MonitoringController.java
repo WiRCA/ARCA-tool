@@ -108,7 +108,7 @@ public class MonitoringController extends Controller {
 		StatusOfCause[] causeStatuses = StatusOfCause.values();
 		StatusOfCorrection[] correctionStatuses = StatusOfCorrection.values();
 
-		render(currentUserId, causes, showCorrections, causeStatuses, correctionStatuses);
+		render(user, currentUserId, causes, showCorrections, causeStatuses, correctionStatuses);
 	}
 
 	public static void changeCauseStatus(Long causeId, StatusOfCause statusOfCause) {
