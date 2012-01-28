@@ -5,6 +5,9 @@
 open('/logout')
 open('/?language=en')
 
+// Set timeout to 5 seconds, used in waitFor-accessors
+setTimeout('5000')
+
 // Logging with admin
 type('id=username','admin@local')
 type('id=password','admin')
@@ -27,15 +30,13 @@ open('/user?language=fi')
 verifyTextPresent('testgraph')
 verifyTextPresent(' Jaa..')
 clickAt('//*[text()="Jaa.."]')
-pause('1000')
-verifyTextPresent('Kutsu sähköpostilla')
+waitForTextPresent('Kutsu sähköpostilla')
 click('css=input[type="submit"]')
 click('css=input[type="submit"]')
 
 type('id=rcacase-share-dialog-invitedEmail-input','email@local.fi')
 click('css=input[type="submit"]')
-pause('2000')
-verifyTextPresent('email@local.fi')
+waitForTextPresent('email@local.fi')
 click('//button[@type='button']')
 verifyTextPresent('Admin user')
 
@@ -47,38 +48,33 @@ clickAndWait('link=Monitoring')
 // Show own cases and causes
 click('name=whatToShow')
 click('name=casesRadio')
-pause('100')
+waitForTextPresent('testgraph')
 click('name=selectedCases')
-pause('1000')
 
 // Verify that cause can be liked and like it
-verifyTextPresent('Like')
+waitForTextPresent('Like')
 verifyTextNotPresent('Dislike')
 verifyTextPresent('0')
 clickAt('//*[text()="Like"]')
-pause('100')
 
 // Verify that like is registered and dislike and like are still visible, because admin is case owner
-verifyTextPresent('1')
+waitForTextPresent('1')
 verifyTextPresent('Dislike')
 verifyTextPresent('Like')
 
 // Add another like
 clickAt('//*[text()="Like"]')
-pause('100')
-verifyTextPresent('2')
+waitForTextPresent('2')
 
 // Try dislike
 clickAt('//*[text()="Dislike"]')
-pause('100')
-verifyTextPresent('1')
+waitForTextPresent('1')
 verifyTextPresent('Like')
 verifyTextPresent('Dislike')
 
 // Finally delete all likes
 clickAt('//*[text()="Dislike"]')
-pause('100')
-verifyTextNotPresent('Dislike')
+waitForTextNotPresent('Dislike')
 verifyTextPresent('0')
 verifyTextPresent('Like')
 
@@ -92,26 +88,23 @@ clickAndWait('id=signin')
 clickAndWait('link=Monitoring')
 click('name=whatToShow')
 click('//input[@name='casesRadio' and @value='sharedCases']')
-pause('100')
+waitForTextPresent('testgraph')
 click('name=selectedCases')
-pause('1000')
 
 // Verify that cause can be liked
-verifyTextPresent('Like')
+waitForTextPresent('Like')
 verifyTextNotPresent('Dislike')
 verifyTextPresent('0')
 
 // Like and verify things
 clickAt('//*[text()="Like"]')
-pause('100')
-verifyTextPresent('Dislike')
+waitForTextPresent('Dislike')
 verifyTextNotPresent('Like')
 verifyTextPresent('1')
 
 // Dislike and verify things
 clickAt('//*[text()="Dislike"]')
-pause('100')
-verifyTextPresent('Like')
+waitForTextPresent('Like')
 verifyTextNotPresent('Dislike')
 verifyTextPresent('0')
 
