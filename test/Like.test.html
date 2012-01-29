@@ -52,31 +52,31 @@ waitForTextPresent('testgraph')
 click('name=selectedCases')
 
 // Verify that cause can be liked and like it
-waitForTextPresent('Like')
-verifyTextNotPresent('Dislike')
+waitForTextPresent('+1')
+verifyTextNotPresent('-1')
 verifyTextPresent('0')
-clickAt('//*[text()="Like"]')
+clickAt('//*[text()="+1"]')
 
 // Verify that like is registered and dislike and like are still visible, because admin is case owner
 waitForTextPresent('1')
-verifyTextPresent('Dislike')
-verifyTextPresent('Like')
+waitForTextPresent('-1')
+verifyTextPresent('+1')
 
 // Add another like
-clickAt('//*[text()="Like"]')
+clickAt('//*[text()="+1"]')
 waitForTextPresent('2')
 
 // Try dislike
-clickAt('//*[text()="Dislike"]')
+clickAt('//*[text()="-1"]')
 waitForTextPresent('1')
-verifyTextPresent('Like')
-verifyTextPresent('Dislike')
+verifyTextPresent('+1')
+verifyTextPresent('-1')
 
 // Finally delete all likes
-clickAt('//*[text()="Dislike"]')
-waitForTextNotPresent('Dislike')
+clickAt('//*[text()="-1"]')
+waitForTextNotPresent('-1')
 verifyTextPresent('0')
-verifyTextPresent('Like')
+verifyTextPresent('+1')
 
 // Login with another user
 clickAndWait('id=logout-link')
@@ -92,20 +92,20 @@ waitForTextPresent('testgraph')
 click('name=selectedCases')
 
 // Verify that cause can be liked
-waitForTextPresent('Like')
-verifyTextNotPresent('Dislike')
+waitForTextPresent('+1')
+verifyTextNotPresent('-1')
 verifyTextPresent('0')
 
-// Like and verify things
-clickAt('//*[text()="Like"]')
-waitForTextPresent('Dislike')
-verifyTextNotPresent('Like')
+// +1 and verify things
+clickAt('//*[text()="+1"]')
+waitForTextPresent('-1')
+verifyTextNotPresent('+1')
 verifyTextPresent('1')
 
-// Dislike and verify things
-clickAt('//*[text()="Dislike"]')
-waitForTextPresent('Like')
-verifyTextNotPresent('Dislike')
+// -1 and verify things
+clickAt('//*[text()="-1"]')
+waitForTextPresent('+1')
+verifyTextNotPresent('-1')
 verifyTextPresent('0')
 
 // Logout
