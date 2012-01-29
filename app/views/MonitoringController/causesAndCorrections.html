@@ -84,9 +84,12 @@
         #{if showCorrections}
         #{list cause.corrections, as:'correction'}
         <tr id="correction-${correction.id}" class="correction-for-cause-${cause.id}">
-            <td colspan="3">${correction.name}</td>
+            <td colspan="3"><dl><dt>${correction.name}</dt><dd>${correction.description}</dd></dl></td>
             <td #{if cause.rcaCase.ownerId == currentUserId}class="editable correction-status"#{/if}>&{'monitoring.statusCorrection.' + correction.status?.name}</td>
-            <td></td>
+            <td id="correction-${correction.id}-likes">${correction.countLikes()}</td>
+            #{if user}<td>
+                *{ place for likeing corrections }*
+            </td>#{/if}
         </tr>
         #{/list}
         #{/if}
