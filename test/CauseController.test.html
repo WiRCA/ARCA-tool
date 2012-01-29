@@ -83,9 +83,16 @@
 
 	//New correction
 	clickAt('//*[text()="C"]')
-	answerOnNextPrompt('hdhdh')
 	click('//div[@id='radmenu-event-addCorrection']')
-	assertPrompt('Correction name?')
+    verifyTextPresent('Add corrective action')
+    clickAt('id=submitCorrectiveActionButton')
+    verifyTextPresent('Add corrective action')
+    type('id=ideaName','hdhdh')
+    clickAt('id=submitCorrectiveActionButton')
+    verifyTextPresent('Add corrective action')
+    type('id=ideaDescription','hdhdh')
+    clickAt('id=submitCorrectiveActionButton')
+    waitForTextNotPresent('Add corrective action')
 	clickAt('//*[text()="seppo ei saa myytyä"]')
 	waitForTextPresent('+')
 	clickAt('//*[text()="kukaan ei osta"]')

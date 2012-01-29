@@ -134,9 +134,12 @@
 	clickAt('//*[text()="another cause"]')
 	waitForTextPresent('C')
 	clickAt('//*[text()="C"]')
-	answerOnNextPrompt('correction to this private case to share')
 	click('//div[@id='radmenu-event-addCorrection']')
-	assertPrompt('Correction name?')
+    verifyTextPresent('Add corrective action')
+    type('id=ideaName','correction to this private case to share')
+    type('id=ideaDescription','correction to this private case to share')
+    clickAt('id=submitCorrectiveActionButton')
+    waitForTextNotPresent('Add corrective action')
 	
 	//testing monitoring
 	clickAndWait('link=Monitoring')
@@ -223,7 +226,11 @@
 	clickAt('//*[text()="C"]')
   answerOnNextPrompt('correction to this public cause')
   click('//div[@id='radmenu-event-addCorrection']')
-  assertPrompt('Correction name?')
+    verifyTextPresent('Add corrective action')
+    type('id=ideaName','correction to this public cause')
+    type('id=ideaDescription','correction to this public cause')
+    clickAt('id=submitCorrectiveActionButton')
+    waitForTextNotPresent('Add corrective action')
 	//testing monitoring with "All cases" checked
   clickAndWait('link=Monitoring')
   click('//input[@name='casesRadio' and @value='allCases']')
