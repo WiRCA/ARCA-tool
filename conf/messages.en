@@ -166,3 +166,9 @@ monitoring.statusCause.WILL_NOT_FIX=Won't fix
 monitoring.statusCorrection.IDEA=Idea
 monitoring.statusCorrection.IMPLEMENTED=Implemented
 monitoring.statusCorrection.WILL_BE_IMPLEMENTED=Will be implemented
+
+addCause.title=Add cause
+addCorrectiveAction.title=Add corrective action
+addCorrectiveAction.name=Name
+addCorrectiveAction.description=Description
+addCorrectiveAction.submit=Add

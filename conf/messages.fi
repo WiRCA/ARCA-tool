@@ -165,3 +165,9 @@ monitoring.statusCause.WILL_NOT_FIX=Ei korjata
 monitoring.statusCorrection.IDEA=Idea
 monitoring.statusCorrection.IMPLEMENTED=Toteutettu
 monitoring.statusCorrection.WILL_BE_IMPLEMENTED=Toteutetaan
+
+addCause.title=Add cause
+addCorrectiveAction.title=Lisää korjaava toimenpide
+addCorrectiveAction.name=Nimi
+addCorrectiveAction.description=Kuvaus
+addCorrectiveAction.submit=Luo idea

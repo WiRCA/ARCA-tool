@@ -71,10 +71,20 @@
   
   <!-- Add corrective action popover form div -->
   <div id="addCorrectiveForm" rel="popover" data-placement="below" style="position: absolute;">
-    <form id="submitCorrectiveAction">
-      <input type="input" id="ideaName" value="Nimi"/><br /><br />
-      <input type="text" id="ideaDescription" value="Kuvaus"/><br /><br />
-      <input class="btn primary small" id="submitCorrectiveActionButton" type="button" value="Luo idea"/>
+    <form id="submitCorrectiveAction" class="form-stacked">
+      <div class="clearfix">
+        <label for="ideaName">&{'addCorrectiveAction.name'}</label>
+        <div class="input">
+          <input type="text" id="ideaName" />
+        </div>
+      </div>
+      <div class="clearfix">
+        <label for="ideaDescription">&{'addCorrectiveAction.description'}</label>
+        <div class="input">
+            <textarea rows="3" id="ideaDescription"></textarea>
+        </div>
+      </div>
+      <input class="btn primary small" id="submitCorrectiveActionButton" type="button" value="&{'addCorrectiveAction.submit'}"/>
     </form>
   </div>
   
@@ -125,6 +135,7 @@
     $(document).ready(function() {
       init();
       zoomLevel = 1;
+      $("#addCorrectiveForm").hide();
     });
     var labelType, useGradients, nativeTextSupport, animate;
 
@@ -230,7 +241,7 @@
               defaultEdgesForSelectedNode(selectedNode);
             }else if($selected[0].id == "radmenu-event-addCorrection") {
               var CorrectiveActionForm = $("#addCorrectiveForm");
-              CorrectiveActionForm.attr("title", "Lisää korjaava toimenpide.");
+              CorrectiveActionForm.attr("title", "&{'addCorrectiveAction.title'}");
               var CorrectiveActionFormHtml = CorrectiveActionForm.html();
               CorrectiveActionForm.attr('data-content', CorrectiveActionFormHtml);
               CorrectiveActionForm.popover('show');
@@ -238,7 +249,19 @@
               $("div.popover").css("z-index", "100");
               $('#submitCorrectiveActionButton').live('click', function() {
                   var name = $("#ideaName").val();
+                  if (name == undefined || name == "") {
+                    $("#ideaName").parents(".clearfix").addClass("error");
+                    return;
+                  } else {
+                    $("#ideaName").parents(".clearfix").removeClass("error");
+                  }
                   var description = $("#ideaDescription").val();
+                  if (description == undefined || description == "") {
+                    $("#ideaDescription").parents(".clearfix").addClass("error");
+                    return;
+                  } else {
+                    $("#ideaDescription").parents(".clearfix").removeClass("error");
+                  }
                   $.post(addCorrection({toId: selectedNode.id, name: name, description: description}), function () {
                     radmenu_fadeOut();
                     jQuery("#corrections_link").hide();
