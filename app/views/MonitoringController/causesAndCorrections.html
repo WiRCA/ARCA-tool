@@ -54,6 +54,7 @@
             <th>&{'monitoring.relatedCase'}</th>
             <th>&{'monitoring.status'}</th>
             <th>&{'monitoring.score'}</th>
+            #{if user}<th>&{'monitoring.commands'}</th>#{/if}
         </tr>
     </thead>
     <tbody>
@@ -67,19 +68,17 @@
             <td>${cause.name}</td>
             <td>${cause.rcaCase.caseName}</td>
             <td #{if cause.rcaCase.ownerId == currentUserId}class="editable cause-status"#{/if}>&{'monitoring.statusCause.' + cause.status?.name}</td>
-            <td>
-                <span id="cause-${cause.id}-likes">${cause.countLikes()}</span>
-
-                <a href="javascript:" id="cause-${cause.id}-likebutton"
-                   class="btn success like" onclick="like(${cause.id})"
-                        #{if (user == null || !(cause.rcaCase.ownerId == currentUserId) && cause.hasUserLiked(user))}
-                            style="display:none;"
-                        #{/if}>Like</a>
-
+            <td id="cause-${cause.id}-likes">${cause.countLikes()}</td>
+            #{if user}<td>
                 <a href="javascript:" id="cause-${cause.id}-dislikebutton"
                    class="btn danger like" onclick="dislike(${cause.id})"
-                        #{if (user == null || !cause.hasUserLiked(user))} style="display:none;" #{/if}>Dislike</a>
-            </td>
+                        #{if !cause.hasUserLiked(user)} style="display:none;" #{/if}>-1</a>
+                <a href="javascript:" id="cause-${cause.id}-likebutton"
+                   class="btn success like" onclick="like(${cause.id})"
+                    #{if (!(cause.rcaCase.ownerId == currentUserId) && cause.hasUserLiked(user))}
+                   style="display:none;"
+                    #{/if}>+1</a>
+            </td>#{/if}
         </tr>
         #{if showCorrections}
         #{list cause.corrections, as:'correction'}

@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
+# Copyright (C) 2012 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
 # Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus,
 # Timo Lehtinen, Jaakko Harjuhahto
 #
@@ -157,6 +157,7 @@ monitoring.causeName=Syy
 monitoring.relatedCase=RCA analyysi
 monitoring.status=Tila
 monitoring.score=Pisteet
+monitoring.commands=Toiminnot
 
 monitoring.statusCause.DETECTED=Havaittu
 monitoring.statusCause.ELIMINATION=Korjataan
