@@ -29,6 +29,7 @@
             $("#cause-" + parseInt(causeId) + "-dislikebutton").hide();
             $("#cause-" + parseInt(causeId) + "-likebutton").show();
         }
+        $("table#cause-table").trigger("update");
     }
 
     function like(causeId) {
