@@ -53,8 +53,8 @@ ON `wircatest`.`correctioncomments`
 FOR EACH ROW
 SET NEW.created = CURRENT_TIMESTAMP;
 
-ALTER TABLE `wircatest`.`cause` ADD COLUMN xCoordinate INT DEFAULT NULL;
-ALTER TABLE `wircatest`.`cause` ADD COLUMN yCoordinate INT DEFAULT NULL;
+ALTER TABLE `arcatool`.`cause` ADD COLUMN xCoordinate INT DEFAULT '100' NOT NULL;
+ALTER TABLE `arcatool`.`cause` ADD COLUMN yCoordinate INT DEFAULT '100' NOT NULL;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;

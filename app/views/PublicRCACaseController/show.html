@@ -156,8 +156,8 @@
                     "$dim":1,
                     "parent": #{if cause.parent}${cause.parent.id}#{/if}#{else}""#{/else},
                     "creatorId": '${cause.creatorId}',
-                    "xCoordinate": #{if cause.xCoordinate}${cause.xCoordinate}#{/if}#{else}""#{/else},
-                    "yCoordinate": #{if cause.yCoordinate}${cause.yCoordinate}#{/if}#{else}""#{/else}
+                    "xCoordinate": #{if cause.xCoordinate != null && rcaCase.problem != cause}${cause.xCoordinate}#{/if}#{else}""#{/else},
+                    "yCoordinate": #{if cause.yCoordinate != null && rcaCase.problem != cause}${cause.yCoordinate}#{/if}#{else}""#{/else}
                     },
             "adjacencies": [
             #{list cause.causes, as:'causedBy'}
@@ -336,8 +336,8 @@
               var xPos = node.getPos('end').x - nodeParent.getPos('end').x;
               var yPos = node.getPos('end').y - nodeParent.getPos('end').y;
               $.post(moveNode({causeId: node.id, x: xPos, y: yPos}));
+              updateChildrenVectors(node);
             }
-            updateChildrenVectors(node);
           },
           //Implement zooming for nodes
           onMouseWheel: function(delta, e) {
@@ -361,18 +361,18 @@
                 relationFromNode = null;
               }
               else {
-              defaultEdgesForSelectedNode(selectedNode);
-              jQuery("#corrections_link").fadeOut(400);
-              show_radial_menu(node);
-              node.eachAdjacency(function(adj) {
-                adj.setDataset('current', {
-                  lineWidth: '5',
-                  color: '#4CC417'
+                defaultEdgesForSelectedNode(selectedNode);
+                jQuery("#corrections_link").fadeOut(400);
+                show_radial_menu(node);
+                node.eachAdjacency(function(adj) {
+                  adj.setDataset('current', {
+                    lineWidth: '5',
+                    color: '#4CC417'
+                  });
                 });
-              });
-              fd.plot();
+                fd.plot();
               }
-            }else{
+            } else{
               defaultEdgesForSelectedNode(selectedNode);
               jQuery("#radial_menu").radmenu("hide");
               jQuery("#corrections_link").fadeOut(400);
