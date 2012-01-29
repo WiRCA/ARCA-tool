@@ -137,7 +137,7 @@
 	click('//div[@id='radmenu-event-addCorrection']')
     verifyTextPresent('Add corrective action')
     type('id=ideaName','correction to this private case to share')
-    type('id=ideaDescription','correction to this private case to share')
+    type('id=ideaDescription','description for correction to this private case to share')
     clickAt('id=submitCorrectiveActionButton')
     waitForTextNotPresent('Add corrective action')
 	
@@ -164,6 +164,7 @@
 	waitForTextPresent('Elimination')
 	click('link=1')
 	waitForTextPresent('correction to this private case to share')
+    verifyTextPresent('description for correction to this private case to share')
 	
 	//changing correction status to "Implemented"
 	click('css=td.editable.correction-status')
@@ -228,7 +229,7 @@
   click('//div[@id='radmenu-event-addCorrection']')
     verifyTextPresent('Add corrective action')
     type('id=ideaName','correction to this public cause')
-    type('id=ideaDescription','correction to this public cause')
+    type('id=ideaDescription','description for correction to this public cause')
     clickAt('id=submitCorrectiveActionButton')
     waitForTextNotPresent('Add corrective action')
 	//testing monitoring with "All cases" checked
@@ -269,6 +270,7 @@
 	waitForTextPresent('public cause')
 	click('link=1')
 	waitForTextPresent('correction to this public cause')
+    verifyTextPresent('description for correction to this public cause')
 	
 		  //click('//input[@name='casesRadio' and @value='publicCases']')
 		  //click('name=whatToShow')
