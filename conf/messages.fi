@@ -91,6 +91,9 @@ createRCA.public=Onko tämä julkinen analyysi?
 createRCA.create=Luo RCA analyysi!
 createRCA.isMultinational=Monikansallinen yritys?
 
+editor.help1=Uusi käyttäjä?
+editor.help2=Aloita klikkaamalla solmua.
+
 showRCACase.title=RCA analyysi %s
 showRCACase.owner=Omistaja
 showRCACase.back=Takaisin omiin analyyseihin

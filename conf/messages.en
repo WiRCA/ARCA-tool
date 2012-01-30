@@ -88,6 +88,9 @@ showRCACase.title=RCA Case %s
 showRCACase.owner=RCA case owner
 showRCACase.back=Back to my cases
 
+editor.help1=New user?
+editor.help2=Start by clicking a node.
+
 RCACaseType.softwareProject=Software project
 RCACaseType.hr=Human resources related problem
 RCACaseType.other=Other
