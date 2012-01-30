@@ -90,6 +90,10 @@ showRCACase.back=Back to my cases
 
 editor.help1=New user?
 editor.help2=Start by clicking a node.
+editor.addCause=Add a sub cause
+editor.addRelation=Add a relation. Click another cause to create the relation
+editor.delete=Delete
+editor.addCorrection=Add a correction idea
 
 RCACaseType.softwareProject=Software project
 RCACaseType.hr=Human resources related problem

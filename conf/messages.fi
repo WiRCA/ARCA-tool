@@ -93,6 +93,10 @@ createRCA.isMultinational=Monikansallinen yritys?
 
 editor.help1=Uusi käyttäjä?
 editor.help2=Aloita klikkaamalla solmua.
+editor.addCause=Lisää alasyy
+editor.addRelation=Lisää relaatio. Klikkaa toista syytä lisätäksesi relaatio.
+editor.delete=Poista
+editor.addCorrection=Lisää korjaava idea
 
 showRCACase.title=RCA analyysi %s
 showRCACase.owner=Omistaja
