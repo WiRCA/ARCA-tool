@@ -22,29 +22,42 @@
  * THE SOFTWARE.
  */
 
-package models.enums;
+import models.enums.*;
+import org.junit.Test;
+import play.test.UnitTest;
 
 /**
  * @author Risto Virtanen
  */
-public enum StatusOfCorrection {
+public class EnumTest extends UnitTest {
 
-	IDEA(1),
-	WILL_BE_IMPLEMENTED(2),
-	IMPLEMENTED(3);
-
-	public Integer value;
-
-	StatusOfCorrection(Integer value) {
-		this.value = value;
+	@Test
+	public void commentTypeTest() {
+		assertEquals(CommentType.NEGATIVE, CommentType.valueOf(CommentType.NEGATIVE.value));
+		assertNull(CommentType.valueOf(9999));
+	}
+	
+	@Test
+	public void companySizeTest() {
+		assertEquals(CompanySize.HUNDRED, CompanySize.valueOf(CompanySize.HUNDRED.value));
+		assertNull(CompanySize.valueOf(9999));
+	}
+	
+	@Test
+	public void rcaCaseTypeTest() {
+		assertEquals(RCACaseType.OTHER, RCACaseType.valueOf(RCACaseType.OTHER.value));
+		assertNull(RCACaseType.valueOf(9999));
 	}
 
-	public static StatusOfCorrection valueOf(Integer id) {
-		for (StatusOfCorrection status : StatusOfCorrection.values()) {
-			if (status.value.equals(id)) {
-				return status;
-			}
-		}
-		return null;
+	@Test
+	public void statusOfCauseTest() {
+		assertEquals(StatusOfCause.WILL_NOT_FIX, StatusOfCause.valueOf(StatusOfCause.WILL_NOT_FIX.value));
+		assertNull(StatusOfCause.valueOf(9999));
+	}
+
+	@Test
+	public void statusOfCorrection() {
+		assertEquals(StatusOfCorrection.IMPLEMENTED, StatusOfCorrection.valueOf(StatusOfCorrection.IMPLEMENTED.value));
+		assertNull(StatusOfCorrection.valueOf(9999));
 	}
 }

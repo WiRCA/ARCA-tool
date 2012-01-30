@@ -67,7 +67,7 @@ public class Cause extends LikableIdComparableModel {
 	@Sort(type = SortType.NATURAL)
 	public SortedSet<Correction> corrections;
 
-	public Integer statusValue = StatusOfCause.DETECTED.getValue();
+	public Integer statusValue = StatusOfCause.DETECTED.value;
 
 	public Integer xCoordinate = 100;
 
@@ -278,7 +278,7 @@ public class Cause extends LikableIdComparableModel {
 	 * @param status the status to be set
 	 */
 	public void setStatus(StatusOfCause status) {
-		this.statusValue = status.getValue();
+		this.statusValue = status.value;
 	}
 
 	@Override

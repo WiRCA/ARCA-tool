@@ -33,9 +33,9 @@ public enum StatusOfCause {
 	ELIMINATION(2),
 	WILL_NOT_FIX(3);
 
-	private Integer value;
+	public Integer value;
 
-	private StatusOfCause(Integer value) {
+	StatusOfCause(Integer value) {
 		this.value = value;
 	}
 
@@ -46,23 +46,5 @@ public enum StatusOfCause {
 			}
 		}
 		return null;
-	}
-
-	/**
-	 * Get the name of enum
-	 *
-	 * @return the name of enum
-	 */
-	public String getName() {
-		return this.name();
-	}
-
-	/**
-	 * Get the value of enum
-	 *
-	 * @return the value of enum
-	 */
-	public Integer getValue() {
-		return value;
 	}
 }

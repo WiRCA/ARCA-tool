@@ -68,7 +68,7 @@
             #{/if}
             <td>${cause.name}</td>
             <td>${cause.rcaCase.caseName}</td>
-            <td #{if cause.rcaCase.ownerId == currentUserId}class="editable cause-status"#{/if}>&{'monitoring.statusCause.' + cause.status?.name}</td>
+            <td #{if cause.rcaCase.ownerId == currentUserId}class="editable cause-status"#{/if}>&{'monitoring.statusCause.' + cause.status}</td>
             <td id="cause-${cause.id}-likes">${cause.countLikes()}</td>
             #{if user}<td>
                 <a href="javascript:" id="cause-${cause.id}-dislikebutton"
@@ -85,7 +85,7 @@
         #{list cause.corrections, as:'correction'}
         <tr id="correction-${correction.id}" class="correction-for-cause-${cause.id}">
             <td colspan="3"><dl><dt>${correction.name}</dt><dd>${correction.description}</dd></dl></td>
-            <td #{if cause.rcaCase.ownerId == currentUserId}class="editable correction-status"#{/if}>&{'monitoring.statusCorrection.' + correction.status?.name}</td>
+            <td #{if cause.rcaCase.ownerId == currentUserId}class="editable correction-status"#{/if}>&{'monitoring.statusCorrection.' + correction.status}</td>
             <td id="correction-${correction.id}-likes">${correction.countLikes()}</td>
             #{if user}<td>
                 *{ place for likeing corrections }*
@@ -160,7 +160,7 @@
     var causeStatusJson =
         {
         #{list causeStatuses, as:'status'}
-        "${status.name}":"&{'monitoring.statusCause.' + status.name}"#{if !status_isLast},#{/if}
+        "${status}":"&{'monitoring.statusCause.' + status}"#{if !status_isLast},#{/if}
         #{/list}
         };
 
@@ -184,7 +184,7 @@
     var correctionStatusJson =
         {
         #{list correctionStatuses, as:'status'}
-        "${status.name}":"&{'monitoring.statusCorrection.' + status.name}"#{if !status_isLast},#{/if}
+        "${status}":"&{'monitoring.statusCorrection.' + status}"#{if !status_isLast},#{/if}
         #{/list}
         };
 

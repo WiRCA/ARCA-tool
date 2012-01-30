@@ -49,7 +49,7 @@ public class Correction extends LikableIdComparableModel {
 
 	public String description;
 
-	public Integer statusValue = StatusOfCorrection.IDEA.getValue();
+	public Integer statusValue = StatusOfCorrection.IDEA.value;
 
 	@ManyToOne
 	@JoinColumn(name = "causeId")
@@ -103,7 +103,7 @@ public class Correction extends LikableIdComparableModel {
 	 * @param status the status to be set
 	 */
 	public void setStatus(StatusOfCorrection status) {
-		this.statusValue = status.getValue();
+		this.statusValue = status.value;
 	}
 
 	/**
