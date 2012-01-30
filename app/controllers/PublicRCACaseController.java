@@ -80,7 +80,11 @@ public class PublicRCACaseController extends Controller {
 		if (!rcaCase.isCasePublic && (user == null || !user.caseIds.contains(rcaCase.id))) {
 			if (user == null) {
 				flash.put("url", request.url);
-				redirect("/login");
+				try {
+					Secure.login();
+				} catch (Throwable throwable) {
+					Logger.error("Login failed.");
+				}
 				return null;
 			} else if (!user.caseIds.contains(rcaCase.id)) {
 				forbidden();
