@@ -44,37 +44,37 @@
 
 	//Creates new causes
 	clickAt('//*[text()="sepon oma keissi"]')
-    waitForTextPresent('+')
+    waitForElementPresent('//div[@id='radmenu-event-addCause']')
 
 	//New cause
-	clickAt('//*[text()="+"]')
+	click('//div[@id='radmenu-event-addCause']')
 	answerOnNextPrompt('seppo ei saa myytyä')
 	click('//div[@id='radmenu-event-addCause']')
 	assertPrompt('Node name?')
 	waitForTextPresent('seppo ei saa myytyä')
 	clickAt('//*[text()="seppo ei saa myytyä"]')
-	waitForTextPresent('X')
+	waitForElementPresent('//div[@id='radmenu-event-addCause']')
 
 	//New cause
-	clickAt('//*[text()="+"]')
+	click('//div[@id='radmenu-event-addCause']') 
 	answerOnNextPrompt('kukaan ei osta')
 	click('//div[@id='radmenu-event-addCause']')
 	assertPrompt('Node name?')
 	waitForTextPresent('kukaan ei osta')
 	clickAt('//*[text()="kukaan ei osta"]')
-    waitForTextPresent('+')
+    waitForElementPresent('//div[@id='radmenu-event-addCause']')
 
 	//New cause
-	clickAt('//*[text()="+"]')
+	click('//div[@id='radmenu-event-addCause']') 
 	answerOnNextPrompt('syy 3')
 	click('//div[@id='radmenu-event-addCause']')
 	assertPrompt('Node name?')
 	waitForTextPresent('syy 3')
 	clickAt('//*[text()="syy 3"]')
-	waitForTextPresent('+')
+	waitForElementPresent('//div[@id='radmenu-event-addCause']')
 
 	//New cause
-	clickAt('//*[text()="+"]')
+	click('//div[@id='radmenu-event-addCause']') 
 	answerOnNextPrompt('adada')
 	click('//div[@id='radmenu-event-addCause']')
 	assertPrompt('Node name?')
@@ -82,7 +82,6 @@
 	clickAt('//*[text()="seppo ei saa myytyä"]')
 
 	//New correction
-	clickAt('//*[text()="C"]')
 	click('//div[@id='radmenu-event-addCorrection']')
     verifyTextPresent('Add corrective action')
     clickAt('id=submitCorrectiveActionButton')
@@ -94,30 +93,30 @@
     clickAt('id=submitCorrectiveActionButton')
     waitForTextNotPresent('Add corrective action')
 	clickAt('//*[text()="seppo ei saa myytyä"]')
-	waitForTextPresent('+')
+	waitForElementPresent('//div[@id='radmenu-event-addCause']')
 	clickAt('//*[text()="kukaan ei osta"]')
-	waitForTextPresent('X')
+	waitForElementPresent('//div[@id='radmenu-event-addCause']')
 
 	//Removes cause
 	click('//div[@id='radmenu-event-removeCause']')
 	waitForTextNotPresent('kukaan ei osta')
 	clickAt('//*[text()="syy 3"]')
-	waitForTextPresent('+')
+	waitForElementPresent('//div[@id='radmenu-event-addCause']')
 
 	//New cause
-	clickAt('//*[text()="+"]')
+	click('//div[@id='radmenu-event-addCause']') 
 	answerOnNextPrompt('asdasdasd')
 	click('//div[@id='radmenu-event-addCause']')
 	assertPrompt('Node name?')
 	waitForTextPresent('asdasdasd')
 	clickAt('//*[text()="asdasdasd"]')
-	waitForTextPresent('R')
+	waitForElementPresent('//div[@id='radmenu-event-addRelation']')
 
 	//New relation
 	click('//div[@id='radmenu-event-addRelation']')
 	clickAt('//*[text()="adada"]')
 	clickAt('//*[text()="syy 3"]')
-	waitForTextPresent('R')
+	waitForElementPresent('//div[@id='radmenu-event-addRelation']')
 
 	//New relation
 	click('//div[@id='radmenu-event-addRelation']')
@@ -127,7 +126,7 @@
 	clickAt('//*[text()="sepon oma keissi"]')
 	waitForTextPresent('adada')
 	clickAt('//*[text()="adada"]')
-    waitForTextPresent('X')
+    waitForElementPresent('//div[@id='radmenu-event-addCause']')
 
 	//Removes cause
 	click('//div[@id='radmenu-event-removeCause']')

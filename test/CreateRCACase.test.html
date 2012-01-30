@@ -61,7 +61,7 @@
     clickAndWait('link=Testikeissi')
     verifyTextPresent('Testikeissi')
     clickAt('//*[text()="Testikeissi"]')
-    assertTextPresent('+')
+    assertElementPresent('//div[@id='radmenu-event-addCause']')
 
     // Add a new node with user that is not logged in
     answerOnNextPrompt('foo')
@@ -69,7 +69,7 @@
     assertPrompt('Node name?')
     waitForTextPresent('foo')
     clickAt('//*[text()="foo"]')
-    assertTextPresent('+')
+    assertElementPresent('//div[@id='radmenu-event-addCause']')
 
     // Try to open a non-existent RCA case
     open('/case/9999999')

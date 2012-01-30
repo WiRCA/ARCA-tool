@@ -26,6 +26,7 @@
 #{selenium}
 
     // open page and log in first user
+    open('/logout')
     open('/?language=en')
 	type('id=username','admin@local')
 	type('id=password','admin')
@@ -47,17 +48,18 @@
     // check that delete button is not visible for root node
     verifyTextPresent('testgraph')
     clickAt('//*[text()="testgraph"]')
-    assertTextNotPresent('X')
-    assertTextPresent('+')
+    assertElementNotPresent('xpath=//img[@alt='Remove cause icon']')
+    assertElementPresent('//div[@id='radmenu-event-addCause']')
 
     // add new node and check that delete button is visible for it
+    clickAt('//div[@id='radmenu-event-addCause']')
     answerOnNextPrompt('foo')
     clickAt('//div[@id='radmenu-event-addCause']')
     assertPrompt('Node name?')
     waitForTextPresent('foo')
     clickAt('//*[text()="foo"]')
-    assertTextPresent('+')
-    assertTextPresent('X')
+    assertElementPresent('//div[@id='radmenu-event-addCause']')
+    assertElementPresent('//div[@id='radmenu-event-removeCause']')
 
     // add new node and delete it
     answerOnNextPrompt('bar')
@@ -86,13 +88,13 @@
     // check that delete button is not visible for root node
     verifyTextPresent('testgraph')
     clickAt('//*[text()="testgraph"]')
-    assertTextNotPresent('X')
-    assertTextPresent('+')
+    assertNotVisible('//div[@id='radmenu-event-removeCause']')
+    assertElementPresent('//div[@id='radmenu-event-addCause']')
 
     // check that delete button is not visible for other node
     clickAt('//*[text()="foo"]')
-    assertTextNotPresent('X')
-    assertTextPresent('+')
+    assertNotVisible('//div[@id='radmenu-event-removeCause']')
+    assertElementPresent('//div[@id='radmenu-event-addCause']')
 
     // create new node and check that delete button is visible for it
     answerOnNextPrompt('baz')
@@ -100,8 +102,8 @@
     assertPrompt('Node name?')
     waitForTextPresent('baz')
     clickAt('//*[text()="baz"]')
-    assertTextPresent('+')
-    assertTextPresent('X')
+    assertElementPresent('//div[@id='radmenu-event-addCause']')
+    assertElementPresent('//div[@id='radmenu-event-removeCause']')
 
     // logout
     open('/logout')
@@ -117,8 +119,8 @@
 
     // check that delete button is visible for the node created by the other user
     clickAt('//*[text()="baz"]')
-    assertTextPresent('+')
-    assertTextPresent('X')
+    assertElementPresent('//div[@id='radmenu-event-addCause']')
+    assertElementPresent('//div[@id='radmenu-event-removeCause']')
 
     // delete node
     assertTextPresent('baz')

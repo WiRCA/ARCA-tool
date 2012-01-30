@@ -49,7 +49,7 @@
     // add new node
     verifyTextPresent('testgraph')
     clickAt('//*[text()="testgraph"]')
-    assertTextPresent('+')
+    assertElementPresent('//div[@id='radmenu-event-addCause']')
     answerOnNextPrompt('foo')
     clickAt('//div[@id='radmenu-event-addCause']')
     assertPrompt('Node name?')
@@ -71,7 +71,7 @@
 
     // add new relation
     clickAt('//*[text()="foobar"]')
-    waitForTextPresent('R')
+    waitForElementPresent('//div[@id='radmenu-event-addRelation']')
     click('//div[@id='radmenu-event-addRelation']')
     clickAt('//*[text()="testgraph"]')
 
