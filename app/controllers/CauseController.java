@@ -197,7 +197,7 @@ public class CauseController extends Controller {
 
 	/**
 	 * Adds a like to the cause if user has rights to do it.
-	 * @param causeId cause to be liked
+	 * @param causeId id of the cause to be liked
 	 */
 	public static void like(Long causeId) {
 		Cause cause = Cause.findById(causeId);
@@ -221,7 +221,7 @@ public class CauseController extends Controller {
 
 	/**
 	 * Removes a like from the cause.
-	 * @param causeId cause to be disliked
+	 * @param causeId id of the cause to be disliked
 	 */
 	public static void dislike(Long causeId) {
 		Cause cause = Cause.findById(causeId);
