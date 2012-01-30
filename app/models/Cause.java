@@ -69,9 +69,9 @@ public class Cause extends LikableIdComparableModel {
 
 	public Integer statusValue = StatusOfCause.DETECTED.getValue();
 
-	public Integer xCoordinate = null;
+	public Integer xCoordinate = 100;
 
-	public Integer yCoordinate = null;
+	public Integer yCoordinate = 100;
 
 	@ElementCollection
 	@JoinTable(name = "causelikes", joinColumns = {@JoinColumn(name = "causeId", nullable = false)})
