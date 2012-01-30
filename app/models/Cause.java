@@ -286,13 +286,4 @@ public class Cause extends LikableIdComparableModel {
 		return name + " (id: " + id + ", rca case: " + rcaCase + ")";
 	}
 
-	/**
-	 * Method to determine if both coordinates of the cause have been set.
-	 *
-	 * @return true if both coordinates have been set, false otherwise
-	 */
-	public boolean areCoordinatesSet() {
-		return (this.yCoordinate != null) && (this.xCoordinate != null);
-	}
-
 }
