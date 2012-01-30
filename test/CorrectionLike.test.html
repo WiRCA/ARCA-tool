@@ -8,12 +8,17 @@ open('/?language=en')
 // Set timeout to 5 seconds, used in waitFor-accessors
 setTimeout('5000')
 
+// login
 type('id=username','admin@local')
 type('id=password','admin')
 clickAndWait('id=signin')
+
+// create new case
 clickAndWait('id=createRCACase-link')
 type('id=caseName','testi')
 clickAndWait('id=create')
+
+// create one correction
 waitForTextPresent('testi')
 clickAt('//*[text()="testi"]')
 waitForTextPresent('C')
@@ -22,6 +27,8 @@ waitForTextPresent('Add corrective action')
 type('id=ideaName','testing')
 type('id=ideaDescription','testing')
 click('id=submitCorrectiveActionButton')
+
+// show corrections in monitoring view
 clickAndWait('link=Monitoring')
 click('name=whatToShow')
 click('xpath=(//input[@name='whatToShow'])[2]')
@@ -32,16 +39,21 @@ waitForTextPresent('Detected')
 waitForElementPresent('link=1')
 click('link=1')
 waitForTextPresent('Idea')
+
+// verify that buttons are visible when appropriate
 waitForElementPresent('//a[contains(@id, "correction-") and contains(@id, "-likebutton")]')
 verifyNotVisible('//a[contains(@id, "correction-") and contains(@id, "-dislikebutton")]')
+
 click('//a[contains(@id, "correction-") and contains(@id, "-likebutton")]')
 waitForElementPresent('//a[contains(@id, "correction-") and contains(@id, "-dislikebutton")]')
 verifyElementPresent('//a[contains(@id, "correction-") and contains(@id, "-likebutton")]')
 waitForText('//td[contains(@id, "correction-") and contains(@id, "-likes")]','1')
+
 click('//a[contains(@id, "correction-") and contains(@id, "-dislikebutton")]')
 waitForText('//td[contains(@id, "correction-") and contains(@id, "-likes")]','0')
 waitForElementPresent('//a[contains(@id, "correction-") and contains(@id, "-likebutton")]')
 verifyNotVisible('//a[contains(@id, "correction-") and contains(@id, "-dislikebutton")]')
+
 clickAndWait('id=logout-link')
 
 #{/selenium}
