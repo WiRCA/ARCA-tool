@@ -54,8 +54,11 @@
 
 #{navigation /}
 
-
-    
+	<div id="help-message" class="alert-message warning" style="z-index:99999999999; top: 50px; width: 230px; opacity: .5; margin-left: auto; margin-right: auto; padding: 2px">
+	  <a id="help-message-close" class="close" href="#">&times;</a>
+	  <p><strong>New user?</strong> Start by clicking a node.</p>
+	</div>
+	
     <div id="infovis">
       
     </div>
@@ -133,6 +136,9 @@
         nodes.css("transform", "matrix(" + zoomLevel + ",0,0," + zoomLevel + ",0,0)");
     };
     $(document).ready(function() {
+			$("#help-message-close").click(function() {
+				$(this).parent().hide();
+			});
       init();
       zoomLevel = 1;
       $("#addCorrectiveForm").hide();
@@ -277,8 +283,36 @@
         //get the position of the placeholder element
         menupos   = $("#"+given_node.id).offset();
         menuwidth = $("#"+given_node.id).width();
-        //show the menu directly over the placeholder
-        $radial_menu.css({ "left": (menupos.left + menuwidth/2 - 5) + "px", "top":menupos.top + "px" }).show();
+				menuheight = $("#"+given_node.id).height();
+				
+		///////////////////////////////////////////////////////
+		// As the radial menu is a square of four menu items //
+		// this is to find out what shape the menu is.       //
+		//    #  #					          ------                 //
+		//  --------                #|     |#                //
+		//  |      |        OR       |     |                 //
+		//  -------                 #|     |#                //
+		//    #  #                    -----                  //
+		///////////////////////////////////////////////////////
+		if(menuheight > menuwidth){
+			radius_Xcomp = menuwidth/2 + 20;
+			// cos(45) is about 0.70
+			newRadius = radius_Xcomp/0.7;
+		}
+		else {
+		    radius_Ycomp = menuheight/2 + 22;
+			// sin(45) is about 0.70
+			newRadius = radius_Ycomp/0.7;
+		}
+		jQuery("#radial_menu").radmenu("opts").radius = newRadius;
+        jQuery("#radial_menu").radmenu("opts").centerY = menuheight/2 - 30;
+				
+	    if(selectedNode.id == ${rcaCase.problem.id}) {
+			jQuery("#radial_menu").radmenu("opts").radius += 10;
+			jQuery("#radial_menu").radmenu("opts").centerY += 7;
+				}
+		 //show the menu directly over the placeholder
+        $radial_menu.css({ "left": (menupos.left + menuwidth/2 - 10) + "px", "top":menupos.top + "px" }).show();
         var hasCorrections = #{jsAction @CauseController.hasCorrections(':causeId') /}
         $.get(hasCorrections({causeId: selectedNode.id}), function(data) {
           if (data == "true") {
@@ -340,11 +374,10 @@
           //Change cursor style when hovering a node
           onMouseEnter: function() {
             fd.canvas.getElement().style.cursor = 'move';
-          },
+          },	
           onMouseLeave: function() {
             fd.canvas.getElement().style.cursor = '';
           },
-
           //Update node positions when dragged
           onDragMove: function(node, eventInfo, e) {
             jQuery("#radial_menu").radmenu("hide");
@@ -378,6 +411,7 @@
           },
           //Add also a click handler to nodes
           onClick: function(node){
+			$("#help-message").hide();            
             if(node){
               if (relationFromNode) {
                 $.post(addRelation({fromId: relationFromNode.id, toID: node.id}));
