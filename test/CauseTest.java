@@ -177,16 +177,4 @@ public class CauseTest extends GenericRCAUnitTest {
 		cause.dislike(user);
 		assertEquals(1, cause.likes.size());
 	}
-
-	@Test
-	public void coordinateTest() {
-		Cause cause = new Cause(testCase, "test cause", user).save();
-		assertFalse(cause.areCoordinatesSet());
-		cause.xCoordinate = 0;
-		cause.save();
-		assertFalse(cause.areCoordinatesSet());
-		cause.yCoordinate = 0;
-		cause.save();
-		assertTrue(cause.areCoordinatesSet());
-	}
 }
