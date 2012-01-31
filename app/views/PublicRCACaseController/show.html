@@ -251,7 +251,8 @@
         centerX: -5, // the center x axis offset
         centerY: -10, // the center y axis offset
         selectEvent: "click", // the select event (click)
-        onSelect: function($selected){ // show what is returned 
+        onSelect: function($selected){ // show what is returned
+			$('.twipsy').remove();
             if($selected[0].id == "radmenu-event-removeCause"){
               $.post(deleteCause({causeId: selectedNode.id}));
               jQuery("#radial_menu").radmenu("hide");
@@ -434,7 +435,7 @@
           },
           //Add also a click handler to nodes
           onClick: function(node){
-			$("#help-message").hide();            
+						$("#help-message").hide();
             if(node){
               if (relationFromNode) {
                 $.post(addRelation({fromId: relationFromNode.id, toID: node.id}));
@@ -494,7 +495,7 @@
                 url: waitMessages({lastReceived: lastReceived}),
                 success: function(events) {
                     $(events).each(function() {
-                        if (this.data.type === 'deletecauseevent') {
+                        if (this.data.type === 'deletecauseevent') {													
                           fd.graph.removeNode(this.data.causeId);
                           fd.plot();
                           $("div.node#" + this.data.causeId).remove();
