@@ -40,6 +40,9 @@ indexPage.title=Index page
 indexPage.info=Start by signing in or browse cases.
 
 aboutPage.title=About
+aboutPage.content=The ARCA-tool is a product of the  Aalto University School of Science course Software Development \
+  Project team WiRCA. The project is open source (MIT license). You can participate in the project on GitHub (link at \
+   the bottom of the page).
 
 contactPage.title=Contact
 

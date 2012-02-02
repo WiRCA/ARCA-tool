@@ -5,7 +5,7 @@
             <ul class="nav">
                 <li class="${ activePage == 'index' ? 'active' : ''}">#{a @IndexPageController.index()}&{'indexPage.title'}#{/a}</li>
                 <li class="${ activePage == 'monitoring' ? 'active' : ''}">#{a @MonitoringController.index()}&{'monitoringPage.title'}#{/a}</li>
-                <li class="${ activePage == 'about' ? 'active' : ''}"><a href="#about">&{'aboutPage.title'}</a></li>
+                <li class="${ activePage == 'about' ? 'active' : ''}">#{a @AboutController.index()}&{'aboutPage.title'}#{/a}</li>
                 <li class="${ activePage == 'contact' ? 'active' : ''}"><a href="#contact">&{'contactPage.title'}</a></li>
             </ul>
             <div class="pull-right">

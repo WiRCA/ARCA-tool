@@ -37,7 +37,10 @@ applicationDescription=Tapa tehdä juurisyyanalyysia
 indexPage.title=Etusivu
 indexPage.info=Aloita kirjautumalla sisään tai selaa analyysejä.
 
-aboutPage.title=RCA?
+aboutPage.title=Tietoa projektista
+aboutPage.content=ARCA-työkalu on Aalto-yliopiston Perustieteiden Korkeakoulun Ohjelmistonkehitysprojekti-kurssin \
+  ryhmä WiRCAn tuotos. Työkalu on opensourcea (MIT-lisenssi). Projekti löytyy \
+  GitHubista (linkki sivun alareunassa).
 
 contactPage.title=Ota yhteyttä
 
