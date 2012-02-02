@@ -103,13 +103,12 @@
       </li>
     </ul>
   </div>
+  <!-- Add corrective action popover form div -->
   <script>
     $(function () {
         $("a[rel=twipsy]").twipsy({live: true})
     })
   </script>
-  
-  <!-- Add corrective action popover form div -->
   <div id="addCorrectiveForm" rel="popover" data-placement="below" style="position: absolute;">
     <form id="submitCorrectiveAction" class="form-stacked">
       <div class="clearfix">
@@ -158,9 +157,10 @@
           html: true
         })
         .click(function(e) {
-          e.preventDefault()
-        })
-    })
+          isVisible = true;
+          e.preventDefault();
+        });
+    });
   </script>
 <script type="text/javascript">
 
@@ -177,6 +177,9 @@
 				$(this).parent().hide();
 			});
       init();
+      $("a#popover-close.close").click(function() {
+				$("#addCorrectiveForm").popover('hide');
+			});
       zoomLevel = 1;
       $("#addCorrectiveForm").hide();
     });
@@ -285,7 +288,7 @@
               defaultEdgesForSelectedNode(selectedNode);
             }else if($selected[0].id == "radmenu-event-addCorrection") {
               var CorrectiveActionForm = $("#addCorrectiveForm");
-              CorrectiveActionForm.attr("title", "&{'addCorrectiveAction.title'}");
+              CorrectiveActionForm.attr("title", "&{'addCorrectiveAction.title'}<a id=\"popover-close\" href=\"#\" class=\"close\">&times;</a>");
               var CorrectiveActionFormHtml = CorrectiveActionForm.html();
               CorrectiveActionForm.attr('data-content', CorrectiveActionFormHtml);
               CorrectiveActionForm.popover('show');
