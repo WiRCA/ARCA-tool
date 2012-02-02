@@ -112,18 +112,6 @@ public class CauseController extends Controller {
 		Cause cause = Cause.findById(causeId);
 		return !cause.corrections.isEmpty();
 	}
-
-	/**
-	 * Gets the name of the first corrective action of a cause.
-	 *
-	 * @param causeId
-	 *
-	 * @return
-	 */
-	public static String getFirstCorrectionName(Long causeId) {
-		Cause cause = Cause.findById(causeId);
-		return (cause.corrections).first().name;
-	}
 	
 	/**
 	 * Gets the names of the corrective actions of a cause.
