@@ -134,14 +134,9 @@
         <a href="#" class="close">&times;</a>
         <h3>Corrective action ideas</h3>
       </div>
-      <div class="popover">
-        <p>List of corrections</p>
+      <div class="modal_body">
         <div id="my_modal_body">
         </div>
-      </div>
-      <div class="modal-footer">
-        <a href="#" class="btn primary">Nappi</a>
-        <a href="#" class="btn secondary">Toinen nappi</a>
       </div>
     </div>
   </div>
@@ -252,11 +247,13 @@
       var $modal_body = $("#my_modal_body");
       var $radial_menu = $("#radial_menu"), menupos, menuwidth, selectedNode, relationFromNode;
       jQuery("#corrections_link a").click(function(){
-        var getFirstCorrectionName = #{jsAction @CauseController.getFirstCorrectionName(':causeId') /}
+        var getFirstCorrectionName = #{jsAction @CauseController.getCorrectionNames(':causeId') /}
         $.get(getFirstCorrectionName({causeId: selectedNode.id}), function(data) {
           if (data) {
             $modal_body.html(" ");
-            $modal_body.append(data); 
+            for (var i = 0; i < data.length; i++) { 
+                $modal_body.append("<ul>"+data[i]);
+            }
           }
         });
       });
