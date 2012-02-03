@@ -68,10 +68,12 @@
 
 #{navigation /}
 
-	<div id="help-message" class="alert-message warning">
-	  <a id="help-message-close" class="close" href="#">&times;</a>
-	  <p><strong>&{'editor.help1'}</strong> &{'editor.help2'}</p>
-	</div>
+    <!div id="help-message-wrapper">
+        <div id="help-message" class="alert-message warning">
+          <a id="help-message-close" class="close" href="#">&times;</a>
+          <p><strong>&{'editor.help1'}</strong> &{'editor.help2'}</p>
+        </div>
+    <!/div>
 		<div id="correction-help-message" class="alert-message success">&{'addCorrectiveAction.success'}</div>
     <div id="infovis">
       
@@ -174,6 +176,7 @@
         nodes.css("-o-transform", "matrix(" + zoomLevel + ",0,0," + zoomLevel + ",0,0)");
         nodes.css("transform", "matrix(" + zoomLevel + ",0,0," + zoomLevel + ",0,0)");
     };
+
     $(document).ready(function() {
 			$("#help-message-close").click(function() {
 				$(this).parent().hide();
@@ -182,6 +185,7 @@
       zoomLevel = 1;
       $("#correction-help-message").hide();
       $("#addCorrectiveForm").hide();
+      $("#infovis").disableSelection();
     });
     var labelType, useGradients, nativeTextSupport, animate;
 
@@ -199,6 +203,42 @@
       useGradients = nativeCanvasSupport;
       animate = !(iStuff || !nativeCanvasSupport);
     })();
+
+    (function($){
+
+        $.fn.ctrl = function(key, callback) {
+            if(typeof key != 'object') key = [key];
+            callback = callback || function(){ return false; }
+            return $(this).keydown(function(e) {
+                var ret = true;
+                $.each(key,function(i,k){
+                    if(e.keyCode == k.toUpperCase().charCodeAt(0) && e.ctrlKey) {
+                        ret = callback(e);
+                    }
+                });
+                return ret;
+            });
+        };
+
+
+        $.fn.disableSelection = function() {
+            $(window).ctrl(['a','s','c']);
+            return this.each(function() {
+                $(this).attr('unselectable', 'on')
+                        .css({'-moz-user-select':'none',
+                                 '-o-user-select':'none',
+                                 '-khtml-user-select':'none',
+                                 '-webkit-user-select':'none',
+                                 '-ms-user-select':'none',
+                                 'user-select':'none'})
+                        .each(function() {
+                                  $(this).attr('unselectable','on')
+                                          .bind('selectstart',function(){ return false; });
+                              });
+            });
+        };
+
+    })(jQuery);
 
     function init(){
       // init data
@@ -368,6 +408,7 @@
           }
         });
         radmenu_fadeIn(selectedNode);
+        $("#radial_menu").disableSelection();
       }
 
        $("#infovis").css("width", window.innerWidth + 1000);
@@ -569,6 +610,7 @@
                             duration: 1500
                           });
                           applyZoom();
+                            $("#infovis-label div.node").disableSelection();
                         }
                         else if(this.data.type === 'nodemovedevent'){
                           var nodeToMove = fd.graph.getNode(this.data.causeId);
@@ -637,6 +679,7 @@
         }
       });
     }
+
     placeChildsFromParent = function(nodeFrom){
       var childrens = [];
       var childrensWidth = 0;
