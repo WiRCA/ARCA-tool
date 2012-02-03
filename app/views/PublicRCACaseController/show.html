@@ -274,7 +274,7 @@
         centerY: -10, // the center y axis offset
         selectEvent: "click", // the select event (click)
         onSelect: function($selected){ // show what is returned
-			$('.twipsy').remove();
+					$('.twipsy').remove();
             if($selected[0].id == "radmenu-event-removeCause"){
               $.post(deleteCause({causeId: selectedNode.id}));
               jQuery("#radial_menu").radmenu("hide");
@@ -541,6 +541,8 @@
                           fd.plot();
                         }
                         else if(this.data.type === 'addcauseevent') {
+													// This is a small fix. Now twipsy hides as it's supposed to.
+													$('.twipsy').remove();
                           defaultEdgesForSelectedNode(selectedNode);
                           var newNode = {
                             "id": this.data.causeTo,
