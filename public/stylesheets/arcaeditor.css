@@ -75,7 +75,8 @@
 	height:30px;
 	padding:7px;
 	color:#234;
-	-moz-border-radius:10px;
+    border-radius:10px;
+    -moz-border-radius:10px;
 	-webkit-border-radius:10px;
 	cursor:pointer;
 }
@@ -86,6 +87,7 @@
 	font-size:13px;
 	color:#abc;
 	background-color:#def;
+    border-radius:30px;
 	-moz-border-radius:30px;
 	width:20px;
 	height:20px;
