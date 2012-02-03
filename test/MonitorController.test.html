@@ -153,6 +153,7 @@
 	select('name=value','label=Elimination')	
 	waitForTextPresent('ok')
 	clickAt('//*[text()="ok"]')
+    waitForTextPresent('Elimination')
 	
 	clickAndWait('link=Monitoring')
 	click('name=whatToShow')

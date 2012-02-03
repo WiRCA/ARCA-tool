@@ -48,7 +48,6 @@
         <label for="caseTypeValue">&{'createRCA.rcaCaseType'}</label>
         <div class="input">
         #{select 'rcaCase.caseTypeValue', value:"${flash['rcaCase.caseTypeValue']}", id:'caseTypeValue'}
-        <option value="-1">&{'select.optionSelect'}</option>
         #{list types, as:'caseTypeValue'}
         #{option caseTypeValue.value}&{caseTypeValue.text}#{/option}
         #{/list}
