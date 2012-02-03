@@ -27,11 +27,31 @@
 #{set 'pageHeaderSmall'}#{/set}
 #{set 'activePage'}about#{/set}
 
-<div>
-    &{'aboutPage.content'}
-        <br>
-        <br>
-        <br>
-        <iframe src="https://docs.google.com/spreadsheet/embeddedform?formkey=dF9EYXYtUU5rTldEb283OHdkU2ZHeGc6MQ" width="760" height="638" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>
+<p>&{'aboutPage.content'}</p>
 
-</div>
+<form id="ss-form" class="form-stacked" method="POST" action="https://docs.google.com/spreadsheet/formResponse?formkey=dF9EYXYtUU5rTldEb283OHdkU2ZHeGc6MQ&embedded=true&ifq">
+    <fieldset>
+        <div class="errorbox-good">
+            <div class="ss-item  ss-paragraph-text">
+                <div class="ss-form-entry">
+                    <legend for="entry_0" class="ss-q-title">Free-form feedback on the tool.</legend>
+                    <div class="clearfix">
+                        <label for="entry_0" class="ss-q-help">&nbsp;</label>
+                        <div class="input">
+                            <textarea id="entry_0" class="ss-q-long span7" cols="75" rows="8" name="entry.0.single"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    <input type="hidden" value="0" name="pageNumber">
+    <input type="hidden" value="" name="backupCache">
+
+
+    <div class="ss-item ss-navigate">
+        <div class="ss-form-entry actions">
+            <input type="submit" class="btn primary" value="Submit" name="submit">
+        </div>
+    </div>
+</form>
