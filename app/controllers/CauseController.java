@@ -25,6 +25,7 @@
 package controllers;
 
 import models.Cause;
+import models.Correction;
 import models.RCACase;
 import models.User;
 import models.events.*;
@@ -33,6 +34,8 @@ import play.data.validation.Validation;
 import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.With;
+
+import java.util.ArrayList;
 
 /**
  * Methods related to causes.
@@ -109,17 +112,21 @@ public class CauseController extends Controller {
 		Cause cause = Cause.findById(causeId);
 		return !cause.corrections.isEmpty();
 	}
-
+	
 	/**
-	 * Gets the name of the first corrective action of a cause.
+	 * Gets the names of the corrective actions of a cause.
 	 *
 	 * @param causeId
 	 *
 	 * @return
 	 */
-	public static String getFirstCorrectionName(Long causeId) {
+	public static void getCorrectionNames(Long causeId) {
 		Cause cause = Cause.findById(causeId);
-		return (cause.corrections).first().name;
+    ArrayList<String> listOfNames = new ArrayList<String>();
+    for (Correction correction : cause.corrections) {
+      listOfNames.add(correction.name);
+    }
+		renderJSON(listOfNames);
 	}
 
 	/**

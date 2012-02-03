@@ -103,13 +103,12 @@
       </li>
     </ul>
   </div>
+  <!-- Add corrective action popover form div -->
   <script>
     $(function () {
         $("a[rel=twipsy]").twipsy({live: true})
     })
   </script>
-  
-  <!-- Add corrective action popover form div -->
   <div id="addCorrectiveForm" rel="popover" data-placement="below" style="position: absolute;">
     <form id="submitCorrectiveAction" class="form-stacked">
       <div class="clearfix">
@@ -135,14 +134,9 @@
         <a href="#" class="close">&times;</a>
         <h3>Corrective action ideas</h3>
       </div>
-      <div class="popover">
-        <p>List of corrections</p>
+      <div class="modal_body">
         <div id="my_modal_body">
         </div>
-      </div>
-      <div class="modal-footer">
-        <a href="#" class="btn primary">Nappi</a>
-        <a href="#" class="btn secondary">Toinen nappi</a>
       </div>
     </div>
   </div>
@@ -158,9 +152,10 @@
           html: true
         })
         .click(function(e) {
-          e.preventDefault()
-        })
-    })
+          isVisible = true;
+          e.preventDefault();
+        });
+    });
   </script>
 <script type="text/javascript">
 
@@ -177,6 +172,9 @@
 				$(this).parent().hide();
 			});
       init();
+      $("a#popover-close.close").click(function() {
+				$("#addCorrectiveForm").popover('hide');
+			});
       zoomLevel = 1;
       $("#addCorrectiveForm").hide();
     });
@@ -249,11 +247,13 @@
       var $modal_body = $("#my_modal_body");
       var $radial_menu = $("#radial_menu"), menupos, menuwidth, selectedNode, relationFromNode;
       jQuery("#corrections_link a").click(function(){
-        var getFirstCorrectionName = #{jsAction @CauseController.getFirstCorrectionName(':causeId') /}
-        $.get(getFirstCorrectionName({causeId: selectedNode.id}), function(data) {
+        var getCorrectionNames = #{jsAction @CauseController.getCorrectionNames(':causeId') /}
+        $.get(getCorrectionNames({causeId: selectedNode.id}), function(data) {
           if (data) {
             $modal_body.html(" ");
-            $modal_body.append(data); 
+            for (var i = 0; i < data.length; i++) { 
+                $modal_body.append("<ul>"+data[i]);
+            }
           }
         });
       });
@@ -285,7 +285,7 @@
               defaultEdgesForSelectedNode(selectedNode);
             }else if($selected[0].id == "radmenu-event-addCorrection") {
               var CorrectiveActionForm = $("#addCorrectiveForm");
-              CorrectiveActionForm.attr("title", "&{'addCorrectiveAction.title'}");
+              CorrectiveActionForm.attr("title", "&{'addCorrectiveAction.title'}<a id=\"popover-close\" href=\"#\" class=\"close\">&times;</a>");
               var CorrectiveActionFormHtml = CorrectiveActionForm.html();
               CorrectiveActionForm.attr('data-content', CorrectiveActionFormHtml);
               CorrectiveActionForm.popover('show');
