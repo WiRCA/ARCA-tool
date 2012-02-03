@@ -67,3 +67,13 @@
 	height:20px;
 	-webkit-border-radius:30px;
 }
+
+.alert-message {
+    position: absolute;
+    z-index: 999999999;
+    top: 50px;
+    width: 280px;
+    opacity: .8;
+    margin-left: 40%;
+    padding: 2px;
+}
