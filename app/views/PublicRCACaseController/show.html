@@ -73,18 +73,10 @@
 	  <a id="help-message-close" class="close" href="#">&times;</a>
 	  <p><strong>&{'editor.help1'}</strong> &{'editor.help2'}</p>
 	</div>
-	
+		<div id="correction-help-message" class="alert-message success" style="z-index:99999999999; top: 50px; min-width: 230px; max-width: 270px; opacity: .7; margin-left: auto; margin-right: auto; padding: 2px">Corrective action lisätty.</div>
     <div id="infovis">
       
     </div>
-	 <script>
-	// Panning hides the radial menu.
-		$('#infovis').mousedown(function(){
-			jQuery("#radial_menu").radmenu("hide");
-			$('.popover').remove();
-			jQuery("#corrections_link").hide();
-		});
-	</script>
   
   <div id="radial_menu" style="position: absolute; display: none; width: 0; height: 0;">
     <ul class="list">
@@ -180,10 +172,8 @@
 				$(this).parent().hide();
 			});
       init();
-      $("a#popover-close.close").click(function() {
-				$("#addCorrectiveForm").popover('hide');
-			});
       zoomLevel = 1;
+      $("#correction-help-message").hide();
       $("#addCorrectiveForm").hide();
     });
     var labelType, useGradients, nativeTextSupport, animate;
@@ -318,12 +308,17 @@
                     radmenu_fadeOut();
                     jQuery("#corrections_link").hide();
                     CorrectiveActionForm.popover('hide');
+                    show_correction_help_message();
                   });
               });
             }
           },
         angleOffset: 45 // in degrees
       });
+      function show_correction_help_message(){
+        $("#correction-help-message").show();
+        $("#correction-help-message").delay(1700).fadeOut(1600, "linear");
+      }
       function show_radial_menu(given_node){
         selectedNode = given_node;
         //get the position of the placeholder element
@@ -417,7 +412,6 @@
         // Add node events
         Events: {
           enable: true,
-
           //Change cursor style when hovering a node
           onMouseEnter: function() {
             fd.canvas.getElement().style.cursor = 'move';
@@ -449,7 +443,6 @@
 
             //hides a radial menu when zoomed as the scaling does not work yet.
             jQuery("#radial_menu").radmenu("hide");
-						$('.popover').remove();
             applyZoom();
           },
           //Implement the same handler for touchscreens
@@ -714,7 +707,7 @@
         });
       }
     }
-
+    
 </script>
     </body>
 </html>
