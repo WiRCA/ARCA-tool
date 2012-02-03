@@ -243,6 +243,7 @@
       var lastReceived = ${lastMessage};
       var waitMessages = #{jsAction @waitMessages(rcaCase.id,':lastReceived') /}
       var addCause = #{jsAction @CauseController.addCause(':causeId', ':name') /}
+      var renameCause = #{jsAction @CauseController.renameCause(':causeId', ':name') /}
       var deleteCause = #{jsAction @CauseController.deleteCause(':causeId') /}
       var addRelation = #{jsAction @CauseController.addRelation(':fromId', ':toID') /}
       var addCorrection = #{jsAction @CauseController.addCorrection(':toId', ':name', ':description') /}
@@ -485,8 +486,18 @@
               $("#addCorrectiveForm").popover('hide');
               fd.plot();
             }
+          },
+          onRightClick: function(node) {
+              if (node) {
+                  var name = prompt('Rename node');
+                  runningNumber = runningNumber + 1;
+                  if (name != null && name != "") {
+                    $.post(renameCause({causeId: node.id, name: encodeURIComponent(name)}));
+                  }
+              }
           }
-        },
+          },
+
         //Number of iterations for the FD algorithm
         iterations: 4,
         //Edge length
@@ -570,6 +581,9 @@
                           });
                           applyZoom();
                         }
+                        else if(this.data.type === 'causeRenameEvent') {
+                            $("#" + this.data.causeId).html(this.data.newName);
+                        }
                         else if(this.data.type === 'nodemovedevent'){
                           var nodeToMove = fd.graph.getNode(this.data.causeId);
                           var nodeParent = fd.graph.getNode(nodeToMove.data.parent);
@@ -628,6 +642,7 @@
         transition: $jit.Trans.Elastic.easeOut,
         duration: 1500
       });
+
     }
     traverseWholeTree = function(node){
       placeChildsFromParent(node);

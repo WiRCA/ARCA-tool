@@ -70,7 +70,7 @@ public class CauseController extends Controller {
 	 */
 	public static void addCause(Long causeId, String name) {
 		// causeId is used later as a String
-		Cause cause = Cause.findById(Long.valueOf(causeId));
+		Cause cause = Cause.findById(causeId);
 		RCACase rcaCase = cause.rcaCase;
 
 		Cause newCause = cause.addCause(name, SecurityController.getCurrentUser());
@@ -78,7 +78,7 @@ public class CauseController extends Controller {
 		AddCauseEvent event = new AddCauseEvent(newCause, causeId);
 		CauseStream causeEvents = rcaCase.getCauseStream();
 		causeEvents.getStream().publish(event);
-		Logger.info("Cause %s added to cause %s", name, cause);
+		Logger.debug("Cause %s added to cause %s", name, cause);
 	}
 
 	/**
@@ -98,7 +98,7 @@ public class CauseController extends Controller {
 		AddRelationEvent event = new AddRelationEvent(causeId, toId);
 		CauseStream causeEvents = rcaCase.getCauseStream();
 		causeEvents.getStream().publish(event);
-		Logger.info("Relation added between %s and %s", causeFrom, causeTo);
+		Logger.debug("Relation added between %s and %s", causeFrom, causeTo);
 	}
 
 	/**
@@ -145,7 +145,7 @@ public class CauseController extends Controller {
 		AddCorrectionEvent event = new AddCorrectionEvent(causeTo, name, description);
 		CauseStream causeEvents = rcaCase.getCauseStream();
 		causeEvents.getStream().publish(event);
-		Logger.info("Correction added to cause %s with description %s", causeTo.name, description);
+		Logger.debug("Correction added to cause %s with description %s", causeTo.name, description);
 	}
 
 	/**
@@ -170,7 +170,7 @@ public class CauseController extends Controller {
 		DeleteCauseEvent deleteEvent = new DeleteCauseEvent(cause);
 		CauseStream causeEvents = rcaCase.getCauseStream();
 		causeEvents.getStream().publish(deleteEvent);
-		Logger.info("Cause %s deleted", cause);
+		Logger.debug("Cause %s deleted", cause);
 	}
 
 	private static boolean userIsAllowedToDelete(Cause cause, RCACase rcaCase) {
@@ -199,7 +199,7 @@ public class CauseController extends Controller {
 
 		CauseStream causeStream = rcaCase.getCauseStream();
 		causeStream.getStream().publish(movedEvent);
-		Logger.info("Cause %s moved to x:%d, y:%d", cause, x, y);
+		Logger.debug("Cause %s moved to x:%d, y:%d", cause, x, y);
 	}
 
 	/**
@@ -218,7 +218,7 @@ public class CauseController extends Controller {
 		} else if (!cause.hasUserLiked(user)) {
 			cause.like(user);	
 		}
-		Logger.info("Cause %s liked by %s", cause, user);
+		Logger.debug("Cause %s liked by %s", cause, user);
 		
 		String likeData = String.format("{\"count\":%d,\"hasliked\":%b,\"isowner\":%b}", cause.countLikes(), 
 		                                cause.hasUserLiked(user), user.equals(rcaCase.getOwner()));
@@ -238,10 +238,37 @@ public class CauseController extends Controller {
 			forbidden();
 		}
 		cause.dislike(user);
-		Logger.info("Cause %s disliked by %s", cause, user);
+		Logger.debug("Cause %s disliked by %s", cause, user);
 		String likeData = String.format("{\"count\":%d,\"hasliked\":%b,\"isowner\":%b}", cause.countLikes(),
 		                                cause.hasUserLiked(user), user.equals(rcaCase.getOwner()));
 
 		renderJSON(likeData);
+	}
+
+	/**
+	 * Adds a sub-cause to a cause.
+	 *
+	 * @param causeId
+	 * @param name
+	 */
+	public static void renameCause(Long causeId, String name) {
+		// causeId is used later as a String
+		Cause cause = Cause.findById(causeId);
+		RCACase rcaCase = cause.rcaCase;
+
+		String oldName = cause.name;
+		
+		cause.name = name;
+		cause.save();
+		
+		if(cause == rcaCase.problem) {
+			rcaCase.caseName = name;
+			rcaCase.save();
+		}
+
+		CauseRenameEvent event = new CauseRenameEvent(causeId, name);
+		CauseStream causeEvents = rcaCase.getCauseStream();
+		causeEvents.getStream().publish(event);
+		Logger.debug("Cause %s renamed to cause %s", oldName, name);
 	}
 }
