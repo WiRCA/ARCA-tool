@@ -110,7 +110,6 @@
         $("a[rel=twipsy]").twipsy({live: true})
 
         $('#infovis').live("mousedown", function(event){
-            console.log("event: " + event);
             jQuery("#radial_menu").radmenu("hide");
             $('.popover').remove();
             jQuery("#corrections_link").hide();
@@ -320,7 +319,8 @@
               CorrectiveActionForm.popover('show');
               $("div.popover").css({ "left": (menupos.left-50) + "px", "top":(menupos.top+50) + "px" });
               $("div.popover").css("z-index", "100");
-              $('#submitCorrectiveActionButton').live('click', function() {
+              $("#ideaName").focus();
+              $('#submitCorrectiveActionButton').click(function() {
                   var name = $("#ideaName").val();
                   if (name == undefined || name == "") {
                     $("#ideaName").parents(".clearfix").addClass("error");
