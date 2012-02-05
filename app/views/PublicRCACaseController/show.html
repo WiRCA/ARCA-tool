@@ -223,11 +223,11 @@
   
     function applyZoom() {
         var nodes = $("#infovis-label div.node");
-        nodes.css("-webkit-transform", "matrix(" + zoomLevel + ",0,0," + zoomLevel + ",0,0)");
-        nodes.css("-moz-transform", "matrix(" + zoomLevel + ",0,0," + zoomLevel + ",0px,0px");
-        nodes.css("-ms-transform", "matrix(" + zoomLevel + ",0,0," + zoomLevel + ",0,0)");
-        nodes.css("-o-transform", "matrix(" + zoomLevel + ",0,0," + zoomLevel + ",0,0)");
-        nodes.css("transform", "matrix(" + zoomLevel + ",0,0," + zoomLevel + ",0,0)");
+        nodes.css("-webkit-transform", "scale(" + zoomLevel + ")");
+        nodes.css("-moz-transform",  "scale(" + zoomLevel + ")");
+        nodes.css("-ms-transform",  "scale(" + zoomLevel + ")");
+        nodes.css("-o-transform",  "scale(" + zoomLevel + ")");
+        nodes.css("transform",  "scale(" + zoomLevel + ")");
     };
 
     $(document).ready(function() {
@@ -553,9 +553,9 @@
           }
         },
         //Number of iterations for the FD algorithm
-        iterations: 4,
+        iterations: 0,
         //Edge length
-        levelDistance: 130,
+        levelDistance: 0,
         // Add text to the labels. This method is only triggered
         // on label creation and only for DOM labels (not native canvas ones).
         onCreateLabel: function(domElement, node){
@@ -574,10 +574,10 @@
           var style = domElement.style;
           var left = parseInt(style.left);
           var top = parseInt(style.top);
-          var w = domElement.offsetWidth;
-          style.left = (left - w / 2) + 'px';
-          style.top = (top-18) + 'px';
-          style.display = '';
+          var w = parseInt(domElement.offsetWidth) >> 1;
+          var h = parseInt(domElement.offsetHeight) >> 1;
+          style.left = (left - w) + 'px';
+          style.top = (top - h) + 'px';
         }
       });
       var getNodes = function() {
