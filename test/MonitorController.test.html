@@ -144,7 +144,7 @@
 	
 	//testing monitoring
 	clickAndWait('link=Monitoring')
-	click('name=whatToShow')
+	//click('name=whatToShow')
 	click('//input[@name='whatToShow' and @value='corrections']')
 	click('name=casesRadio')
 	waitForTextPresent('PRIVATE CASE TO SHARE')
@@ -158,7 +158,7 @@
     waitForTextPresent('Elimination')
 	
 	clickAndWait('link=Monitoring')
-	click('name=whatToShow')
+	//click('name=whatToShow')
 	click('//input[@name='whatToShow' and @value='corrections']')
 	click('name=casesRadio')
     waitForTextPresent('PRIVATE CASE TO SHARE')
@@ -193,7 +193,7 @@
 	//verifying that the editing of cause and correction status was succesful
 	clickAndWait('link=Monitoring')
 	click('//input[@name='casesRadio' and @value='sharedCases']')
-	click('name=whatToShow')
+	//click('name=whatToShow')
 	waitForTextPresent('PRIVATE CASE TO SHARE')
 	click('name=selectedCases')
 	waitForTextPresent('Detected')
@@ -237,7 +237,7 @@
 	//testing monitoring with "All cases" checked
   clickAndWait('link=Monitoring')
   click('//input[@name='casesRadio' and @value='allCases']')
-  click('name=whatToShow')
+  //click('name=whatToShow')
   click('//input[@name='whatToShow' and @value='corrections']')
   waitForTextPresent('PRIVATE CASE TO SHARE')
   verifyTextPresent('PUBLIC CASE')
@@ -266,7 +266,7 @@
   click('//input[@name='casesRadio' and @value='publicCases']')
   waitForTextPresent('PUBLIC CASE')
 	click('name=selectedCases')
-	click('name=whatToShow')
+	//click('name=whatToShow')
 	click('//input[@name='whatToShow' and @value='corrections']')
 	click('name=casesRadio')
 	waitForTextPresent('public cause')
