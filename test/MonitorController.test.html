@@ -120,10 +120,10 @@
     //first cause
 	click('//div[@id='radmenu-event-addCause']')
     waitForElementPresent('css=#addcause-modal > div.modal-header > h3')
-    type('id=causeName','cause')
+    type('id=causeName','uniqueCauseString')
     click('css=div.modal-footer > input.btn.primary')
-	waitForTextPresent('cause')
-	clickAt('//*[text()="cause"]')
+	waitForTextPresent('uniqueCauseString')
+	clickAt('//*[text()="uniqueCauseString"]')
 
 	//second cause
     waitForElementPresent('//div[@id='radmenu-event-addCause']')
@@ -149,7 +149,7 @@
 	click('name=casesRadio')
 	waitForTextPresent('PRIVATE CASE TO SHARE')
 	click('name=selectedCases')
-	waitForTextPresent('cause')
+	waitForTextPresent('uniqueCauseString')
 	//changing cause status to "Elimination"
 	clickAt('css=td.editable.cause-status')
 	select('name=value','label=Elimination')	
