@@ -50,23 +50,26 @@
     verifyTextPresent('testgraph')
     clickAt('//*[text()="testgraph"]')
     assertElementPresent('//div[@id='radmenu-event-addCause']')
-    answerOnNextPrompt('foo')
     clickAt('//div[@id='radmenu-event-addCause']')
-    assertPrompt('Node name?')
+    waitForElementPresent('css=#addcause-modal > div.modal-header > h3')
+    type('id=causeName','foo')
+    click('css=div.modal-footer > input.btn.primary')
     waitForTextPresent('foo')
 
     // add new node
     clickAt('//*[text()="foo"]')
-    answerOnNextPrompt('bar')
     click('//div[@id='radmenu-event-addCause']')
-    assertPrompt('Node name?')
+    waitForElementPresent('css=#addcause-modal > div.modal-header > h3')
+    type('id=causeName','bar')
+    click('css=div.modal-footer > input.btn.primary')
     waitForTextPresent('bar')
 
     // add new node
     clickAt('//*[text()="bar"]')
-    answerOnNextPrompt('foobar')
     click('//div[@id='radmenu-event-addCause']')
-    assertPrompt('Node name?')
+    waitForElementPresent('css=#addcause-modal > div.modal-header > h3')
+    type('id=causeName','foobar')
+    click('css=div.modal-footer > input.btn.primary')
     waitForTextPresent('foobar')
 
     // add new relation

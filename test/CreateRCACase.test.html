@@ -64,9 +64,10 @@
     assertElementPresent('//div[@id='radmenu-event-addCause']')
 
     // Add a new node with user that is not logged in
-    answerOnNextPrompt('foo')
     clickAt('//div[@id='radmenu-event-addCause']')
-    assertPrompt('Node name?')
+    waitForElementPresent('css=#addcause-modal > div.modal-header > h3')
+    type('id=causeName','foo')
+    click('css=div.modal-footer > input.btn.primary')
     waitForTextPresent('foo')
     clickAt('//*[text()="foo"]')
     assertElementPresent('//div[@id='radmenu-event-addCause']')

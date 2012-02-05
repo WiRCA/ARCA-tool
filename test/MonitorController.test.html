@@ -116,19 +116,21 @@
 	clickAndWait('id=create')
 	clickAt('//*[text()="PRIVATE CASE TO SHARE"]')
 	waitForElementPresent('//div[@id='radmenu-event-addCause']')
-	//first cause
+
+    //first cause
 	click('//div[@id='radmenu-event-addCause']')
-	answerOnNextPrompt('cause')
-	click('//div[@id='radmenu-event-addCause']')
-	assertPrompt('Node name?')
+    waitForElementPresent('css=#addcause-modal > div.modal-header > h3')
+    type('id=causeName','cause')
+    click('css=div.modal-footer > input.btn.primary')
 	waitForTextPresent('cause')
 	clickAt('//*[text()="cause"]')
+
 	//second cause
     waitForElementPresent('//div[@id='radmenu-event-addCause']')
 	click('//div[@id='radmenu-event-addCause']')
-	answerOnNextPrompt('another cause')
-	click('//div[@id='radmenu-event-addCause']')
-	assertPrompt('Node name?')
+    waitForElementPresent('css=#addcause-modal > div.modal-header > h3')
+    type('id=causeName','another cause')
+    click('css=div.modal-footer > input.btn.primary')
     waitForTextPresent('another cause')
 	//correction idea to the first cause
 	clickAt('//*[text()="another cause"]')
@@ -218,9 +220,9 @@
 	clickAt('//*[text()="PUBLIC CASE"]')
 	waitForElementPresent('//div[@id='radmenu-event-addCause']')
 	click('//div[@id='radmenu-event-addCause']')
-  answerOnNextPrompt('public cause')
-  click('//div[@id='radmenu-event-addCause']')
-  assertPrompt('Node name?')
+    waitForElementPresent('css=#addcause-modal > div.modal-header > h3')
+    type('id=causeName','public cause')
+    click('css=div.modal-footer > input.btn.primary')
 	waitForTextPresent('public cause')
 	clickAt('//*[text()="public cause"]')
 	waitForElementPresent('//div[@id='radmenu-event-addCorrection']')
