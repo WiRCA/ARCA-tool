@@ -6,6 +6,7 @@
         <option name="WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN" value="true" />
         <option name="JD_ADD_BLANK_AFTER_PARM_COMMENTS" value="true" />
         <option name="JD_ADD_BLANK_AFTER_RETURN" value="true" />
+        <option name="HTML_TEXT_WRAP" value="0" />
         <option name="HTML_ALIGN_TEXT" value="true" />
         <option name="KEEP_LINE_BREAKS" value="false" />
         <option name="ALIGN_MULTILINE_CHAINED_METHODS" value="true" />
@@ -177,7 +178,6 @@
         </codeStyleSettings>
       </value>
     </option>
-    <option name="USE_PER_PROJECT_SETTINGS" value="true" />
   </component>
 </project>
 

@@ -48,36 +48,36 @@
 
 	//New cause
 	click('//div[@id='radmenu-event-addCause']')
-	answerOnNextPrompt('seppo ei saa myytyä')
-	click('//div[@id='radmenu-event-addCause']')
-	assertPrompt('Node name?')
+    waitForElementPresent('css=#addcause-modal > div.modal-header > h3')
+    type('id=causeName','seppo ei saa myytyä')
+    click('css=div.modal-footer > input.btn.primary')
 	waitForTextPresent('seppo ei saa myytyä')
 	clickAt('//*[text()="seppo ei saa myytyä"]')
 	waitForElementPresent('//div[@id='radmenu-event-addCause']')
 
 	//New cause
-	click('//div[@id='radmenu-event-addCause']') 
-	answerOnNextPrompt('kukaan ei osta')
 	click('//div[@id='radmenu-event-addCause']')
-	assertPrompt('Node name?')
-	waitForTextPresent('kukaan ei osta')
+    waitForElementPresent('css=#addcause-modal > div.modal-header > h3')
+    type('id=causeName','kukaan ei osta')
+    click('css=div.modal-footer > input.btn.primary')
+    waitForTextPresent('kukaan ei osta')
 	clickAt('//*[text()="kukaan ei osta"]')
     waitForElementPresent('//div[@id='radmenu-event-addCause']')
 
 	//New cause
-	click('//div[@id='radmenu-event-addCause']') 
-	answerOnNextPrompt('syy 3')
 	click('//div[@id='radmenu-event-addCause']')
-	assertPrompt('Node name?')
+    waitForElementPresent('css=#addcause-modal > div.modal-header > h3')
+    type('id=causeName','syy 3')
+    click('css=div.modal-footer > input.btn.primary')
 	waitForTextPresent('syy 3')
 	clickAt('//*[text()="syy 3"]')
 	waitForElementPresent('//div[@id='radmenu-event-addCause']')
 
 	//New cause
-	click('//div[@id='radmenu-event-addCause']') 
-	answerOnNextPrompt('adada')
 	click('//div[@id='radmenu-event-addCause']')
-	assertPrompt('Node name?')
+    waitForElementPresent('css=#addcause-modal > div.modal-header > h3')
+    type('id=causeName','adada')
+    click('css=div.modal-footer > input.btn.primary')
 	waitForTextPresent('adada')
 	clickAt('//*[text()="seppo ei saa myytyä"]')
 
@@ -104,10 +104,10 @@
 	waitForElementPresent('//div[@id='radmenu-event-addCause']')
 
 	//New cause
-	click('//div[@id='radmenu-event-addCause']') 
-	answerOnNextPrompt('asdasdasd')
 	click('//div[@id='radmenu-event-addCause']')
-	assertPrompt('Node name?')
+    waitForElementPresent('css=#addcause-modal > div.modal-header > h3')
+    type('id=causeName','asdasdasd')
+    click('css=div.modal-footer > input.btn.primary')
 	waitForTextPresent('asdasdasd')
 	clickAt('//*[text()="asdasdasd"]')
 	waitForElementPresent('//div[@id='radmenu-event-addRelation']')

@@ -53,18 +53,19 @@
 
     // add new node and check that delete button is visible for it
     clickAt('//div[@id='radmenu-event-addCause']')
-    answerOnNextPrompt('foo')
-    clickAt('//div[@id='radmenu-event-addCause']')
-    assertPrompt('Node name?')
+    waitForElementPresent('css=#addcause-modal > div.modal-header > h3')
+    type('id=causeName','foo')
+    click('css=div.modal-footer > input.btn.primary')
     waitForTextPresent('foo')
     clickAt('//*[text()="foo"]')
     assertElementPresent('//div[@id='radmenu-event-addCause']')
     assertElementPresent('//div[@id='radmenu-event-removeCause']')
 
     // add new node and delete it
-    answerOnNextPrompt('bar')
     click('//div[@id='radmenu-event-addCause']')
-    assertPrompt('Node name?')
+    waitForElementPresent('css=#addcause-modal > div.modal-header > h3')
+    type('id=causeName','bar')
+    click('css=div.modal-footer > input.btn.primary')
     waitForTextPresent('bar')
     clickAt('//*[text()="bar"]')
     click('//div[@id='radmenu-event-removeCause']')
@@ -97,9 +98,10 @@
     assertElementPresent('//div[@id='radmenu-event-addCause']')
 
     // create new node and check that delete button is visible for it
-    answerOnNextPrompt('baz')
     clickAt('//div[@id='radmenu-event-addCause']')
-    assertPrompt('Node name?')
+    waitForElementPresent('css=#addcause-modal > div.modal-header > h3')
+    type('id=causeName','baz')
+    click('css=div.modal-footer > input.btn.primary')
     waitForTextPresent('baz')
     clickAt('//*[text()="baz"]')
     assertElementPresent('//div[@id='radmenu-event-addCause']')
