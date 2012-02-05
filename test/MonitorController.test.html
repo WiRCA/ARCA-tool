@@ -121,7 +121,7 @@
 	click('//div[@id='radmenu-event-addCause']')
     waitForElementPresent('css=#addcause-modal > div.modal-header > h3')
     type('id=causeName','uniqueCauseString')
-    click('css=div.modal-footer > input.btn.primary')
+    click('//input[@id='addcause-submit']')
 	waitForTextPresent('uniqueCauseString')
 	clickAt('//*[text()="uniqueCauseString"]')
 
@@ -130,7 +130,7 @@
 	click('//div[@id='radmenu-event-addCause']')
     waitForElementPresent('css=#addcause-modal > div.modal-header > h3')
     type('id=causeName','another cause')
-    click('css=div.modal-footer > input.btn.primary')
+    click('//input[@id='addcause-submit']')
     waitForTextPresent('another cause')
 	//correction idea to the first cause
 	clickAt('//*[text()="another cause"]')
@@ -222,7 +222,7 @@
 	click('//div[@id='radmenu-event-addCause']')
     waitForElementPresent('css=#addcause-modal > div.modal-header > h3')
     type('id=causeName','public cause')
-    click('css=div.modal-footer > input.btn.primary')
+    click('//input[@id='addcause-submit']')
 	waitForTextPresent('public cause')
 	clickAt('//*[text()="public cause"]')
 	waitForElementPresent('//div[@id='radmenu-event-addCorrection']')

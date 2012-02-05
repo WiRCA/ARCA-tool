@@ -67,7 +67,7 @@
     clickAt('//div[@id='radmenu-event-addCause']')
     waitForElementPresent('css=#addcause-modal > div.modal-header > h3')
     type('id=causeName','foo')
-    click('css=div.modal-footer > input.btn.primary')
+    click('//input[@id='addcause-submit']')
     waitForTextPresent('foo')
     clickAt('//*[text()="foo"]')
     assertElementPresent('//div[@id='radmenu-event-addCause']')
