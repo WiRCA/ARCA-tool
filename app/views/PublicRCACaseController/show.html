@@ -191,10 +191,9 @@
         var addCauseAjax = #{jsAction @CauseController.addCause(':causeId', ':name') /};
         var name = $.trim($("#causeName").val());
               if (name != null && name != "" && name.charAt(0) != " ") {
-                $.post(addCauseAjax({causeId: globalSelectedNode, name: encodeURIComponent(name)}), function() {
-                    radmenu_fadeOut();
-                    $("#addcause-modal").modal('hide');
-                });
+                radmenu_fadeOut();
+                $("#addcause-modal").modal('hide');
+                $.post(addCauseAjax({causeId: globalSelectedNode, name: encodeURIComponent(name)}));
               }
     };
 </script>
