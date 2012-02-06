@@ -31,11 +31,9 @@ import models.User;
 import models.enums.StatusOfCause;
 import models.enums.StatusOfCorrection;
 import play.data.binding.As;
-import play.db.jpa.JPA;
 import play.mvc.Controller;
 import play.mvc.With;
 
-import javax.persistence.Query;
 import java.util.*;
 
 /**
@@ -86,21 +84,17 @@ public class MonitoringController extends Controller {
 		Boolean showCauses = whatToShow.contains("causes");
 		Boolean showCorrections = whatToShow.contains("corrections");
 		User user = SecurityController.getCurrentUser();
-		Set<RCACase> rcaCases = new HashSet<RCACase>();
 		if (allCases) {
+			selectedCases = new ArrayList<Long>();
 			if (user != null) {
-				rcaCases.addAll(user.getRCACases());
+				for (RCACase rcaCase : user.getRCACases()) {
+					selectedCases.add(rcaCase.id);
+				}
 			}
 			List<RCACase> publicCases = RCACase.find("isCasePublic", true).fetch();
-			rcaCases.addAll(publicCases);
-		} else {
-			List<RCACase> selected = JPA.em().createQuery("SELECT r FROM rcacase r WHERE r.id in ?1")
-										.setParameter(1, selectedCases).getResultList();
-			rcaCases.addAll(selected);
-		}
-		
-		if (selectedCases.isEmpty()) {
-			render(showCorrections);
+			for (RCACase rcaCase : publicCases) {
+				selectedCases.add(rcaCase.id);
+			}
 		}
 
 		Long currentUserId = user != null ? user.id : -1;
@@ -108,25 +102,19 @@ public class MonitoringController extends Controller {
 		List<Cause> causes = null;
 		List<Correction> corrections = null;
 		if (showCauses) {
-			Query query;
-			if (selectedCauseStatuses.size() >= 1 && selectedCauseStatuses.get(0) != null) {
-				query = JPA.em().createQuery("SELECT c FROM cause c WHERE c.rcaCase in ?1 and c.statusValue in ?2")
-				           .setParameter(1, rcaCases).setParameter(2, selectedCauseStatuses);
+			if (selectedCauseStatuses.get(0) != null) {
+				causes = Cause.find("rcaCase.id in (?1) and statusValue in (?2)", selectedCases,
+				                    selectedCauseStatuses).fetch();
 			} else {
-				query = JPA.em().createQuery("SELECT c FROM cause c WHERE c.rcaCase in ?1")
-				           .setParameter(1, rcaCases);
+				causes = Cause.find("rcaCase.id in (?1)", selectedCases).fetch();
 			}
-			causes = query.getResultList();
 		} else if (showCorrections) {
-			Query query;
-			if (selectedCorrectionStatuses.size() >= 1 && selectedCorrectionStatuses.get(0) != null) {
-				query = JPA.em().createQuery("SELECT c FROM correction c WHERE c.cause.rcaCase in ?1 and c.statusValue in ?2")
-				           .setParameter(1, rcaCases).setParameter(2, selectedCorrectionStatuses);
+			if (selectedCorrectionStatuses.get(0) != null) {
+				corrections = Correction.find("cause.rcaCase.id in (?1) AND statusValue in (?2)", selectedCases,
+				                              selectedCorrectionStatuses).fetch();
 			} else {
-				query = JPA.em().createQuery("SELECT c FROM correction c WHERE c.cause.rcaCase in ?1")
-				           .setParameter(1, rcaCases);
+				corrections = Correction.find("cause.rcaCase.id in (?1)", selectedCases).fetch();
 			}
-			corrections = query.getResultList();
 		}
 
 		StatusOfCause[] causeStatuses = StatusOfCause.values();
