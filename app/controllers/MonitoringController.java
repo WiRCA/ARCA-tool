@@ -35,6 +35,7 @@ import play.db.jpa.JPA;
 import play.mvc.Controller;
 import play.mvc.With;
 
+import javax.persistence.Query;
 import java.util.*;
 
 /**
@@ -44,7 +45,9 @@ import java.util.*;
 public class MonitoringController extends Controller {
 
 	public static void index() {
-		render();
+		StatusOfCause[] causeStatuses = StatusOfCause.values();
+		StatusOfCorrection[] correctionStatuses = StatusOfCorrection.values();
+		render(causeStatuses, correctionStatuses);
 	}
 
 	public static void rcaCaseSelecting(@As(",") List<String> showCases) {
@@ -78,13 +81,13 @@ public class MonitoringController extends Controller {
 	}
 
 	public static void causesAndCorrections(@As(",") List<String> whatToShow, @As(",") List<Long> selectedCases,
-	                                        Boolean allCases) {
+	                                        Boolean allCases, @As(",") List<Integer> selectedCauseStatuses,
+	                                        @As(",") List<Integer> selectedCorrectionStatuses) {
 		Boolean showCauses = whatToShow.contains("causes");
 		Boolean showCorrections = whatToShow.contains("corrections");
 		User user = SecurityController.getCurrentUser();
 		Set<RCACase> rcaCases = new HashSet<RCACase>();
 		if (allCases) {
-			//selectedCases = "";
 			if (user != null) {
 				rcaCases.addAll(user.getRCACases());
 			}
@@ -102,16 +105,28 @@ public class MonitoringController extends Controller {
 
 		Long currentUserId = user != null ? user.id : -1;
 
-		//selectedCases = "(" + selectedCases.substring(0, selectedCases.lastIndexOf(",")) + ")";
 		List<Cause> causes = null;
 		List<Correction> corrections = null;
 		if (showCauses) {
-			causes = JPA.em().createQuery("SELECT c FROM cause c WHERE c.rcaCase in ?1")
-			            .setParameter(1, rcaCases).getResultList();
-            //Cause.find("rcaCaseId in ?", selectedCases).fetch();
+			Query query;
+			if (selectedCauseStatuses.size() >= 1 && selectedCauseStatuses.get(0) != null) {
+				query = JPA.em().createQuery("SELECT c FROM cause c WHERE c.rcaCase in ?1 and c.statusValue in ?2")
+				           .setParameter(1, rcaCases).setParameter(2, selectedCauseStatuses);
+			} else {
+				query = JPA.em().createQuery("SELECT c FROM cause c WHERE c.rcaCase in ?1")
+				           .setParameter(1, rcaCases);
+			}
+			causes = query.getResultList();
 		} else if (showCorrections) {
-			corrections = JPA.em().createQuery("SELECT c FROM correction c WHERE c.cause.rcaCase in ?1")
-							.setParameter(1, rcaCases).getResultList();
+			Query query;
+			if (selectedCorrectionStatuses.size() >= 1 && selectedCorrectionStatuses.get(0) != null) {
+				query = JPA.em().createQuery("SELECT c FROM correction c WHERE c.cause.rcaCase in ?1 and c.statusValue in ?2")
+				           .setParameter(1, rcaCases).setParameter(2, selectedCorrectionStatuses);
+			} else {
+				query = JPA.em().createQuery("SELECT c FROM correction c WHERE c.cause.rcaCase in ?1")
+				           .setParameter(1, rcaCases);
+			}
+			corrections = query.getResultList();
 		}
 
 		StatusOfCause[] causeStatuses = StatusOfCause.values();

@@ -172,6 +172,8 @@ monitoring.relatedCase=Related case
 monitoring.status=Status
 monitoring.score=Score
 monitoring.commands=Actions
+monitoring.noCasesFound=No matching cases
+monitoring.noMatchingItemsFound=Matching items not found
 
 monitoring.statusCause.DETECTED=Detected
 monitoring.statusCause.ELIMINATION=Elimination

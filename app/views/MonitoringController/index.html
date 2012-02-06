@@ -48,12 +48,32 @@
                         <input type="checkbox" value="causes" name="whatToShow" checked=checked />
                         <span>&{'monitoring.causesCheckbox'}</span>
                     </label>
+                    <ul>
+                    #{list causeStatuses, as:'status'}
+                        <li>
+                            <label>
+                                <input type="checkbox" value="${status.value}" name="causeStatuses" />
+                                <span>&{'monitoring.statusCause.' + status}</span>
+                            </label>
+                        </li>
+                    #{/list}
+                    </ul>
                 </li>
                 <li>
                     <label>
                         <input type="checkbox" value="corrections" name="whatToShow" />
                         <span>&{'monitoring.correctionsCheckbox'}</span>
                     </label>
+                    <ul id="correctionStatusesUl" style="display: none;">
+                    #{list correctionStatuses, as:'status'}
+                        <li>
+                            <label>
+                                <input type="checkbox" value="${status.value}" name="correctionStatuses" />
+                                <span>&{'monitoring.statusCorrection.' + status}</span>
+                            </label>
+                        </li>
+                    #{/list}
+                    </ul>
                 </li>
             </ul>
         </div>
@@ -105,6 +125,34 @@
 
     });
 
+    $("input[name='causeStatuses']").live("change", function() {
+        if ($("input[name='causeStatuses']:checked").length > 0) {
+            $("input[name='whatToShow'][value='causes']").attr("checked", "checked");
+            $("#correctionStatusesUl").hide();
+        }
+    });
+
+    $("input[name='whatToShow'][value='causes']").live("change", function() {
+        if ($("input[name='whatToShow'][value='causes']:checked").length != 1) {
+            $("input[name='causeStatuses']").removeAttr("checked");
+            $("#correctionStatusesUl").show();
+        } else {
+            $("#correctionStatusesUl").hide();
+        }
+    });
+
+    $("input[name='correctionStatuses']").live("change", function() {
+        if ($("input[name='correctionStatuses']:checked").length > 0) {
+            $("input[name='whatToShow'][value='corrections']").attr("checked", "checked");
+        }
+    });
+
+    $("input[name='whatToShow'][value='corrections']").live("change", function() {
+        if ($("input[name='whatToShow'][value='corrections']:checked").length != 1) {
+            $("input[name='correctionStatuses']").removeAttr("checked");
+        }
+    });
+
     $("input[name='casesRadio']").live("change", function(event) {
         if ($(event.target).attr("value") == "allCases") {
             if ($("input[name='casesRadio'][value='allCases']").attr("checked")) {
@@ -134,10 +182,19 @@
         }
     });
 
-    $("input[name='whatToShow'],input[name='selectedCases'],input[name='casesRadio'][value='allCases']").live("change", function(event) {
+    $("input[name='whatToShow'],input[name='causeStatuses'],input[name='correctionStatuses'],input[name='selectedCases']," +
+      "input[name='casesRadio'][value='allCases']").live("change", function(event) {
         var whatToShow = "";
         $("input[name='whatToShow']:checked").each(function() {
             whatToShow += $(this).attr("value") + ",";
+        });
+        var selectedCauseStatuses = "";
+        $("input[name='causeStatuses']:checked").each(function() {
+            selectedCauseStatuses += $(this).attr("value") + ",";
+        });
+        var selectedCorrectionStatuses = "";
+        $("input[name='correctionStatuses']:checked").each(function() {
+            selectedCorrectionStatuses += $(this).attr("value") + ",";
         });
         var selectedCases = "";
         $("input[name='selectedCases']:checked").each(function() {
@@ -147,8 +204,12 @@
 
         if ((allCases || selectedCases != "") && whatToShow != "") {
             $("#causesAndCorrections").html("<img src=\"@{'/public/images/wait-spinner.gif'}\">");
-            var causesAndCorrectionsAction = #{jsAction @MonitoringController.causesAndCorrections(':whatToShow', ':selectedCases', ':allCases') /}
-            $("#causesAndCorrections").load(causesAndCorrectionsAction({whatToShow: whatToShow, selectedCases: selectedCases, allCases: allCases}));
+            var causesAndCorrectionsAction = #{jsAction @MonitoringController.causesAndCorrections(':whatToShow',
+                            ':selectedCases', ':allCases', ':selectedCauseStatuses', ':selectedCorrectionStatuses') /}
+            $("#causesAndCorrections").load(causesAndCorrectionsAction(
+                    {whatToShow: whatToShow, selectedCases: selectedCases, allCases: allCases,
+                        selectedCauseStatuses: selectedCauseStatuses, selectedCorrectionStatuses: selectedCorrectionStatuses}
+            ));
         } else {
             $("#causesAndCorrections").html("");
         }

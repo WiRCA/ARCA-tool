@@ -1,4 +1,4 @@
-#{if causes != null || corrections != null}
+#{if (causes != null && causes.size() > 0) || (corrections != null && corrections.size() > 0)}
 %{
     int __itemsPerPage = 10;
 }%
@@ -290,3 +290,8 @@
     });
 </script>
 #{/if}
+#{else}
+<div class="alert-message warning">
+    <p>&{'monitoring.noMatchingItemsFound'}</p>
+</div>
+#{/else}

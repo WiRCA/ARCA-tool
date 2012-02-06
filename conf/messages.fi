@@ -171,6 +171,8 @@ monitoring.relatedCase=RCA analyysi
 monitoring.status=Tila
 monitoring.score=Pisteet
 monitoring.commands=Toiminnot
+monitoring.noCasesFound=Ei analyysejä määritellyillä kriteereillä
+monitoring.noMatchingItemsFound=Ei kriteerejä vastaavia osumia
 
 monitoring.statusCause.DETECTED=Havaittu
 monitoring.statusCause.ELIMINATION=Korjataan
