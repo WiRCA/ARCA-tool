@@ -46,7 +46,7 @@ open('/user?language=en')
 clickAndWait('link=Monitoring')
 
 // Show own cases and causes
-click('name=whatToShow')
+//click('name=whatToShow')
 click('name=casesRadio')
 waitForTextPresent('testgraph')
 click('name=selectedCases')
@@ -86,7 +86,7 @@ clickAndWait('id=signin')
 
 // Show shared cases and causes in monitoring
 clickAndWait('link=Monitoring')
-click('name=whatToShow')
+//click('name=whatToShow')
 click('//input[@name='casesRadio' and @value='sharedCases']')
 waitForTextPresent('testgraph')
 click('name=selectedCases')
