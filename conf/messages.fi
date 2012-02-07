@@ -108,7 +108,7 @@ showRCACase.title=RCA analyysi %s
 showRCACase.owner=Omistaja
 showRCACase.back=Takaisin omiin analyyseihin
 
-RCACaseType.softwareProject=Ohjelmisto projekti
+RCACaseType.softwareProject=Ohjelmistoprojekti
 RCACaseType.hr=Henkilöstöön liittyvä ongelma
 RCACaseType.other=Muu
 
