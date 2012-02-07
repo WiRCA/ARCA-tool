@@ -184,6 +184,7 @@ monitoring.statusCorrection.IMPLEMENTED=Implemented
 monitoring.statusCorrection.WILL_BE_IMPLEMENTED=Will be implemented
 
 addCause.title=Add cause
+renameCause.title=Rename cause
 addCorrectiveAction.title=Add corrective action
 addCorrectiveAction.name=Name
 addCorrectiveAction.description=Description

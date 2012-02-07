@@ -195,6 +195,40 @@
               }
     };
 </script>
+
+<div id="renameCause-modal" class="modal hide">
+    <div class="modal-header">
+        <a href="#" class="close">&times;</a>
+        <h3>&{'renameCause.title'}</h3>
+    </div>
+    <form action="" onsubmit="renameCause(); return false;" style="margin: 0; padding: 0;">
+        <div class="modal-body">
+            <div class="clearfix">
+                <label for="causeName">Rename cause</label>
+                <div class="input">
+                    <input class="xlarge" autofocus="autofocus" id="renamedName"
+                           name="renamedName" type="text" value="" />
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <input type="submit" value="&{'renameCause.title'}" class="btn primary" id="renameCause-submit" />
+            <a href="#" class="btn secondary" onclick="$('#renameCause-modal').modal('hide')">&{'dialog.cancel'}</a>
+        </div>
+    </form>
+</div>
+<script type="text/javascript">
+    function renameCause() {
+        var renameCauseAjax = #{jsAction @CauseController.renameCause(':causeId', ':name') /};
+        var name = $.trim($("#renamedName").val());
+        if (name != null && name != "" && name.charAt(0) != " ") {
+            radmenu_fadeOut();
+            $("#renameCause-modal").modal('hide');
+            $.post(renameCauseAjax({causeId: globalSelectedNode, name: encodeURIComponent(name)}));
+        }
+    };
+</script>
+
 <script type="text/javascript">
   function addCorrectiveIdea() {
     var addCorrection = #{jsAction @CauseController.addCorrection(':toId', ':name', ':description') /}
@@ -241,31 +275,46 @@
 
       // initialize addCause modal window
       $('#addcause-modal').modal({
-                                       keyboard: true,
-                                       backdrop: true,
-                                       show: false
-                                   });
-        $('#addcause-modal').bind('show', function () {
-            $('#causeName').val('');
-        });
-        $('#addcause-modal').bind('shown', function () {
-            $('#causeName').focus();
-        });
+          keyboard: true,
+          backdrop: true,
+          show: false
+      });
+      $('#addcause-modal').bind('show', function () {
+          $('#causeName').val('');
+      });
+      $('#addcause-modal').bind('shown', function () {
+          $('#causeName').focus();
+      });
+
+      // initialize renameCause modal window
+      $('#renameCause-modal').modal({
+           keyboard: true,
+           backdrop: true,
+           show: false
+      });
+      $('#renameCause-modal').bind('show', function () {
+          $('#renamedName').val('');
+      });
+      $('#renameCause-modal').bind('shown', function () {
+          $('#renamedName').focus();
+      });
+
+
       // initialize addCorrection modal window
       $('#addcorrection-modal').modal({
-                                       keyboard: true,
-                                       backdrop: true,
-                                       show: false
-                                   });
-        $('#addcorrection-modal').bind('show', function () {
-            $('#ideaName').val('');
-        });
-        $('#addcorrection-modal').bind('show', function () {
-            $('#ideaDescription').val('');
-        });
-        $('#addcorrection-modal').bind('shown', function () {
-            $('#ideaName').focus();
-        });
+          keyboard: true,
+          backdrop: true,
+          show: false
+      });
+      $('#addcorrection-modal').bind('show', function () {
+          $('#ideaName').val('');
+      });
+      $('#addcorrection-modal').bind('show', function () {
+          $('#ideaDescription').val('');
+      });
+      $('#addcorrection-modal').bind('shown', function () {
+          $('#ideaName').focus();
+      });
       
     });
     var labelType, useGradients, nativeTextSupport, animate;
@@ -552,11 +601,8 @@
           },
           onRightClick: function(node) {
               if (node) {
-                  var name = prompt('Rename node');
-                  runningNumber = runningNumber + 1;
-                  if (name != null && name != "") {
-                    $.post(renameCause({causeId: node.id, name: encodeURIComponent(name)}));
-                  }
+                  $('#renameCause-modal').modal('show');
+                  globalSelectedNode = selectedNode.id;
               }
           }
           },
