@@ -21,7 +21,10 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 #
+
 null=
+
+dialog.cancel=Peruuta
 
 secure.title=
 secure.username=Käyttäjätunnus
@@ -105,7 +108,7 @@ showRCACase.title=RCA analyysi %s
 showRCACase.owner=Omistaja
 showRCACase.back=Takaisin omiin analyyseihin
 
-RCACaseType.softwareProject=Ohjelmisto projekti
+RCACaseType.softwareProject=Ohjelmistoprojekti
 RCACaseType.hr=Henkilöstöön liittyvä ongelma
 RCACaseType.other=Muu
 
@@ -168,6 +171,9 @@ monitoring.relatedCase=RCA analyysi
 monitoring.status=Tila
 monitoring.score=Pisteet
 monitoring.commands=Toiminnot
+monitoring.noCasesFound=Ei analyysejä määritellyillä kriteereillä
+monitoring.noMatchingItemsFound=Ei kriteerejä vastaavia osumia
+monitoring.correctionNameAndDescription=Korjaava toimenpide
 
 monitoring.statusCause.DETECTED=Havaittu
 monitoring.statusCause.ELIMINATION=Korjataan

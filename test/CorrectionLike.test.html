@@ -28,11 +28,9 @@ type('id=ideaName','testing')
 type('id=ideaDescription','testing')
 click('id=submitCorrectiveActionButton')
 clickAt('//*[text()="testi"]')
-waitForElementPresent('//div[@id='corrections_link']')
 
 // show corrections in monitoring view
 clickAndWait('link=Monitoring')
-click('name=whatToShow')
 click('xpath=(//input[@name='whatToShow'])[2]')
 click('name=casesRadio')
 waitForTextPresent('testi')

@@ -34,10 +34,7 @@ import play.data.binding.As;
 import play.mvc.Controller;
 import play.mvc.With;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Risto Virtanen
@@ -46,13 +43,12 @@ import java.util.Set;
 public class MonitoringController extends Controller {
 
 	public static void index() {
-		render();
+		StatusOfCause[] causeStatuses = StatusOfCause.values();
+		StatusOfCorrection[] correctionStatuses = StatusOfCorrection.values();
+		render(causeStatuses, correctionStatuses);
 	}
 
 	public static void rcaCaseSelecting(@As(",") List<String> showCases) {
-		if (showCases.contains("allCases")) {
-			render();
-		}
 		Set<RCACase> cases = new HashSet<RCACase>();
 		User user = SecurityController.getCurrentUser();
 		if (showCases.contains("publicCases")) {
@@ -79,36 +75,50 @@ public class MonitoringController extends Controller {
 		render(cases);
 	}
 
-	public static void causesAndCorrections(@As(",") List<String> whatToShow, String selectedCases,
-	                                        Boolean allCases) {
+	public static void causesAndCorrections(@As(",") List<String> whatToShow, @As(",") List<Long> selectedCases,
+	                                        Boolean allCases, @As(",") List<Integer> selectedCauseStatuses,
+	                                        @As(",") List<Integer> selectedCorrectionStatuses) {
+		Boolean showCauses = whatToShow.contains("causes");
 		Boolean showCorrections = whatToShow.contains("corrections");
 		User user = SecurityController.getCurrentUser();
 		if (allCases) {
-			selectedCases = "";
+			selectedCases = new ArrayList<Long>();
 			if (user != null) {
 				for (RCACase rcaCase : user.getRCACases()) {
-					selectedCases += rcaCase.id + ",";
+					selectedCases.add(rcaCase.id);
 				}
 			}
 			List<RCACase> publicCases = RCACase.find("isCasePublic", true).fetch();
 			for (RCACase rcaCase : publicCases) {
-				selectedCases += rcaCase.id + ",";
+				selectedCases.add(rcaCase.id);
 			}
-		}
-
-		if (selectedCases.isEmpty()) {
-			render(showCorrections);
 		}
 
 		Long currentUserId = user != null ? user.id : -1;
 
-		selectedCases = "(" + selectedCases.substring(0, selectedCases.lastIndexOf(",")) + ")";
-		List<Cause> causes = Cause.find("rcaCaseId in " + selectedCases).fetch();
+		List<Cause> causes = null;
+		List<Correction> corrections = null;
+		if (showCauses) {
+			if (selectedCauseStatuses.get(0) != null) {
+				causes = Cause.find("rcaCase.id in (?1) and statusValue in (?2)", selectedCases,
+				                    selectedCauseStatuses).fetch();
+			} else {
+				causes = Cause.find("rcaCase.id in (?1)", selectedCases).fetch();
+			}
+		} else if (showCorrections) {
+			if (selectedCorrectionStatuses.get(0) != null) {
+				corrections = Correction.find("cause.rcaCase.id in (?1) AND statusValue in (?2)", selectedCases,
+				                              selectedCorrectionStatuses).fetch();
+			} else {
+				corrections = Correction.find("cause.rcaCase.id in (?1)", selectedCases).fetch();
+			}
+		}
 
 		StatusOfCause[] causeStatuses = StatusOfCause.values();
 		StatusOfCorrection[] correctionStatuses = StatusOfCorrection.values();
 
-		render(user, currentUserId, causes, showCorrections, causeStatuses, correctionStatuses);
+		render(user, currentUserId, showCauses, causes,showCorrections,
+		       corrections, causeStatuses, correctionStatuses);
 	}
 
 	public static void changeCauseStatus(Long causeId, StatusOfCause statusOfCause) {

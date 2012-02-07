@@ -1,20 +1,126 @@
-#{if causes != null}
+#{if (causes != null && causes.size() > 0) || (corrections != null && corrections.size() > 0)}
 %{
-    int __causesPerPage = 10;
+    int __itemsPerPage = 10;
 }%
-#{if causes.size().page(__causesPerPage) > 1}
+#{if showCauses && causes != null && causes.size().page(__itemsPerPage) > 1}
 <div class="center pagination" id="pagination-causes">
     <ul>
         <li class="prev disabled"><a href="javascript:">&larr; &{'button.prev'}</a></li>
-        %{for ( i in 1..causes.size().page(__causesPerPage) ) { }%
+        %{for ( i in 1..causes.size().page(__itemsPerPage) ) { }%
             <li ${i == 1 ? "class=active" : ''}><a href="javascript:">${i}</a></li>
         %{ } }%
         <li class="next"><a href="javascript:">&{'button.next'} &rarr;</a></li>
     </ul>
 </div>
 #{/if}
+#{elseif showCorrections && corrections != null && corrections.size().page(__itemsPerPage) > 1}
+<div class="center pagination" id="pagination-corrections">
+    <ul>
+        <li class="prev disabled"><a href="javascript:">&larr; &{'button.prev'}</a></li>
+        %{for ( i in 1..corrections.size().page(__itemsPerPage) ) { }%
+            <li ${i == 1 ? "class=active" : ''}><a href="javascript:">${i}</a></li>
+        %{ } }%
+        <li class="next"><a href="javascript:">&{'button.next'} &rarr;</a></li>
+    </ul>
+</div>
+#{/elseif}
 
-<script type="text/javascript" charset="utf-8">
+#{if showCauses}
+<table class="condensed-table bordered-table" id="cause-table">
+    <thead>
+        <tr>
+            #{if showCorrections}
+            <th>&{'monitoring.numberOfCorrections'}</th>
+            #{/if}
+            <th>&{'monitoring.causeName'}</th>
+            <th>&{'monitoring.relatedCase'}</th>
+            <th>&{'monitoring.status'}</th>
+            <th>&{'monitoring.score'}</th>
+            #{if user}<th>&{'monitoring.commands'}</th>#{/if}
+        </tr>
+    </thead>
+    <tbody>
+    #{list causes, as:'cause'}
+        <tr id="cause-${cause.id}" class="causes-page-${cause_index.page(__itemsPerPage)}">
+            #{if showCorrections}
+            <td class="toggleCorrections">
+                <a href="javascript:" class="ui-icon-plusthick">${cause.corrections.size()}</a>
+            </td>
+            #{/if}
+            <td>${cause.name}</td>
+            <td>${cause.rcaCase.caseName}</td>
+            <td #{if cause.rcaCase.ownerId == currentUserId}class="editable cause-status"#{/if}>&{'monitoring.statusCause.' + cause.status}</td>
+            <td id="cause-${cause.id}-likes">${cause.countLikes()}</td>
+            #{if user}<td>
+                <a href="javascript:" id="cause-${cause.id}-likebutton"
+                   class="btn success like" onclick="like(${cause.id})"
+                    #{if (!(cause.rcaCase.ownerId == currentUserId) && cause.hasUserLiked(user))}
+                   style="display:none;"
+                    #{/if}>+1</a>
+                <a href="javascript:" id="cause-${cause.id}-dislikebutton"
+                   class="btn danger like" onclick="dislike(${cause.id})"
+                        #{if !cause.hasUserLiked(user)} style="display:none;" #{/if}>-1</a>
+            </td>#{/if}
+        </tr>
+        #{if showCorrections}
+        #{list cause.corrections, as:'correction'}
+        <tr id="correction-${correction.id}" class="correction-for-cause-${cause.id}">
+            <td colspan="3"><dl><dt>${correction.name}</dt><dd>${correction.description}</dd></dl></td>
+            <td #{if cause.rcaCase.ownerId == currentUserId}class="editable correction-status"#{/if}>&{'monitoring.statusCorrection.' + correction.status}</td>
+            <td id="correction-${correction.id}-likes">${correction.countLikes()}</td>
+            #{if user}<td>
+                <a href="javascript:" id="correction-${correction.id}-likebutton"
+                   class="btn success like" onclick="likeCorrection(${correction.id})"
+                    #{if (!(correction.cause.rcaCase.ownerId == currentUserId) && correction.hasUserLiked(user))}
+                   style="display:none;"
+                    #{/if}>+1</a>
+                <a href="javascript:" id="correction-${correction.id}-dislikebutton"
+                   class="btn danger like" onclick="dislikeCorrection(${correction.id})"
+                    #{if !correction.hasUserLiked(user)} style="display:none;" #{/if}>-1</a>
+            </td>#{/if}
+        </tr>
+        #{/list}
+        #{/if}
+    #{/list}
+    </tbody>
+</table>
+#{/if}
+#{elseif showCorrections}
+<table class="condensed-table bordered-table" id="cause-table">
+    <thead>
+        <tr>
+            <th>&{'monitoring.correctionNameAndDescription'}</th>
+            <th>&{'monitoring.relatedCase'}</th>
+            <th>&{'monitoring.status'}</th>
+            <th>&{'monitoring.score'}</th>
+            #{if user}<th>&{'monitoring.commands'}</th>#{/if}
+        </tr>
+    </thead>
+    <tbody>
+    #{list corrections, as:'correction'}
+        <tr id="correction-${correction.id}" class="corrections-page-${correction_index.page(__itemsPerPage)}">
+            <td><dl><dt>${correction.name}</dt><dd>${correction.description}</dd></dl></td>
+            <td>${correction.cause.rcaCase.caseName}</td>
+            <td #{if correction.cause.rcaCase.ownerId == currentUserId}class="editable correction-status"#{/if}>&{'monitoring.statusCorrection.' + correction.status}</td>
+            <td id="correction-${correction.id}-likes">${correction.countLikes()}</td>
+            #{if user}<td>
+                <a href="javascript:" id="correction-${correction.id}-likebutton"
+                   class="btn success like" onclick="likeCorrection(${correction.id})"
+                    #{if (!(correction.cause.rcaCase.ownerId == currentUserId) && correction.hasUserLiked(user))}
+                   style="display:none;"
+                    #{/if}>+1</a>
+                <a href="javascript:" id="correction-${correction.id}-dislikebutton"
+                   class="btn danger like" onclick="dislikeCorrection(${correction.id})"
+                    #{if !correction.hasUserLiked(user)} style="display:none;" #{/if}>-1</a>
+            </td>#{/if}
+        </tr>
+    #{/list}
+    </tbody>
+</table>
+#{/elseif}
+
+#{i18n keys:['monitoring.statusC*'] /}
+<script type="text/javascript">
     var likeAction = #{jsAction @CauseController.like(':causeId') /};
     var dislikeAction = #{jsAction @CauseController.dislike(':causeId') /};
     var correctionLikeAction = #{jsAction @CorrectionController.like(':correctionId') /};
@@ -58,81 +164,20 @@
             checkLikes("correction", ideaId, data);
         });
     };
-</script>
 
-<table class="condensed-table bordered-table" id="cause-table">
-    <thead>
-        <tr>
-            #{if showCorrections}
-            <th>&{'monitoring.numberOfCorrections'}</th>
-            #{/if}
-            <th>&{'monitoring.causeName'}</th>
-            <th>&{'monitoring.relatedCase'}</th>
-            <th>&{'monitoring.status'}</th>
-            <th>&{'monitoring.score'}</th>
-            #{if user}<th>&{'monitoring.commands'}</th>#{/if}
-        </tr>
-    </thead>
-    <tbody>
-    #{list causes, as:'cause'}
-        <tr id="cause-${cause.id}" class="causes-page-${cause_index.page(__causesPerPage)}">
-            #{if showCorrections}
-            <td class="toggleCorrections">
-                <a href="javascript:" class="*{ui-icon ui-icon-default}* ui-icon-plusthick">${cause.corrections.size()}</a>
-            </td>
-            #{/if}
-            <td>${cause.name}</td>
-            <td>${cause.rcaCase.caseName}</td>
-            <td #{if cause.rcaCase.ownerId == currentUserId}class="editable cause-status"#{/if}>&{'monitoring.statusCause.' + cause.status}</td>
-            <td id="cause-${cause.id}-likes">${cause.countLikes()}</td>
-            #{if user}<td>
-                <a href="javascript:" id="cause-${cause.id}-likebutton"
-                   class="btn success like" onclick="like(${cause.id})"
-                    #{if (!(cause.rcaCase.ownerId == currentUserId) && cause.hasUserLiked(user))}
-                   style="display:none;"
-                    #{/if}>+1</a>
-                <a href="javascript:" id="cause-${cause.id}-dislikebutton"
-                   class="btn danger like" onclick="dislike(${cause.id})"
-                        #{if !cause.hasUserLiked(user)} style="display:none;" #{/if}>-1</a>
-            </td>#{/if}
-        </tr>
-        #{if showCorrections}
-        #{list cause.corrections, as:'correction'}
-        <tr id="correction-${correction.id}" class="correction-for-cause-${cause.id}">
-            <td colspan="3"><dl><dt>${correction.name}</dt><dd>${correction.description}</dd></dl></td>
-            <td #{if cause.rcaCase.ownerId == currentUserId}class="editable correction-status"#{/if}>&{'monitoring.statusCorrection.' + correction.status}</td>
-            <td id="correction-${correction.id}-likes">${correction.countLikes()}</td>
-            #{if user}<td>
-                <a href="javascript:" id="correction-${correction.id}-likebutton"
-                   class="btn success like" onclick="likeCorrection(${correction.id})"
-                    #{if (!(correction.cause.rcaCase.ownerId == currentUserId) && correction.hasUserLiked(user))}
-                   style="display:none;"
-                    #{/if}>+1</a>
-                <a href="javascript:" id="correction-${correction.id}-dislikebutton"
-                   class="btn danger like" onclick="dislikeCorrection(${correction.id})"
-                    #{if !correction.hasUserLiked(user)} style="display:none;" #{/if}>-1</a>
-            </td>#{/if}
-        </tr>
-        #{/list}
-        #{/if}
-    #{/list}
-    </tbody>
-</table>
-
-#{i18n keys:['monitoring.statusC*'] /}
-<script type="text/javascript">
-    var causesPerPage = '${__causesPerPage}';
+    var itemsPerPage = '${__itemsPerPage}';
     $.tablesorter.addWidget({
-        id: "pagination",
+        #{if showCauses}
+        id: "cause-pagination",
         format: function(table) {
             $("span.ui-icon-minusthick").toggleClass("ui-icon-plusthick").toggleClass("ui-icon-minusthick");
             $("tr[id^='correction-']").hide();
 
             $(table).find("tbody tr[id^='cause']").each(function(index, element) {
                 var causeId = $(this).attr("id").replace("cause-", "");
-                $(this).alterClass("causes-page-*", "causes-page-" + Math.ceil(index / causesPerPage + 0.01));
+                $(this).alterClass("causes-page-*", "causes-page-" + Math.ceil(index / itemsPerPage + 0.01));
                 $("tr.correction-for-cause-" + causeId)
-                        .alterClass("causes-page-*", "causes-page-" + Math.ceil(index / causesPerPage + 0.01))
+                        .alterClass("causes-page-*", "causes-page-" + Math.ceil(index / itemsPerPage + 0.01))
                         .insertAfter(this);
             });
 
@@ -144,6 +189,22 @@
             $("tr.causes-page-" + currentPage).show();
             $('tr[id^="correction-"]').removeClass("show").hide();
         }
+        #{/if}
+        #{elseif showCorrections}
+        id: "correction-pagination",
+        format: function(table) {
+            $(table).find("tbody tr[id^='correction']").each(function(index, element) {
+                $(this).alterClass("corrections-page-*", "corrections-page-" + Math.ceil(index / itemsPerPage + 0.01));
+            });
+
+            $('tr[class^="corrections-page-"]').hide();
+            var currentPage = $("div#pagination-corrections").find("li.active a").html();
+            if (currentPage == undefined) {
+                currentPage = 1;
+            }
+            $("tr.corrections-page-" + currentPage).show();
+        }
+        #{/elseif}
     });
 
     $(function() {
@@ -151,16 +212,20 @@
             $(this).next().parent().css("padding", "10px 19px");
         });
 
-        #{if showCorrections}
+        #{if showCauses && showCorrections}
         var sortList = [[4,1],[0,1]];
         #{/if}
-        #{else}
+        #{elseif showCauses && !showCorrections}
         var sortList = [[3,1]];
-        #{/else}
+        #{/elseif}
 
-        $("table#cause-table").tablesorter({ sortList: sortList, widgets: ['pagination'] });
-
+        #{if showCauses}
+        $("table#cause-table").tablesorter({ sortList: sortList, widgets: ['cause-pagination'] });
         $("tr[id^='correction']").hide();
+        #{/if}
+        #{else}
+        $("table#cause-table").tablesorter({ sortList: [[3,1]], widgets: ['correction-pagination'] });
+        #{/else}
 
         $(".toggleCorrections").click(function() {
             $(this).parent().nextUntil("tr[id^='cause']").toggleClass("show").toggle("fast");
@@ -180,11 +245,9 @@
     });
 
     var causeStatusJson =
-        {
-        #{list causeStatuses, as:'status'}
+        {#{list causeStatuses, as:'status'}
         "${status}":"&{'monitoring.statusCause.' + status}"#{if !status_isLast},#{/if}
-        #{/list}
-        };
+        #{/list}};
 
     $(".editable.cause-status").editable(function(value, settings) {
         var causeId = $(this).parent().attr("id").replace("cause-", "");
@@ -200,15 +263,13 @@
         data : causeStatusJson,
         type : 'select',
         onblur : 'submit',
-				submit : 'ok'
+        submit : 'ok'
     });
 
     var correctionStatusJson =
-        {
-        #{list correctionStatuses, as:'status'}
+        {#{list correctionStatuses, as:'status'}
         "${status}":"&{'monitoring.statusCorrection.' + status}"#{if !status_isLast},#{/if}
-        #{/list}
-        };
+        #{/list}};
 
     $(".editable.correction-status").editable(function(value, settings) {
         var correctionId = $(this).parent().attr("id").replace("correction-", "");
@@ -224,8 +285,13 @@
         data : correctionStatusJson,
         type : 'select',
         onblur : 'submit',
-				submit : 'ok'
+        submit : 'ok'
 
     });
 </script>
 #{/if}
+#{else}
+<div class="alert-message warning">
+    <p>&{'monitoring.noMatchingItemsFound'}</p>
+</div>
+#{/else}

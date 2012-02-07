@@ -20,7 +20,9 @@
         </div>
         #{/if}
     #{if cases.size() == 0}
-        <p>no cases</p>
+        <div class="alert-message warning">
+            <p>&{'monitoring.noCasesFound'}</p>
+        </div>
     #{/if}
     #{list items:cases, as:'rcaCase'}
         #{if rcaCase_index % __casesPerPage == 1}

@@ -68,11 +68,12 @@
 
 #{navigation /}
 
-	<div id="help-message" class="alert-message warning">
-	  <a id="help-message-close" class="close" href="#">&times;</a>
-	  <p><strong>&{'editor.help1'}</strong> &{'editor.help2'}</p>
-	</div>
-		<div id="correction-help-message" class="alert-message success">&{'addCorrectiveAction.success'}</div>
+    <div id="help-message" class="alert-message warning">
+      <a id="help-message-close" class="close" href="#">&times;</a>
+      <p><strong>&{'editor.help1'}</strong> &{'editor.help2'}</p>
+    </div>
+
+    <div id="correction-help-message" class="alert-message success">&{'addCorrectiveAction.success'}</div>
     <div id="infovis">
       
     </div>
@@ -80,7 +81,8 @@
   <div id="radial_menu" style="position: absolute; display: none; width: 0; height: 0;">
     <ul class="list">
       <li class="item my_class" id="radmenu-event-addCause">
-          <a href="#" rel='twipsy' data-placement="right" title='&{'editor.addCause'}'>
+          <a href="#" rel='twipsy' data-placement="right"
+             title='&{'editor.addCause'}'>
               <img src="@{'/public/images/icons/add.png'}" height="20" width="20">
           </a>
       </li>
@@ -108,14 +110,9 @@
         $("a[rel=twipsy]").twipsy({live: true})
 
         $('#infovis').live("mousedown", function(event){
-            console.log("event: " + event);
             jQuery("#radial_menu").radmenu("hide");
             $('.popover').remove();
             jQuery("#corrections_link").hide();
-        });
-
-        $("a#popover-close.close").live("click", function() {
-            $("#addCorrectiveForm").popover('hide');
         });
 
         $("div[rel=popover]").popover({
@@ -129,51 +126,109 @@
         $("#help-message").delay(5000).fadeOut("slow");
     })
   </script>
-  <div id="addCorrectiveForm" rel="popover" data-placement="below" style="position: absolute;">
-    <form id="submitCorrectiveAction" class="form-stacked">
-      <div class="clearfix">
-        <label for="ideaName">&{'addCorrectiveAction.name'}</label>
-        <div class="input">
-          <input type="text" id="ideaName" />
-        </div>
-      </div>
-      <div class="clearfix">
-        <label for="ideaDescription">&{'addCorrectiveAction.description'}</label>
-        <div class="input">
-            <textarea rows="3" id="ideaDescription"></textarea>
-        </div>
-      </div>
-      <input class="btn primary small" id="submitCorrectiveActionButton" type="button" value="&{'addCorrectiveAction.submit'}"/>
-    </form>
-  </div>
   
-  <div id="my-modal" class="modal-backdrop fade hide in">
-    <!-- Modal -->
-    <div class="modal" style="position: relative; top: auto; left: auto; margin: 0 auto; z-index: 1">
-      <div class="modal-header">
-        <a href="#" class="close">&times;</a>
-        <h3>Corrective action ideas</h3>
-      </div>
-      <div class="modal_body">
-        <div id="my_modal_body">
-        </div>
-      </div>
+  <div id="addcorrection-modal" class="modal hide">
+    <div class="modal-header">
+      <a href="#" class="close">&times;</a>
+      <h3>Add corrective action</h3>
     </div>
-  </div>
-  <div class="my_class" id="corrections_link" style="position: absolute; display:none;">
-    <a data-controls-modal="my-modal" data-backdrop="static" >+</a>
+    <table>
+      <tr>
+        <td>
+          <div id="my_modal_body">
+          </div>
+        </td>
+        <td>
+          <form action="" onsubmit="addCorrectiveIdea(); return false;" style="margin: 0; padding: 0;">
+            <div class="modal-body">
+              <div class="clearfix">
+                <label for="ideaName">&{'addCorrectiveAction.name'}</label>
+                <div class="input">
+                  <input type="text" id="ideaName" />
+                </div>
+              </div>
+              <div class="clearfix">
+                <label for="ideaDescription">&{'addCorrectiveAction.description'}</label>
+                <div class="input">
+                  <textarea rows="3" id="ideaDescription"></textarea>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <input id="submitCorrectiveActionButton" class="btn primary"type="submit" value="&{'addCorrectiveAction.submit'}"/>
+              <a href="#" class="btn secondary" onclick="$('#addcorrection-modal').modal('hide')">&{'dialog.cancel'}</a>
+            </div>
+          </form>
+        </td>
+      </tr>
+    </table>
   </div>
 
+<div id="addcause-modal" class="modal hide">
+        <div class="modal-header">
+            <a href="#" class="close">&times;</a>
+            <h3>&{'addCause.title'}</h3>
+        </div>
+        <form action="" onsubmit="addNewCause(); return false;" style="margin: 0; padding: 0;">
+            <div class="modal-body">
+                <div class="clearfix">
+                    <label for="causeName">Cause name</label>
+                    <div class="input">
+                        <input class="xlarge" autofocus="autofocus" id="causeName" name="causeName" type="text" value="" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="submit" value="&{'addCause.title'}" class="btn primary" id="addcause-submit" />
+                <a href="#" class="btn secondary" onclick="$('#addcause-modal').modal('hide')">&{'dialog.cancel'}</a>
+            </div>
+        </form>
+</div>
 <script type="text/javascript">
-
+    function addNewCause() {
+        var addCauseAjax = #{jsAction @CauseController.addCause(':causeId', ':name') /};
+        var name = $.trim($("#causeName").val());
+              if (name != null && name != "" && name.charAt(0) != " ") {
+                radmenu_fadeOut();
+                $("#addcause-modal").modal('hide');
+                $.post(addCauseAjax({causeId: globalSelectedNode, name: encodeURIComponent(name)}));
+              }
+    };
+</script>
+<script type="text/javascript">
+  function addCorrectiveIdea() {
+    var addCorrection = #{jsAction @CauseController.addCorrection(':toId', ':name', ':description') /}
+    var name = $("#ideaName").val();
+    if (name == undefined || name == "") {
+      $("#ideaName").parents(".clearfix").addClass("error");
+      return;
+    } else {
+      $("#ideaName").parents(".clearfix").removeClass("error");
+    }
+    var description = $("#ideaDescription").val();
+    if (description == undefined || description == "") {
+      $("#ideaDescription").parents(".clearfix").addClass("error");
+      return;
+    } else {
+      $("#ideaDescription").parents(".clearfix").removeClass("error");
+    }
+    $.post(addCorrection({toId: globalSelectedNode, name: name, description: description}), function () {
+      radmenu_fadeOut();
+      $("#addcorrection-modal").modal('hide');
+      $("#correction-help-message").show();
+      $("#correction-help-message").delay(1700).fadeOut(1600, "linear");
+    });
+  };
+  
     function applyZoom() {
         var nodes = $("#infovis-label div.node");
-        nodes.css("-webkit-transform", "matrix(" + zoomLevel + ",0,0," + zoomLevel + ",0,0)");
-        nodes.css("-moz-transform", "matrix(" + zoomLevel + ",0,0," + zoomLevel + ",0px,0px");
-        nodes.css("-ms-transform", "matrix(" + zoomLevel + ",0,0," + zoomLevel + ",0,0)");
-        nodes.css("-o-transform", "matrix(" + zoomLevel + ",0,0," + zoomLevel + ",0,0)");
-        nodes.css("transform", "matrix(" + zoomLevel + ",0,0," + zoomLevel + ",0,0)");
+        nodes.css("-webkit-transform", "scale(" + zoomLevel + ")");
+        nodes.css("-moz-transform",  "scale(" + zoomLevel + ")");
+        nodes.css("-ms-transform",  "scale(" + zoomLevel + ")");
+        nodes.css("-o-transform",  "scale(" + zoomLevel + ")");
+        nodes.css("transform",  "scale(" + zoomLevel + ")");
     };
+
     $(document).ready(function() {
 			$("#help-message-close").click(function() {
 				$(this).parent().hide();
@@ -182,6 +237,36 @@
       zoomLevel = 1;
       $("#correction-help-message").hide();
       $("#addCorrectiveForm").hide();
+      $("#infovis").disableSelection();
+
+      // initialize addCause modal window
+      $('#addcause-modal').modal({
+                                       keyboard: true,
+                                       backdrop: true,
+                                       show: false
+                                   });
+        $('#addcause-modal').bind('show', function () {
+            $('#causeName').val('');
+        });
+        $('#addcause-modal').bind('shown', function () {
+            $('#causeName').focus();
+        });
+      // initialize addCorrection modal window
+      $('#addcorrection-modal').modal({
+                                       keyboard: true,
+                                       backdrop: true,
+                                       show: false
+                                   });
+        $('#addcorrection-modal').bind('show', function () {
+            $('#ideaName').val('');
+        });
+        $('#addcorrection-modal').bind('show', function () {
+            $('#ideaDescription').val('');
+        });
+        $('#addcorrection-modal').bind('shown', function () {
+            $('#ideaName').focus();
+        });
+      
     });
     var labelType, useGradients, nativeTextSupport, animate;
 
@@ -199,6 +284,26 @@
       useGradients = nativeCanvasSupport;
       animate = !(iStuff || !nativeCanvasSupport);
     })();
+
+    (function($){
+
+        $.fn.disableSelection = function() {
+            return this.each(function() {
+                $(this).attr('unselectable', 'on')
+                        .css({'-moz-user-select':'none',
+                                 '-o-user-select':'none',
+                                 '-khtml-user-select':'none',
+                                 '-webkit-user-select':'none',
+                                 '-ms-user-select':'none',
+                                 'user-select':'none'})
+                        .each(function() {
+                                  $(this).attr('unselectable','on')
+                                          .bind('selectstart',function(){ return false; });
+                              });
+            });
+        };
+
+    })(jQuery);
 
     function init(){
       // init data
@@ -238,31 +343,15 @@
           }${cause_isLast ? '' : ','}
         #{/list}
       ];
-      //Running number for creating nodes
-      var runningNumber = 0;
+
       var lastReceived = ${lastMessage};
       var waitMessages = #{jsAction @waitMessages(rcaCase.id,':lastReceived') /}
-      var addCause = #{jsAction @CauseController.addCause(':causeId', ':name') /}
-      var renameCause = #{jsAction @CauseController.renameCause(':causeId', ':name') /}
       var deleteCause = #{jsAction @CauseController.deleteCause(':causeId') /}
       var addRelation = #{jsAction @CauseController.addRelation(':fromId', ':toID') /}
-      var addCorrection = #{jsAction @CauseController.addCorrection(':toId', ':name', ':description') /}
       var moveNode = #{jsAction @CauseController.nodeMoved(':causeId', ':x', ':y') /}
       // end
-      var $corrections_link = $("#corrections_link");
-      var $modal_body = $("#my_modal_body");
       var $radial_menu = $("#radial_menu"), menupos, menuwidth, selectedNode, relationFromNode;
-      jQuery("#corrections_link a").click(function(){
-        var getCorrectionNames = #{jsAction @CauseController.getCorrectionNames(':causeId') /}
-        $.get(getCorrectionNames({causeId: selectedNode.id}), function(data) {
-          if (data) {
-            $modal_body.html(" ");
-            for (var i = 0; i < data.length; i++) { 
-                $modal_body.append("<ul>"+data[i]);
-            }
-          }
-        });
-      });
+      
       jQuery("#radial_menu").radmenu({
         listClass: 'list', // the list class to look within for items
         itemClass: 'item', // the items - NOTE: the HTML inside the item is copied into the menu item
@@ -276,57 +365,30 @@
             if($selected[0].id == "radmenu-event-removeCause"){
               $.post(deleteCause({causeId: selectedNode.id}));
               jQuery("#radial_menu").radmenu("hide");
-              jQuery("#corrections_link").hide();
             }else if($selected[0].id == "radmenu-event-addCause"){
-              var name = prompt('Node name?');
-              runningNumber = runningNumber + 1;
-              if (name != null && name != "") {
-                $.post(addCause({causeId: selectedNode.id, name: encodeURIComponent(name)}), function() {
-                    radmenu_fadeOut();
-                });
-              }
+                $('#addcause-modal').modal('show');
+                globalSelectedNode = selectedNode.id;
             }else if($selected[0].id == "radmenu-event-addRelation"){
               relationFromNode = selectedNode;
               radmenu_fadeOut();
               defaultEdgesForSelectedNode(selectedNode);
             }else if($selected[0].id == "radmenu-event-addCorrection") {
-              var CorrectiveActionForm = $("#addCorrectiveForm");
-              CorrectiveActionForm.attr("title", "&{'addCorrectiveAction.title'}<a id=\"popover-close\" href=\"#\" class=\"close\">&times;</a>");
-              var CorrectiveActionFormHtml = CorrectiveActionForm.html();
-              CorrectiveActionForm.attr('data-content', CorrectiveActionFormHtml);
-              CorrectiveActionForm.popover('show');
-              $("div.popover").css({ "left": (menupos.left-50) + "px", "top":(menupos.top+50) + "px" });
-              $("div.popover").css("z-index", "100");
-              $('#submitCorrectiveActionButton').live('click', function() {
-                  var name = $("#ideaName").val();
-                  if (name == undefined || name == "") {
-                    $("#ideaName").parents(".clearfix").addClass("error");
-                    return;
-                  } else {
-                    $("#ideaName").parents(".clearfix").removeClass("error");
+              var $modal_body = $("#my_modal_body");
+              var getCorrectionNames = #{jsAction @CauseController.getCorrectionNames(':causeId') /}
+              $.get(getCorrectionNames({causeId: selectedNode.id}), function(data) {
+                if (data) {
+                  $modal_body.html(" ");
+                  for (var i = 0; i < data.length; i++) {
+                      $modal_body.append(data[i]+"<br />");
                   }
-                  var description = $("#ideaDescription").val();
-                  if (description == undefined || description == "") {
-                    $("#ideaDescription").parents(".clearfix").addClass("error");
-                    return;
-                  } else {
-                    $("#ideaDescription").parents(".clearfix").removeClass("error");
-                  }
-                  $.post(addCorrection({toId: selectedNode.id, name: name, description: description}), function () {
-                    radmenu_fadeOut();
-                    jQuery("#corrections_link").hide();
-                    CorrectiveActionForm.popover('hide');
-                    show_correction_help_message();
-                  });
+                };
               });
+              $('#addcorrection-modal').modal('show');
+              globalSelectedNode = selectedNode.id;
             }
           },
         angleOffset: 45 // in degrees
       });
-      function show_correction_help_message(){
-        $("#correction-help-message").show();
-        $("#correction-help-message").delay(1700).fadeOut(1600, "linear");
-      }
       function show_radial_menu(given_node){
         selectedNode = given_node;
         //get the position of the placeholder element
@@ -365,10 +427,11 @@
         var hasCorrections = #{jsAction @CauseController.hasCorrections(':causeId') /}
         $.get(hasCorrections({causeId: selectedNode.id}), function(data) {
           if (data == "true") {
-            $corrections_link.css({ "left": (menupos.left-10) + "px", "top":menupos.top + "px" }).show(); 
+            //TODO: CHANGE NODE COLOR.
           }
         });
         radmenu_fadeIn(selectedNode);
+        $("#radial_menu").disableSelection();
       }
 
        $("#infovis").css("width", window.innerWidth + 1000);
@@ -499,9 +562,9 @@
           },
 
         //Number of iterations for the FD algorithm
-        iterations: 4,
+        iterations: 0,
         //Edge length
-        levelDistance: 130,
+        levelDistance: 0,
         // Add text to the labels. This method is only triggered
         // on label creation and only for DOM labels (not native canvas ones).
         onCreateLabel: function(domElement, node){
@@ -520,10 +583,10 @@
           var style = domElement.style;
           var left = parseInt(style.left);
           var top = parseInt(style.top);
-          var w = domElement.offsetWidth;
-          style.left = (left - w / 2) + 'px';
-          style.top = (top-18) + 'px';
-          style.display = '';
+          var w = parseInt(domElement.offsetWidth) >> 1;
+          var h = parseInt(domElement.offsetHeight) >> 1;
+          style.left = (left - w) + 'px';
+          style.top = (top - h) + 'px';
         }
       });
       var getNodes = function() {
@@ -580,6 +643,7 @@
                             duration: 1500
                           });
                           applyZoom();
+                            $("#infovis-label div.node").disableSelection();
                         }
                         else if(this.data.type === 'causeRenameEvent') {
                             $("#" + this.data.causeId).html(this.data.newName);
@@ -652,6 +716,7 @@
         }
       });
     }
+
     placeChildsFromParent = function(nodeFrom){
       var childrens = [];
       var childrensWidth = 0;
