@@ -175,6 +175,7 @@ monitoring.commands=Actions
 monitoring.noCasesFound=No matching cases
 monitoring.noMatchingItemsFound=Matching items not found
 monitoring.correctionNameAndDescription=Corrective action
+monitoring.selectAllCasesButton=Select all cases
 
 monitoring.statusCause.DETECTED=Detected
 monitoring.statusCause.ELIMINATION=Elimination

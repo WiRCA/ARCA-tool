@@ -174,6 +174,7 @@ monitoring.commands=Toiminnot
 monitoring.noCasesFound=Ei analyysejä määritellyillä kriteereillä
 monitoring.noMatchingItemsFound=Ei kriteerejä vastaavia osumia
 monitoring.correctionNameAndDescription=Korjaava toimenpide
+monitoring.selectAllCasesButton=Valitse kaikki analyysit
 
 monitoring.statusCause.DETECTED=Havaittu
 monitoring.statusCause.ELIMINATION=Korjataan
