@@ -257,6 +257,11 @@
         nodes.css("-ms-transform",  "scale(" + zoomLevel + ")");
         nodes.css("-o-transform",  "scale(" + zoomLevel + ")");
         nodes.css("transform",  "scale(" + zoomLevel + ")");
+	    $("#radial_menu").radmenu().css("-webkit-transform", "scale(" + zoomLevel + ")");
+	    $("#radial_menu").radmenu().css("-moz-transform",  "scale(" + zoomLevel + ")");
+	    $("#radial_menu").radmenu().css("-ms-transform",  "scale(" + zoomLevel + ")");
+        $("#radial_menu").radmenu().css("-o-transform",  "scale(" + zoomLevel + ")");
+        $("#radial_menu").radmenu().css("transform",  "scale(" + zoomLevel + ")");
     };
 
     $(document).ready(function() {
@@ -468,7 +473,7 @@
 			jQuery("#radial_menu").radmenu("opts").centerY += 7;
 				}
 		 //show the menu directly over the placeholder
-        $radial_menu.css({ "left": (menupos.left + menuwidth/2 - 10) + "px", "top":menupos.top + "px" }).show();
+        $radial_menu.css({ "left": (menupos.left + menuwidth/2 - 10) + "px", "top": menupos.top + "px" }).show();
         var hasCorrections = #{jsAction @CauseController.hasCorrections(':causeId') /}
         $.get(hasCorrections({causeId: selectedNode.id}), function(data) {
           if (data == "true") {
