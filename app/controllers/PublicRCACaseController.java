@@ -49,7 +49,6 @@ public class PublicRCACaseController extends Controller {
 	public static void show(Long id) {
 		RCACase rcaCase = checkIfCurrentUserHasRightsForRCACase(id);
 		Long lastMessage = rcaCase.getCauseStream().lastEvent;
-		Logger.info("Showing RCACase, last message id: %d", lastMessage);
 		User currentUser = SecurityController.getCurrentUser();
 		render(rcaCase, lastMessage, currentUser);
 	}
