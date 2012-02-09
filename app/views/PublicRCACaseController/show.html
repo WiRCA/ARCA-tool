@@ -764,7 +764,8 @@
       var childrensWidth = 0;
       //count children
       nodeFrom.eachAdjacency(function(adj) {
-        if(adj.nodeTo.data.nodeLevel>nodeFrom.data.nodeLevel && !(adj.nodeTo.data.locked)){
+        if(adj.data.$type != "arrow" &&
+				adj.nodeTo.data.nodeLevel>nodeFrom.data.nodeLevel && !(adj.nodeTo.data.locked)){
           childrens.push(adj.nodeTo);
           childrensWidth += $("#"+adj.nodeTo.id).width()+25;
         }
