@@ -114,6 +114,8 @@
 <div id="causesAndCorrections"></div>
 
 <script type="text/javascript">
+	var ajaxRequest;
+
     $(function() {
         $('.well .head').live("click", function(event) {
 			if (event.target.name == 'selectAllCases') {
@@ -180,7 +182,13 @@
         if (caseSelections != "") {
             $("#rcaCaseSelect").html("<img src=\"@{'/public/images/wait-spinner.gif'}\">");
             var rcaCaseSelectingAction = #{jsAction @MonitoringController.rcaCaseSelecting(':showCases') /}
-            $("#rcaCaseSelect").load(rcaCaseSelectingAction({showCases: caseSelections}));
+			if (ajaxRequest != undefined) {
+				ajaxRequest.abort();
+			}
+
+            ajaxRequest = $.get(rcaCaseSelectingAction({showCases: caseSelections}), function(html) {
+				("#rcaCaseSelect").html(html);
+			});
         } else {
             $("#rcaCaseSelect").html("");
             $("#causesAndCorrections").html("");
@@ -211,10 +219,17 @@
             $("#causesAndCorrections").html("<img src=\"@{'/public/images/wait-spinner.gif'}\">");
             var causesAndCorrectionsAction = #{jsAction @MonitoringController.causesAndCorrections(':whatToShow',
                             ':selectedCases', ':allCases', ':selectedCauseStatuses', ':selectedCorrectionStatuses') /}
-            $("#causesAndCorrections").load(causesAndCorrectionsAction(
-                    {whatToShow: whatToShow, selectedCases: selectedCases, allCases: allCases,
-                        selectedCauseStatuses: selectedCauseStatuses, selectedCorrectionStatuses: selectedCorrectionStatuses}
-            ));
+			if (ajaxRequest != undefined) {
+				ajaxRequest.abort();
+			}
+
+			ajaxRequest = $.get(causesAndCorrectionsAction({whatToShow: whatToShow, selectedCases: selectedCases,
+								allCases: allCases, selectedCauseStatuses: selectedCauseStatuses,
+								selectedCorrectionStatuses: selectedCorrectionStatuses}),
+					function(html) {
+						$("#causesAndCorrections").html(html);
+					}
+			);
         } else {
             $("#causesAndCorrections").html("");
         }
