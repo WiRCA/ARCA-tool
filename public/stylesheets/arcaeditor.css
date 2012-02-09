@@ -42,24 +42,37 @@
     user-select: none;
     word-wrap: break-word;
 
-    -webkit-box-shadow: 0px 0px 4px hsl(208, 30%, 50%); /* Saf3-4, iOS 4.0.2 - 4.2, Android 2.3+ */
-    -moz-box-shadow: 0px 0px 4px hsl(208, 30%, 50%); /* FF3.5 - 3.6 */
-    box-shadow: 0px 0px 10px hsl(60, 99%, 80%); /* Opera 10.5, IE9, FF4+, Chrome 6+, iOS 5 */
+    -webkit-box-shadow: 0px 5px 10px #ddd; /* Saf3-4, iOS 4.0.2 - 4.2, Android 2.3+ */
+    -moz-box-shadow: 0px 5px 10px #ddd; /* FF3.5 - 3.6 */
+    box-shadow: 0px 5px 10px #ddd; /* Opera 10.5, IE9, FF4+, Chrome 6+, iOS 5 */
 }
 
 .nodeBox {
-  	color:rgb(0,0,0);
+    color:rgb(0,0,0);
   	font-size: 10pt;
 	padding: 3px;
-	background:#BCD2EE;
+    background-color: #BCD2EE;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#D6E3F5), to(#A5C2E9)); /* Saf4+, Chrome */
+    background-image: -webkit-linear-gradient(top, #D6E3F5, #A5C2E9); /* Chrome 10+, Saf5.1+, iOS 5+ */
+    background-image:    -moz-linear-gradient(top, #D6E3F5, #A5C2E9); /* FF3.6 */
+    background-image:     -ms-linear-gradient(top, #D6E3F5, #A5C2E9); /* IE10 */
+    background-image:      -o-linear-gradient(top, #D6E3F5, #A5C2E9); /* Opera 11.10+ */
+    background-image:         linear-gradient(to bottom, #D6E3F5, #A5C2E9);
 	max-width:10em;
 }
 
 .rootNodeBox {
 	color:rgb(255,255,255);
+    text-shadow: 1px 1px 2px #000;
   	font-size: 12pt;
 	padding: 10px;
 	background:#3579DC;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#528BE0), to(#2569D0)); /* Saf4+, Chrome */
+    background-image: -webkit-linear-gradient(top, #528BE0, #2569D0); /* Chrome 10+, Saf5.1+, iOS 5+ */
+    background-image:    -moz-linear-gradient(top, #528BE0, #2569D0); /* FF3.6 */
+    background-image:     -ms-linear-gradient(top, #528BE0, #2569D0); /* IE10 */
+    background-image:      -o-linear-gradient(top, #528BE0, #2569D0); /* Opera 11.10+ */
+    background-image:         linear-gradient(to bottom, #528BE0, #2569D0);
 }
 
 #radial_container {
