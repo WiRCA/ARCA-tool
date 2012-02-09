@@ -658,8 +658,8 @@
                           fd.plot();
                         }
                         else if(this.data.type === 'addcauseevent') {
-													// This is a small fix. Now twipsy hides as it's supposed to.
-													$('.twipsy').remove();
+                          // This is a small fix. Now twipsy hides as it's supposed to.
+                          // $('.twipsy').remove();
                           defaultEdgesForSelectedNode(selectedNode);
                           var newNode = {
                             "id": this.data.causeTo,
@@ -674,7 +674,8 @@
                           newNode = fd.graph.getNode(this.data.causeTo);
                           newNode.data.nodeLevel = oldNode.data.nodeLevel+1;
                           newNode.setPos(oldNode.getPos('end'),'current');
-                          newNode.getPos('end').y = oldNode.getPos('end').y+80;
+                          newNode.getPos('end').y = oldNode.getPos('end').y+100;
+						  newNode.getPos('end').x = oldNode.getPos('end').x+100;
                           newNode.data.xCoordinate = newNode.getPos('end').x;
                           newNode.data.yCoordinate = newNode.getPos('end').y;
                           fd.plot();
