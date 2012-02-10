@@ -140,6 +140,7 @@ rcacase.share.dialog.email=Sähköposti
 rcacase.share.dialog.actions=Toiminnot
 rcacase.share.dialog.remove=Poista
 rcacase.share.dialog.close=Sulje
+rcacase.share.dialog.invalidEmail=Virheellinen sähköposti!
 
 register.title=Rekisteröidy
 register.titleSmall=Täytä kentät
