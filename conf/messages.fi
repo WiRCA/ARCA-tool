@@ -188,7 +188,7 @@ monitoring.statusCorrection.WILL_BE_IMPLEMENTED=Toteutetaan
 
 addCause.title=Lisää syy
 renameCause.title=Uudelleennimeä syy
-addCorrectiveAction.title=Korjaavat ideat
+addCorrectiveAction.title=Lisää korjaava idea
 addCorrectiveAction.name=Nimi
 addCorrectiveAction.description=Kuvaus
 addCorrectiveAction.submit=Luo idea
