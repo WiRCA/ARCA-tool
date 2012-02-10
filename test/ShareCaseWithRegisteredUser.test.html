@@ -22,9 +22,10 @@
   ~ THE SOFTWARE.
   -->
 #{fixture delete:'all',load:'data.yml' /}
+Http.Response.current().reset();
 #{selenium}
 open('/logout')
-open('/?language=en')
+open('/?language=fi')
 
 verifyTextPresent(&{'indexPage.title'})
 type('id=username','admin@local')
@@ -44,7 +45,7 @@ type('id=companyProducts','asd')
 verifyTextPresent(&{'createRCA.title'})
 clickAndWait('id=create')
 
-open('/?language=en')
+open('/?language=fi')
 verifyTextPresent('test case')
 verifyTextPresent(&{'rcacase.share'})
 clickAt('//*[text()="&{'rcacase.share'}"]')
@@ -112,7 +113,7 @@ clickAndWait('id=signin')
 verifyTextPresent('test case ')
 verifyTextPresent('Admin user')
 clickAndWait('link=test case')
-open('/?language=en')
+open('/?language=fi')
 clickAndWait('id=logout-link')
 
 type('id=username','admin@local')
