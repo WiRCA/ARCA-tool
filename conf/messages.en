@@ -28,7 +28,7 @@ dialog.cancel=Cancel
 submit=Submit
 
 secure.title=
-secure.username=Username
+secure.username=Email
 secure.password=Password
 secure.remember=Remember me
 secure.signin=Sign in
