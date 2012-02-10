@@ -80,7 +80,7 @@ button.prev=Previous
 button.next=Next
 
 createRCA.title=Create a new RCA case
-createRCA.caseName=Case name
+createRCA.caseName=Case name (required)
 createRCA.rcaCaseType=Case type
 createRCA.caseGoals=Case goals
 createRCA.description=Short description of the problem
@@ -90,6 +90,7 @@ createRCA.companyProducts=What are the main products or product types of the com
 createRCA.public=Is this a public case?
 createRCA.create=Create the new RCA case!
 createRCA.isMultinational=Multinational company?
+createRCA.instruction=Only the case name is a required field
 
 showRCACase.title=RCA Case %s
 showRCACase.owner=RCA case owner

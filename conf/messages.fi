@@ -87,7 +87,7 @@ button.prev=Edellinen
 button.next=Seuraava
 
 createRCA.title=Luo uusi RCA analyysi
-createRCA.caseName=Analyysin nimi
+createRCA.caseName=Analyysin nimi (pakollinen)
 createRCA.rcaCaseType=Analyysin tyyppi
 createRCA.caseGoals=Analyysin tavoitteet
 createRCA.description=Ongelman lyhyt kuvaus
