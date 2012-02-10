@@ -94,10 +94,8 @@
 	-webkit-border-radius:10px;
 	cursor:pointer;
 }
-.radial_div_item.active {
-	
-}
-.my_class {
+
+.radmenu-button {
 	font-size:13px;
 	color:#abc;
 	background-color:#def;
