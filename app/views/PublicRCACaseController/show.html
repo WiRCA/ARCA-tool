@@ -127,35 +127,33 @@
     <form action="" onsubmit="addCorrectiveIdea(); return false;" style="margin: 0; padding: 0;">
     <div class="modal-header">
       <a href="#" class="close">&times;</a>
-      <h3>Add corrective action</h3>
+      <h3>&{'addCorrectiveAction.title'}</h3>
     </div>
     <table>
       <tr>
         <td>
           <div id="ideaHeader">
-            <h4>&{'addCorrectiveAction.ideaHeader'}</h3>
+            <h4>&{'addCorrectiveAction.ideaHeader'}</h4>
           </div>
           <div id="my_modal_body">
             
           </div>
         </td>
         <td>
-            <div class="modal-body">
-              <div class="clearfix">
-                <label for="ideaName">&{'addCorrectiveAction.name'}</label>
-                <div class="input">
-                  <input type="text" id="ideaName" />
-                </div>
-              </div>
-              <div class="clearfix">
-                <label for="ideaDescription">&{'addCorrectiveAction.description'}</label>
-                <div class="input">
-                  <textarea rows="3" id="ideaDescription"></textarea>
-                </div>
+          <div class="modal-body">
+            <div class="clearfix">
+              <label for="ideaName">&{'addCorrectiveAction.name'}</label>
+              <div class="input">
+                <input type="text" id="ideaName" />
               </div>
             </div>
-
-          
+            <div class="clearfix">
+              <label for="ideaDescription">&{'addCorrectiveAction.description'}</label>
+              <div class="input">
+                <textarea rows="3" id="ideaDescription"></textarea>
+              </div>
+            </div>
+          </div>
         </td>
       </tr>
     </table>
@@ -428,16 +426,16 @@
               var $modal_body = $("#my_modal_body");
               var getCorrectionNames = #{jsAction @CauseController.getCorrectionNames(':causeId') /}
               $.get(getCorrectionNames({causeId: selectedNode.id}), function(data) {
-                if (data) {
-                  $modal_body.html(" ");
+                $modal_body.html(" ");
+                if (data != "") {
+                  $("#ideaHeader").show();
                   $modal_body.append("<ul>");
                   for (var i = 0; i < data.length; i++) {
-                    if(data[0] != " ") {
-                      $("#ideaHeader").show();
-                    }
                       $modal_body.append("<li>"+data[i]+"</li>");
                   }
                   $modal_body.append("</ul>");
+                }else {
+                  $("#ideaHeader").hide();
                 };
               });
               $('#addcorrection-modal').modal('show');
