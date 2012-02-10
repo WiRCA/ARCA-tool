@@ -184,6 +184,7 @@ monitoring.statusCorrection.IMPLEMENTED=Toteutettu
 monitoring.statusCorrection.WILL_BE_IMPLEMENTED=Toteutetaan
 
 addCause.title=Lisää syy
+addCause.causeName=Syyn nimi
 renameCause.title=Uudelleennimeä syy
 addCorrectiveAction.title=Lisää korjaava toimenpide
 addCorrectiveAction.name=Nimi
