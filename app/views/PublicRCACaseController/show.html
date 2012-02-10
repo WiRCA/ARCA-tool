@@ -131,7 +131,11 @@
     <table>
       <tr>
         <td>
+          <div id="ideaHeader">
+            <h4>&{'addCorrectiveAction.ideaHeader'}</h3>
+          </div>
           <div id="my_modal_body">
+            
           </div>
         </td>
         <td>
@@ -161,24 +165,24 @@
   </div>
 
 <div id="addcause-modal" class="modal hide">
-        <div class="modal-header">
-            <a href="#" class="close">&times;</a>
-            <h3>&{'addCause.title'}</h3>
-        </div>
-        <form action="" onsubmit="addNewCause(); return false;" style="margin: 0; padding: 0;">
-            <div class="modal-body">
-                <div class="clearfix">
-                    <label for="causeName">Cause name</label>
-                    <div class="input">
-                        <input class="xlarge" autofocus="autofocus" id="causeName" name="causeName" type="text" value="" />
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <input type="submit" value="&{'addCause.title'}" class="btn primary" id="addcause-submit" />
-                <a href="#" class="btn secondary" onclick="$('#addcause-modal').modal('hide')">&{'dialog.cancel'}</a>
-            </div>
-        </form>
+  <div class="modal-header">
+      <a href="#" class="close">&times;</a>
+      <h3>&{'addCause.title'}</h3>
+  </div>
+  <form action="" onsubmit="addNewCause(); return false;" style="margin: 0; padding: 0;">
+      <div class="modal-body">
+          <div class="clearfix">
+              <label for="causeName">Cause name</label>
+              <div class="input">
+                  <input class="xlarge" autofocus="autofocus" id="causeName" name="causeName" type="text" value="" />
+              </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+          <input type="submit" value="&{'addCause.title'}" class="btn primary" id="addcause-submit" />
+          <a href="#" class="btn secondary" onclick="$('#addcause-modal').modal('hide')">&{'dialog.cancel'}</a>
+      </div>
+  </form>
 </div>
 <script type="text/javascript">
     function addNewCause() {
@@ -267,6 +271,7 @@
       zoomLevel = 1;
       $("#correction-help-message").hide();
       $("#addCorrectiveForm").hide();
+      $("#ideaHeader").hide();
       $("#infovis").disableSelection();
 
       // initialize addCause modal window
@@ -423,9 +428,14 @@
               $.get(getCorrectionNames({causeId: selectedNode.id}), function(data) {
                 if (data) {
                   $modal_body.html(" ");
+                  $modal_body.append("<ul>");
                   for (var i = 0; i < data.length; i++) {
-                      $modal_body.append(data[i]+"<br />");
+                    if(data[0] != " ") {
+                      $("#ideaHeader").show();
+                    }
+                      $modal_body.append("<li>"+data[i]+"</li>");
                   }
+                  $modal_body.append("</ul>");
                 };
               });
               $('#addcorrection-modal').modal('show');

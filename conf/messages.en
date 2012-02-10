@@ -191,3 +191,4 @@ addCorrectiveAction.name=Name
 addCorrectiveAction.description=Description
 addCorrectiveAction.submit=Add
 addCorrectiveAction.success=Corrective action added
+addCorrectiveAction.ideaHeader=Korjaavat ideat

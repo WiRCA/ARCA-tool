@@ -190,3 +190,4 @@ addCorrectiveAction.name=Nimi
 addCorrectiveAction.description=Kuvaus
 addCorrectiveAction.submit=Luo idea
 addCorrectiveAction.success=Korjaava idea lisätty
+addCorrectiveAction.ideaHeader=Korjaavat ideat
