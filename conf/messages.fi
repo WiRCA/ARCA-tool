@@ -25,9 +25,10 @@
 null=
 
 dialog.cancel=Peruuta
+submit=Lähetä
 
 secure.title=
-secure.username=Käyttäjätunnus
+secure.username=Sähköpostiosoite
 secure.password=Salasana
 secure.remember=Muista minut
 secure.signin=Kirjaudu
@@ -117,11 +118,12 @@ user.welcomeTitle=Tervetuloa %s!
 user.createRCACase=Luo uusi RCA analyysi
 user.noRCACases=Ei RCA analyysejä
 user.noPrivateCases=Ei yksityisiä analyysejä
-user.noPublicCases=Et seuraa mitään julkista analyysiä
+user.noPublicCases=Kanssasi ei ole jaettu mitään julkista analyysiä
 user.created=Analyysi luotu
 user.myCases=Minun analyysini
-user.sharedCases=Minulle jaetut yksityiset analyysit
-user.publicCases=Julkiset analyysit joita seuraan
+user.sharedCases=Minulle jaetut analyysit
+user.sharedPrivateCases=Minulle jaetut yksityiset analyysit
+user.publicCases=Minulle jaetut julkiset analyysit
 rcacase.lastmodified=muokattu
 rcacase.share=Jaa..
 rcacase.sharedBy=Omistaja:
@@ -139,6 +141,7 @@ rcacase.share.dialog.email=Sähköposti
 rcacase.share.dialog.actions=Toiminnot
 rcacase.share.dialog.remove=Poista
 rcacase.share.dialog.close=Sulje
+rcacase.share.dialog.invalidEmail=Virheellinen sähköposti!
 
 register.title=Rekisteröidy
 register.titleSmall=Täytä kentät
@@ -150,7 +153,7 @@ register.emailExists=Antamasi sähköpostiosoite on jo rekisteröity.
 register.passwordsDidNotMatch=Salasanat eivät täsmänneet
 register.gLogin=Tai kirjaudu Google-tunnuksellasi
 
-rcaCase.csv.exportCSV=Lataa syyt CSV:nä
+rcaCase.csv.exportCSV=Lataa CSV
 rcaCase.csv.caseName=RCA analyysi
 rcaCase.csv.causeID=Syyn ID
 rcaCase.csv.causeName=Syyn nimi
@@ -188,8 +191,11 @@ addCause.title=Lisää syy
 addCause.name=Syyn nimi
 renameCause.title=Uudelleennimeä syy
 renameCause.newName=Uusi nimi
-addCorrectiveAction.title=Lisää korjaava toimenpide
+addCorrectiveAction.title=Lisää korjausehdotus
 addCorrectiveAction.name=Nimi
 addCorrectiveAction.description=Kuvaus
 addCorrectiveAction.submit=Luo idea
 addCorrectiveAction.success=Korjaava idea lisätty
+addCorrectiveAction.ideaHeader=Korjaavat ideat
+
+contactPage.feedbackFormTitle=Ota meihin yhteyttä tai lähetä palautetta

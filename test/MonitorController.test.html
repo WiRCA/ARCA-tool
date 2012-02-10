@@ -163,6 +163,7 @@
     click('name=selectedCases')
     waitForTextPresent('Matching items not found')
     click('//input[@name='causeStatuses' and @value='3']')
+	waitForTextPresent('uniqueCauseString')
     click('//input[@name='causeStatuses' and @value='2']')
     waitForTextPresent('another cause')
 
