@@ -1,0 +1,52 @@
+# ARCA-tool Readme
+
+ARCA-tool is a tool for doing root acuse analysis. It is implemented as a web application, with Play! framework.
+
+Current version includes:
+
+  - Registering user accounts
+  - Login with Google Login
+  - Making cause-effect diagrams for RCA Cases
+    - Adding subcauses to causes
+    - Adding additional relations between causes
+    - Deleting causes
+    - Renaming causes
+    - Adding corrective actions for causes
+  - Sharing RCA Cases by email
+  - Users can be invited even if they do not have an account
+  - Cause-effect diagrams can be made simultaneously by multiple people, colloboratively
+  - Causes can be downloaded as a cvs file
+  - Causes and corrective actions can be monitored through a separate monitoring view
+    - Search can be filtered with multiple ways
+    - Causes and corrective actions can be liked
+    - States of causes and corrective actions can be changed
+
+# Installation
+
+## Play! framework
+
+Download Play! framework from [here](http://koti.kapsi.fi/risto/play-master-e0400da.zip).
+
+We used this version of the Play! framework (master branch, [e0400da60371c365063fccf941663d1e7c237938](https://github.com/playframework/play/commit/e0400da60371c365063fccf941663d1e7c237938), because the latest stable version (1.2.3) [didn't have support for multiple databases](https://play.lighthouseapp.com/projects/57987/tickets/1129-play-documentation-and-milestones-out-of-synch) and a previous version from Github had a [bug](https://play.lighthouseapp.com/projects/57987/tickets/1037) with [ArchivedEventStream](http://www.playframework.org/documentation/api/1.2/play/libs/F.ArchivedEventStream.html).
+
+## Database
+
+You can configure Play! framework to use [different database implementations](http://www.playframework.org/documentation/1.2.3/configuration#dbconf). Implemented configuration uses [MySQL](http://www.mysql.com/downloads/)-database.
+
+## Java 1.6 JDK
+
+Install [Java 1.6 JDK](http://jdk6.java.net/) and add the installation path to [environment variable](http://en.wikipedia.org/wiki/Environment_variable) `JAVA_HOME`.
+
+## ARCA-tool source
+
+Get the latest source from [Github](https://github.com/WiRCA/ARCA-tool/zipball/master) and unzip it somewhere.
+
+## Installation steps
+
+  1. Open command line utility and go to the folder where you unzipped the ARCA-tool source.
+  2. Get module dependencies by running `play deps --sync`.
+  3. Edit conf/application.conf and comment/uncomment the database configuration (commented with `# Production environment database configuration`) you use. You can also configure other [Play! configuration parameters](http://www.playframework.org/documentation/1.2.3/configuration).
+  4. If you use MySQL-database, then you have to migrate database to the latest version. 
+    1. Create databases by running `play migrate:create`.
+    2. Create database tables by running `play migrate:up`.
+  5. Run the application by running `play run --%prod`. You can run the application in background by running `play start --%prod`.
