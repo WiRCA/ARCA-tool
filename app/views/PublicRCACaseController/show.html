@@ -302,9 +302,6 @@
            backdrop: true,
            show: false
       });
-      $('#renameCause-modal').bind('show', function () {
-          $('#renamedName').val('');
-      });
       $('#renameCause-modal').bind('shown', function () {
           $('#renamedName').focus();
       });
@@ -426,6 +423,7 @@
               jQuery("#radial_menu").radmenu("hide");
             }
             else if($selected[0].id == "radmenu-event-renameCause"){
+                $('#renamedName').val(selectedNode.name);
                 $('#renameCause-modal').modal('show');
                 globalSelectedNode = selectedNode.id;
             }
@@ -703,6 +701,8 @@
                             $("#infovis-label div.node").disableSelection();
                         }
                         else if(this.data.type === 'causeRenameEvent') {
+                            var oldNode = fd.graph.getNode(this.data.causeId);
+                            oldNode.name = this.data.newName;
                             $("#" + this.data.causeId).html(this.data.newName);
                         }
                         else if(this.data.type === 'nodemovedevent'){
