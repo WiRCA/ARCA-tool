@@ -135,11 +135,11 @@
     clickAt('//*[text()="another cause"]')
     waitForElementPresent('//div[@id='radmenu-event-addCorrection']')
     click('//div[@id='radmenu-event-addCorrection']')
-    verifyTextPresent('Add corrective action')
+    verifyTextPresent('Corrective actions')
     type('id=ideaName','correction to this private case to share')
     type('id=ideaDescription','description for correction to this private case to share')
     clickAt('id=submitCorrectiveActionButton')
-    waitForTextNotPresent('Add corrective action')
+    waitForTextNotPresent('Corrective actions')
 
     //testing monitoring
     clickAndWait('link=Monitoring')
@@ -250,11 +250,11 @@
     clickAt('//*[text()="public cause"]')
     waitForElementPresent('//div[@id='radmenu-event-addCorrection']')
     click('//div[@id='radmenu-event-addCorrection']')
-    verifyTextPresent('Add corrective action')
+    verifyTextPresent('Corrective actions')
     type('id=ideaName','correction to this public cause')
     type('id=ideaDescription','description for correction to this public cause')
     clickAt('id=submitCorrectiveActionButton')
-    waitForTextNotPresent('Add corrective action')
+    waitForTextNotPresent('Corrective actions')
     //testing monitoring with "All cases" checked
     clickAndWait('link=Monitoring')
     click('//input[@name='casesRadio' and @value='allCases']')
