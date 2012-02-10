@@ -25,6 +25,7 @@
 null=
 
 dialog.cancel=Peruuta
+submit=Lähetä
 
 secure.title=
 secure.username=Käyttäjätunnus
@@ -192,3 +193,5 @@ addCorrectiveAction.description=Kuvaus
 addCorrectiveAction.submit=Luo idea
 addCorrectiveAction.success=Korjaava idea lisätty
 addCorrectiveAction.ideaHeader=Korjaavat ideat
+
+contactPage.feedbackFormTitle=Ota meihin yhteyttä tai lähetä palautetta

@@ -25,6 +25,7 @@
 null=
 
 dialog.cancel=Cancel
+submit=Submit
 
 secure.title=
 secure.username=Username
@@ -193,3 +194,5 @@ addCorrectiveAction.description=Description
 addCorrectiveAction.submit=Add
 addCorrectiveAction.success=Corrective action added
 addCorrectiveAction.ideaHeader=Korjaavat ideat
+
+contactPage.feedbackFormTitle=Contact us or send feedback
