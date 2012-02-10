@@ -140,6 +140,7 @@ rcacase.share.dialog.email=Email
 rcacase.share.dialog.actions=Action
 rcacase.share.dialog.remove=Remove
 rcacase.share.dialog.close=Close
+rcacase.share.dialog.invalidEmail=Invalid email!
 
 register.title=Sign up
 register.titleSmall=Fill the form
