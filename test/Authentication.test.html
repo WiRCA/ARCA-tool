@@ -5,7 +5,7 @@
     type('id=username','foobar')
     type('id=password','foobar')
     clickAndWait('id=signin')
-    verifyTextPresent('Oops, unknown username or password.')
+    verifyTextPresent(&{'secure.error'})
     type('id=username','admin@local')
     type('id=password','admin')
     clickAndWait('id=signin')

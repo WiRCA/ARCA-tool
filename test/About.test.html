@@ -26,8 +26,8 @@
 #{selenium}
     open('/?language=en')
     clickAndWait('link=About')
-    verifyTextPresent('ARCA-tool is a product')
+    verifyTextPresent(&{'aboutPage.content'})
     open('/?language=fi')
     clickAndWait('link=Tietoa projektista')
-    verifyTextPresent('ARCA-työkalu on')
+    verifyTextPresent(&{'aboutPage.content'})
 #{/selenium}
