@@ -257,11 +257,12 @@
         nodes.css("-ms-transform",  "scale(" + zoomLevel + ")");
         nodes.css("-o-transform",  "scale(" + zoomLevel + ")");
         nodes.css("transform",  "scale(" + zoomLevel + ")");
-	    $("#radial_menu").radmenu().css("-webkit-transform", "scale(" + zoomLevel + ")");
-	    $("#radial_menu").radmenu().css("-moz-transform",  "scale(" + zoomLevel + ")");
-	    $("#radial_menu").radmenu().css("-ms-transform",  "scale(" + zoomLevel + ")");
-        $("#radial_menu").radmenu().css("-o-transform",  "scale(" + zoomLevel + ")");
-        $("#radial_menu").radmenu().css("transform",  "scale(" + zoomLevel + ")");
+var menu = $("#radial_menu").radmenu();
+	    menu.css("-webkit-transform", "scale(" + zoomLevel + ")");
+	    menu.css("-moz-transform",  "scale(" + zoomLevel + ")");
+	    menu.css("-ms-transform",  "scale(" + zoomLevel + ")");
+        menu.css("-o-transform",  "scale(" + zoomLevel + ")");
+        menu.css("transform",  "scale(" + zoomLevel + ")");
     };
 
     $(document).ready(function() {
@@ -440,41 +441,40 @@
         angleOffset: 45 // in degrees
       });
       function show_radial_menu(given_node){
+		
         selectedNode = given_node;
         //get the position of the placeholder element
         menupos   = $("#"+given_node.id).offset();
-        menuwidth = $("#"+given_node.id).width();
-				menuheight = $("#"+given_node.id).height();
+        menuwidth = $("#"+given_node.id).outerWidth(true) * zoomLevel;
+		tempwidth = $("#"+given_node.id).width() * zoomLevel;
+		menuheight = $("#"+given_node.id).outerHeight(true) * zoomLevel;
+		console.log(menuwidth + " " + menuheight + " " + menupos.left);
 				
 		///////////////////////////////////////////////////////
 		// As the radial menu is a square of four menu items //
 		// this is to find out what shape the menu is.       //
-		//    #  #					          ------                 //
+		//    #  #                    ------                 //
 		//  --------                #|     |#                //
 		//  |      |        OR       |     |                 //
 		//  -------                 #|     |#                //
 		//    #  #                    -----                  //
 		///////////////////////////////////////////////////////
 		if(menuheight > menuwidth){
-			radius_Xcomp = menuwidth/2 + 20;
+			radius_Xcomp = menuwidth/2 + 20*zoomLevel;
 			// cos(45) is about 0.70
 			newRadius = radius_Xcomp/0.7;
 		}
 		else {
-		    radius_Ycomp = menuheight/2 + 22;
+		    radius_Ycomp = menuheight/2 + 20*zoomLevel;
 			// sin(45) is about 0.70
 			newRadius = radius_Ycomp/0.7;
-		}
-		jQuery("#radial_menu").radmenu("opts").radius = newRadius;
-        jQuery("#radial_menu").radmenu("opts").centerY = menuheight/2 - 30;
-				
-	    if(selectedNode.id == ${rcaCase.problem.id}) {
-			jQuery("#radial_menu").radmenu("opts").radius += 10;
-			jQuery("#radial_menu").radmenu("opts").centerY += 7;
-				}
+		}		
+		jQuery("#radial_menu").radmenu("opts").radius = newRadius / zoomLevel;
+
 		 //show the menu directly over the placeholder
-        $radial_menu.css({ "left": (menupos.left + menuwidth/2 - 10) + "px", "top": menupos.top + "px" }).show();
-        var hasCorrections = #{jsAction @CauseController.hasCorrections(':causeId') /}
+        $radial_menu.css({ "left": menupos.left + menuwidth/2 - (10*zoomLevel)+ "px", "top": menupos.top + menuheight/2 - (23*zoomLevel) + "px" }).show();
+        
+		var hasCorrections = #{jsAction @CauseController.hasCorrections(':causeId') /}
         $.get(hasCorrections({causeId: selectedNode.id}), function(data) {
           if (data == "true") {
             //TODO: CHANGE NODE COLOR.
