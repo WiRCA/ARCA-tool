@@ -257,11 +257,8 @@
         nodes.css("-ms-transform",  "scale(" + zoomLevel + ")");
         nodes.css("-o-transform",  "scale(" + zoomLevel + ")");
         nodes.css("transform",  "scale(" + zoomLevel + ")");
-var menu = $("#radial_menu").radmenu();
+		var menu = $("#radial_menu").radmenu();
 	    menu.css("-webkit-transform", "scale(" + zoomLevel + ")");
-	    menu.css("-moz-transform",  "scale(" + zoomLevel + ")");
-	    menu.css("-ms-transform",  "scale(" + zoomLevel + ")");
-        menu.css("-o-transform",  "scale(" + zoomLevel + ")");
         menu.css("transform",  "scale(" + zoomLevel + ")");
     };
 
@@ -446,9 +443,7 @@ var menu = $("#radial_menu").radmenu();
         //get the position of the placeholder element
         menupos   = $("#"+given_node.id).offset();
         menuwidth = $("#"+given_node.id).outerWidth(true) * zoomLevel;
-		tempwidth = $("#"+given_node.id).width() * zoomLevel;
 		menuheight = $("#"+given_node.id).outerHeight(true) * zoomLevel;
-		console.log(menuwidth + " " + menuheight + " " + menupos.left);
 				
 		///////////////////////////////////////////////////////
 		// As the radial menu is a square of four menu items //
