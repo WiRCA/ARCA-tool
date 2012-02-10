@@ -133,7 +133,7 @@
       <tr>
         <td>
           <div id="ideaHeader">
-            <h4>&{'addCorrectiveAction.ideaHeader'}</h4>
+            <b>&{'addCorrectiveAction.ideaHeader'}</b>
           </div>
           <div id="my_modal_body">
             
@@ -246,7 +246,7 @@
     } else {
       $("#ideaDescription").parents(".clearfix").removeClass("error");
     }
-    $.post(addCorrection({toId: globalSelectedNode, name: name, description: description}), function () {
+    $.post(addCorrection({toId: globalSelectedNode, name: name, description: description}), function (data) {
       radmenu_fadeOut();
       $("#addcorrection-modal").modal('hide');
       $("#correction-help-message").show();
@@ -363,7 +363,7 @@
             "id": "${cause.id}",
             "name": "${cause.name}",
             "data": {
-                    "$color": "#83548B",
+                    "hasCorrections": ${!cause.corrections.isEmpty()},
                     "$type": "circle",
                     "$dim":1,
                     "parent": #{if cause.parent}${cause.parent.id}#{/if}#{else}""#{/else},
@@ -479,12 +479,6 @@
 				}
 		 //show the menu directly over the placeholder
         $radial_menu.css({ "left": (menupos.left + menuwidth/2 - 10) + "px", "top":menupos.top + "px" }).show();
-        var hasCorrections = #{jsAction @CauseController.hasCorrections(':causeId') /}
-        $.get(hasCorrections({causeId: selectedNode.id}), function(data) {
-          if (data == "true") {
-            //TODO: CHANGE NODE COLOR.
-          }
-        });
         radmenu_fadeIn(selectedNode);
         $("#radial_menu").disableSelection();
       }
@@ -622,12 +616,15 @@
         onCreateLabel: function(domElement, node){
         // Root node looks different.
         if (node.id == ${rcaCase.problem.id}) {
-          $(domElement).addClass('rootNodeBox')
+          $(domElement).addClass('rootNodeBox');
         }
         else {
-          $(domElement).addClass('nodeBox')
+          $(domElement).addClass('nodeBox');
         }
           $(domElement).html(node.name);
+          if(node.data.hasCorrections) {
+            $(domElement).addClass('nodeBoxCorrection');
+          }
         },
         // Change node styles when DOM labels are placed
         // or moved.
@@ -665,6 +662,7 @@
                         }
                         if (this.data.type === 'addcorrectionevent') {
                           //alert(this.data.correctionTo + " " + this.data.name);
+                          $("#"+this.data.correctionTo).addClass('nodeBoxCorrection');
                           fd.plot();
                         }
                         else if(this.data.type === 'addcauseevent') {

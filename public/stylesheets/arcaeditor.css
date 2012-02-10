@@ -60,6 +60,11 @@
     /* background-image:         linear-gradient(to bottom, #D6E3F5, #A5C2E9); */
 	max-width:10em;
 }
+.nodeBoxCorrection {
+  background-color: #00CC66;
+  background-image: -webkit-linear-gradient(top, #00CC66, #A5C3F0); /* Chrome 10+, Saf5.1+, iOS 5+ */
+  
+}
 
 .rootNodeBox {
 	color:rgb(255,255,255);
