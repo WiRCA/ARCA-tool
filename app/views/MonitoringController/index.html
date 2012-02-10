@@ -30,9 +30,10 @@
 <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/monitoring.css'}">
 #{/set}
 #{set 'moreScripts'}
-<script src="@{'/public/javascripts/jquery.tablesorter.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
-<script src="@{'/public/javascripts/jquery.alterclass.js'}" type="text/javascript" charset="${_response_encoding}"></script>
-<script src="@{'/public/javascripts/jquery.jeditable.mini.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+#{press.script 'jquery.tablesorter.min.js' /}
+#{press.script 'jquery.alterclass.js' /}
+#{press.script 'jquery.jeditable.js' /}
+#{press.compressed-script /}
 #{/set}
 
 <div class="well" id="selectFilter">
@@ -113,10 +114,16 @@
 <div id="causesAndCorrections"></div>
 
 <script type="text/javascript">
+	var ajaxRequest;
+
     $(function() {
-        $('.well .head').live("click", function() {
-            $(this).next().toggle();
-            return false;
+        $('.well .head').live("click", function(event) {
+			if (event.target.name == 'selectAllCases') {
+				$("input[name='selectedCases']").attr("checked", "checked");
+				$("input[name='selectedCases']").eq(0).change();
+			} else {
+            	$(this).next().toggle();
+			}
         });
 
         $('.well .head').each(function() {
@@ -175,7 +182,13 @@
         if (caseSelections != "") {
             $("#rcaCaseSelect").html("<img src=\"@{'/public/images/wait-spinner.gif'}\">");
             var rcaCaseSelectingAction = #{jsAction @MonitoringController.rcaCaseSelecting(':showCases') /}
-            $("#rcaCaseSelect").load(rcaCaseSelectingAction({showCases: caseSelections}));
+			if (ajaxRequest != undefined) {
+				ajaxRequest.abort();
+			}
+
+            ajaxRequest = $.get(rcaCaseSelectingAction({showCases: caseSelections}), function(html) {
+				$("#rcaCaseSelect").html(html);
+			});
         } else {
             $("#rcaCaseSelect").html("");
             $("#causesAndCorrections").html("");
@@ -206,10 +219,17 @@
             $("#causesAndCorrections").html("<img src=\"@{'/public/images/wait-spinner.gif'}\">");
             var causesAndCorrectionsAction = #{jsAction @MonitoringController.causesAndCorrections(':whatToShow',
                             ':selectedCases', ':allCases', ':selectedCauseStatuses', ':selectedCorrectionStatuses') /}
-            $("#causesAndCorrections").load(causesAndCorrectionsAction(
-                    {whatToShow: whatToShow, selectedCases: selectedCases, allCases: allCases,
-                        selectedCauseStatuses: selectedCauseStatuses, selectedCorrectionStatuses: selectedCorrectionStatuses}
-            ));
+			if (ajaxRequest != undefined) {
+				ajaxRequest.abort();
+			}
+
+			ajaxRequest = $.get(causesAndCorrectionsAction({whatToShow: whatToShow, selectedCases: selectedCases,
+								allCases: allCases, selectedCauseStatuses: selectedCauseStatuses,
+								selectedCorrectionStatuses: selectedCorrectionStatuses}),
+					function(html) {
+						$("#causesAndCorrections").html(html);
+					}
+			);
         } else {
             $("#causesAndCorrections").html("");
         }

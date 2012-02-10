@@ -127,6 +127,7 @@ public class RCACaseController extends Controller {
 			request.format = "json";
 			User invitedUser = User.find(FIND_BY_EMAIL, invitedEmail).first();
 			if (invitedUser != null) {
+				Logger.info("User %s invited %s to RCA case %s", current, invitedUser, rcaCase);
 				invitedUser.addRCACase(rcaCase);
 				render(invitedUser);
 			} else {
@@ -136,6 +137,7 @@ public class RCACaseController extends Controller {
 					Mails.invite(current, invitation, rcaCase);
 				}
 				invitation.addCase(rcaCase);
+				Logger.info("User %s invited %s to RCA case %s", current, invitation, rcaCase);
 				render(invitation);
 			}
 		}

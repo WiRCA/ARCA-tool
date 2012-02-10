@@ -94,14 +94,26 @@ public class Bootstrap extends Job {
 	        tester.save();
 	        
 	        Cause testNode1 = firstRCACase.problem.addCause("test node 1", tester);
+			testNode1.xCoordinate = -100;
+			testNode1.save();
 	        Cause testNode2 = firstRCACase.problem.addCause("test node 2", tester);
 	        Cause testNode3 = testNode1.addCause("test node 3", tester);
+			testNode3.xCoordinate = -75;
+			testNode3.save();
 	        Cause testNode4 = testNode1.addCause("test node 4", tester);
 	        Cause testNode5 = testNode1.addCause("test node 5", tester);
+			testNode5.xCoordinate = -200;
+			testNode5.save();
 	        Cause testNode6 = testNode2.addCause("test node 6", tester);
+			testNode6.xCoordinate = 0;
+			testNode6.save();
 	        Cause testNode7 = testNode5.addCause("test node 7", tester);
 	        Cause testNode8 = testNode4.addCause("test node 8", tester);
+			testNode8.xCoordinate = 0;
+			testNode8.save();
 	        Cause testNode9 = testNode5.addCause("test node 9", tester);
+			testNode9.xCoordinate = -100;
+			testNode9.save();
 	        Cause testNode10 = testNode9.addCause("test node 10", tester);
 	        testNode7.addCause(testNode3);
 	        testNode8.addCause(testNode6);
