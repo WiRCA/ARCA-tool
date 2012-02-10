@@ -22,10 +22,12 @@
   ~ THE SOFTWARE.
   -->
 #{fixture delete:'all',load:'data.yml' /}
+Http.Response.current().reset();
 #{selenium}
 open('/logout')
-open('/?language=fi')
-verifyTextPresent('Etusivu')
+open('/?language=en')
+
+verifyTextPresent(&{'indexPage.title'})
 type('id=username','admin@local')
 type('id=password','admin')
 clickAndWait('id=signin')
@@ -40,29 +42,29 @@ type('id=caseGoals','asd')
 type('id=companyName','asd')
 select('id=companySize','label=301->')
 type('id=companyProducts','asd')
-verifyTextPresent('Luo uusi RCA analyysi')
+verifyTextPresent(&{'createRCA.title'})
 clickAndWait('id=create')
 
-open('/?language=fi')
+open('/?language=en')
 verifyTextPresent('test case')
-verifyTextPresent(' Jaa..')
-clickAt('//*[text()="Jaa.."]')
-waitForTextPresent('Kutsu sähköpostilla')
+verifyTextPresent(&{'rcacase.share'})
+clickAt('//*[text()="&{'rcacase.share'}"]')
+waitForTextPresent(&{'rcacase.share.dialog.inviteEmail'})
 click('css=input[type="submit"]')
 click('css=input[type="submit"]')
 
 // Tries to invite user to the case with an invalid email address
 type('id=rcacase-share-dialog-invitedEmail-input','roope')
 click('css=input[type="submit"]')
-waitForTextPresent('rcacase.share.dialog.invalidEmail')
+waitForTextPresent(&{'rcacase.share.dialog.invalidEmail'})
 // with another invalid email
 type('id=rcacase-share-dialog-invitedEmail-input','roope@roope@roope')
 click('css=input[type="submit"]')
-verifyTextPresent('rcacase.share.dialog.invalidEmail')
+verifyTextPresent(&{'rcacase.share.dialog.invalidEmail'})
 // and with another
 type('id=rcacase-share-dialog-invitedEmail-input','roope@roope')
 click('css=input[type="submit"]')
-verifyTextPresent('rcacase.share.dialog.invalidEmail')
+verifyTextPresent(&{'rcacase.share.dialog.invalidEmail'})
 
 // Tries to invite user to the case to the case with a valid email address
 type('id=rcacase-share-dialog-invitedEmail-input','roope@roope.xxx')
@@ -71,7 +73,7 @@ waitForTextPresent('roope@roope.xxx')
 click('//button[@type='button']')
 verifyTextPresent('Admin user')
 clickAndWait('id=logout-link')
-verifyTextPresent('Etusivu')
+verifyTextPresent(&{'indexPage.title'})
 
 // Creates a new user for testing
 clickAndWait('id=register-link')
@@ -80,7 +82,7 @@ type('id=emailFieldRegister','roope@roope.xxx')
 type('id=passwordFieldRegister','xxx')
 type('id=password2FieldRegister','xxx')
 clickAndWait('id=registerButton')
-verifyTextPresent('Lomake sisältää virheitä')
+verifyTextPresent(&{'error.errorsInForm'})
 type('id=emailFieldRegister','roope@roope.roope')
 type('id=passwordFieldRegister','xxx')
 type('id=password2FieldRegister','xxx')
@@ -88,14 +90,14 @@ clickAndWait('id=registerButton')
 waitForTextPresent('testikäyttäjä')
 clickAndWait('id=logout-link')
 
-verifyTextPresent('Etusivu')
+verifyTextPresent(&{'indexPage.title'})
 type('id=username','admin@local')
 type('id=password','admin')
 clickAndWait('id=signin')
 verifyTextPresent('Admin user')
 
-clickAt('//*[text()="Jaa.."]')
-waitForTextPresent('Kutsu sähköpostilla')
+clickAt('//*[text()="&{'rcacase.share'}"]')
+waitForTextPresent(&{'rcacase.share.dialog.inviteEmail'})
 
 // Invites testikäyttäjä to the case
 type('id=rcacase-share-dialog-invitedEmail-input','roope@roope.roope')
@@ -111,13 +113,13 @@ clickAndWait('id=signin')
 verifyTextPresent('test case ')
 verifyTextPresent('Admin user')
 clickAndWait('link=test case')
-open('/?language=fi')
+open('/?language=en')
 clickAndWait('id=logout-link')
 
 type('id=username','admin@local')
 type('id=password','admin')
 clickAndWait('id=signin')
-clickAt('//*[text()="Jaa.."]')
+clickAt('//*[text()="&{'rcacase.share'}"]')
 
 // Tries to invite empty user to the case
 click('css=input[type="submit"]')

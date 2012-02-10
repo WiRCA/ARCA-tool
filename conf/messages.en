@@ -25,6 +25,7 @@
 null=
 
 dialog.cancel=Cancel
+submit=Submit
 
 secure.title=
 secure.username=Username
@@ -109,11 +110,12 @@ user.welcomeTitle=Welcome %s!
 user.createRCACase=Create new RCA case
 user.noRCACases=No RCA cases
 user.noPrivateCases=No private cases to show
-user.noPublicCases=You're not following any public cases
+user.noPublicCases=You haven't got any shared public cases
 user.created=Case created:
 user.myCases=My cases
-user.sharedCases=Private cases shared with me
-user.publicCases=Public cases I'm following
+user.sharedCases=Cases shared with me
+user.sharedPrivateCases=Private cases shared with me
+user.publicCases=Public cases shared with me
 user.allPublicCases=All public cases
 user.noAnyPublicCases=No public cases
 user.allCases=All cases
@@ -139,6 +141,7 @@ rcacase.share.dialog.email=Email
 rcacase.share.dialog.actions=Action
 rcacase.share.dialog.remove=Remove
 rcacase.share.dialog.close=Close
+rcacase.share.dialog.invalidEmail=Invalid email!
 
 register.title=Sign up
 register.titleSmall=Fill the form
@@ -150,7 +153,7 @@ register.emailExists=The given email already exists.
 register.passwordsDidNotMatch=Passwords did not match
 register.gLogin=Or log in using your Google Account
 
-rcaCase.csv.exportCSV=Export causes as CSV file
+rcaCase.csv.exportCSV=Export CSV
 rcaCase.csv.caseName=RCA case
 rcaCase.csv.causeID=Cause ID
 rcaCase.csv.causeName=Cause name
@@ -192,3 +195,5 @@ addCorrectiveAction.name=Name
 addCorrectiveAction.description=Description
 addCorrectiveAction.submit=Add
 addCorrectiveAction.success=Corrective action added
+addCorrectiveAction.ideaHeader=Corrective actions
+contactPage.feedbackFormTitle=Contact us or send feedback

@@ -100,18 +100,6 @@ public class CauseController extends Controller {
 		causeEvents.getStream().publish(event);
 		Logger.debug("Relation added between %s and %s", causeFrom, causeTo);
 	}
-
-	/**
-	 * Checks whether a cause has corrective actions added.
-	 *
-	 * @param causeId
-	 *
-	 * @return
-	 */
-	public static boolean hasCorrections(Long causeId) {
-		Cause cause = Cause.findById(causeId);
-		return !cause.corrections.isEmpty();
-	}
 	
 	/**
 	 * Gets the names of the corrective actions of a cause.

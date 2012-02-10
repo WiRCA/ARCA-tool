@@ -159,7 +159,7 @@
         &{'rcacase.lastmodified'} ${rcaCase.updated.since(true)}
         &{'user.created'} ${rcaCase.created.since(true)}
         <a id="rcacase-share-${rcaCase.id}" href="javascript:;" class="btn small success">&{'rcacase.share'}</a>
-        #{a @RCACaseController.extractCSV(rcaCase.id)}&{'rcaCase.csv.exportCSV'}#{/a}
+        #{a @RCACaseController.extractCSV(rcaCase.id), class:'btn small'}&{'rcaCase.csv.exportCSV'}#{/a}
     </li>
     #{/list}
     #{else}
@@ -168,7 +168,7 @@
 </ul>
     </div>
     <div class="tab-pane" id="privatecases">
-<h2>&{'user.sharedCases'}</h2>
+<h2>&{'user.sharedPrivateCases'}</h2>
         <ul>
         #{list items:privateCases, as:'rcaCase'}
         <li>#{a @PublicRCACaseController.show(rcaCase.id), id:'show-rcacase-'+rcaCase.id+'-link', rel:'popover',
@@ -181,23 +181,25 @@
     #{else}
     <li>&{'user.noPrivateCases'}</li>
     #{/else}
-</ul>
+        </ul>
+            <h2>&{'user.publicCases'}</h2>
+            <ul>
+            #{list items:publicCases, as:'rcaCase'}
+                <li>#{a @PublicRCACaseController.show(rcaCase.id), id:'show-rcacase-'+rcaCase.id+'-link', rel:'popover',
+                title:"${rcaCase.caseName}", 'data-content':"${rcaCase.description}"}${rcaCase.caseName}#{/a}
+                &{'rcacase.sharedBy'} <b>${rcaCase.owner.name}</b>
+                &{'rcacase.lastmodified'} ${rcaCase.updated.since(true)}
+                &{'user.created'} ${rcaCase.created.since(true)}
+                </li>
+            #{/list}
+            #{else}
+                <li>&{'user.noPublicCases'}</li>
+            #{/else}
+            </ul>
+
     </div>
     <div class="tab-pane" id="publiccases">
-<h2>&{'user.publicCases'}</h2>
-<ul>
-    #{list items:publicCases, as:'rcaCase'}
-    <li>#{a @PublicRCACaseController.show(rcaCase.id), id:'show-rcacase-'+rcaCase.id+'-link', rel:'popover',
-        title:"${rcaCase.caseName}", 'data-content':"${rcaCase.description}"}${rcaCase.caseName}#{/a}
-        &{'rcacase.sharedBy'} <b>${rcaCase.owner.name}</b>
-        &{'rcacase.lastmodified'} ${rcaCase.updated.since(true)}
-        &{'user.created'} ${rcaCase.created.since(true)}
-    </li>
-    #{/list}
-    #{else}
-    <li>&{'user.noPublicCases'}</li>
-    #{/else}
-</ul>
+
 
 <h2>&{'user.allPublicCases'}</h2>
 <ul>
