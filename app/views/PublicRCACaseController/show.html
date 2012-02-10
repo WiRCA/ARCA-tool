@@ -478,13 +478,6 @@
 
 		 //show the menu directly over the placeholder
         $radial_menu.css({ "left": menupos.left + menuwidth/2 - (10*zoomLevel)+ "px", "top": menupos.top + menuheight/2 - (23*zoomLevel) + "px" }).show();
-
-		var hasCorrections = #{jsAction @CauseController.hasCorrections(':causeId') /}
-        $.get(hasCorrections({causeId: selectedNode.id}), function(data) {
-          if (data == "true") {
-            //TODO: CHANGE NODE COLOR.
-          }
-        });
         radmenu_fadeIn(selectedNode);
         $("#radial_menu").disableSelection();
       }
