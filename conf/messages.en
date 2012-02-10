@@ -80,7 +80,7 @@ button.prev=Previous
 button.next=Next
 
 createRCA.title=Create a new RCA case
-createRCA.caseName=Case name
+createRCA.caseName=Case name (required)
 createRCA.rcaCaseType=Case type
 createRCA.caseGoals=Case goals
 createRCA.description=Short description of the problem
