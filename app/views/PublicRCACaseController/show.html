@@ -818,7 +818,11 @@
                     !( selectedNode.data.creatorId == ${currentUser == null ? 'null' : currentUser.id} ||
                     ${currentUser == null ? 'null' : currentUser.id} == ${rcaCase.ownerId})
                     ) {
+                    // hide remove-cause button, if user has no rights to remove selected cause
                     jQuery("#radial_menu").radmenu("items")[3].style.visibility = "hidden";
+
+                    // hide rename-cause button, if user has no rights to rename selected cause
+                    jQuery("#radial_menu").radmenu("items")[4].style.visibility = "hidden";
                 }
             }
         );

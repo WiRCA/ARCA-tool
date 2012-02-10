@@ -160,9 +160,8 @@ public class CauseController extends Controller {
 		Cause cause = Cause.findById(causeId);
 		RCACase rcaCase = cause.rcaCase;
 
-		if (!CauseController.userIsAllowedToDelete(cause, rcaCase)) {
-			//TODO: notify user that she cannot remove the problem cause
-			return;
+		if (!CauseController.userIsAllowedToDeleteAndRename(cause, rcaCase)) {
+			forbidden();
 		}
 
 		rcaCase.deleteCause(cause);
@@ -173,7 +172,7 @@ public class CauseController extends Controller {
 		Logger.debug("Cause %s deleted", cause);
 	}
 
-	private static boolean userIsAllowedToDelete(Cause cause, RCACase rcaCase) {
+	private static boolean userIsAllowedToDeleteAndRename(Cause cause, RCACase rcaCase) {
 		User current = SecurityController.getCurrentUser();
 		return current != null && !cause.equals(rcaCase.problem) &&
 		       (current == cause.getCreator() || current == rcaCase.getOwner());
@@ -256,6 +255,9 @@ public class CauseController extends Controller {
 		Cause cause = Cause.findById(causeId);
 		RCACase rcaCase = cause.rcaCase;
 
+        if (!CauseController.userIsAllowedToDeleteAndRename(cause, rcaCase)) {
+            forbidden();
+        }
 		String oldName = cause.name;
 		
 		cause.name = name;
