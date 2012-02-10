@@ -124,6 +124,7 @@
   </script>
   
   <div id="addcorrection-modal" class="modal hide">
+    <form action="" onsubmit="addCorrectiveIdea(); return false;" style="margin: 0; padding: 0;">
     <div class="modal-header">
       <a href="#" class="close">&times;</a>
       <h3>Add corrective action</h3>
@@ -139,7 +140,6 @@
           </div>
         </td>
         <td>
-          <form action="" onsubmit="addCorrectiveIdea(); return false;" style="margin: 0; padding: 0;">
             <div class="modal-body">
               <div class="clearfix">
                 <label for="ideaName">&{'addCorrectiveAction.name'}</label>
@@ -154,14 +154,16 @@
                 </div>
               </div>
             </div>
-            <div class="modal-footer">
-              <input id="submitCorrectiveActionButton" class="btn primary"type="submit" value="&{'addCorrectiveAction.submit'}"/>
-              <a href="#" class="btn secondary" onclick="$('#addcorrection-modal').modal('hide')">&{'dialog.cancel'}</a>
-            </div>
-          </form>
+
+          
         </td>
       </tr>
     </table>
+    <div class="modal-footer">
+      <input id="submitCorrectiveActionButton" class="btn primary"type="submit" value="&{'addCorrectiveAction.submit'}"/>
+      <a href="#" class="btn secondary" onclick="$('#addcorrection-modal').modal('hide')">&{'dialog.cancel'}</a>
+    </div>
+    </form>
   </div>
 
 <div id="addcause-modal" class="modal hide">
