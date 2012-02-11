@@ -203,7 +203,7 @@
 
     //sharing the private case to another test user
     clickAndWait('link=Index page')
-    clickAt('//*[text()="Share"]')
+    clickAt('//*[text()="Share"][2]')
     waitForTextPresent('Invite by email')
     type('id=rcacase-share-dialog-invitedEmail-input','esteri@esteri.esteri')
     click('css=input[type="submit"]')
