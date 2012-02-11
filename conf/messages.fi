@@ -158,7 +158,7 @@ rcaCase.csv.caseName=RCA analyysi
 rcaCase.csv.causeID=Syyn ID
 rcaCase.csv.causeName=Syyn nimi
 rcaCase.csv.causedById=Alasyyt
-rcaCase.csv.relationsFromId=Muut syyt
+rcaCase.csv.relations=Relaatiot
 
 monitoringPage.title=Monitorointi
 monitoring.selectFilterTitle=Valitse suodin
