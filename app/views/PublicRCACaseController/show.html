@@ -682,16 +682,17 @@
                             }
                           };
                           var oldNode = fd.graph.getNode(this.data.causeFrom);
+                          var newNodesXCoordinate = 100;
+                          var newNodesYCoordinate = 100;
                           fd.graph.addAdjacence(oldNode,newNode);
                           newNode = fd.graph.getNode(this.data.causeTo);
                           newNode.data.nodeLevel = oldNode.data.nodeLevel+1;
                           newNode.setPos(oldNode.getPos('end'),'current');
-                          newNode.getPos('end').y = oldNode.getPos('end').y+100;
-						  newNode.getPos('end').x = oldNode.getPos('end').x+100;
-                          newNode.data.xCoordinate = newNode.getPos('end').x;
-                          newNode.data.yCoordinate = newNode.getPos('end').y;
+                          newNode.getPos('end').y = oldNode.getPos('end').y + newNodesYCoordinate;
+						  newNode.getPos('end').x = oldNode.getPos('end').x + newNodesXCoordinate;
+                          newNode.data.xCoordinate = newNodesXCoordinate;
+                          newNode.data.yCoordinate = newNodesYCoordinate;
                           fd.plot();
-                          //placeChildsFromParent(oldNode);
                           fd.animate({
                             modes: ['linear'],
                             transition: $jit.Trans.Elastic.easeOut,
