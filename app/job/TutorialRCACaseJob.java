@@ -61,47 +61,51 @@ public class TutorialRCACaseJob extends Job {
 		user.addRCACase(tutorialRCACase);
         user.save();
 
-        Cause node1 = tutorialRCACase.problem
+        Cause activityNode = tutorialRCACase.problem
 	            .addCause("The activity menu can be accessed by clicking on a node (like this one)", user);
-		node1.xCoordinate = 0;
-		node1.save();
-        Cause node2 = node1
+		activityNode.xCoordinate = 0;
+		activityNode.save();
+        Cause relationshipTopNode = activityNode
 		        .addCause("Clicking on the arrow creates a relationship arrow between two nodes. After clicking the " +
 		                  "arrow click on the node to which you wish to make the relation from the initial node.", user);
-		node2.yCoordinate = 160;
-		node2.xCoordinate = 0;
-		node2.save();
-        Cause node3 = node2.addCause("Try adding a relation from this node to another node.", user);
-		node3.yCoordinate = 250;
-		node3.xCoordinate = 0;
-		node3.save();
-        Cause node4 = node2.addCause("This node has a relation to the node next to it.", user);
-		node4.yCoordinate = 250;
-		node4.xCoordinate = -200;
-		node4.save();
-		node4.addCause(node3);
-        Cause node5 = node1.addCause("Clicking on the plus button creates a new node under the currently selected node",
+		relationshipTopNode.yCoordinate = 160;
+		relationshipTopNode.xCoordinate = 0;
+		relationshipTopNode.save();
+        Cause relationshipToNode = relationshipTopNode.addCause("Try adding a relation from this node to another node.", user);
+		relationshipToNode.yCoordinate = 250;
+		relationshipToNode.xCoordinate = 0;
+		relationshipToNode.save();
+        Cause relationshipFromNode = relationshipTopNode.addCause("This node has a relation to the node next to it.", user);
+		relationshipFromNode.yCoordinate = 250;
+		relationshipFromNode.xCoordinate = -200;
+		relationshipFromNode.save();
+		relationshipFromNode.addCause(relationshipToNode);
+        Cause addCauseNode = activityNode.addCause("Clicking on the plus button creates a new node under the currently selected node",
                                      user);
-		node5.yCoordinate = 160;
-		node5.xCoordinate = -160;
-		node5.save();
-        Cause node6 = node5.addCause("Feel free to create a node! You can remove nodes you've created by " +
-                                             "using the Remove button in the upper right corner of the menu.", user);
-		node6.yCoordinate = 85;
-		node6.xCoordinate = -220;
-		node6.save();
-        Cause node7 = node1.addCause("Clicking on the light bulb allows to add corrective ideas to the node.",
+		addCauseNode.yCoordinate = 160;
+		addCauseNode.xCoordinate = -360;
+		addCauseNode.save();
+		Cause renameNode = addCauseNode.addCause("Cause can be renamed by clicking pencil button", user);
+		renameNode.yCoordinate = 160;
+		renameNode.xCoordinate = 120;
+		renameNode.save();
+        Cause removeNode = addCauseNode.addCause("Feel free to create a node! You can remove nodes you've created by " +
+                                             "using the Remove button (trashcan).", user);
+		removeNode.yCoordinate = 160;
+		removeNode.xCoordinate = -180;
+		removeNode.save();
+        Cause correctiveIdeaTopNode = activityNode.addCause("Clicking on the light bulb allows to add corrective ideas to the node.",
                                              user);
-		node7.yCoordinate = 160;
-		node7.xCoordinate = 180;
-		node7.save();
-        Cause node8 = node7.addCause("This node has ideas added to it.", user);
-		node8.yCoordinate = 140;
-		node8.xCoordinate = 130;
-		node8.save();
+		correctiveIdeaTopNode.yCoordinate = 160;
+		correctiveIdeaTopNode.xCoordinate = 180;
+		correctiveIdeaTopNode.save();
+        Cause hasIdeasNode = correctiveIdeaTopNode.addCause("This node has ideas added to it.", user);
+		hasIdeasNode.yCoordinate = 140;
+		hasIdeasNode.xCoordinate = 130;
+		hasIdeasNode.save();
 
-		node8.addCorrection("Tutorial idea 1", "Description for the first idea");
-		node8.addCorrection("Tutorial idea 2", "Description for the second idea");
+		hasIdeasNode.addCorrection("Tutorial idea 1", "Description for the first idea");
+		hasIdeasNode.addCorrection("Tutorial idea 2", "Description for the second idea");
 		Logger.debug("Tutorial RCA case job ended for user %s", user);
 	}
 }
