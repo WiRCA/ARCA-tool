@@ -124,6 +124,7 @@
     click('//input[@id='addcause-submit']')
     waitForTextPresent('another cause')
     // corrective ideas to the first cause
+    waitForElementPresent('//*[text()="another cause"]')
     clickAt('//*[text()="another cause"]')
     waitForElementPresent('//div[@id='radmenu-event-addCorrection']')
     click('//div[@id='radmenu-event-addCorrection']')
@@ -133,6 +134,7 @@
     clickAt('id=submitCorrectiveActionButton')
     waitForTextPresent('Corrective action added')
 
+    waitForElementPresent('//*[text()="another cause"]')
     clickAt('//*[text()="another cause"]')
     waitForElementPresent('//div[@id='radmenu-event-addCorrection']')
     click('//div[@id='radmenu-event-addCorrection']')
@@ -142,6 +144,7 @@
     clickAt('id=submitCorrectiveActionButton')
     waitForTextPresent('Corrective action added')
 
+    waitForElementPresent('//*[text()="another cause"]')
     clickAt('//*[text()="another cause"]')
     waitForElementPresent('//div[@id='radmenu-event-addCorrection']')
     click('//div[@id='radmenu-event-addCorrection']')
