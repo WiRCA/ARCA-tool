@@ -717,6 +717,7 @@
                           var nodePos = new $jit.Complex(xPos,yPos);
                           nodeToMove.setPos(nodePos, 'end');
 
+                          updateChildrenVectors(nodeToMove);
                           fd.animate({
                             modes: ['linear'],
                             transition: $jit.Trans.Elastic.easeOut,
