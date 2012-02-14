@@ -78,14 +78,23 @@
     click('//div[@id='radmenu-event-addRelation']')
     clickAt('//*[text()="testgraph"]')
 
-    // remove 3rd node
+    // rename 3rd node
     clickAt('//*[text()="bar"]')
+    click('//div[@id='radmenu-event-renameCause']')
+    waitForElementPresent('css=#renameCause-modal > div.modal-header > h3')
+    type('id=renamedName','renamed')
+    click('//input[@id='renameCause-submit']')
+    waitForTextPresent('renamed')
+
+    // remove 3rd node
+    clickAt('//*[text()="renamed"]')
     click('//div[@id='radmenu-event-removeCause']')
 
     // verify that root node cannot be deleted
     clickAt('//*[text()="testgraph"]')
     click('//div[@id='radmenu-event-removeCause']')
     verifyTextPresent('testgraph')
+
     open('/logout')
 
 #{/selenium}
