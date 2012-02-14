@@ -68,7 +68,7 @@
 
     $("#rcacase-share-dialog-share-form").submit(function() {
     var rcaId = $("#rcacase-share-dialog-rcaCaseId-input").val();
-    var email = $("#rcacase-share-dialog-invitedEmail-input").val();
+    var email = $.trim($("#rcacase-share-dialog-invitedEmail-input").val());
 
     /* Check if user exists already */
     if ($('#rcacase-share-dialog-persons tr').find('td[name="' + email + '"]').length > 0) {
@@ -221,10 +221,10 @@
 <div id="rcacase-share-dialog" title="&{'rcacase.share.dialog.title'}">
     #{form @RCACaseController.inviteUser(), id:'rcacase-share-dialog-share-form' }
     <input id="rcacase-share-dialog-rcaCaseId-input" type="hidden" name="rcaCaseId"/>
-    <label for="rcacase-share-dialog-invitedEmail-input">&{'rcacase.share.dialog.inviteEmail'}</label>
+    <label for="rcacase-share-dialog-invitedEmail-input"><b>&{'rcacase.share.dialog.inviteEmail'}</b></label>
     <input id="rcacase-share-dialog-invitedEmail-input" type="text" name="invitedEmail"/>
     <span id="rcacase-share-dialog-invitedEmail-error" class="error"></span>
-    <input type="submit" value="&{'rcacase.share.dialog.submitForm'}"/>
+    <input type="submit" class="btn primary" value="&{'rcacase.share.dialog.submitForm'}"/>
     #{/form}
     <span>&{'rcacase.share.dialog.whoHasAccess'}</span>
 </div>

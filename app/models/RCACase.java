@@ -31,6 +31,7 @@ import models.events.Event;
 import org.hibernate.annotations.Sort;
 import org.hibernate.annotations.SortType;
 import play.cache.Cache;
+import play.data.validation.MaxSize;
 import play.data.validation.Required;
 import play.libs.F.IndexedEvent;
 import play.libs.F.Promise;
@@ -56,6 +57,7 @@ public class RCACase extends IdComparableModel {
 	private static final String EXPIRATION_TIME_FOR_CAUSE_STREAM_IN_CACHE = "30mn";
 
 	@Required
+	@MaxSize(value = 255)
 	@Column(name = "name")
 	public String caseName;
 
@@ -73,6 +75,7 @@ public class RCACase extends IdComparableModel {
 
 	public boolean isMultinational;
 
+	@MaxSize(value = 255)
 	public String companyName;
 
 	@Lob

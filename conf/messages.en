@@ -159,7 +159,7 @@ rcaCase.csv.caseName=RCA case
 rcaCase.csv.causeID=Cause ID
 rcaCase.csv.causeName=Cause name
 rcaCase.csv.causedById=Sub causes
-rcaCase.csv.relationsFromId=Other causes
+rcaCase.csv.relations=Relations
 
 monitoringPage.title=Monitoring
 monitoring.selectFilterTitle=Select filter

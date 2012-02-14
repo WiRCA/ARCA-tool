@@ -29,6 +29,8 @@ Download Play! framework from [here](http://koti.kapsi.fi/risto/play-master-e040
 
 We used this version of the Play! framework (master branch, [e0400da60371c365063fccf941663d1e7c237938](https://github.com/playframework/play/commit/e0400da60371c365063fccf941663d1e7c237938), because the latest stable version (1.2.3) [didn't have support for multiple databases](https://play.lighthouseapp.com/projects/57987/tickets/1129-play-documentation-and-milestones-out-of-synch) and a previous version from Github had a [bug](https://play.lighthouseapp.com/projects/57987/tickets/1037) with [ArchivedEventStream](http://www.playframework.org/documentation/api/1.2/play/libs/F.ArchivedEventStream.html).
 
+Add the installation path to [environment variable](http://en.wikipedia.org/wiki/Environment_variable) `PATH`.
+
 ## Database
 
 You can configure Play! framework to use [different database implementations](http://www.playframework.org/documentation/1.2.3/configuration#dbconf). Implemented configuration uses [MySQL](http://www.mysql.com/downloads/)-database.
