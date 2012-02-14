@@ -60,15 +60,17 @@ waitForTextPresent(&{'rcacase.share.dialog.invalidEmail'})
 // with another invalid email
 type('id=rcacase-share-dialog-invitedEmail-input','roope@roope@roope')
 click('css=input[type="submit"]')
-verifyTextPresent(&{'rcacase.share.dialog.invalidEmail'})
+waitForTextPresent(&{'rcacase.share.dialog.invalidEmail'})
 // and with another
 type('id=rcacase-share-dialog-invitedEmail-input','roope@roope')
 click('css=input[type="submit"]')
-verifyTextPresent(&{'rcacase.share.dialog.invalidEmail'})
+waitForTextPresent(&{'rcacase.share.dialog.invalidEmail'})
 
 // Tries to invite user to the case to the case with a valid email address
 type('id=rcacase-share-dialog-invitedEmail-input','roope@roope.xxx')
+verifyTextNotPresent(&{'rcacase.share.dialog.success'})
 click('css=input[type="submit"]')
+waitForTextPresent(&{'rcacase.share.dialog.success'})
 waitForTextPresent('roope@roope.xxx')
 click('//button[@type='button']')
 verifyTextPresent('Admin user')
@@ -101,7 +103,9 @@ waitForTextPresent(&{'rcacase.share.dialog.inviteEmail'})
 
 // Invites testikäyttäjä to the case
 type('id=rcacase-share-dialog-invitedEmail-input','roope@roope.roope')
+verifyTextNotPresent(&{'rcacase.share.dialog.success'})
 click('css=input[type="submit"]')
+waitForTextPresent(&{'rcacase.share.dialog.success'})
 waitForTextPresent('roope@roope.roope')
 verifyTextPresent('testikäyttäjä')
 click('//button[@type='button']')
