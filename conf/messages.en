@@ -143,6 +143,7 @@ rcacase.share.dialog.actions=Action
 rcacase.share.dialog.remove=Remove
 rcacase.share.dialog.close=Close
 rcacase.share.dialog.invalidEmail=Invalid email!
+rcacase.share.dialog.success=Invitation sent!
 
 register.title=Sign up
 register.titleSmall=Fill the form

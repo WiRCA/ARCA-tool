@@ -48,6 +48,9 @@
     var removeUserAction = #{jsAction @RCACaseController.removeUser(':rcaCaseId', ':isInvitedUser', ':email') /}
 
     $(function() {
+
+    $("#rcacase-share-dialog-success").hide();
+    $("#rcacase-share-dialog-invalidEmail").hide();
     $("#rcacase-share-dialog").dialog({
     autoOpen: false,
     height: 400,
@@ -79,7 +82,8 @@
 
     $.getJSON(inviteUserAction({rcaCaseId: rcaId, invitedEmail: email}), function(data) {
     if (data.invalidEmail == "true") {
-    $("#rcacase-share-dialog-invitedEmail-error").html("&{'rcacase.share.dialog.invalidEmail'}");
+    $("#rcacase-share-dialog-invalidEmail").show();
+    $("#rcacase-share-dialog-invalidEmail").delay(1700).fadeOut(1600, "linear");
     $("#rcacase-share-dialog-invitedEmail-error").show();
     } else {
     var invited = data.invited == "true" ? "invited-" : "";
@@ -91,6 +95,8 @@
         '</tr>').appendTo("table#rcacase-share-dialog-persons");
     $("#rcacase-share-dialog-invitedEmail-input").val("");
     $("#rcacase-share-dialog-invitedEmail-error").hide();
+    $("#rcacase-share-dialog-success").show();
+    $("#rcacase-share-dialog-success").delay(1700).fadeOut(1600, "linear");
     }
     });
     return false;
@@ -226,5 +232,7 @@
     <span id="rcacase-share-dialog-invitedEmail-error" class="error"></span>
     <input type="submit" class="btn primary" value="&{'rcacase.share.dialog.submitForm'}"/>
     #{/form}
+    <div id="rcacase-share-dialog-success" class="alert-message success">&{'rcacase.share.dialog.success'}</div>
+    <div id="rcacase-share-dialog-invalidEmail" class="alert-message error">&{'rcacase.share.dialog.invalidEmail'}</div>
     <span>&{'rcacase.share.dialog.whoHasAccess'}</span>
 </div>

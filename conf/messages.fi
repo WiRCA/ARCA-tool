@@ -142,6 +142,7 @@ rcacase.share.dialog.actions=Toiminnot
 rcacase.share.dialog.remove=Poista
 rcacase.share.dialog.close=Sulje
 rcacase.share.dialog.invalidEmail=Virheellinen sähköposti!
+rcacase.share.dialog.success=Kutsu lähetetty!
 
 register.title=Rekisteröidy
 register.titleSmall=Täytä kentät
