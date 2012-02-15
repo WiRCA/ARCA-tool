@@ -19,7 +19,6 @@
   ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
   ~ THE SOFTWARE.
   -->
-<!-- icons by "mjames" http://www.famfamfam.com/lab/icons/silk/ -->
 <!DOCTYPE html>
 
 <html>
@@ -474,7 +473,7 @@
 		
 		//border radius needs to be concerned while calculating height and width for a node
 		halfNodeWidth = isChrome*((menuwidth/2)*zoomLevel-10) + isFirefox*(menuwidth/2-10) + isIE*((menuwidth/2)*zoomLevel-10);
-		halfNodeHeight = isChrome*((menuheight/2)*zoomLevel) + isFirefox*(menuheight/2-20) + isIE*((menuheight/2)*zoomLevel-20);
+		halfNodeHeight = isChrome*((menuheight/2)*zoomLevel-20) + isFirefox*(menuheight/2-20) + isIE*((menuheight/2)*zoomLevel-20);
 		
 		//radius algorithm depends on amount of menu items in radial menu
 		if(menuheight > menuwidth){
