@@ -27,7 +27,6 @@
 #{set 'pageHeaderSmall'}#{/set}
 #{set 'activePage'}monitoring#{/set}
 #{set 'moreStyles'}
-#{press.stylesheet src:'bootstrap.min.css', compressed:false /}
 <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/monitoring.css'}">
 #{/set}
 #{set 'moreScripts'}
@@ -37,8 +36,8 @@
 #{press.compressed-script /}
 #{/set}
 
-<button id="info_button" class="btn info pull-right">info</button>
-<div id="help-block-message" class="alert-message block-message info">
+<button id="info_button" class="btn info info_btn pull-right">info</button>
+<div id="help-block-message" class="alert-message block-message info info_msg">
   <a id="help-block-message-close" class="close" href="#">&times;</a>
   <p><strong>&{'monitoring.help1'}</strong> &{'monitoring.help2'}</p>
 </div>
@@ -122,7 +121,7 @@
 	
 	function show_help(){
 		$('#info_button').attr("disabled", true);
-		$("#help-block-message").css({'position': 'absolute', 'margin-left':'20px', 'top': '53px', 'width': '580px', 'padding': '7px', 'opacity':'0.9'}).show();
+		$("#help-block-message").show();
 		$("#help-block-message-close").click(function() {
 			$(this).parent().hide();
 			$('#info_button').attr("disabled", false);
@@ -130,7 +129,6 @@
 	}
 
 	function init(){
-		$("#info_button").css({'position': 'relative', 'left': '37px', 'padding': '5px'});
 		$("#info_button").click(function() {
 			show_help();
 		});

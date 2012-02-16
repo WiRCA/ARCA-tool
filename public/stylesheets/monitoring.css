@@ -31,3 +31,16 @@
     float: right;
 }
 
+.info_msg {
+	position: absolute;
+	margin-left: 20px;
+	top: 40px;
+	width: 566px;
+	opacity: 0.9;
+}
+
+.info_btn {
+	position: relative;
+	left: 37px;
+	padding: 5px;
+}
