@@ -41,7 +41,7 @@ error.errorsInForm=Form contains error(s)
 applicationName=ARCA-tool
 applicationDescription=Root cause analysis method
 indexPage.title=Index page
-indexPage.info=Start by signing in or browse cases.
+indexPage.info=Not a registered user? Sign up or just sign in with your Google Account.
 
 aboutPage.title=About
 aboutPage.content=The ARCA-tool is a product of the  Aalto University School of Science course Software Development \

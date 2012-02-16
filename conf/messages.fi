@@ -39,7 +39,7 @@ logout=Kirjaudu ulos
 applicationName=ARCA-työkalu
 applicationDescription=Tapa tehdä juurisyyanalyysia
 indexPage.title=Etusivu
-indexPage.info=Aloita kirjautumalla sisään tai selaa analyysejä.
+indexPage.info=Etkö ole rekisteröitynyt? Rekisteröidy tai kirjaudu sisään Google tililläsi.
 
 aboutPage.title=Tietoa projektista
 aboutPage.content=ARCA-työkalu on Aalto-yliopiston Perustieteiden Korkeakoulun Ohjelmistonkehitysprojekti-kurssin \

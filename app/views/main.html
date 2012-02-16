@@ -61,7 +61,11 @@
 
             <div class="content">
               <div class="page-header">
-                <h1>#{get 'pageHeader' /} <small>#{get 'pageHeaderSmall' /}</small></h1>
+                <h1>#{get 'pageHeader' /} <small>#{get 'pageHeaderSmall' /}</small>   
+					#{if !session.username}
+						#{a @RegisterController.registerUser(), id:'register-link', class:'btn primary pull-right'}&{'register.title'}#{/a}
+					#{/if}
+                </h1>
               </div>
               <div class="row">
                 <div class="span4">
@@ -70,12 +74,8 @@
                     #{languages /}
                     #{if session.username}
                     <p>#{a @RCACaseController.createRCACase(), id:'createRCACase-link',
-                    class:'btn primary'}&{'user.createRCACase'}#{/a}</p>
-                    <p>#{a @UserController.index(), id:'showRCACases-link'}&{'user.allCases'}#{/a}</p>
+                    class:'btn large primary'}&{'user.createRCACase'}#{/a}</p>
                     #{/if}
-                    #{else}
-                      #{a @RegisterController.registerUser(), id:'register-link', class:'btn primary'}&{'register.title'}#{/a}
-                    #{/else}
                   </div>
                 </div>
                 <div class="span10">
