@@ -32,7 +32,6 @@ clickAt('//*[text()="testi"]')
 // show corrections in monitoring view
 clickAndWait('link=Monitoring')
 click('xpath=(//input[@name='whatToShow'])[2]')
-click('name=casesRadio')
 waitForTextPresent('testi')
 clickAt('//*[text()="testi"]')
 waitForTextPresent('Detected')

@@ -163,6 +163,8 @@ rcaCase.csv.causedById=Sub causes
 rcaCase.csv.relations=Relations
 
 monitoringPage.title=Monitoring
+monitoring.help1=Welcome to Monitoring page!
+monitoring.help2=Here you can monitor your cases and change statuses of causes and corrective actions. Start by selecting the case you want to monitor.
 monitoring.selectFilterTitle=Select filter
 monitoring.causesCheckbox=Causes
 monitoring.correctionsCheckbox=Corrective actions

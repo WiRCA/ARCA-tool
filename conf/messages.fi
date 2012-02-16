@@ -162,6 +162,8 @@ rcaCase.csv.causedById=Alasyyt
 rcaCase.csv.relations=Relaatiot
 
 monitoringPage.title=Monitorointi
+monitoring.help1=Tervetuloa monitorointisivulle!
+monitoring.help2=Täällä voit monitoroida RCA tapauksia ja muuttaa syiden ja korjaavien ideoiden statuksia. Aloita valitsemalla monitoroitava RCA tapaus.
 monitoring.selectFilterTitle=Valitse suodin
 monitoring.causesCheckbox=Syyt
 monitoring.correctionsCheckbox=Korjaavat toimenpiteet

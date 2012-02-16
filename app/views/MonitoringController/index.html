@@ -23,10 +23,11 @@
   -->
 #{extends 'main.html' /}
 #{set 'title'}&{'monitoringPage.title'}#{/set}
-#{set 'pageHeader'}&{'monitoringPage.title'}#{/set}
+#{set 'pageHeader'}&{'monitoringPage.title'} #{/set}
 #{set 'pageHeaderSmall'}#{/set}
 #{set 'activePage'}monitoring#{/set}
 #{set 'moreStyles'}
+#{press.stylesheet src:'bootstrap.min.css', compressed:false /}
 <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/monitoring.css'}">
 #{/set}
 #{set 'moreScripts'}
@@ -36,11 +37,19 @@
 #{press.compressed-script /}
 #{/set}
 
+<button id="info_button" class="btn info pull-right">info</button>
+<div id="help-block-message" class="alert-message block-message info">
+  <a id="help-block-message-close" class="close" href="#">&times;</a>
+  <p><strong>&{'monitoring.help1'}</strong> &{'monitoring.help2'}</p>
+</div>
+
 <div class="well" id="selectFilter">
+
     <h3 class="head">
         &{'monitoring.selectFilterTitle'}
         <span class="ui-icon ui-icon-default ui-icon-circle-triangle-n pull-right"></span>
     </h3>
+
     <div class="row">
         <div class="span5 input">
             <ul class="inputs-list">
@@ -82,26 +91,20 @@
             <ul class="inputs-list">
                 <li>
                     <label>
-                        <input type="checkbox" value="myCases" name="casesRadio">
+                        <input type="checkbox" value="myCases" name="casesRadio" checked=checked>
                         <span>&{'monitoring.myCasesRadio'}</span>
                     </label>
                 </li>
                 <li>
                     <label>
-                        <input type="checkbox" value="sharedCases" name="casesRadio">
+                        <input type="checkbox" value="sharedCases" name="casesRadio" checked=checked>
                         <span>&{'monitoring.casesSharedWithMeRadio'}</span>
                     </label>
                 </li>
                 <li>
                     <label>
-                        <input type="checkbox" value="publicCases" name="casesRadio">
+                        <input type="checkbox" value="publicCases" name="casesRadio" checked=checked>
                         <span>&{'monitoring.publicCasesRadio'}</span>
-                    </label>
-                </li>
-                <li>
-                    <label>
-                        <input type="checkbox" value="allCases" name="casesRadio">
-                        <span>&{'monitoring.allCasesRadio'}</span>
                     </label>
                 </li>
             </ul>
@@ -110,11 +113,59 @@
 </div>
 
 <div id="rcaCaseSelect"></div>
-
 <div id="causesAndCorrections"></div>
 
 <script type="text/javascript">
 	var ajaxRequest;
+	var caseSelections;
+	init();
+	
+	function show_help(){
+		$('#info_button').attr("disabled", true);
+		$("#help-block-message").css({'position': 'absolute', 'margin-left':'20px', 'top': '53px', 'width': '580px', 'padding': '7px', 'opacity':'0.9'}).show();
+		$("#help-block-message-close").click(function() {
+			$(this).parent().hide();
+			$('#info_button').attr("disabled", false);
+		});
+	}
+
+	function init(){
+		$("#info_button").css({'position': 'relative', 'left': '37px', 'padding': '5px'});
+		$("#info_button").click(function() {
+			show_help();
+		});
+		show_help();
+		$("#help-block-message").delay(7000).fadeOut("fast", function(){
+			$('#info_button').attr("disabled", false);
+		});
+		
+		// if user is not logged in, only public cases checkbox is unabled
+		#{if controllers.SecurityController.getCurrentUser() == null }
+			$("input[name='casesRadio'][value='myCases']").attr("checked", false);
+			$("input[name='casesRadio'][value='sharedCases']").attr("checked", false);
+			$("input[name='casesRadio'][value='myCases']").attr("disabled", true);
+			$("input[name='casesRadio'][value='sharedCases']").attr("disabled", true);
+		#{/if}
+			
+		caseSelections = "";
+		$("input[name='casesRadio']:checked").each(function() {
+	        caseSelections += $(this).attr("value") + ",";
+	    });
+		if (caseSelections != "") {
+	        $("#rcaCaseSelect").html("<img src=\"@{'/public/images/wait-spinner.gif'}\">");
+	        var rcaCaseSelectingAction = #{jsAction @MonitoringController.rcaCaseSelecting(':showCases') /}
+			if (ajaxRequest != undefined) {
+				ajaxRequest.abort();
+			}
+
+	        ajaxRequest = $.get(rcaCaseSelectingAction({showCases: caseSelections}), function(html) {
+				$("#rcaCaseSelect").html(html);
+			});
+	    } else {
+	        $("#rcaCaseSelect").html("");
+	        $("#causesAndCorrections").html("");
+	    }
+    }
 
     $(function() {
         $('.well .head').live("click", function(event) {
@@ -161,21 +212,7 @@
     });
 
     $("input[name='casesRadio']").live("change", function(event) {
-        if ($(event.target).attr("value") == "allCases") {
-            if ($("input[name='casesRadio'][value='allCases']").attr("checked")) {
-                $("input[name='casesRadio']").each(function() {
-                    $(this).attr("checked", "checked");
-                });
-                $("#rcaCaseSelect").html("");
-                return false;
-            }
-        } else {
-            if ($(event.target).attr("checked") != "checked") {
-                $("input[name='casesRadio'][value='allCases']").removeAttr("checked");
-            }
-        }
-
-        var caseSelections = "";
+		caseSelections = "";
         $("input[name='casesRadio']:checked").each(function() {
             caseSelections += $(this).attr("value") + ",";
         });
