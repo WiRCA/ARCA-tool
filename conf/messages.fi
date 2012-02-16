@@ -28,7 +28,7 @@ dialog.cancel=Peruuta
 submit=Lähetä
 
 secure.title=
-secure.username=Sähköpostiosoite
+secure.username=Sähköposti
 secure.password=Salasana
 secure.remember=Muista minut
 secure.signin=Kirjaudu
