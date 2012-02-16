@@ -63,7 +63,7 @@
 
 #{navigation /}
 
-    <div id="help-message" class="alert-message warning">
+    <div id="help-message" class="alert-message block-message info">
       <a id="help-message-close" class="close" href="#">&times;</a>
       <p><strong>&{'editor.help1'}</strong> &{'editor.help2'}</p>
     </div>
@@ -457,6 +457,13 @@
       function show_radial_menu(given_node){
 
         selectedNode = given_node;
+		if(given_node.id == ${rcaCase.problem.id}){
+			$("#" + given_node.id).addClass("rootNodeBoxSelected");
+		}
+		else{
+			$("#" + given_node.id).addClass("nodeBoxSelected");
+		}
+		
         //get the position of the placeholder element
         menupos   = $("#"+given_node.id).offset();
         menuwidth = $("#"+given_node.id).width();
@@ -580,7 +587,7 @@
           },
           //Add also a click handler to nodes
           onClick: function(node){
-						$("#help-message").hide();
+			$("#help-message").hide();
             if(node){
               if (relationFromNode) {
                 $.post(addRelation({fromId: relationFromNode.id, toID: node.id}));
@@ -844,6 +851,12 @@
 
     defaultEdgesForSelectedNode = function(selectedNode) {
       if (selectedNode != undefined) {
+			if(selectedNode.id == ${rcaCase.problem.id}){
+				$("#" + selectedNode.id).removeClass("rootNodeBoxSelected").addClass("rootNodeBox");
+			}
+			else{
+				$("#" + selectedNode.id).removeClass("nodeBoxSelected").addClass("nodeBox");
+			}
         selectedNode.eachAdjacency(function(adj) {
           if(adj.data.$type == "arrow") {
             adj.setDataset('current', {

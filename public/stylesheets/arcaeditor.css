@@ -65,6 +65,15 @@
   background-image: -webkit-linear-gradient(top, #00CC66, #A5C3F0); /* Chrome 10+, Saf5.1+, iOS 5+ */
   
 }
+.nodeBoxSelected {
+  background-color: #336699;
+  background-image: -webkit-linear-gradient(top, #A5C3F0, #336699); /* Chrome 10+, Saf5.1+, iOS 5+ */
+  border-top: 3px solid #000066;
+  border-right: 3px solid #000066;
+  border-left: 3px solid #3366CC;
+  border-bottom: 3px solid #3366CC;
+
+}
 
 .rootNodeBox {
 	color:rgb(255,255,255);
@@ -80,6 +89,12 @@
     /* background-image:     -ms-linear-gradient(top, #528BE0, #2569D0); /* IE10 */
     /* background-image:      -o-linear-gradient(top, #528BE0, #2569D0); /* Opera 11.10+ */
     /* background-image:         linear-gradient(to bottom, #528BE0, #2569D0); */
+}
+.rootNodeBoxSelected {
+  border-top: 3px solid #000066;
+  border-right: 3px solid #000066;
+  border-left: 3px solid #3366CC;
+  border-bottom: 3px solid #3366CC;
 }
 
 #radial_container {
