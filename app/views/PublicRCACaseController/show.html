@@ -193,11 +193,15 @@
     function addNewCause() {
         var addCauseAjax = #{jsAction @CauseController.addCause(':causeId', ':name') /};
         var name = $.trim($("#causeName").val());
-              if (name != null && name != "" && name.charAt(0) != " ") {
-                radmenu_fadeOut();
-                $("#addcause-modal").modal('hide');
-                $.post(addCauseAjax({causeId: globalSelectedNode, name: encodeURIComponent(name)}));
-              }
+	    if (name == undefined || name == "") {
+	      $("#causeName").parents(".clearfix").addClass("error");
+	      return;
+	    } else {
+	      $("#causeName").parents(".clearfix").removeClass("error");
+	    }
+        radmenu_fadeOut();
+        $("#addcause-modal").modal('hide');
+        $.post(addCauseAjax({causeId: globalSelectedNode, name: encodeURIComponent(name)}));
     };
 </script>
 
@@ -226,11 +230,15 @@
     function renameCause() {
         var renameCauseAjax = #{jsAction @CauseController.renameCause(':causeId', ':name') /};
         var name = $.trim($("#renamedName").val());
-        if (name != null && name != "" && name.charAt(0) != " ") {
-            radmenu_fadeOut();
-            $("#renameCause-modal").modal('hide');
-            $.post(renameCauseAjax({causeId: globalSelectedNode, name: encodeURIComponent(name)}));
-        }
+        if (name == undefined || name == "") {
+	      $("#renamedName").parents(".clearfix").addClass("error");
+	      return;
+	    } else {
+	      $("#renamedName").parents(".clearfix").removeClass("error");
+	    }
+        radmenu_fadeOut();
+        $("#renameCause-modal").modal('hide');
+        $.post(renameCauseAjax({causeId: globalSelectedNode, name: encodeURIComponent(name)}));
     };
 </script>
 
