@@ -77,7 +77,7 @@ public class MonitoringController extends Controller {
 
 	public static void causesAndCorrections(@As(",") List<String> whatToShow, @As(",") List<Long> selectedCases,
 	                                        Boolean allCases, @As(",") List<Integer> selectedCauseStatuses,
-	                                        @As(",") List<Integer> selectedCorrectionStatuses) {
+	                                        @As(",") List<Integer> selectedCorrectionStatuses, Boolean csvExport) {
 		Boolean showCauses = whatToShow.contains("causes");
 		Boolean showCorrections = whatToShow.contains("corrections");
 		User user = SecurityController.getCurrentUser();
@@ -114,10 +114,17 @@ public class MonitoringController extends Controller {
 			}
 		}
 
+		if (csvExport) {
+			response.setHeader("Content-Disposition", "attachment;filename=arca-monitoring.csv");
+			request.format = "text/csv";
+			renderTemplate("MonitoringController/extractCSV.csv", user, currentUserId, showCauses, causes,
+			               showCorrections, corrections);
+		}
+
 		StatusOfCause[] causeStatuses = StatusOfCause.values();
 		StatusOfCorrection[] correctionStatuses = StatusOfCorrection.values();
 
-		render(user, currentUserId, showCauses, causes,showCorrections,
+		render(user, currentUserId, showCauses, causes, showCorrections,
 		       corrections, causeStatuses, correctionStatuses);
 	}
 
