@@ -25,7 +25,7 @@ Current version includes:
 
 ## Play! framework
 
-Download Play! framework from [here](http://koti.kapsi.fi/risto/play-master-e0400da.zip) (build from master branch, [e0400da60371c365063fccf941663d1e7c237938](https://github.com/playframework/play/commit/e0400da60371c365063fccf941663d1e7c237938).
+Download Play! framework from [here](http://koti.kapsi.fi/risto/play-master-e0400da.zip) (build from master branch, [e0400da60371c365063fccf941663d1e7c237938](https://github.com/playframework/play/commit/e0400da60371c365063fccf941663d1e7c237938)).
 
 We used the above version of the Play! framework, because the latest stable version (1.2.3) [didn't have support for multiple databases](https://play.lighthouseapp.com/projects/57987/tickets/1129-play-documentation-and-milestones-out-of-synch) and a previous version from Github had a [bug](https://play.lighthouseapp.com/projects/57987/tickets/1037) with [ArchivedEventStream](http://www.playframework.org/documentation/api/1.2/play/libs/F.ArchivedEventStream.html).
 
