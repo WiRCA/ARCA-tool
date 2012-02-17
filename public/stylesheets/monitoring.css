@@ -30,16 +30,3 @@
     margin-right: 2px;
     float: right;
 }
-
-.info_msg {
-	position: absolute;
-	top: 40px;
-	width: 586px;
-	opacity: 0.9;
-}
-
-.info_btn {
-	position: relative;
-	left: 37px;
-	padding: 5px;
-}

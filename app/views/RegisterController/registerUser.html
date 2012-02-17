@@ -37,7 +37,7 @@
     <div class="clearfix${errors.forKey('user.name') ? ' error' : ''}" id="nameFieldP">
         <label for="nameFieldRegister">&{'register.name'}</label>
         <div class="input">
-        <input type="text" name="user.name" id="nameFieldRegister" value="${flash['user.name']}" />
+        <input type="text" name="user.name" id="nameFieldRegister" value="${flash['user.name']}" maxlength="64" />
         #{ifError 'user.name'}<span class="help-inline">#{error 'user.name' /}</span>#{/ifError}
         </div>
     </div>
@@ -52,7 +52,7 @@
         <input type="hidden" name="rcaCaseId" value="${rcaCaseId}" />
         #{/if}
         #{else}
-        <input type="text" name="user.email" id="emailFieldRegister" value="${flash['user.email']}" />
+        <input type="text" name="user.email" id="emailFieldRegister" value="${flash['user.email']}" maxlength="255" />
         #{/else}
         #{ifError 'user.email'}<span class="help-inline">#{error 'user.email' /}</span>#{/ifError}
         </div>

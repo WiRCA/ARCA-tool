@@ -185,6 +185,7 @@ monitoring.noCasesFound=No matching cases
 monitoring.noMatchingItemsFound=Matching items not found
 monitoring.correctionNameAndDescription=Corrective action
 monitoring.selectAllCasesButton=Select all cases
+monitoring.csv.exportCSV=Export CSV
 
 monitoring.statusCause.DETECTED=Detected
 monitoring.statusCause.ELIMINATION=Elimination
