@@ -31,7 +31,8 @@ public enum StatusOfCorrection {
 
 	IDEA(1),
 	WILL_BE_IMPLEMENTED(2),
-	IMPLEMENTED(3);
+	IMPLEMENTED(3),
+	REJECTED(4);
 
 	public Integer value;
 

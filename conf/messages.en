@@ -187,9 +187,11 @@ monitoring.selectAllCasesButton=Select all cases
 monitoring.statusCause.DETECTED=Detected
 monitoring.statusCause.ELIMINATION=Elimination
 monitoring.statusCause.WILL_NOT_FIX=Won't fix
+monitoring.statusCause.FIXED=Fixed
 monitoring.statusCorrection.IDEA=Idea
 monitoring.statusCorrection.IMPLEMENTED=Implemented
 monitoring.statusCorrection.WILL_BE_IMPLEMENTED=Will be implemented
+monitoring.statusCorrection.REJECTED=Rejected
 
 addCause.title=Add cause
 addCause.name=Cause name

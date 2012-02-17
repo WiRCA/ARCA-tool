@@ -186,9 +186,11 @@ monitoring.selectAllCasesButton=Valitse kaikki analyysit
 monitoring.statusCause.DETECTED=Havaittu
 monitoring.statusCause.ELIMINATION=Korjataan
 monitoring.statusCause.WILL_NOT_FIX=Ei korjata
+monitoring.statusCause.FIXED=Korjattu
 monitoring.statusCorrection.IDEA=Idea
 monitoring.statusCorrection.IMPLEMENTED=Toteutettu
 monitoring.statusCorrection.WILL_BE_IMPLEMENTED=Toteutetaan
+monitoring.statusCorrection.REJECTED=Ei korjata
 
 addCause.title=Lisää syy
 addCause.name=Syyn nimi
