@@ -95,7 +95,7 @@ createRCA.companyName=Yrityksen nimi
 createRCA.companySize=Työntekijöiden määrä yrityksessänne?
 createRCA.companyProducts=Mitkä ovat yrityksenne päätuotteet tai tuotetyypit?
 createRCA.public=Onko tämä julkinen analyysi?
-createRCA.create=Luo RCA analyysi!
+createRCA.create=Luo analyysi!
 createRCA.isMultinational=Monikansallinen yritys?
 
 editor.help1=Uusi käyttäjä?
