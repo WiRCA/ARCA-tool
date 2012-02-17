@@ -131,44 +131,34 @@
   </script>
   
   <div id="addcorrection-modal" class="modal hide">
-    <form action="" onsubmit="addCorrectiveIdea(); return false;" style="margin: 0; padding: 0;">
     <div class="modal-header">
       <a href="#" class="close">&times;</a>
       <h3>&{'addCorrectiveAction.title'}</h3>
     </div>
-    <table>
-      <tr>
-        <td>
-          <div id="ideaHeader">
-            <b>&{'addCorrectiveAction.ideaHeader'}</b>
+    <form action="" onsubmit="addCorrectiveIdea(); return false;" style="margin: 0; padding: 0;">
+      <div class="modal-body">
+        <div class="clearfix">
+          <label for="ideaName">&{'addCorrectiveAction.name'}</label>
+          <div class="input">
+            <input type="text" id="ideaName" />
           </div>
-          <div id="my_modal_body">
-
+        </div>
+        <div class="clearfix">
+          <label for="ideaDescription">&{'addCorrectiveAction.description'}</label>
+          <div class="input">
+            <textarea rows="3" id="ideaDescription"></textarea>
           </div>
-        </td>
-        <td>
-          <div class="modal-body">
-            <div class="clearfix">
-              <label for="ideaName">&{'addCorrectiveAction.name'}</label>
-              <div class="input">
-                <input type="text" id="ideaName" />
-              </div>
-            </div>
-            <div class="clearfix">
-              <label for="ideaDescription">&{'addCorrectiveAction.description'}</label>
-              <div class="input">
-                <textarea rows="3" id="ideaDescription"></textarea>
-              </div>
-            </div>
-          </div>
-        </td>
-      </tr>
-    </table>
-    <div class="modal-footer">
+        </div>
+      </div>
       <input id="submitCorrectiveActionButton" class="btn primary"type="submit" value="&{'addCorrectiveAction.submit'}"/>
+    </form>
+    <br />
+    <div id="my_modal_body">
+      
+    </div>
+    <div class="modal-footer">
       <a href="#" class="btn secondary" onclick="$('#addcorrection-modal').modal('hide')">&{'dialog.cancel'}</a>
     </div>
-    </form>
   </div>
 
 <div id="addcause-modal" class="modal hide">
@@ -446,18 +436,11 @@
             }
             else if($selected[0].id == "radmenu-event-addCorrection") {
               var $modal_body = $("#my_modal_body");
-              var getCorrectionNames = #{jsAction @CauseController.getCorrectionNames(':causeId') /}
-              $.get(getCorrectionNames({causeId: selectedNode.id}), function(data) {
+              var getCorrections = #{jsAction @CauseController.getCorrections(':causeId') /}
+              $.get(getCorrections({causeId: selectedNode.id}), function(data) {
                 $modal_body.html(" ");
-                if (data != "") {
-                  $("#ideaHeader").show();
-                  $modal_body.append("<ul>");
-                  for (var i = 0; i < data.length; i++) {
-                      $modal_body.append("<li>"+data[i]+"</li>");
-                  }
-                  $modal_body.append("</ul>");
-                }else {
-                  $("#ideaHeader").hide();
+                if (data) {
+                  $("#my_modal_body").html(data);
                 };
               });
               $('#addcorrection-modal').modal('show');

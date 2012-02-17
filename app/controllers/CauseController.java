@@ -35,7 +35,7 @@ import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.With;
 
-import java.util.ArrayList;
+import java.util.Set;
 
 /**
  * Methods related to causes.
@@ -102,19 +102,18 @@ public class CauseController extends Controller {
 	}
 	
 	/**
-	 * Gets the names of the corrective actions of a cause.
+	 * Gets the corrective actions of a cause and renders them in a variable.
 	 *
 	 * @param causeId
 	 *
 	 * @return
 	 */
-	public static void getCorrectionNames(Long causeId) {
+	public static void getCorrections(Long causeId) {
 		Cause cause = Cause.findById(causeId);
-    ArrayList<String> listOfNames = new ArrayList<String>();
-    for (Correction correction : cause.corrections) {
-      listOfNames.add(correction.name);
-    }
-		renderJSON(listOfNames);
+    Set<Correction> listOfCorrections = cause.corrections;
+    User user = SecurityController.getCurrentUser();
+
+		render(listOfCorrections, user);
 	}
 
 	/**
