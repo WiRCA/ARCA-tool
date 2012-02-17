@@ -440,17 +440,17 @@
               jQuery("#radial_menu").radmenu("hide");
             }
             else if($selected[0].id == "radmenu-event-renameCause"){
-                $('#renamedName').val(selectedNode.name);
-                $('#renameCause-modal').modal('show');
-                globalSelectedNode = selectedNode.id;
+              $('#renamedName').val(selectedNode.name);
+              $('#renameCause-modal').modal('show');
+              globalSelectedNode = selectedNode.id;
             }
             else if($selected[0].id == "radmenu-event-addCause"){
-                $('#addcause-modal').modal('show');
-                globalSelectedNode = selectedNode.id;
+              $('#addcause-modal').modal('show');
+              globalSelectedNode = selectedNode.id;
             }
             else if($selected[0].id == "radmenu-event-addRelation"){
               relationFromNode = selectedNode;
-			  $("#relation-help-message").show();
+              $("#relation-help-message").show();
               radmenu_fadeOut();
               defaultEdgesForSelectedNode(selectedNode);
             }
@@ -463,7 +463,7 @@
                   $("#ideaHeader").show();
                   $modal_body.append("<ul>");
                   for (var i = 0; i < data.length; i++) {
-                      $modal_body.append("<li>"+data[i]+"</li>");
+                    $modal_body.append("<li>"+data[i]+"</li>");
                   }
                   $modal_body.append("</ul>");
                 }else {
@@ -474,53 +474,49 @@
               globalSelectedNode = selectedNode.id;
             }
           },
-        angleOffset: 45 // in degrees
+        angleOffset: 90 // in degrees
       });
       function show_radial_menu(given_node){
-
         selectedNode = given_node;
-		if(given_node.id == ${rcaCase.problem.id}){
-			$("#" + given_node.id).addClass("rootNodeBoxSelected");
-		}
-		else{
-			$("#" + given_node.id).addClass("nodeBoxSelected");
-		}
-		
+        if(given_node.id == ${rcaCase.problem.id}){
+          $("#" + given_node.id).addClass("rootNodeBoxSelected");
+        }else{
+          $("#" + given_node.id).addClass("nodeBoxSelected");
+        }
         //get the position of the placeholder element
         menupos   = $("#"+given_node.id).offset();
         menuwidth = $("#"+given_node.id).width();
-		menuheight = $("#"+given_node.id).height();
+        menuheight = $("#"+given_node.id).height();
 
-		isFirefox = 0; // this is 1 if Firefox is used.
-		isChrome = 0; // this is 1 if Chrome or Safari is used.
-		isIE = 0; // this is 1 if IE is used.
-		
-		// checks the browser
-		if($.browser.mozilla){isFirefox = 1;}
-		else if($.browser.msie){isIE = 1;}
-		else {isChrome = 1;}
-		
-		//border radius needs to be concerned while calculating height and width for a node
-		halfNodeWidth = isChrome*((menuwidth/2)*zoomLevel-10) + isFirefox*(menuwidth/2-10) + isIE*((menuwidth/2)*zoomLevel-10);
-		halfNodeHeight = isChrome*((menuheight/2)*zoomLevel-20) + isFirefox*(menuheight/2-20) + isIE*((menuheight/2)*zoomLevel-20);
-		
-		//radius algorithm depends on amount of menu items in radial menu
-		if(menuheight > menuwidth){
-			newRadius = halfNodeHeight + 60;
-		}
-		else {
-			newRadius = halfNodeWidth + 30;
-		}
-		jQuery("#radial_menu").radmenu("opts").radius = newRadius;
+        isFirefox = 0; // this is 1 if Firefox is used.
+        isChrome = 0; // this is 1 if Chrome or Safari is used.
+        isIE = 0; // this is 1 if IE is used.
 
-		 //show the menu directly over the placeholder
+        // checks the browser
+        if($.browser.mozilla){isFirefox = 1;}
+        else if($.browser.msie){isIE = 1;}
+        else {isChrome = 1;}
+
+        //border radius needs to be concerned while calculating height and width for a node
+        halfNodeWidth = isChrome*((menuwidth/2)*zoomLevel-10) + isFirefox*(menuwidth/2-10) + isIE*((menuwidth/2)*zoomLevel-10);
+        halfNodeHeight = isChrome*((menuheight/2)*zoomLevel-20) + isFirefox*(menuheight/2-20) + isIE*((menuheight/2)*zoomLevel-20);        
+        newRadius = Math.sqrt(Math.pow(halfNodeWidth,2)+Math.pow(halfNodeHeight,2));
+        //radius algorithm depends on amount of menu items in radial menu
+        if(menuheight > menuwidth){
+          newRadius += 50;
+        } else {
+          newRadius += 40;
+        }
+        jQuery("#radial_menu").radmenu("opts").radius = newRadius;
+
+        //show the menu directly over the placeholder
         $radial_menu.css({ "left": menupos.left + halfNodeWidth + "px", "top": menupos.top + halfNodeHeight + "px" }).show();
         radmenu_fadeIn(selectedNode);
         $("#radial_menu").disableSelection();
       }
 
-       $("#infovis").css("width", window.innerWidth + 1000);
-       $("#infovis").css("height", window.innerHeight + 1000);
+      $("#infovis").css("width", window.innerWidth + 1000);
+      $("#infovis").css("height", window.innerHeight + 1000);
 
       // init ForceDirected
       var fd = new $jit.ForceDirected({
@@ -609,14 +605,13 @@
           },
           //Add also a click handler to nodes
           onClick: function(node){
-			$("#help-message").hide();
+            $("#help-message").hide();
             if(node){
               if (relationFromNode) {
                 $.post(addRelation({fromId: relationFromNode.id, toID: node.id}));
                 relationFromNode = null;
-				$("#relation-help-message").fadeOut(500, "linear");
-              }
-              else {
+				        $("#relation-help-message").fadeOut(500, "linear");
+              } else {
                 defaultEdgesForSelectedNode(selectedNode);
                 jQuery("#corrections_link").fadeOut(400);
                 show_radial_menu(node);
@@ -628,7 +623,7 @@
                 });
                 fd.plot();
               }
-            } else{
+            } else {
               defaultEdgesForSelectedNode(selectedNode);
               jQuery("#radial_menu").radmenu("hide");
               jQuery("#corrections_link").fadeOut(400);
@@ -716,7 +711,7 @@
                           newNode.data.nodeLevel = oldNode.data.nodeLevel+1;
                           newNode.setPos(oldNode.getPos('end'),'current');
                           newNode.getPos('end').y = oldNode.getPos('end').y + newNodesYCoordinate;
-						  newNode.getPos('end').x = oldNode.getPos('end').x + newNodesXCoordinate;
+						              newNode.getPos('end').x = oldNode.getPos('end').x + newNodesXCoordinate;
                           newNode.data.xCoordinate = newNodesXCoordinate;
                           newNode.data.yCoordinate = newNodesYCoordinate;
                           fd.plot();
@@ -786,50 +781,13 @@
         node.setPos(new $jit.Complex(0, -300 + nodeLevel*80), 'current');
         node.setPos(new $jit.Complex(0, -300 + nodeLevel*80), 'end');
       });
-      traverseWholeTree(rootNode);
+      updateChildrenVectors(rootNode);
       fd.animate({
         modes: ['linear'],
         transition: $jit.Trans.Elastic.easeOut,
         duration: 1500
       });
 
-    }
-    traverseWholeTree = function(node){
-      placeChildsFromParent(node);
-      node.eachAdjacency(function(adj) {
-        if(adj.nodeTo.data.nodeLevel>node.data.nodeLevel){
-          traverseWholeTree(adj.nodeTo);
-        }
-      });
-    }
-
-    placeChildsFromParent = function(nodeFrom){
-      var childrens = [];
-      var childrensWidth = 0;
-      //count children
-      nodeFrom.eachAdjacency(function(adj) {
-        if(adj.data.$type != "arrow" &&
-				adj.nodeTo.data.nodeLevel>nodeFrom.data.nodeLevel && !(adj.nodeTo.data.locked)){
-          childrens.push(adj.nodeTo);
-          childrensWidth += $("#"+adj.nodeTo.id).width()+25;
-        }
-      });
-      childrensWidth -= 25;
-      //left-most side position for nodes
-      var nodePos = nodeFrom.getPos('end');
-      var leftSideX = nodePos.x-childrensWidth/2;
-      //place them
-      var runningWidth = 0;
-      var iChildsWidth = 0;
-      for(var i = 0; i < childrens.length; ++i){
-        if(childrens[i].data.xCoordinate!=="" || childrens[i].data.yCoordinate!==""){
-          childrens[i].setPos(new $jit.Complex(nodePos.x+childrens[i].data.xCoordinate,nodePos.y+childrens[i].data.yCoordinate), 'end');
-        }else{
-          iChildsWidth = $("#"+childrens[i].id).width();
-          childrens[i].setPos(new $jit.Complex(leftSideX + runningWidth + iChildsWidth/2, childrens[i].getPos('end').y), 'end');
-          runningWidth += iChildsWidth+25;
-        }
-      }
     }
 
     updateChildrenVectors = function(node) {
