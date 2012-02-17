@@ -172,7 +172,7 @@
         title:"${rcaCase.caseName}", 'data-content':"${rcaCase.description}"}${rcaCase.caseName}#{/a}
         &{'rcacase.lastmodified'} ${rcaCase.updated.since(true)}
         &{'user.created'} ${rcaCase.created.since(true)}
-        <a id="rcacase-share-${rcaCase.id}" href="javascript:;" class="btn small success">&{'rcacase.share'}</a>
+        <a id="rcacase-share-${rcaCase.id}" href="javascript:;" class="btn small primary">&{'rcacase.share'}</a>
         #{a @RCACaseController.extractCSV(rcaCase.id), class:'btn small'}&{'rcaCase.csv.exportCSV'}#{/a}
     </li>
     #{/list}
@@ -237,7 +237,7 @@
     <label for="rcacase-share-dialog-invitedEmail-input"><b>&{'rcacase.share.dialog.inviteEmail'}</b></label>
     <input id="rcacase-share-dialog-invitedEmail-input" type="text" name="invitedEmail"/>
     <span id="rcacase-share-dialog-invitedEmail-error" class="error"></span>
-    <input type="submit" class="btn primary" value="&{'rcacase.share.dialog.submitForm'}"/>
+    <input type="submit" class="btn success" value="&{'rcacase.share.dialog.submitForm'}"/>
     #{/form}
     <div id="rcacase-share-dialog-success" class="alert-message success">&{'rcacase.share.dialog.success'}</div>
     <div id="rcacase-share-dialog-invalidEmail" class="alert-message error">&{'rcacase.share.dialog.invalidEmail'}</div>
