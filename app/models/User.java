@@ -46,7 +46,6 @@ public class User extends Model {
 	@Required
 	@Email
 	@MaxSize(value = 255)
-	@MinSize(value = 5)
 	public String email;
 
 	@Required

@@ -23,7 +23,7 @@
   -->
 #{extends 'main.html' /}
 #{set 'title'}&{'user.allCases'}#{/set}
-#{set 'pageHeader'}&{'user.welcomeTitle', user.name}#{/set}
+#{set 'pageHeader'}&{'user.welcomeTitle', user.name.escape().raw()}#{/set}
 #{set 'pageHeaderSmall'}#{/set}
 #{set 'activePage'}index#{/set}
 
@@ -72,9 +72,9 @@
     $("#rcacase-share-dialog-share-form").submit(function() {
     var rcaId = $("#rcacase-share-dialog-rcaCaseId-input").val();
     var email = $.trim($("#rcacase-share-dialog-invitedEmail-input").val());
-	
+
 	/* Check if the input is an empty string */
-	if(email = null) {
+	if(email == null) {
 	    $("#rcacase-share-dialog-invitedEmail-error").show();
 	}
 
