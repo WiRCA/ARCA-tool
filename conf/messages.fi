@@ -106,7 +106,7 @@ editor.addRelation=Lisää relaatio. Klikkaa toista syytä lisätäksesi relaati
 editor.delete=Poista
 editor.addCorrection=Lisää korjaava idea
 editor.addRelationInfo1=Relaatiotila on nyt päällä.
-editor.addRelationInfo2=Klikkaa toista solmua lisätäksesi relaatio.
+editor.addRelationInfo2=Klikkaa toista solmua lisätäksesi relaatio tai paina ESC peruuttaaksesi.
 
 showRCACase.title=RCA analyysi %s
 showRCACase.owner=Omistaja
