@@ -6,7 +6,7 @@
 <table>
 #{list listOfCorrections, as:'correction'}
 <tr id="correction-${correction.id}">
-    <td colspan="2"><dl><dt>${correction.name.escape().raw()}</dt><dd>${correction.description.escape().raw()}</dd></dl></td>                                                        
+    <td width="100%" colspan="2"><dl><dt>${correction.name.escape().raw()}</dt><dd>${correction.description.escape().raw()}</dd></dl></td>                                                        
     <td id="correction-${correction.id}-likes">${correction.countLikes()}</td>
     #{if user}<td>
         <a href="javascript:" id="correction-${correction.id}-likebutton"

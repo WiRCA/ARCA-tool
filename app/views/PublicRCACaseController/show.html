@@ -70,7 +70,7 @@
 	<div id="relation-help-message" class="alert-message warning">
 		<p><strong>&{'editor.addRelationInfo1'}</strong> &{'editor.addRelationInfo2'}</p>
 	</div>
-    <div id="correction-help-message" class="alert-message warning">&{'addCorrectiveAction.success'}</div>
+    <div id="correction-help-message" class="alert-message success">&{'addCorrectiveAction.success'}</div>
     <div id="infovis">
       
     </div>
@@ -130,30 +130,31 @@
     })
   </script>
   
-  <div id="addcorrection-modal" class="modal hide">
+  <div id="addcorrection-modal" class="modal hide" style="overflow: auto; max-height:580px;">
     <div class="modal-header">
       <a href="#" class="close">&times;</a>
       <h3>&{'addCorrectiveAction.title'}</h3>
     </div>
-    <form action="" onsubmit="addCorrectiveIdea(); return false;" style="margin: 0; padding: 0;">
-      <div class="modal-body">
-        <div class="clearfix">
-          <label for="ideaName">&{'addCorrectiveAction.name'}</label>
-          <div class="input">
-            <input type="text" id="ideaName" />
+    <div style="left-margin:10; text-align:left;padding:0;" class="modal-body">
+      <form class="form-stacked" action="" onsubmit="addCorrectiveIdea(); return false;">
+
+          <div class="clearfix">
+            <label for="ideaName">&{'addCorrectiveAction.name'}</label>
+            <div class="input">
+              <input type="text" id="ideaName" />
+            </div>
           </div>
-        </div>
-        <div class="clearfix">
-          <label for="ideaDescription">&{'addCorrectiveAction.description'}</label>
-          <div class="input">
-            <textarea rows="3" id="ideaDescription"></textarea>
+          <div class="clearfix">
+            <label for="ideaDescription">&{'addCorrectiveAction.description'}</label>
+            <div class="input">
+              <textarea rows="2" id="ideaDescription" style="width:500px; maxheight:50px; rows:2;"></textarea>
+            </div>
           </div>
-        </div>
-      </div>
-      <input id="submitCorrectiveActionButton" class="btn primary"type="submit" value="&{'addCorrectiveAction.submit'}"/>
-    </form>
-    <br />
-    <div id="my_modal_body">
+ 
+        <input id="submitCorrectiveActionButton" class="btn primary"type="submit" value="&{'addCorrectiveAction.submit'}"/>
+      </form>
+    </div>
+    <div id="my_modal_body"style="left-margin:10px; text-align:left; padding:10px;">
       
     </div>
     <div class="modal-footer">
