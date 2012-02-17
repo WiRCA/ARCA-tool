@@ -26,9 +26,7 @@ package models;
 
 import org.hibernate.annotations.Sort;
 import org.hibernate.annotations.SortType;
-import play.data.validation.Email;
-import play.data.validation.Password;
-import play.data.validation.Required;
+import play.data.validation.*;
 import play.db.jpa.Model;
 import utils.EncodingUtils;
 
@@ -47,9 +45,13 @@ public class User extends Model {
 
 	@Required
 	@Email
+	@MaxSize(value = 255)
+	@MinSize(value = 5)
 	public String email;
 
 	@Required
+	@MaxSize(value = 64)
+	@MinSize(value = 1)
 	public String name;
 
 	@Required
