@@ -36,10 +36,9 @@
 #{press.compressed-script /}
 #{/set}
 
-<button id="info_button" class="btn info info_btn pull-right">info</button>
 <div id="help-block-message" class="alert-message block-message info info_msg">
   <a id="help-block-message-close" class="close" href="#">&times;</a>
-  <p><strong>&{'monitoring.help1'}</strong> &{'monitoring.help2'}</p>
+  <p><strong>&{'monitoring.help1'}</strong><br/>&{'monitoring.help2'}</p>
 </div>
 
 <div class="well" id="selectFilter">
@@ -134,14 +133,10 @@
 	}
 
 	function init(){
-		$("#info_button").click(function() {
-			show_help();
-		});
-		show_help();
-		$("#help-block-message").delay(7000).fadeOut("fast", function(){
-			$('#info_button').attr("disabled", false);
-		});
-		
+        $("#help-block-message-close").click(function() {
+            $(this).parent().hide();
+        });
+
 		// if user is not logged in, only public cases checkbox is unabled
 		#{if controllers.SecurityController.getCurrentUser() == null }
 			$("input[name='casesRadio'][value='myCases']").attr("checked", false);
