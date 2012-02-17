@@ -1,0 +1,56 @@
+#{if listOfCorrections.size() >0}
+<div id="ideaHeader">
+  <h3>&{'addCorrectiveAction.ideaHeader'}</h3>
+</div>
+#{/if}
+<table>
+#{list listOfCorrections, as:'correction'}
+<tr id="correction-${correction.id}">
+    <td colspan="2"><dl><dt>${correction.name.escape().raw()}</dt><dd>${correction.description.escape().raw()}</dd></dl></td>                                                        
+    <td id="correction-${correction.id}-likes">${correction.countLikes()}</td>
+    #{if user}<td>
+        <a href="javascript:" id="correction-${correction.id}-likebutton"
+           class="btn success like" onclick="likeCorrection(${correction.id})"
+            #{if (!(correction.cause.rcaCase.ownerId == currentUserId) && correction.hasUserLiked(user))}
+           style="display:none;"
+            #{/if}>+1</a>
+        <a href="javascript:" id="correction-${correction.id}-dislikebutton"
+           class="btn danger like" onclick="dislikeCorrection(${correction.id})"
+            #{if !correction.hasUserLiked(user)} style="display:none;" #{/if}>-1</a>
+    </td>#{/if}
+</tr>
+#{/list}
+</table>
+
+<script type="text/javascript">
+
+  var correctionLikeAction = #{jsAction @CorrectionController.like(':correctionId') /};
+  var correctionDislikeAction = #{jsAction @CorrectionController.dislike(':correctionId') /};
+  
+  // type = "correction" or "cause", id = id of the object, data = like data from the server
+  function checkLikes(type, id, data) {
+      $("#" + type + "-" + parseInt(id) + "-likes").text(data.count);
+      if (data.hasliked) {
+          if (!data.isowner) {
+              $("#" + type + "-" + parseInt(id) + "-likebutton").hide();
+          }
+          $("#" + type + "-" + parseInt(id) + "-dislikebutton").show();
+      } else {
+          $("#" + type + "-" + parseInt(id) + "-dislikebutton").hide();
+          $("#" + type + "-" + parseInt(id) + "-likebutton").show();
+      }
+      $("table#cause-table").trigger("update");
+  }
+
+  function likeCorrection(ideaId) {
+      $.post(correctionLikeAction({correctionId: ideaId}), function(data) {
+          checkLikes("correction", ideaId, data);
+      });
+  };
+
+  function dislikeCorrection(ideaId) {
+      $.post(correctionDislikeAction({correctionId: ideaId}), function(data) {
+          checkLikes("correction", ideaId, data);
+      });
+  };
+</script>
