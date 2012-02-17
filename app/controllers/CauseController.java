@@ -198,17 +198,16 @@ public class CauseController extends Controller {
 		RCACase rcaCase = cause.rcaCase;
 		User user = SecurityController.getCurrentUser();
 		
-		if (userAllowedToLike(user, rcaCase, cause)) {
-			cause.like(user);
-			Logger.debug("Cause %s liked by %s", cause, user);
-
-			String likeData = String.format("{\"count\":%d,\"hasliked\":%b,\"isowner\":%b}", cause.countLikes(),
-                cause.hasUserLiked(user), user.equals(rcaCase.getOwner()));
-			renderJSON(likeData);
-		}
-		else {
+		if (!userAllowedToLike(user, rcaCase, cause)) {
 			forbidden();
 		}
+
+		cause.like(user);
+		Logger.debug("Cause %s liked by %s", cause, user);
+
+		String likeData = String.format("{\"count\":%d,\"hasliked\":%b,\"isowner\":%b}", cause.countLikes(),
+            cause.hasUserLiked(user), user.equals(rcaCase.getOwner()));
+		renderJSON(likeData);
 	}
 
 	/**
@@ -220,17 +219,15 @@ public class CauseController extends Controller {
 		RCACase rcaCase = cause.rcaCase;
 		User user = SecurityController.getCurrentUser();
 
-		if (userAllowedToDislike(user, rcaCase, cause)) {
-			cause.dislike(user);
-			Logger.debug("Cause %s disliked by %s", cause, user);
-
-			String likeData = String.format("{\"count\":%d,\"hasliked\":%b,\"isowner\":%b}", cause.countLikes(),
-                cause.hasUserLiked(user), user.equals(rcaCase.getOwner()));
-			renderJSON(likeData);
-		}
-		else {
+		if (!userAllowedToDislike(user, rcaCase, cause)) {
 			forbidden();
 		}
+		cause.dislike(user);
+		Logger.debug("Cause %s disliked by %s", cause, user);
+
+		String likeData = String.format("{\"count\":%d,\"hasliked\":%b,\"isowner\":%b}", cause.countLikes(),
+            cause.hasUserLiked(user), user.equals(rcaCase.getOwner()));
+		renderJSON(likeData);
 	}
 
 	/**
