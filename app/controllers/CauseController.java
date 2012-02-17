@@ -197,19 +197,16 @@ public class CauseController extends Controller {
 		Cause cause = Cause.findById(causeId);
 		RCACase rcaCase = cause.rcaCase;
 		User user = SecurityController.getCurrentUser();
-		if (user == null) {
+		
+		if (!userAllowedToLike(user, rcaCase, cause)) {
 			forbidden();
 		}
-		if (rcaCase.getOwner().equals(user)) {
-			cause.like(user);	
-		} else if (!cause.hasUserLiked(user)) {
-			cause.like(user);	
-		}
+
+		cause.like(user);
 		Logger.debug("Cause %s liked by %s", cause, user);
-		
-		String likeData = String.format("{\"count\":%d,\"hasliked\":%b,\"isowner\":%b}", cause.countLikes(), 
-		                                cause.hasUserLiked(user), user.equals(rcaCase.getOwner()));
-		
+
+		String likeData = String.format("{\"count\":%d,\"hasliked\":%b,\"isowner\":%b}", cause.countLikes(),
+            cause.hasUserLiked(user), user.equals(rcaCase.getOwner()));
 		renderJSON(likeData);
 	}
 
@@ -221,14 +218,15 @@ public class CauseController extends Controller {
 		Cause cause = Cause.findById(causeId);
 		RCACase rcaCase = cause.rcaCase;
 		User user = SecurityController.getCurrentUser();
-		if (user == null) {
+
+		if (!userAllowedToDislike(user, rcaCase, cause)) {
 			forbidden();
 		}
 		cause.dislike(user);
 		Logger.debug("Cause %s disliked by %s", cause, user);
-		String likeData = String.format("{\"count\":%d,\"hasliked\":%b,\"isowner\":%b}", cause.countLikes(),
-		                                cause.hasUserLiked(user), user.equals(rcaCase.getOwner()));
 
+		String likeData = String.format("{\"count\":%d,\"hasliked\":%b,\"isowner\":%b}", cause.countLikes(),
+            cause.hasUserLiked(user), user.equals(rcaCase.getOwner()));
 		renderJSON(likeData);
 	}
 
@@ -260,5 +258,14 @@ public class CauseController extends Controller {
 		CauseStream causeEvents = rcaCase.getCauseStream();
 		causeEvents.getStream().publish(event);
 		Logger.debug("Cause %s renamed to cause %s", oldName, name);
+	}	 
+	
+	private static boolean userAllowedToLike(User user, RCACase rcaCase, Cause cause) {
+		return user != null && (rcaCase.getOwner().equals(user) || !cause.hasUserLiked(user));		
+	}
+	
+	private static boolean userAllowedToDislike(User user, RCACase rcaCase, Cause cause) {
+		return (cause.countLikes() > 0 && user != null &&
+		        (rcaCase.getOwner().equals(user) || cause.hasUserLiked(user)));
 	}
 }
