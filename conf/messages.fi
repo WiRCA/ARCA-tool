@@ -105,6 +105,8 @@ editor.renameCause=Uudelleennimeä tämä syy
 editor.addRelation=Lisää relaatio. Klikkaa toista syytä lisätäksesi relaatio.
 editor.delete=Poista
 editor.addCorrection=Lisää korjaava idea
+editor.addRelationInfo1=Relaatiotila on nyt päällä.
+editor.addRelationInfo2=Klikkaa toista solmua lisätäksesi relaatio.
 
 showRCACase.title=RCA analyysi %s
 showRCACase.owner=Omistaja
