@@ -103,7 +103,7 @@ editor.addRelation=Add a relation. Click another cause to create the relation
 editor.delete=Delete
 editor.addCorrection=Add a correction idea
 editor.addRelationInfo1=Relation mode is on.
-editor.addRelationInfo2=Click another node to create relation.
+editor.addRelationInfo2=Click another node to create relation or press ESC to cancel.
 
 RCACaseType.softwareProject=Software project
 RCACaseType.hr=Human resources related problem
@@ -185,6 +185,7 @@ monitoring.noCasesFound=No matching cases
 monitoring.noMatchingItemsFound=Matching items not found
 monitoring.correctionNameAndDescription=Corrective action
 monitoring.selectAllCasesButton=Select all cases
+monitoring.csv.exportCSV=Export CSV
 
 monitoring.statusCause.DETECTED=Detected
 monitoring.statusCause.ELIMINATION=Elimination

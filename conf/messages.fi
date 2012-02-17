@@ -106,7 +106,7 @@ editor.addRelation=Lisää relaatio. Klikkaa toista syytä lisätäksesi relaati
 editor.delete=Poista
 editor.addCorrection=Lisää korjaava idea
 editor.addRelationInfo1=Relaatiotila on nyt päällä.
-editor.addRelationInfo2=Klikkaa toista solmua lisätäksesi relaatio.
+editor.addRelationInfo2=Klikkaa toista solmua lisätäksesi relaatio tai paina ESC peruuttaaksesi.
 
 showRCACase.title=RCA analyysi %s
 showRCACase.owner=Omistaja
@@ -184,6 +184,7 @@ monitoring.noCasesFound=Ei analyysejä määritellyillä kriteereillä
 monitoring.noMatchingItemsFound=Ei kriteerejä vastaavia osumia
 monitoring.correctionNameAndDescription=Korjaava toimenpide
 monitoring.selectAllCasesButton=Valitse kaikki analyysit
+monitoring.csv.exportCSV=Lataa CSV
 
 monitoring.statusCause.DETECTED=Havaittu
 monitoring.statusCause.ELIMINATION=Korjataan

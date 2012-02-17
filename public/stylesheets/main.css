@@ -41,7 +41,8 @@ table .cause .toggleCorrections {
 }
 
 #languageSelection {
-    margin-bottom: 30px;
+    margin-top: 12px;
+	margin-right: 30px;
 }
 
 #languageSelection a.lang-select {
@@ -57,6 +58,7 @@ table .cause .toggleCorrections {
     border: 1px solid lightgray;
     height: 11px;
 }
+
 
 div#rcacase-share-dialog form {
     margin-bottom: 20px;
