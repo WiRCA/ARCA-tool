@@ -31,7 +31,8 @@ public enum StatusOfCause {
 
 	DETECTED(1),
 	ELIMINATION(2),
-	WILL_NOT_FIX(3);
+	WILL_NOT_FIX(3),
+	FIXED(4);
 
 	public Integer value;
 

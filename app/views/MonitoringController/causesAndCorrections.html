@@ -2,6 +2,7 @@
 %{
     int __itemsPerPage = 10;
 }%
+<a href="javascript:" id="export-csv-link" class="btn primary">&{'monitoring.csv.exportCSV'}</a>
 #{if showCauses && causes != null && causes.size().page(__itemsPerPage) > 1}
 <div class="center pagination" id="pagination-causes">
     <ul>

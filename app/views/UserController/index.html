@@ -72,6 +72,11 @@
     $("#rcacase-share-dialog-share-form").submit(function() {
     var rcaId = $("#rcacase-share-dialog-rcaCaseId-input").val();
     var email = $.trim($("#rcacase-share-dialog-invitedEmail-input").val());
+	
+	/* Check if the input is an empty string */
+	if(email = null) {
+	    $("#rcacase-share-dialog-invitedEmail-error").show();
+	}
 
     /* Check if user exists already */
     if ($('#rcacase-share-dialog-persons tr').find('td[name="' + email + '"]').length > 0) {

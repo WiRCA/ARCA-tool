@@ -2,6 +2,7 @@ ARCA-tool.iml
 logs
 test-result
 tmp
+modules
 .idea/.name
 .idea/ant.xml
 .idea/compiler.xml

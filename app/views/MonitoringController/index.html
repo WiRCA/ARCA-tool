@@ -117,6 +117,11 @@
 <script type="text/javascript">
 	var ajaxRequest;
 	var caseSelections;
+    var whatToShow;
+    var selectedCauseStatuses;
+    var selectedCorrectionStatuses;
+    var selectedCases;
+    var allCases;
 	init();
 	
 	function show_help(){
@@ -163,6 +168,26 @@
 	        $("#rcaCaseSelect").html("");
 	        $("#causesAndCorrections").html("");
 	    }
+    }
+
+    function collectSelectionsWhatToShow() {
+        whatToShow = "";
+        $("input[name='whatToShow']:checked").each(function() {
+            whatToShow += $(this).attr("value") + ",";
+        });
+        selectedCauseStatuses = "";
+        $("input[name='causeStatuses']:checked").each(function() {
+            selectedCauseStatuses += $(this).attr("value") + ",";
+        });
+        selectedCorrectionStatuses = "";
+        $("input[name='correctionStatuses']:checked").each(function() {
+            selectedCorrectionStatuses += $(this).attr("value") + ",";
+        });
+        selectedCases = "";
+        $("input[name='selectedCases']:checked").each(function() {
+            selectedCases += $(this).attr("value") + ",";
+        });
+        allCases = $("input[name='casesRadio'][value='allCases']:checked").length == 1;
     }
 
     $(function() {
@@ -232,41 +257,36 @@
 
     $("input[name='whatToShow'],input[name='causeStatuses'],input[name='correctionStatuses'],input[name='selectedCases']," +
       "input[name='casesRadio'][value='allCases']").live("change", function(event) {
-        var whatToShow = "";
-        $("input[name='whatToShow']:checked").each(function() {
-            whatToShow += $(this).attr("value") + ",";
-        });
-        var selectedCauseStatuses = "";
-        $("input[name='causeStatuses']:checked").each(function() {
-            selectedCauseStatuses += $(this).attr("value") + ",";
-        });
-        var selectedCorrectionStatuses = "";
-        $("input[name='correctionStatuses']:checked").each(function() {
-            selectedCorrectionStatuses += $(this).attr("value") + ",";
-        });
-        var selectedCases = "";
-        $("input[name='selectedCases']:checked").each(function() {
-            selectedCases += $(this).attr("value") + ",";
-        });
-        var allCases = $("input[name='casesRadio'][value='allCases']:checked").length == 1;
+        collectSelectionsWhatToShow();
 
         if ((allCases || selectedCases != "") && whatToShow != "") {
             $("#causesAndCorrections").html("<img src=\"@{'/public/images/wait-spinner.gif'}\">");
             var causesAndCorrectionsAction = #{jsAction @MonitoringController.causesAndCorrections(':whatToShow',
-                            ':selectedCases', ':allCases', ':selectedCauseStatuses', ':selectedCorrectionStatuses') /}
+                ':selectedCases', ':allCases', ':selectedCauseStatuses', ':selectedCorrectionStatuses', ':csvExport') /}
 			if (ajaxRequest != undefined) {
 				ajaxRequest.abort();
 			}
 
 			ajaxRequest = $.get(causesAndCorrectionsAction({whatToShow: whatToShow, selectedCases: selectedCases,
 								allCases: allCases, selectedCauseStatuses: selectedCauseStatuses,
-								selectedCorrectionStatuses: selectedCorrectionStatuses}),
+								selectedCorrectionStatuses: selectedCorrectionStatuses, csvExport: 'false'}),
 					function(html) {
 						$("#causesAndCorrections").html(html);
 					}
 			);
         } else {
             $("#causesAndCorrections").html("");
+        }
+    });
+
+    $('#export-csv-link').live("click", function() {
+        collectSelectionsWhatToShow();
+        if ((allCases || selectedCases != "") && whatToShow != "") {
+            var causesAndCorrectionsAction = #{jsAction @MonitoringController.causesAndCorrections(':whatToShow',
+                ':selectedCases', ':allCases', ':selectedCauseStatuses', ':selectedCorrectionStatuses', ':csvExport') /}
+            location = causesAndCorrectionsAction({whatToShow: whatToShow, selectedCases: selectedCases,
+                                  allCases: allCases, selectedCauseStatuses: selectedCauseStatuses,
+                                  selectedCorrectionStatuses: selectedCorrectionStatuses, csvExport: 'true'});
         }
     });
 

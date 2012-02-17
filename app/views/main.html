@@ -56,9 +56,9 @@
       </script>
     </head>
     <body>
-      #{navigation /}
+#{navigation /}
+      
       <div class="container">
-
             <div class="content">
               <div class="page-header">
                 <h1>#{get 'pageHeader' /} <small>#{get 'pageHeaderSmall' /}</small>   
@@ -70,8 +70,7 @@
               <div class="row">
                 <div class="span4">
                   <div class="well">
-
-                    #{languages /}
+					
                     #{if session.username}
                     <p>#{a @RCACaseController.createRCACase(), id:'createRCACase-link',
                     class:'btn large primary'}&{'user.createRCACase'}#{/a}</p>
