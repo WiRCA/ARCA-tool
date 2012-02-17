@@ -284,6 +284,7 @@
 			});
       init();
       zoomLevel = 1;
+
       $("#correction-help-message").hide();
       $("#relation-help-message").hide();
       $("#addCorrectiveForm").hide();
@@ -329,6 +330,7 @@
       $('#addcorrection-modal').bind('shown', function () {
           $('#ideaName').focus();
       });
+
       
     });
     var labelType, useGradients, nativeTextSupport, animate;
@@ -369,6 +371,7 @@
     })(jQuery);
 
     function init(){
+
       // init data
       var json = [
         #{list rcaCase.causes, as:'cause'}
@@ -406,6 +409,13 @@
           }${cause_isLast ? '' : ','}
         #{/list}
       ];
+
+	   $(document).bind('keydown', function(e) { 
+	        if (e.which == 27) {
+				relationFromNode = null;
+				$("#relation-help-message").fadeOut(500, "linear");	
+			}
+	    });
 
       var lastReceived = ${lastMessage};
       var waitMessages = #{jsAction @waitMessages(rcaCase.id,':lastReceived') /}
@@ -884,6 +894,9 @@
         });
       }
     }
+	
+
+
     
 </script>
     </body>
