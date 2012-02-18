@@ -55,7 +55,7 @@ public abstract class LikableIdComparableModel extends IdComparableModel {
 		return returnedLikes;
 	}
 
-	public int countLikes() {
+	public Integer countLikes() {
 		return getLikes().size();
 	}
 

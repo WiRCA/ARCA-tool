@@ -1,0 +1,109 @@
+#{fixture delete:'all', load:'data.yml' /}
+#{selenium}
+
+// Test init
+open('/logout')
+open('/?language=en')
+
+// Set timeout to 5 seconds, used in waitFor-accessors
+setTimeout('5000')
+
+// Logging with admin
+type('id=username','admin@local')
+type('id=password','admin')
+clickAndWait('id=signin')
+
+// create new RCA case
+waitForTextPresent('&{'user.createRCACase'}')
+clickAndWait('link=&{'user.createRCACase'}')
+type('id=caseName','testgraph')
+select('id=caseTypeValue','label=&{'RCACaseType.softwareProject'}')
+type('id=description','testgraph')
+type('id=caseGoals','testgraph')
+type('id=companyName','testgraph')
+select('id=companySize','label=1-10')
+type('id=companyProducts','testgraph')
+clickAndWait('id=create')
+
+verifyTextNotPresent('points')
+verifyTextNotPresent('point')
+clickAt('//*[text()="testgraph"]')
+waitForElementPresent('css=div.radial_div > #radmenu-event-likeCause')
+click('css=div.radial_div > #radmenu-event-likeCause > a > img')
+waitForTextPresent('1 &{'editor.singlePoint'}')
+
+clickAt('//*[text()="testgraph"]')
+waitForElementPresent('css=div.radial_div > #radmenu-event-likeCause')
+verifyElementPresent('css=div.radial_div > #radmenu-event-dislikeCause')
+click('css=div.radial_div > #radmenu-event-likeCause > a > img')
+waitForTextPresent('2 &{'editor.multiplePoints'}')
+
+clickAt('//*[text()="testgraph"]')
+waitForElementPresent('css=div.radial_div > #radmenu-event-likeCause')
+verifyElementPresent('css=div.radial_div > #radmenu-event-dislikeCause')
+click('css=div.radial_div > #radmenu-event-dislikeCause > a > img')
+waitForTextPresent('1 &{'editor.singlePoint'}')
+
+clickAt('//*[text()="testgraph"]')
+waitForElementPresent('css=div.radial_div > #radmenu-event-likeCause')
+verifyElementPresent('css=div.radial_div > #radmenu-event-dislikeCause')
+click('css=div.radial_div > #radmenu-event-dislikeCause > a > img')
+waitForTextNotPresent('1 &{'editor.singlePoint'}')
+
+clickAt('//*[text()="testgraph"]')
+waitForElementPresent('css=div.radial_div > #radmenu-event-likeCause')
+verifyElementPresent('css=div.radial_div > #radmenu-event-addCause > a > img')
+click('css=div.radial_div > #radmenu-event-addCause > a > img')
+waitForElementPresent('css=#addcause-modal > div.modal-header > h3')
+type('id=causeName','jepa')
+click('id=addcause-submit')
+
+waitForTextPresent('jepa')
+verifyTextNotPresent('points')
+verifyTextNotPresent('point')
+clickAt('//*[text()="jepa"]')
+waitForElementPresent('css=div.radial_div > #radmenu-event-likeCause')
+click('css=div.radial_div > #radmenu-event-likeCause > a > img')
+waitForTextPresent('1 &{'editor.singlePoint'}')
+
+// share the case
+open('/user?language=en')
+verifyTextPresent('testgraph')
+verifyTextPresent(' &{'rcacase.share'}')
+clickAt('//*[text()="&{'rcacase.share'}"]')
+waitForTextPresent('&{'rcacase.share.dialog.inviteEmail'}')
+click('css=input[type="submit"]')
+click('css=input[type="submit"]')
+
+type('id=rcacase-share-dialog-invitedEmail-input','email@local.fi')
+click('css=input[type="submit"]')
+waitForTextPresent('email@local.fi')
+click('//button[@type='button']')
+verifyTextPresent('Admin user')
+
+// Login with another user
+clickAndWait('id=logout-link')
+type('id=username','email@local.fi')
+type('id=password','admin')
+clickAndWait('id=signin')
+click('link=&{'user.sharedCases'}')
+waitForTextPresent('testgraph')
+clickAt('//*[text()="testgraph"]')
+
+waitForTextPresent('jepa')
+verifyTextPresent('testgraph')
+verifyTextPresent('1 &{'editor.singlePoint'}')
+clickAt('//*[text()="jepa"]')
+waitForElementPresent('css=div.radial_div > #radmenu-event-likeCause')
+click('css=div.radial_div > #radmenu-event-likeCause > a > img')
+waitForTextPresent('2 &{'editor.multiplePoints'}')
+
+clickAt('//*[text()="jepa"]')
+waitForElementPresent('css=div.radial_div > #radmenu-event-dislikeCause')
+click('css=div.radial_div > #radmenu-event-dislikeCause > a > img')
+waitForTextPresent('1 &{'editor.singlePoint'}')
+
+
+// Logout
+clickAndWait('id=logout-link')
+#{/selenium}

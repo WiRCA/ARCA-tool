@@ -127,3 +127,19 @@
     margin-left: 40%;
     padding: 2px;
 }
+
+#likeBox {
+    text-shadow: 1px 1px 2px #000;
+    position: relative;
+    height: 12px;
+    top: -15px;
+    margin: auto;
+    display: inline;
+}
+
+#likeBoxWrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+}

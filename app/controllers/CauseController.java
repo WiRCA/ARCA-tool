@@ -202,6 +202,11 @@ public class CauseController extends Controller {
 		}
 
 		cause.like(user);
+
+		AmountOfLikesEvent event = new AmountOfLikesEvent(causeId, cause.countLikes());
+		CauseStream causeEvents = rcaCase.getCauseStream();
+		causeEvents.getStream().publish(event);
+
 		Logger.debug("Cause %s liked by %s", cause, user);
 
 		String likeData = String.format("{\"count\":%d,\"hasliked\":%b,\"isowner\":%b}", cause.countLikes(),
@@ -222,6 +227,11 @@ public class CauseController extends Controller {
 			forbidden();
 		}
 		cause.dislike(user);
+
+		AmountOfLikesEvent event = new AmountOfLikesEvent(causeId, cause.countLikes());
+		CauseStream causeEvents = rcaCase.getCauseStream();
+		causeEvents.getStream().publish(event);
+
 		Logger.debug("Cause %s disliked by %s", cause, user);
 
 		String likeData = String.format("{\"count\":%d,\"hasliked\":%b,\"isowner\":%b}", cause.countLikes(),

@@ -104,7 +104,18 @@
              title='&{'editor.renameCause'}'>
               <img src="@{'/public/images/icons/edit.png'}" height="36" width="36" style="margin-left: -8px; margin-top: -8px">
           </a>
-    </li>
+      </li>
+      <li class="item radmenu-button" id="radmenu-event-likeCause">
+          <a href="#" rel='twipsy' data-placement="right" title='&{'editor.likeCause'}'>
+              <img src="@{'/public/images/icons/thumb_up.png'}" height="36" width="36" style="margin-left: -8px; margin-top: -8px">
+          </a>
+      </li>
+      <li class="item radmenu-button" id="radmenu-event-dislikeCause">
+          <a href="#" rel='twipsy' data-placement="right" title='&{'editor.dislikeCause'}'>
+              <img src="@{'/public/images/icons/thumb_down.png'}" height="36" width="36" style="margin-left: -8px;
+              margin-top: -8px">
+          </a>
+      </li>
     </ul>
   </div>
   <!-- Add corrective action popover form div -->
@@ -233,9 +244,51 @@
         $("#renameCause-modal").modal('hide');
         $.post(renameCauseAjax({causeId: globalSelectedNode, name: encodeURIComponent(name)}));
     };
-</script>
 
-<script type="text/javascript">
+    function updateLikes(id, count) {
+        var likeBox = $("#" + id + " div.label");
+        if (count > 0) {
+            if (count > 1) {
+                likeBox.text(count + ' &{'editor.multiplePoints'}');
+            } else {
+                likeBox.text(count + ' &{'editor.singlePoint'}');
+            }
+            likeBox.fadeIn(400);
+        } else {
+            likeBox.fadeOut(400);
+        }
+    }
+
+    function likeCause(selected) {
+        var likeCauseAjax = #{jsAction @CauseController.like(':causeId') /};
+        if (selected.data.creatorId != ${currentUser == null ? 'null' : currentUser.id}) {
+            radmenu_fadeOut();
+        };
+        $.post(likeCauseAjax({causeId: selected.id}), function(result) {
+            selected.data.hasUserLiked = result.hasliked;
+            selected.data.likeCount = result.count;
+            updateLikes(selected.id, result.count);
+            if (selected.data.creatorId == ${currentUser == null ? 'null' : currentUser.id}) {
+                radmenu_updateLikeButtons(selected);
+            };
+        });
+    };
+
+    function dislikeCause(selected) {
+        var dislikeCauseAjax = #{jsAction @CauseController.dislike(':causeId') /};
+        if (selected.data.creatorId != ${currentUser == null ? 'null' : currentUser.id}) {
+            radmenu_fadeOut();
+        };
+        $.post(dislikeCauseAjax({causeId: selected.id}), function(result) {
+            selected.data.hasUserLiked = result.hasliked;
+            selected.data.likeCount = result.count;
+            updateLikes(selected.id, result.count);
+            if (selected.data.creatorId == ${currentUser == null ? 'null' : currentUser.id}) {
+                radmenu_updateLikeButtons(selected);
+            };
+        });
+    };
+
   function addCorrectiveIdea() {
     var addCorrection = #{jsAction @CauseController.addCorrection(':toId', ':name', ':description') /}
     var name = $("#ideaName").val();
@@ -376,7 +429,9 @@
                     "parent": #{if cause.parent}${cause.parent.id}#{/if}#{else}""#{/else},
                     "creatorId": '${cause.creatorId}',
                     "xCoordinate": #{if cause.xCoordinate != null && rcaCase.problem != cause}${cause.xCoordinate}#{/if}#{else}""#{/else},
-                    "yCoordinate": #{if cause.yCoordinate != null && rcaCase.problem != cause}${cause.yCoordinate}#{/if}#{else}""#{/else}
+                    "yCoordinate": #{if cause.yCoordinate != null && rcaCase.problem != cause}${cause.yCoordinate}#{/if}#{else}""#{/else},
+                    "likeCount": ${cause.countLikes()},
+                    "hasUserLiked": ${cause.hasUserLiked(currentUser)}
                     },
             "adjacencies": [
             #{list cause.causes, as:'causedBy'}
@@ -457,10 +512,17 @@
               $('#addcorrection-modal').modal('show');
               globalSelectedNode = selectedNode.id;
             }
+            else if($selected[0].id == "radmenu-event-likeCause"){
+                likeCause(selectedNode);
+            }
+            else if($selected[0].id == "radmenu-event-dislikeCause"){
+                dislikeCause(selectedNode);
+            }
           },
         angleOffset: 90 // in degrees
       });
-      function show_radial_menu(given_node){
+      function show_radial_menu(given_node) {
+
         selectedNode = given_node;
         $("#" + given_node.id).addClass("nodeBoxSelected");
         
@@ -632,6 +694,16 @@
           if(node.data.hasCorrections) {
             $(domElement).addClass('nodeBoxCorrection');
           }
+          var pointString;
+          if (node.data.likeCount > 1) {
+            pointString = '&{'editor.multiplePoints'}';
+          } else {
+              pointString = '&{'editor.singlePoint'}';
+          }
+          $(domElement).append("<div id='likeBoxWrapper'><div id='likeBox' class='label success'>" + node.data.likeCount + " " + pointString + "</div></div>");
+          if (node.data.likeCount == 0) {
+              domElement.childNodes[1].childNodes[0].style.display = "none";
+          }
         },
         // Change node styles when DOM labels are placed
         // or moved.
@@ -681,7 +753,9 @@
                             "name": this.data.text,
                             "data": {
                                 "parent": this.data.causeFrom,
-                                "creatorId": ''+this.data.creatorId
+                                "creatorId": ''+this.data.creatorId,
+                                "likeCount": 0,
+                                "hasUserLiked": false
                             }
                           };
                           var oldNode = fd.graph.getNode(this.data.causeFrom);
@@ -708,6 +782,12 @@
                             var oldNode = fd.graph.getNode(this.data.causeId);
                             oldNode.name = this.data.newName;
                             $("#" + this.data.causeId).html(this.data.newName);
+                        }
+                        else if(this.data.type === 'amountOfLikesEvent') {
+                            var currentNode = fd.graph.getNode(this.data.causeId);
+
+                            var amountOfLikes = this.data.amountOfLikes;
+                            $("#" + currentNode.causeId).html(amountOfLikes);
                         }
                         else if(this.data.type === 'nodemovedevent'){
                           var nodeToMove = fd.graph.getNode(this.data.causeId);
@@ -784,6 +864,30 @@
       });
     }
 
+    radmenu_updateLikeButtons = function(selectedNode) {
+        if (${currentUser == null}) {
+            // hide like buttons if user is not logged in
+            jQuery("#radial_menu").radmenu("items")[5].style.visibility = "hidden";
+            // dislike
+            jQuery("#radial_menu").radmenu("items")[6].style.visibility = "hidden";
+        } else if (!selectedNode.data.hasUserLiked) {
+            // show like button if user has not liked
+            jQuery("#radial_menu").radmenu("items")[5].style.visibility = "visible";
+            // hide dislike button if user has not liked
+            jQuery("#radial_menu").radmenu("items")[6].style.visibility = "hidden";
+        } else if (selectedNode.data.hasUserLiked && selectedNode.data.creatorId != ${currentUser == null ? 'null' : currentUser.id}) {
+            // hide like button if user has liked and is not the owner
+            jQuery("#radial_menu").radmenu("items")[5].style.visibility = "hidden";
+            // show dislike button if user has liked
+            jQuery("#radial_menu").radmenu("items")[6].style.visibility = "visible";
+        } else {
+            // show like button if user has liked and is the owner
+            jQuery("#radial_menu").radmenu("items")[5].style.visibility = "visible";
+            // show dislike button if user has liked and is the owner
+            jQuery("#radial_menu").radmenu("items")[6].style.visibility = "visible";
+        }
+    }
+
     radmenu_fadeIn = function(selectedNode) {
         jQuery("#radial_menu").radmenu("show",
             function(items){
@@ -798,6 +902,19 @@
 
                     // hide rename-cause button, if user has no rights to rename selected cause
                     jQuery("#radial_menu").radmenu("items")[4].style.visibility = "hidden";
+                }
+
+                if (${currentUser == null}) {
+                    // hide like buttons if user is not logged in
+                    jQuery("#radial_menu").radmenu("items")[5].style.visibility = "hidden";
+                    // dislike
+                    jQuery("#radial_menu").radmenu("items")[6].style.visibility = "hidden";
+                } else if (!selectedNode.data.hasUserLiked) {
+                    // hide dislike button if user has not liked
+                    jQuery("#radial_menu").radmenu("items")[6].style.visibility = "hidden";
+                } else if (selectedNode.data.hasUserLiked && selectedNode.data.creatorId != ${currentUser == null ? 'null' : currentUser.id}) {
+                    // hide like button if user has liked and is not the owner
+                    jQuery("#radial_menu").radmenu("items")[5].style.visibility = "hidden";
                 }
             }
         );

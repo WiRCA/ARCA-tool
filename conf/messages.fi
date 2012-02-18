@@ -105,8 +105,12 @@ editor.renameCause=Uudelleennimeä tämä syy
 editor.addRelation=Lisää relaatio. Klikkaa toista syytä lisätäksesi relaatio.
 editor.delete=Poista
 editor.addCorrection=Lisää korjaava idea
+editor.likeCause=Tykkää tästä syystä
+editor.dislikeCause=Poista tykkäys tästä syystä
 editor.addRelationInfo1=Relaatiotila on nyt päällä.
 editor.addRelationInfo2=Klikkaa toista solmua lisätäksesi relaatio tai paina ESC peruuttaaksesi.
+editor.singlePoint=piste
+editor.multiplePoints=pistettä
 
 showRCACase.title=RCA analyysi %s
 showRCACase.owner=Omistaja

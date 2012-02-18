@@ -102,8 +102,12 @@ editor.renameCause=Rename this cause
 editor.addRelation=Add a relation. Click another cause to create the relation
 editor.delete=Delete
 editor.addCorrection=Add a correction idea
+editor.likeCause=Like this cause
+editor.dislikeCause=Dislike this cause
 editor.addRelationInfo1=Relation mode is on.
 editor.addRelationInfo2=Click another node to create relation or press ESC to cancel.
+editor.singlePoint=point
+editor.multiplePoints=points
 
 RCACaseType.softwareProject=Software project
 RCACaseType.hr=Human resources related problem
