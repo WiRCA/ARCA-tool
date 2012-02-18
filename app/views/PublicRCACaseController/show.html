@@ -462,11 +462,8 @@
       });
       function show_radial_menu(given_node){
         selectedNode = given_node;
-        if(given_node.id == ${rcaCase.problem.id}){
-          $("#" + given_node.id).addClass("rootNodeBoxSelected");
-        }else{
-          $("#" + given_node.id).addClass("nodeBoxSelected");
-        }
+        $("#" + given_node.id).addClass("nodeBoxSelected");
+        
         //get the position of the placeholder element
         menupos   = $("#"+given_node.id).offset();
         menuwidth = $("#"+given_node.id).width();
@@ -817,7 +814,7 @@
     defaultEdgesForSelectedNode = function(selectedNode) {
       if (selectedNode != undefined) {
 			if(selectedNode.id == ${rcaCase.problem.id}){
-				$("#" + selectedNode.id).removeClass("rootNodeBoxSelected").addClass("rootNodeBox");
+				$("#" + selectedNode.id).removeClass("nodeBoxSelected").addClass("rootNodeBox");
 			}
 			else{
 				$("#" + selectedNode.id).removeClass("nodeBoxSelected").addClass("nodeBox");
