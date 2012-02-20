@@ -44,14 +44,6 @@
         </div>
     </div>
 
-    <div class="clearfix${errors.forKey('problemName') ? ' error' : ''}" id="problemName-field" >
-        <label for="problemName">&{'problemName'}</label>
-        <div class="input">
-            <input type="text" name="problemName" id="problemName" value="${flash['problemName']}" maxlength="255" />
-            #{ifError 'problemName'}<span class="help-inline">#{error 'problemName' /}</span>#{/ifError}
-        </div>
-    </div>
-
     <div class="clearfix${errors.forKey('rcaCase.caseTypeValue') ? ' error' : ''}" id="RCACaseType">
         <label for="caseTypeValue">&{'createRCA.rcaCaseType'}</label>
         <div class="input">
@@ -61,6 +53,14 @@
         #{/list}
         #{/select}
         #{ifError 'rcaCase.caseTypeValue'}<span class="help-inline">#{error 'rcaCase.caseTypeValue' /}</span>#{/ifError}
+        </div>
+    </div>
+
+    <div class="clearfix${errors.forKey('problemName') ? ' error' : ''}" id="problemName-field" >
+        <label for="problemName">&{'createRCA.problemName'}</label>
+        <div class="input">
+            <input type="text" name="problemName" id="problemName" value="${flash['problemName']}" maxlength="255" />
+            #{ifError 'problemName'}<span class="help-inline">#{error 'problemName' /}</span>#{/ifError}
         </div>
     </div>
 

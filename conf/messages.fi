@@ -90,6 +90,7 @@ createRCA.title=Luo uusi RCA analyysi
 createRCA.caseName=Analyysin nimi (pakollinen)
 createRCA.rcaCaseType=Analyysin tyyppi
 createRCA.caseGoals=Analyysin tavoitteet
+createRCA.problemName=Ongelman nimi
 createRCA.description=Ongelman lyhyt kuvaus
 createRCA.companyName=Yrityksen nimi
 createRCA.companySize=Työntekijöiden määrä yrityksessänne?
