@@ -24,10 +24,8 @@
 
 #{fixture delete:'all',load:'data.yml' /}
 #{selenium}
+    open('/logout')
     open('/?language=en')
-    clickAndWait('link=About')
-    verifyTextPresent(&{'aboutPage.content'})
-    open('/?language=fi')
-    clickAndWait('link=Tietoa projektista')
-    verifyTextPresent(&{'aboutPage.content'})
+    click('//a[contains(@href,"/about")]')
+    waitForElementPresent('//h1[contains(text(), "&{'aboutPage.title'}")]')
 #{/selenium}
