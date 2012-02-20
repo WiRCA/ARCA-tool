@@ -3,7 +3,7 @@
     {
         "invitedUser": "false",
         "id": "${user.id}",
-        "name": "${user.name}",
+        "name": "${user.name.escape().raw()}",
         "email": "${user.email}"
     }${user_isLast && !invitedUsers ? '' : ','}
 #{/list}
