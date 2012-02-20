@@ -40,6 +40,7 @@
     assertElementPresent('id=create')
     assertElementPresent('id=companyName')
     assertElementPresent('id=caseName')
+    assertElementPresent('id=problemName')
     assertElementPresent('id=caseTypeValue')
     assertElementPresent('id=description')
     assertElementPresent('id=caseGoals')
@@ -49,18 +50,21 @@
     clickAndWait('id=create')
     verifyTextPresent('Required')
 
-    // Verify that creating RCA case with only case name given is not possible.
+    // Verify that creating RCA case with only case name and problem name is possible.
     type('id=caseName','Testikeissi')
+    type('id=problemName','Testikeissin probleema')
     click('id=isCasePublic')
     clickAndWait('id=create')
-    verifyTextPresent('Testikeissi')
+
+    // Check that problem has a correct name.
+    verifyTextPresent('Testikeissin probleema')
 
     open('/logout')
 
     // open created RCA case with user that is not logged in
     clickAndWait('link=Testikeissi')
-    verifyTextPresent('Testikeissi')
-    clickAt('//*[text()="Testikeissi"]')
+    verifyTextPresent('Testikeissin probleema')
+    clickAt('//*[text()="Testikeissin probleema"]')
     assertElementPresent('//div[@id='radmenu-event-addCause']')
 
     // Add a new node with user that is not logged in
@@ -98,6 +102,10 @@
     select('id=companySize','label=1-10')
     type('id=companyProducts','testgraph')
     clickAndWait('id=create')
+
+    // Check that problem has a correct name.
+    verifyTextPresent('testgraph')
+
     storeLocation(url)
 
     open('/logout')

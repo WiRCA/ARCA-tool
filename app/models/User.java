@@ -106,6 +106,23 @@ public class User extends Model {
 
 	/**
 	 * @param rcaCase The RCA case to be added to the User.
+	 * @param problemName Name of the problem that appears as the root node in the cause-effect tree.
+	 *
+	 * @return RCACase object that represents the existing RCA case that is added to User.
+	 */
+	public RCACase addRCACase(RCACase rcaCase, String problemName) {
+		if (rcaCase.problem == null) {
+			// Creating the new 'initial problem' for the RCACase with the problem name.
+			rcaCase.problem = new Cause(rcaCase, problemName, this).save();
+			rcaCase.save();
+		}
+		this.caseIds.add(rcaCase.id);
+		this.save();
+		return rcaCase;
+	}
+
+	/**
+	 * @param rcaCase The RCA case to be added to the User.
 	 *
 	 * @return RCACase object that represents the existing RCA case that is added to User.
 	 */

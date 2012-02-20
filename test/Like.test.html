@@ -26,11 +26,11 @@ type('id=companyProducts','testgraph')
 clickAndWait('id=create')
 
 // share the case
-open('/user?language=fi')
+open('/user?language=en')
 verifyTextPresent('testgraph')
-verifyTextPresent(' Jaa..')
-clickAt('//*[text()="Jaa.."]')
-waitForTextPresent('Kutsu sähköpostilla')
+verifyTextPresent('&{'rcacase.share'}')
+clickAt('//*[text()="&{'rcacase.share'}"]')
+waitForTextPresent('&{'rcacase.share.dialog.inviteEmail'}')
 click('css=input[type="submit"]')
 click('css=input[type="submit"]')
 

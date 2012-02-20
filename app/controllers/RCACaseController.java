@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
+ * Copyright (C) 2012 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
  * Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus,
  * Timo Lehtinen, Jaakko Harjuhahto
  *
@@ -32,6 +32,7 @@ import models.enums.RCACaseType;
 import notifiers.Mails;
 import play.Logger;
 import play.data.validation.Email;
+import play.data.validation.MaxSize;
 import play.data.validation.Required;
 import play.data.validation.Valid;
 import play.mvc.Before;
@@ -75,7 +76,7 @@ public class RCACaseController extends Controller {
 	 * Creates a new RCA case with the values given in the RCA case creation form.
 	 * @param rcaCase created RCA case
 	 */
-	public static void create(@Valid RCACase rcaCase) {
+	public static void create(@Valid RCACase rcaCase, @MaxSize(255) String problemName) {
 		if (validation.hasErrors()) {
 			params.flash(); // add http parameters to the flash scope
 			validation.keep(); // keep the errors for the next request
@@ -83,7 +84,10 @@ public class RCACaseController extends Controller {
 		}
 		rcaCase.save();
 		User user = SecurityController.getCurrentUser();
-		user.addRCACase(rcaCase);
+		if (problemName.trim().length() == 0) {
+			problemName = rcaCase.caseName;
+		}
+		user.addRCACase(rcaCase, problemName);
 		Logger.info("User %s created new RCA case with name %s", user, rcaCase.caseName);
 		PublicRCACaseController.show(rcaCase.id);
 	}

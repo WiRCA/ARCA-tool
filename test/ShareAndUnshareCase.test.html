@@ -30,18 +30,13 @@
     clickAndWait('id=signin')
     verifyTextPresent('Admin user')
 	
-	// Changes the language to Finnish
-    clickAndWait('css=img[alt="Suomi"]')
-	
 	// Creates a new RCA case
-    clickAndWait('link=Luo uusi RCA analyysi')
-    verifyTextPresent('Luo uusi RCA analyysi')
+    clickAndWait('link=&{'user.createRCACase'}')
+    verifyTextPresent('&{'createRCA.title'}')
     type('id=caseName','Irmelin testikeissi')
-    select('id=caseTypeValue','label=Muu')
     type('id=description','Irmeli on surullinen')
     type('id=caseGoals','Irmeli ei ole surullinen')
     type('id=companyName','Irmelin pulla')
-    select('id=companySize','label=1-10')
     type('id=companyProducts','Pullapitkot ja hillomunkit')
     clickAndWait('id=create')
 
@@ -50,8 +45,8 @@
     verifyTextPresent('Admin user')
 
 	// Clicks share
-    clickAt('//*[text()="Jaa.."]')
-    waitForTextPresent('Kutsu sähköpostilla')
+    clickAt('//*[text()="&{'rcacase.share'}"]')
+    waitForTextPresent('&{'rcacase.share.dialog.inviteEmail'}')
     verifyTextPresent('admin@local')
 
 	// Invites kalevi
@@ -77,14 +72,14 @@
     verifyTextPresent('Admin user')
     clickAndWait('id=logout-link')
     
-	verifyTextPresent('Etusivu')
+	verifyTextPresent('&{'indexPage.title'}')
     type('id=username','admin@local')
     type('id=password','admin')
     clickAndWait('id=signin')
     verifyTextPresent('Admin user')
     verifyTextPresent('Irmelin testikeissi')
 
-    clickAt('//*[text()="Jaa.."]')
+    clickAt('//*[text()="&{'rcacase.share'}"]')
 
 	// Verifies that kalevi is still invited after relogin
     waitForTextPresent('kalevi@kalevi.kalevi')
@@ -99,7 +94,7 @@
     type('id=username','admin@local')
     type('id=password','admin')
     clickAndWait('id=signin')
-    clickAt('//*[text()="Jaa.."]')
+    clickAt('//*[text()="&{'rcacase.share'}"]')
 
 	// Verifies that kalevi is still removed from the case after relogin
     verifyTextNotPresent('kalevi@kalevi.kalevi')
@@ -108,4 +103,3 @@
     open('/?language=en')
     open('/logout')
 #{/selenium}
-

@@ -22,7 +22,6 @@
   ~ THE SOFTWARE.
   -->
 #{fixture delete:'all',load:'data.yml' /}
-Http.Response.current().reset();
 #{selenium}
 open('/logout')
 open('/?language=en')

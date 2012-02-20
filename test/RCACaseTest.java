@@ -1,6 +1,7 @@
 /*
- * Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen, Joona Koistinen,
- * Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus
+ * Copyright (C) 2012 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
+ * Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus,
+ * Timo Lehtinen, Jaakko Harjuhahto
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,7 +27,8 @@ import models.RCACase;
 import models.User;
 import models.enums.CompanySize;
 import models.enums.RCACaseType;
-import org.junit.*;
+import org.junit.Before;
+import org.junit.Test;
 import play.test.UnitTest;
 
 /**
@@ -68,8 +70,9 @@ public class RCACaseTest extends UnitTest {
 	@Test
 	public void getAndSetTest() {
 		RCACase testCase = new RCACase(user);
-		user.addRCACase(testCase);
+		user.addRCACase(testCase, "another name");		
 		assertTrue(testCase.getOwner() == user);
+		assertTrue(testCase.problem.name == "another name");
 		testCase.setRCACaseType(rcaCaseType);
 		assertTrue(testCase.getRCACaseType() == rcaCaseType);
 		testCase.setCompanySize(size);
