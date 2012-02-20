@@ -109,3 +109,15 @@ div#rcacase-share-dialog form {
 .caseTitle {
     max-width: 350px;
 }
+
+.browser {
+    display: inline-block;
+    vertical-align: top;
+    text-align: center;
+    margin-right: 10px;
+}
+
+.browser img {
+    margin: auto;
+    display: block;
+}
