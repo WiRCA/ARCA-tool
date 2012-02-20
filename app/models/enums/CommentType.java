@@ -59,7 +59,7 @@ public enum CommentType {
 	*/
 	public static CommentType valueOf(Integer value) {
 		for (CommentType commentType : CommentType.values()) {
-			if (commentType.value.equals(id)) {
+			if (commentType.value.equals(value)) {
 				return commentType;
 			}
 		}
