@@ -25,31 +25,38 @@ select('id=companySize','label=1-10')
 type('id=companyProducts','testgraph')
 clickAndWait('id=create')
 
+// verify that there are no likes yet
 verifyTextNotPresent('points')
 verifyTextNotPresent('point')
+
+// add a new like
 clickAt('//*[text()="testgraph"]')
 waitForElementPresent('css=div.radial_div > #radmenu-event-likeCause')
 click('css=div.radial_div > #radmenu-event-likeCause > a > img')
 waitForTextPresent('1 &{'editor.singlePoint'}')
 
+// add another like
 clickAt('//*[text()="testgraph"]')
 waitForElementPresent('css=div.radial_div > #radmenu-event-likeCause')
 verifyElementPresent('css=div.radial_div > #radmenu-event-dislikeCause')
 click('css=div.radial_div > #radmenu-event-likeCause > a > img')
 waitForTextPresent('2 &{'editor.multiplePoints'}')
 
+// dislike
 clickAt('//*[text()="testgraph"]')
 waitForElementPresent('css=div.radial_div > #radmenu-event-likeCause')
 verifyElementPresent('css=div.radial_div > #radmenu-event-dislikeCause')
 click('css=div.radial_div > #radmenu-event-dislikeCause > a > img')
 waitForTextPresent('1 &{'editor.singlePoint'}')
 
+// dislike again and verify that no likes are left
 clickAt('//*[text()="testgraph"]')
 waitForElementPresent('css=div.radial_div > #radmenu-event-likeCause')
 verifyElementPresent('css=div.radial_div > #radmenu-event-dislikeCause')
 click('css=div.radial_div > #radmenu-event-dislikeCause > a > img')
 waitForTextNotPresent('1 &{'editor.singlePoint'}')
 
+// add a subcause
 clickAt('//*[text()="testgraph"]')
 waitForElementPresent('css=div.radial_div > #radmenu-event-likeCause')
 verifyElementPresent('css=div.radial_div > #radmenu-event-addCause > a > img')
@@ -57,10 +64,13 @@ click('css=div.radial_div > #radmenu-event-addCause > a > img')
 waitForElementPresent('css=#addcause-modal > div.modal-header > h3')
 type('id=causeName','jepa')
 click('id=addcause-submit')
-
 waitForTextPresent('jepa')
+
+// verify that there are no points for the new cause
 verifyTextNotPresent('points')
 verifyTextNotPresent('point')
+
+// like the new subcause
 clickAt('//*[text()="jepa"]')
 waitForElementPresent('css=div.radial_div > #radmenu-event-likeCause')
 click('css=div.radial_div > #radmenu-event-likeCause > a > img')
@@ -75,6 +85,7 @@ waitForTextPresent('&{'rcacase.share.dialog.inviteEmail'}')
 click('css=input[type="submit"]')
 click('css=input[type="submit"]')
 
+// share for user email@local.fi
 type('id=rcacase-share-dialog-invitedEmail-input','email@local.fi')
 click('css=input[type="submit"]')
 waitForTextPresent('email@local.fi')
@@ -86,18 +97,22 @@ clickAndWait('id=logout-link')
 type('id=username','email@local.fi')
 type('id=password','admin')
 clickAndWait('id=signin')
+
+// Open testgraph
 click('link=&{'user.sharedCases'}')
 waitForTextPresent('testgraph')
 clickAt('//*[text()="testgraph"]')
-
 waitForTextPresent('jepa')
 verifyTextPresent('testgraph')
 verifyTextPresent('1 &{'editor.singlePoint'}')
+
+// like jepa cause
 clickAt('//*[text()="jepa"]')
 waitForElementPresent('css=div.radial_div > #radmenu-event-likeCause')
 click('css=div.radial_div > #radmenu-event-likeCause > a > img')
 waitForTextPresent('2 &{'editor.multiplePoints'}')
 
+// dislike the jepa cause
 clickAt('//*[text()="jepa"]')
 waitForElementPresent('css=div.radial_div > #radmenu-event-dislikeCause')
 click('css=div.radial_div > #radmenu-event-dislikeCause > a > img')
