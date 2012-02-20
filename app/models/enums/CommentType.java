@@ -35,15 +35,29 @@ public enum CommentType {
 	NEGATIVE(2, "Negative"),
 	POSITIVE(3, "Positive");
 
+	/**
+	* the value of the enum
+	*/
 	public Integer value;
+	/**
+	* the text of the enum
+	*/
 	public String text;
 
+	/**
+	* Basic constructor
+	*/
 	CommentType(Integer value, String text) {
 		this.value = value;
 		this.text = text;
 	}
 
-	public static CommentType valueOf(Integer id) {
+	/**
+	* Get the CommentType vith value
+	* @param value of the type
+	* @return found CommentType or null
+	*/
+	public static CommentType valueOf(Integer value) {
 		for (CommentType commentType : CommentType.values()) {
 			if (commentType.value.equals(id)) {
 				return commentType;

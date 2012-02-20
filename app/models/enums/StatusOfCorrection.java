@@ -34,12 +34,23 @@ public enum StatusOfCorrection {
 	IMPLEMENTED(3),
 	REJECTED(4);
 
+	/**
+	* the value of the enum
+	*/
 	public Integer value;
 
+	/**
+	* Basic constructor
+	*/
 	StatusOfCorrection(Integer value) {
 		this.value = value;
 	}
 
+	/**
+	* Get the StatusOfCorrection vith value
+	* @param value of the status
+	* @return found StatusOfCorrection or null
+	*/
 	public static StatusOfCorrection valueOf(Integer id) {
 		for (StatusOfCorrection status : StatusOfCorrection.values()) {
 			if (status.value.equals(id)) {

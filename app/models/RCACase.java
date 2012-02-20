@@ -56,51 +56,93 @@ public class RCACase extends IdComparableModel {
 	private static final int NUMBER_OF_EVENTS_STORED_IN_EVENT_STREAM = 100;
 	private static final String EXPIRATION_TIME_FOR_CAUSE_STREAM_IN_CACHE = "30mn";
 
+	/**
+	* the name of the rca case
+	*/
 	@Required
 	@MaxSize(value = 255)
 	@Column(name = "name")
 	public String caseName;
 
-	// @Min(value = 0, message = "validation.selectOne")
+	/**
+	* the tpy of the rca case
+	*/
 	public Integer caseTypeValue;
 
+	/*
+	* Goals of the rca case
+	*/
 	@Lob
 	public String caseGoals;
 
-	// @Min(value = 0, message = "validation.selectOne")
+	/**
+	* The size of the company
+	*/
 	public Integer companySizeValue;
 
-	@Lob
+	/**
+	* The description of the rca case
+	*/
 	public String description;
 
+	/**
+	* Is the compnay multinational
+	*/
 	public boolean isMultinational;
 
+	/**
+	* The name of the company
+	*/
 	@MaxSize(value = 255)
 	public String companyName;
 
+	/**
+	* Description of the products of the company
+	*/
 	@Lob
 	public String companyProducts;
 
+	/**
+	* Is the rca case public for everyone
+	*/
 	public boolean isCasePublic;
 
+	/**
+	* Id of the owner user
+	*/
 	public Long ownerId;
 
+	/**
+	* Id of the root problem "cause"
+	*/
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "problemId")
 	public Cause problem;
 
+	/**
+	* All causes that belong to this rca case
+	*/
 	@OneToMany(mappedBy = "rcaCase", cascade = CascadeType.ALL)
 	@Sort(type = SortType.NATURAL)
 	public SortedSet<Cause> causes;
 
+	/**
+	* The creation date of the rca case
+	*/
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "created", nullable = false)
 	public Date created;
 
+	/**
+	* The update date of the rca case
+	*/
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "updated", nullable = false)
 	public Date updated;
 
+	/**
+	* This method is called when the rca case is created
+	*/
 	@PrePersist
 	protected void onCreate() {
 		Date current = new Date();

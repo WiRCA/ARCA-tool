@@ -26,11 +26,23 @@ package models.events;
 
 import models.Cause;
 
+/**
+* Delete cause event
+*/
 public class DeleteCauseEvent extends Event {
 
+	/**
+	* the name of the cause that was deleted
+	*/
 	public final String text;
+	/**
+	* the id of the cause that was deleted
+	*/
 	public final String causeId;
 
+	/**
+	* Basic constructor
+	*/
 	public DeleteCauseEvent(Cause cause) {
 		super("deletecauseevent");
 		this.text = cause.name;

@@ -35,14 +35,28 @@ public enum CompanySize {
 	THREEHUNDRED(4, "101-300"),
 	MORE(5, "301->");
 
+	/**
+	* the value of the enum
+	*/
 	public Integer value;
+	/**
+	* the text of the enum
+	*/
 	public String text;
 
+	/**
+	* Basic constructor
+	*/
 	CompanySize(Integer value, String text) {
 		this.value = value;
 		this.text = text;
 	}
 
+	/**
+	* Get the CompanySize vith value
+	* @param value of the type
+	* @return found CompanySize or null
+	*/
 	public static CompanySize valueOf(Integer id) {
 		for (CompanySize size : CompanySize.values()) {
 			if (size.value.equals(id)) {

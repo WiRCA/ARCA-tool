@@ -65,8 +65,8 @@ public class CauseController extends Controller {
 	/**
 	 * Adds a sub-cause to a cause.
 	 *
-	 * @param causeId
-	 * @param name
+	 * @param causeId id of the cause to which the new cause is added
+	 * @param name the name of the new cause
 	 */
 	public static void addCause(Long causeId, String name) {
 		// causeId is used later as a String
@@ -84,8 +84,8 @@ public class CauseController extends Controller {
 	/**
 	 * Adds a relation between causes.
 	 *
-	 * @param causeId
-	 * @param toId
+	 * @param causeId relation from cause id
+	 * @param toId relation to cause id
 	 */
 	public static void addRelation(Long causeId, Long toId) {
 		Cause causeFrom = Cause.findById(causeId);
@@ -104,14 +104,12 @@ public class CauseController extends Controller {
 	/**
 	 * Gets the corrective actions of a cause and renders them in a variable.
 	 *
-	 * @param causeId
-	 *
-	 * @return
+	 * @param causeId corrrective actions for cause id
 	 */
 	public static void getCorrections(Long causeId) {
 		Cause cause = Cause.findById(causeId);
-    Set<Correction> listOfCorrections = cause.corrections;
-    User user = SecurityController.getCurrentUser();
+		Set<Correction> listOfCorrections = cause.corrections;
+		User user = SecurityController.getCurrentUser();
 
 		render(listOfCorrections, user);
 	}
@@ -119,8 +117,9 @@ public class CauseController extends Controller {
 	/**
 	 * Adds a corrective action for a cause.
 	 *
-	 * @param causeId
-	 * @param name
+	 * @param causeId cause's id to add the new corrective action
+	 * @param name name of the corrective action
+	 * @param description description of the corrective action
 	 */
 	public static void addCorrection(Long causeId, String name, String description) {
 		Cause causeTo = Cause.findById(causeId);
@@ -141,7 +140,7 @@ public class CauseController extends Controller {
 	 * RCA case owner can delete all other nodes.
 	 * Other users can only delete nodes that they have created themselves.
 	 *
-	 * @param causeId
+	 * @param causeId delete cause id
 	 */
 	public static void deleteCause(Long causeId) {
 		Cause cause = Cause.findById(causeId);
@@ -240,10 +239,10 @@ public class CauseController extends Controller {
 	}
 
 	/**
-	 * Adds a sub-cause to a cause.
+	 * Renames a cause.
 	 *
-	 * @param causeId
-	 * @param name
+	 * @param causeId rename cause with id
+	 * @param name new name of the cause
 	 */
 	public static void renameCause(Long causeId, String name) {
 		// causeId is used later as a String

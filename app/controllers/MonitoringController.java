@@ -42,12 +42,19 @@ import java.util.*;
 @With({LanguageController.class})
 public class MonitoringController extends Controller {
 
+	/**
+	* Opens the index page of the Monitoring
+	*/
 	public static void index() {
 		StatusOfCause[] causeStatuses = StatusOfCause.values();
 		StatusOfCorrection[] correctionStatuses = StatusOfCorrection.values();
 		render(causeStatuses, correctionStatuses);
 	}
 
+	/**
+	* List the rca cases that the user wants to see
+	* @param showCases e.g. "publicCases", "sharedCases", or "myCases"
+	*/
 	public static void rcaCaseSelecting(@As(",") List<String> showCases) {
 		Set<RCACase> cases = new HashSet<RCACase>();
 		User user = SecurityController.getCurrentUser();
@@ -75,6 +82,15 @@ public class MonitoringController extends Controller {
 		render(cases);
 	}
 
+	/**
+	* Lists the causes and corrective actions that user wants to see
+	* @param whatToShow "causes", "corrections", or both
+	* @param selectedCases ids of the rca cases to be shown
+	* @param allCases if user wants to see all cases that he has rights for
+	* @param selectedCauseStatuses statuses of the causes that the user wants to see
+	* @param selectedCorrectionStatuses statuses of the corrective actions that the user wants to see
+	* @param csvExport if the request is to download csv file
+	*/
 	public static void causesAndCorrections(@As(",") List<String> whatToShow, @As(",") List<Long> selectedCases,
 	                                        Boolean allCases, @As(",") List<Integer> selectedCauseStatuses,
 	                                        @As(",") List<Integer> selectedCorrectionStatuses, Boolean csvExport) {
@@ -128,6 +144,11 @@ public class MonitoringController extends Controller {
 		       corrections, causeStatuses, correctionStatuses);
 	}
 
+	/**
+	* Change the status of a cause
+	* @param causeId the id of the cause to be updated
+	* @param statusOfCause the new status of the cause
+	*/
 	public static void changeCauseStatus(Long causeId, StatusOfCause statusOfCause) {
 		Cause cause = Cause.findById(causeId);
 		notFoundIfNull(cause);
@@ -140,6 +161,11 @@ public class MonitoringController extends Controller {
 		renderJSON(false);
 	}
 
+	/**
+	* Change the status of a corrective action
+	* @param correctionId the id of the corrective action to be updated
+	* @param statusOdCorrection the new status of the corrective action
+	*/
 	public static void changeCorrectionStatus(Long correctionId, StatusOfCorrection statusOfCorrection) {
 		Correction correction = Correction.findById(correctionId);
 		notFoundIfNull(correction);

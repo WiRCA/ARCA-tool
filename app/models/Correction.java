@@ -45,20 +45,38 @@ import java.util.TreeSet;
 @Entity(name = "correction")
 public class Correction extends LikableIdComparableModel {
 
+	/**
+	* the name of the corrective action
+	*/
 	public String name;
 
+	/**
+	* the description of the corrective action
+	*/
 	public String description;
 
+	/**
+	* the status of the corrective action
+	*/
 	public Integer statusValue = StatusOfCorrection.IDEA.value;
 
+	/**
+	* The cause that the corrective action is related to
+	*/
 	@ManyToOne
 	@JoinColumn(name = "causeId")
 	public Cause cause;
 
+	/**
+	* The comments related to this corrective action
+	*/
 	@OneToMany(mappedBy = "correction", cascade = CascadeType.ALL)
 	@Sort(type = SortType.NATURAL)
 	public SortedSet<Comment> comments;
 
+	/**
+	* Likes related to this corrective action
+	*/
 	@ElementCollection
 	@JoinTable(name = "correctionlikes", joinColumns = {@JoinColumn(name = "correctionId", nullable = false)})
 	@Column(name = "userId", nullable = false)

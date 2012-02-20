@@ -24,11 +24,23 @@
 
 package models.events;
 
+/**
+* Add realtion from cause to cause event
+*/
 public class AddRelationEvent extends Event {
 
+	/**
+	* id of the cause that the relation starts from
+	*/
 	public final String causeFrom;
+	/**
+	* if of the cause that the relation ends to
+	*/
 	public final String causeTo;
 
+	/**
+	* Basic constructor
+	*/
 	public AddRelationEvent(Long causeFrom, Long causeTo) {
 		super("addrelationevent");
 		this.causeTo = String.valueOf(causeTo);

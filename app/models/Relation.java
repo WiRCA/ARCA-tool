@@ -31,20 +31,22 @@ import javax.persistence.*;
 /**
  * Relation between two causes in an RCA tree.
  * @author Eero Laukkanen
- */
-
-/**
  * TODO Timestamp for update information, updating said timestamp to RCACase
  */
-
 @PersistenceUnit(name = "maindb")
 @Entity(name = "relation")
 public class Relation extends IdComparableModel {
 
+	/**
+	* Relation from cause
+	*/
 	@ManyToOne
 	@JoinColumn(name="causeFrom")
 	public Cause causeFrom;
 
+	/**
+	* Relation to cause
+	*/
 	@ManyToOne
 	@JoinColumn(name="causeTo")
 	public Cause causeTo;

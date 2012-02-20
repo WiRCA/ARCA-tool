@@ -34,12 +34,23 @@ public enum StatusOfCause {
 	WILL_NOT_FIX(3),
 	FIXED(4);
 
+	/**
+	* the value of the enum
+	*/
 	public Integer value;
 
+	/**
+	* Basic constructor
+	*/
 	StatusOfCause(Integer value) {
 		this.value = value;
 	}
 
+	/**
+	* Get the StatusOfCause vith value
+	* @param value of the status
+	* @return found StatusOfCause or null
+	*/
 	public static StatusOfCause valueOf(Integer id) {
 		for (StatusOfCause status : StatusOfCause.values()) {
 			if (status.value.equals(id)) {

@@ -37,53 +37,90 @@ import java.util.*;
  *
  * @author Eero Laukkanen
  */
-
 @PersistenceUnit(name = "maindb")
 @Entity(name = "cause")
 public class Cause extends LikableIdComparableModel {
 
+	/**
+	* the name of the cause
+	*/
 	public String name;
 
+	/**
+	* The rca case that the cause belongs to
+	*/
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "rcaCaseId")
 	public RCACase rcaCase;
 
+	/**
+	* the id of the creator user
+	*/
 	public Long creatorId;
 
+	/**
+	* The updated dat of the cause
+	*/
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "updated", nullable = false)
 	private Date updated;
 
-
+	/**
+	* Relations from the cause
+	*/
 	@OneToMany(mappedBy = "causeTo", cascade = CascadeType.ALL)
 	@Sort(type = SortType.NATURAL)
 	public SortedSet<Relation> causeRelations;
 
+	/**
+	* Relations to the cause
+	*/
 	@OneToMany(mappedBy = "causeFrom", cascade = CascadeType.ALL)
 	@Sort(type = SortType.NATURAL)
 	public SortedSet<Relation> effectRelations;
 
+	/**
+	* Corrective actions for the cause
+	*/
 	@OneToMany(mappedBy = "cause", cascade = CascadeType.ALL)
 	@Sort(type = SortType.NATURAL)
 	public SortedSet<Correction> corrections;
 
+	/**
+	* Status of the cause
+	*/
 	public Integer statusValue = StatusOfCause.DETECTED.value;
 
+	/**
+	* Relative X coordinate from the parent
+	*/
 	public Integer xCoordinate = 100;
 
+	/**
+	* Relative Y coordinate from the parent
+	*/
 	public Integer yCoordinate = 100;
 
+	/**
+	* Likes to the cause
+	*/
 	@ElementCollection
 	@JoinTable(name = "causelikes", joinColumns = {@JoinColumn(name = "causeId", nullable = false)})
 	@Column(name = "userId", nullable = false)
 	public List<Long> likes;
 
+	/**
+	* This method is called when the cause is created
+	*/
 	@PrePersist
 	protected void onCreate() {
 		updated = new Date();
 		rcaCase.updated = updated;
 	}
 
+	/**
+	* This method is called when the cause is updated
+	*/
 	@PreUpdate
 	protected void onUpdate() {
 		updated = new Date();
@@ -281,6 +318,10 @@ public class Cause extends LikableIdComparableModel {
 		this.statusValue = status.value;
 	}
 
+	/**
+	* Basic toString method
+	* @return the name, id and the rca case of the case
+	*/
 	@Override
 	public String toString() {
 		return name + " (id: " + id + ", rca case: " + rcaCase + ")";

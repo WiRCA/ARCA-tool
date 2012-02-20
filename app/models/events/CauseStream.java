@@ -28,17 +28,34 @@ import play.libs.F.*;
 
 import java.io.Serializable;
 
-
+/**
+* All events that are made in RCA case tree are saved to CauseStream.
+* Events from the stream are sent to other users that are watching the same
+* rca case at the same time.
+*/
 public class CauseStream implements Serializable {
 
+	/**
+	* History of the events
+	*/
 	public final ArchivedEventStream<Event> eventStream;
+	/**
+	* id of the last event
+	*/
 	public Long lastEvent;
 
+	/**
+	* Basic constructor
+	*/
 	public CauseStream(int size) {
 		this.eventStream = new ArchivedEventStream<Event>(size);
 		this.lastEvent = 0L;
 	}
 
+	/**
+	* Get the event stream
+	* @return the event stream
+	*/
 	public ArchivedEventStream<Event> getStream() {
 		return eventStream;
 	}

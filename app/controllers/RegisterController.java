@@ -58,10 +58,10 @@ public class RegisterController extends Controller {
 	/**
 	 * Registers user with values given in the user registration form.
 	 * An email can only be registered once.
-	 * @param user
-	 * @param password2
-	 * @param invitationId
-	 * @param rcaCaseId
+	 * @param user User to be registered
+	 * @param password2 second password field for validating the password
+	 * @param invitationId id of the invitation if registering with invitation
+	 * @param rcaCaseId id of the rca case if registering with invitation
 	 */
 	public static void register(@Valid User user, @Required String password2, Long invitationId, Long rcaCaseId) {
 
@@ -110,7 +110,7 @@ public class RegisterController extends Controller {
 	 * In this case a random password is generated for the account.
 	 * Google login can also be used to log in a user that has registered with our systems sign up
 	 * feature.
-	 * @throws NoSuchAlgorithmException
+	 * @throws NoSuchAlgorithmException should no be thrown
 	 */
 	public static void googleLogin() throws NoSuchAlgorithmException {
 		if (OpenID.isAuthenticationResponse()) {
@@ -139,9 +139,9 @@ public class RegisterController extends Controller {
 	/**
 	 * Redirects a invited user to the registration form.
 	 * The email address is already given in the registration form and cannot be changed.
-	 * @param invitationId
-	 * @param rcaCaseId
-	 * @param inviteHash
+	 * @param invitationId id of the invitation
+	 * @param rcaCaseId id of a rca case to which the user is invited to
+	 * @param inviteHash hash of the invitation to recognize the user
 	 */
 	public static void registerInvitation(Long invitationId, Long rcaCaseId, String inviteHash) {
 		if (SecurityController.isConnected()) {

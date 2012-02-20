@@ -45,23 +45,30 @@ public class Invitation extends Model {
     private static final String SECURE_RANDOM_ALGORITHM = "SHA1PRNG";
 	private static final int HASH_VALUE_LENGTH = 10;
 
+	/**
+	* The unique hash of the invitation
+	* Hash is inserted to the link that is emailed to the invited user.
+	* With the hash the user can be authorized
+	*/
 	public String hash;
 
+	/**
+	* the email to be invited
+	*/
 	public String email;
 
+	/**
+	* The ids of the rca cases that the invitation has rights for
+	*/
 	@ElementCollection
 	@JoinTable(name = "invitationCases", joinColumns = {@JoinColumn(name = "invitationId", nullable = false)})
 	@Column(name = "caseId")
 	public Set<Long> caseIds;
 
-	/**    } catch (NoSuchAlgorithmException e) {
-			// Should not happen
-			Logger.error(e, "Invitation hash generation failed");
-		}
+	/**
 	 * Creates invitation with email. Hash is generated automatically.
 	 * @param email email where the invitation is send to.
 	 */
-	//TODO: mikä hashin tehtävä on? ei selviä tästä -> doc
 	public Invitation(String email) {
 		try {
 			this.email = email;
@@ -98,6 +105,10 @@ public class Invitation extends Model {
 		this.save();
 	}
 
+	/**
+	* Basic toString method
+	* @return email of the invitation
+	*/
 	@Override
 	public String toString() {
 		return "Invitation{" + "email='" + email + '\'' + '}';

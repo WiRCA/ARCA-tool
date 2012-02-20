@@ -26,12 +26,27 @@ package models.events;
 
 import models.Cause;
 
+/**
+* Add corrective action to cause event
+*/
 public class AddCorrectionEvent extends Event {
 
+	/**
+	* the name of the corrective action
+	*/
 	public final String name;
+	/**
+	* the description if the corrective action
+	*/
 	public final String description;
+	/**
+	* the id of the cause to add the corrective action
+	*/
 	public final String correctionTo;
 
+	/**
+	* Basic constructor
+	*/
 	public AddCorrectionEvent(Cause cause, String name, String description) {
 		super("addcorrectionevent");
 		this.correctionTo = Long.toString(cause.id);

@@ -24,11 +24,23 @@
 
 package models.events;
 
+/**
+* Amount of likes of a cause event
+*/
 public class AmountOfLikesEvent extends Event {
 
+	/**
+	* id of the cause
+	*/
 	public final String causeId;
+	/**
+	* amount of likes to the cause
+	*/
 	public final String amountOfLikes;
 
+	/**
+	* Basic constructor
+	*/
 	public AmountOfLikesEvent(Long causeId, Integer amountOfLikes) {
 		super("amountOfLikesEvent");
 		this.causeId = causeId.toString();

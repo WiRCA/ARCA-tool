@@ -26,13 +26,31 @@ package models.events;
 
 import models.Cause;
 
+/**
+* Add sub cause to cause event
+*/
 public class AddCauseEvent extends Event {
 
+	/**
+	* the name of the new cause
+	*/
 	public final String text;
+	/**
+	* the id of the old cause
+	*/
 	public final String causeFrom;
+	/**
+	* the id of te new sub cause
+	*/
 	public final String causeTo;
+	/**
+	* id of the creator user of the sub cause
+	*/
 	public final String creatorId;
 
+	/**
+	* Basic constructor
+	*/
 	public AddCauseEvent(Cause cause, Long causeFrom) {
 		super("addcauseevent");
 		this.causeTo = Long.toString(cause.id);

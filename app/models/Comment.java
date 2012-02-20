@@ -40,22 +40,41 @@ import java.util.Date;
 @Entity(name = "correctioncomments")
 public class Comment extends IdComparableModel {
 
+	
+	/**
+	* The corrective action that the comment is related to
+	*/
 	@ManyToOne
 	@JoinColumn(name = "correctionId")
 	public Correction correction;
 
+	/**
+	* Id of the author user
+	*/
 	@JoinColumn(name = "userId")
 	public Long creatorId;
 
+	/**
+	* The created date of the comment
+	*/
 	@Temporal(TemporalType.TIMESTAMP)
 	public Date created;
 
+	/**
+	* The updated date of the comment
+	*/
 	@Temporal(TemporalType.TIMESTAMP)
 	public Date updated;
 
+	/**
+	* The comment type of the comment
+	*/
 	@JoinColumn(name = "tag")
 	public Integer commentType;
 
+	/**
+	* The text of the comment
+	*/
 	@Lob
 	public String comment;
 

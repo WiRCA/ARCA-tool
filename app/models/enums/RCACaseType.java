@@ -33,14 +33,28 @@ public enum RCACaseType {
 	HR(2, "RCACaseType.hr"),
 	OTHER(3, "RCACaseType.other");
 
+	/**
+	* the value of the enum
+	*/
 	public Integer value;
+	/**
+	* the text of the enum
+	*/
 	public String text;
 
+	/**
+	* Basic constructor
+	*/
 	RCACaseType(Integer value, String text) {
 		this.value = value;
 		this.text = text;
 	}
 
+	/**
+	* Get the RCACaseType vith value
+	* @param value of the type
+	* @return found RCACaseType or null
+	*/
 	public static RCACaseType valueOf(Integer id) {
 		for (RCACaseType caseType : RCACaseType.values()) {
 			if (caseType.value.equals(id)) {

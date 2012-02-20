@@ -24,11 +24,23 @@
 
 package models.events;
 
+/**
+* The super class of all events
+*/
 public abstract class Event {
 
+	/**
+	* the type of the event
+	*/
 	public final String type;
+	/**
+	* timestamp of the event
+	*/
 	public final Long timestamp;
-
+	
+	/**
+	* Basic constructor
+	*/
 	public Event(String type) {
 		this.type = type;
 		this.timestamp = System.currentTimeMillis();

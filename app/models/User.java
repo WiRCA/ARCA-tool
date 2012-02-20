@@ -43,20 +43,33 @@ import java.util.TreeSet;
 @Entity(name = "user")
 public class User extends Model {
 
+	/**
+	* The email of the user
+	*/
 	@Required
 	@Email
 	@MaxSize(value = 255)
 	public String email;
 
+	/**
+	* The name of the user
+	*/
 	@Required
 	@MaxSize(value = 64)
 	@MinSize(value = 1)
 	public String name;
 
+	/**
+	* The password of the user
+	* Saved to the database using SHA-1
+	*/
 	@Required
 	@Password
 	public String password;
 
+	/**
+	* Ids of the cases that the user has rights to
+	*/
 	@ElementCollection
 	@JoinTable(name = "usercases", joinColumns = {@JoinColumn(name = "userId", nullable = false)})
 	@Column(name = "caseId", nullable = false)
@@ -131,6 +144,10 @@ public class User extends Model {
 		return cases;
 	}
 
+	/**
+	* Basic toString method
+	* @return the name, id, and email of the user
+	*/
 	@Override
 	public String toString() {
 		return name + " (" + id + ", " + email + ")";

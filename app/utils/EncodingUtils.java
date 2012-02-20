@@ -43,6 +43,12 @@ public final class EncodingUtils {
 	private EncodingUtils() {
 	}
 
+	/**
+	* Encode the given text with given algorithm
+	* @param text text to be encoded
+	* @param algorithm to be used
+	* @param encodeBase64 if the encoded text should be encoded with base64
+	*/
 	public static String encodeSHA(String text, String algorithm, boolean encodeBase64) {
 		try {
 			if (text != null) {
@@ -64,10 +70,20 @@ public final class EncodingUtils {
 		return null;
 	}
 
+	/**
+	* Encode the given text with SHA-1
+	* @param text to be encoded
+	* @return encoded text
+	*/
 	public static String encodeSHA1(String text) {
 		return encodeSHA(text, SHA1, false);
 	}
 
+	/**
+	* Encode the given text with SHA-1 and then with Base64
+	* @param text to be encoded
+	* @return encoded text
+	*/
 	public static String encodeSHA1Base64(String text) {
 		return encodeSHA(text, SHA1, true);
 	}

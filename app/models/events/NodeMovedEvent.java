@@ -27,14 +27,27 @@ package models.events;
 import models.Cause;
 
 /**
+ * Cause moved event
  * @author Eero Laukkanen
  */
 public class NodeMovedEvent extends Event {
 
+	/**
+	* Cause moved to X coordinate
+	*/
 	public final String x;
+	/**
+	* Cause moved to Y coordinate
+	*/
 	public final String y;
+	/**
+	* Id of the cause that was moved
+	*/
 	public final String causeId;
 
+	/**
+	* Basic constructor
+	*/
 	public NodeMovedEvent(Cause cause, int x, int y) {
 		super("nodemovedevent");
 		this.x = String.valueOf(x);

@@ -37,9 +37,9 @@ public class SecurityController extends Secure.Security {
 	/**
 	 * Authenticates the log in attempt.
 	 * Checks whether a user with the given email and password has been registered.
-	 * @param username
-	 * @param password
-	 * @return
+	 * @param username user's username
+	 * @param password user's password
+	 * @return if the authentication was successfull
 	 */
 	public static boolean authenticate(String username, String password) {
 		User found = User.find("byEmailAndPassword", username, EncodingUtils.encodeSHA1(password)).first();

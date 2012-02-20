@@ -37,7 +37,6 @@ import java.util.Set;
  * Method to open users personal main page.
  * @author Eero Laukkanen
  */
-
 @With({Secure.class, LanguageController.class})
 public class UserController extends Controller {
 
