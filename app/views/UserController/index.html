@@ -168,7 +168,7 @@
 <h2>&{'user.myCases'}</h2>
 <ul>
     #{list items:ownCases, as:'rcaCase'}
-    <li>#{a @PublicRCACaseController.show(rcaCase.id), id:'show-rcacase-'+rcaCase.id+'-link', rel:'popover',
+    <li>#{a @PublicRCACaseController.show(rcaCase.id), class:'ellipsis caseTitle', id:'show-rcacase-'+rcaCase.id+'-link', rel:'popover',
         title:"${rcaCase.caseName}", 'data-content':"${rcaCase.description}"}${rcaCase.caseName}#{/a}
         &{'rcacase.lastmodified'} ${rcaCase.updated.since(true)}
         &{'user.created'} ${rcaCase.created.since(true)}
