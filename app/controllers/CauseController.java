@@ -93,7 +93,7 @@ public class CauseController extends Controller {
 
 		Cause causeTo = Cause.findById(toId);
 
-		causeFrom.addCause(causeTo);
+		causeTo.addCause(causeFrom);
 
 		AddRelationEvent event = new AddRelationEvent(causeId, toId);
 		CauseStream causeEvents = rcaCase.getCauseStream();
