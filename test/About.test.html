@@ -27,5 +27,5 @@
     open('/logout')
     open('/?language=en')
     click('//a[contains(@href,"/about")]')
-    waitForElementPresent('//h1[contains(text(), "&{'aboutPage.title'}")]')
+    waitForTextPresent('&{'aboutPage.content1'}')
 #{/selenium}
