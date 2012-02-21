@@ -7,6 +7,7 @@
                 <li class="${ activePage == 'monitoring' ? 'active' : ''}">#{a @MonitoringController.index()}&{'monitoringPage.title'}#{/a}</li>
                 <li class="${ activePage == 'about' ? 'active' : ''}">#{a @AboutController.index()}&{'aboutPage.title'}#{/a}</li>
                 <li class="${ activePage == 'contact' ? 'active' : ''}">#{a @ContactController.index()}&{'contactPage.title'}#{/a}</li>
+                <li class="${ activePage == 'help' ? 'active' : ''}">#{a @HelpController.index()}&{'helpPage.title'}#{/a}</li>
             </ul>
             <div class="pull-right">
                 #{login /}
