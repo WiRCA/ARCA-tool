@@ -1,16 +1,17 @@
 #{if (causes != null && causes.size() > 0) || (corrections != null && corrections.size() > 0)}
 #{if showCauses}
-#{if showCorrections}&{'monitoring.numberOfCorrections'};#{/if}&{'monitoring.causeName'};&{'monitoring.relatedCase'};&{'monitoring.status'};&{'monitoring.score'};#{list causes, as:'cause'}
+#{if showCorrections}&{'monitoring.numberOfCorrections'};&{'monitoring.csv.causeAndCorrectionName'};&{'monitoring.csv.relatedCaseAndCorrectionDescription'};&{'monitoring.status'};&{'monitoring.score'};#{/if}
+#{else}&{'monitoring.causeName'};&{'monitoring.relatedCase'};&{'monitoring.status'};&{'monitoring.score'};#{/else}#{list causes, as:'cause'}
 
 #{if showCorrections}${cause.corrections.size()};#{/if}"${cause.name}";"${cause.rcaCase.caseName}";&{'monitoring.statusCause.' + cause.status};${cause.countLikes()};#{if showCorrections}#{list cause.corrections, as:'correction'}
 
-;"${correction.name}";"${correction.description}";#{/list}#{/if}
+;"${correction.name}";"${correction.description}";&{'monitoring.statusCorrection.' + correction.status};${correction.countLikes()};#{/list}#{/if}
 #{/list}
 #{/if}
 #{elseif showCorrections}
-&{'monitoring.correctionNameAndDescription'};&{'monitoring.relatedCase'};&{'monitoring.status'};&{'monitoring.score'};
+&{'monitoring.csv.correctionName'};&{'monitoring.csv.correctionDescription'};&{'monitoring.relatedCase'};&{'monitoring.status'};&{'monitoring.score'};
 #{list corrections, as:'correction'}
-"${correction.name}";"${correction.description}";"${correction.cause.rcaCase.caseName}";
+"${correction.name}";"${correction.description}";"${correction.cause.rcaCase.caseName}";&{'monitoring.statusCorrection.' + correction.status};${correction.countLikes()};
 #{/list}
 #{/elseif}
 #{/if}
