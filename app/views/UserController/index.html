@@ -51,6 +51,7 @@
 
     $("#rcacase-share-dialog-success").hide();
     $("#rcacase-share-dialog-invalidEmail").hide();
+	$("#rcacase-share-dialog-alreadyInvited").hide();
     $("#rcacase-share-dialog").dialog({
     autoOpen: false,
     height: 400,
@@ -66,6 +67,8 @@
     $("#rcacase-share-dialog-invitedEmail-input").val("");
     $("#rcacase-share-dialog-rcaCaseId-input").val("");
     $("#rcacase-share-dialog-invitedEmail-error").hide();
+	$("#rcacase-share-dialog-invalidEmail").hide();
+	$("#rcacase-share-dialog-alreadyInvited").hide();
     }
     });
 
@@ -74,13 +77,19 @@
     var email = $.trim($("#rcacase-share-dialog-invitedEmail-input").val());
 
 	/* Check if the input is an empty string */
-	if(email == null) {
+	if(email == undefined || email == "") {
+		console.log("toimii");
+	    $("#rcacase-share-dialog-invalidEmail").show();
+	    $("#rcacase-share-dialog-invalidEmail").delay(1700).fadeOut(1600, "linear");
 	    $("#rcacase-share-dialog-invitedEmail-error").show();
+		return false;
 	}
 
     /* Check if user exists already */
     if ($('#rcacase-share-dialog-persons tr').find('td[name="' + email + '"]').length > 0) {
     $("#rcacase-share-dialog-invitedEmail-input").val("");
+	$("#rcacase-share-dialog-alreadyInvited").show();
+    $("#rcacase-share-dialog-alreadyInvited").delay(1700).fadeOut(1600, "linear");
     $("#rcacase-share-dialog-invitedEmail-error").hide();
     return false
     }
@@ -241,5 +250,6 @@
     #{/form}
     <div id="rcacase-share-dialog-success" class="alert-message success">&{'rcacase.share.dialog.success'}</div>
     <div id="rcacase-share-dialog-invalidEmail" class="alert-message error">&{'rcacase.share.dialog.invalidEmail'}</div>
+	<div id="rcacase-share-dialog-alreadyInvited" class="alert-message error">&{'rcacase.share.dialog.alreadyInvited'}</div>
     <span>&{'rcacase.share.dialog.whoHasAccess'}</span>
 </div>

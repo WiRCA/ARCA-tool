@@ -154,6 +154,7 @@ rcacase.share.dialog.remove=Remove
 rcacase.share.dialog.close=Close
 rcacase.share.dialog.invalidEmail=Invalid email!
 rcacase.share.dialog.success=Invitation sent!
+rcacase.share.dialog.alreadyInvited=User is already invited!
 
 register.title=Sign up
 register.titleSmall=Fill the form
