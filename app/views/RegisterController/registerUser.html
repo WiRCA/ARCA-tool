@@ -74,6 +74,13 @@
         </div>
     </div>
 
+    <div id="googleRegister">
+        <p>&{'register.gLogin'}</p>
+        <div class="input">
+        #{a @RegisterController.googleLogin(), id:'googleRegisterLink'}<img src="@{'/public/images/google_icon_big.png'}" alt="Google"/>#{/a}
+        </div>
+    </div>
+
     <div class="actions" id="registerButtonP">
         <input class="btn success" type="submit" id="registerButton" value="&{'register.title'}"/>
 		<a class="btn cancel" href="/">&{'dialog.cancel'}</a>

@@ -13,7 +13,7 @@ GET     /user                                                       UserControll
 # Register
 GET     /register                                                   RegisterController.registerUser
 POST    /register                                                   RegisterController.register
-GET     /gLogin                                                     RegisterController.googleLogin
+GET     /auth/google                                                RegisterController.googleLogin
 GET     /invitation/{invitationId}/{rcaCaseId}/{inviteHash}         RegisterController.registerInvitation
 
 # Create RCACase -page
