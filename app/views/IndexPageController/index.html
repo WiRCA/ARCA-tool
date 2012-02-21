@@ -38,14 +38,19 @@
     #{else}<li>&{'user.noAnyPublicCases'}</li>#{/else}
     </ul>
 
+    <hr>
+
     <!-- logos by Paul Irish http://paulirish.com/2010/high-res-browser-icons/ -->
 
-    <h2>&{'indexPage.supportedBrowsers'}</h2>
-    <h3>&{'indexPage.bestBrowsers'}</h3>
-    <div class="browser"><img src="@{'/public/images/64-chrome.png'}"/>Chrome 17</div>
-    <div class="browser"><img src="@{'/public/images/64-firefox.png'}"/>Firefox 10</div>
-    <h3>&{'indexPage.partiallySupportedBrowsers'}</h3>
-    <div class="browser"><img src="@{'/public/images/64-ie.png'}"/>Internet Explorer 9</div>
-    <div class="browser"><img src="@{'/public/images/64-opera.png'}"/>Opera 11.61</div>
-    <div class="browser"><img src="@{'/public/images/64-safari.png'}"/>Safari</div>
+    <div class="supportedBrowsers">
+    <h5>&{'indexPage.bestBrowsers'}</h5>
+    <div class="browser"><img src="@{'/public/images/32-chrome.png'}"/>Chrome 17</div>
+    <div class="browser"><img src="@{'/public/images/32-firefox.png'}"/>Firefox 10</div>
+    </div>
+    <div class="supportedBrowsers">
+    <h5>&{'indexPage.partiallySupportedBrowsers'}</h5>
+    <div class="browser"><img src="@{'/public/images/32-ie.png'}"/>Internet Explorer 9</div>
+    <div class="browser"><img src="@{'/public/images/32-opera.png'}"/>Opera 11.61</div>
+    <div class="browser"><img src="@{'/public/images/32-safari.png'}"/>Safari</div>
+    </div>
 </div>

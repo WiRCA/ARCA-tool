@@ -41,8 +41,8 @@ applicationDescription=Tapa tehdä juurisyyanalyysia
 indexPage.title=Etusivu
 indexPage.info=Etkö ole rekisteröitynyt? Rekisteröidy tai kirjaudu sisään Google-tililläsi.
 indexPage.supportedBrowsers=Tuetut selaimet
-indexPage.bestBrowsers=Paras toimivuus
-indexPage.partiallySupportedBrowsers=Osittain testattu
+indexPage.bestBrowsers=Tuetut selaimet
+indexPage.partiallySupportedBrowsers=Toimii näilläkin
 
 aboutPage.title=Tietoa projektista
 aboutPage.content=ARCA-työkalu on Aalto-yliopiston Perustieteiden Korkeakoulun Ohjelmistonkehitysprojekti-kurssin \

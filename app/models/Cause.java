@@ -259,15 +259,15 @@ public class Cause extends LikableIdComparableModel {
 	}
 
 	/**
-	 * Returns the relations to the causes that are not children of this cause.
+	 * Returns the effect causes, none of which are the parent of this cause.
 	 *
-	 * @return the relations
+	 * @return the causes
 	 */
 	public Set<Cause> getRelations() {
 		Set<Cause> relations = new TreeSet<Cause>();
-		for (Relation relation : this.causeRelations) {
-			if (!relation.causeFrom.isChildOf(this)) {
-				relations.add(relation.causeFrom);
+		for (Relation relation : this.effectRelations) {
+			if (!this.isChildOf(relation.causeTo)) {
+				relations.add(relation.causeTo);
 			}
 		}
 		return relations;

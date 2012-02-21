@@ -43,8 +43,8 @@ applicationDescription=Root cause analysis method
 indexPage.title=Index page
 indexPage.info=Not a registered user? Sign up or just log in with your Google Account.
 indexPage.supportedBrowsers=Supported Browsers
-indexPage.bestBrowsers=Best tested with
-indexPage.partiallySupportedBrowsers=Partially tested with
+indexPage.bestBrowsers=Primary supported browsers
+indexPage.partiallySupportedBrowsers=Works with
 
 aboutPage.title=About
 aboutPage.content=The ARCA-tool is a product of the  Aalto University School of Science course Software Development \

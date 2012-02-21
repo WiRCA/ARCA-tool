@@ -121,3 +121,10 @@ div#rcacase-share-dialog form {
     margin: auto;
     display: block;
 }
+
+.supportedBrowsers {
+    display: inline-block;
+    text-align: center;
+    margin-right: 50px;
+}
+
