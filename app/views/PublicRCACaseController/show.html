@@ -260,13 +260,13 @@
 
     function likeCause(selected) {
         var likeCauseAjax = #{jsAction @CauseController.like(':causeId') /};
-        if (selected.data.creatorId != ${currentUser == null ? 'null' : currentUser.id}) {
+        if (${currentUser == null ? 'null' : currentUser.id} != ${rcaCase.ownerId}) {
             radmenu_fadeOut();
         };
         $.post(likeCauseAjax({causeId: selected.id}), function(result) {
             selected.data.hasUserLiked = result.hasliked;
             selected.data.likeCount = result.count;
-            if (selected.data.creatorId == ${currentUser == null ? 'null' : currentUser.id}) {
+            if (${currentUser == null ? 'null' : currentUser.id} == ${rcaCase.ownerId}) {
                 radmenu_updateLikeButtons(selected);
             };
         });
@@ -274,13 +274,13 @@
 
     function dislikeCause(selected) {
         var dislikeCauseAjax = #{jsAction @CauseController.dislike(':causeId') /};
-        if (selected.data.creatorId != ${currentUser == null ? 'null' : currentUser.id}) {
+        if (${currentUser == null ? 'null' : currentUser.id} != ${rcaCase.ownerId}) {
             radmenu_fadeOut();
         };
         $.post(dislikeCauseAjax({causeId: selected.id}), function(result) {
             selected.data.hasUserLiked = result.hasliked;
             selected.data.likeCount = result.count;
-            if (selected.data.creatorId == ${currentUser == null ? 'null' : currentUser.id}) {
+            if (${currentUser == null ? 'null' : currentUser.id} == ${rcaCase.ownerId}) {
                 radmenu_updateLikeButtons(selected);
             };
         });
@@ -869,8 +869,8 @@
             jQuery("#radial_menu").radmenu("items")[5].style.visibility = "visible";
             // hide dislike button if user has not liked
             jQuery("#radial_menu").radmenu("items")[6].style.visibility = "hidden";
-        } else if (selectedNode.data.hasUserLiked && selectedNode.data.creatorId != ${currentUser == null ? 'null' : currentUser.id}) {
-            // hide like button if user has liked and is not the owner
+        } else if (selectedNode.data.hasUserLiked && ${currentUser == null ? 'null' : currentUser.id} != ${rcaCase.ownerId}) {
+            // hide like button if user has liked and is not the owner of the rca case
             jQuery("#radial_menu").radmenu("items")[5].style.visibility = "hidden";
             // show dislike button if user has liked
             jQuery("#radial_menu").radmenu("items")[6].style.visibility = "visible";
@@ -906,8 +906,8 @@
                 } else if (!selectedNode.data.hasUserLiked) {
                     // hide dislike button if user has not liked
                     jQuery("#radial_menu").radmenu("items")[6].style.visibility = "hidden";
-                } else if (selectedNode.data.hasUserLiked && selectedNode.data.creatorId != ${currentUser == null ? 'null' : currentUser.id}) {
-                    // hide like button if user has liked and is not the owner
+                } else if (selectedNode.data.hasUserLiked && ${currentUser == null ? 'null' : currentUser.id} != ${rcaCase.ownerId}) {
+                    // hide like button if user has liked and is not the owner of the rca case
                     jQuery("#radial_menu").radmenu("items")[5].style.visibility = "hidden";
                 }
             }

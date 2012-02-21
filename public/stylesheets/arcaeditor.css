@@ -133,7 +133,6 @@
     position: relative;
     height: 12px;
     top: -15px;
-    margin: auto;
     display: inline;
 }
 
@@ -142,4 +141,6 @@
     top: 0;
     left: 0;
     width: 100%;
+    vertical-align: top;
+    text-align: center;
 }
