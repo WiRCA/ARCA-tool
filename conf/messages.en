@@ -47,10 +47,15 @@ indexPage.bestBrowsers=Primary supported browsers
 indexPage.partiallySupportedBrowsers=Works with
 
 aboutPage.title=About
-aboutPage.content=The ARCA-tool is a product of the  Aalto University School of Science course Software Development \
-  Project team WiRCA. The project is open source (MIT license). You can participate in the project on GitHub (link at \
-   the bottom of the page).
-
+aboutPage.content1=ARCA tool has been implemented in co-operation with researchers and students from Aalto University. The tool is licensed under the MIT open source license. You can use, download, and modify the software without practical limitations. However, the names of contributors have to be listed. You can download the project from GitHub you can find from this forum.
+aboutPage.content2=ARCA tool supports the ARCA root cause analysis method [1]. Root cause analysis is a structured investigation of a problem to detect and eliminate the causes of the problem. The theoretical foundation is that you cannot solve the problem without elimination of its causes. In root cause analysis, the problem and its causes are detected by utilizing expertise of various stakeholders. The problem causes are detected by constantly asking “why?” for every cause detected. The causes are organized into a cause and effect structure by utilizing a cause and effect diagram. The ARCA method utilizes a directed graph as its cause and effect diagram. The directed graph has been concluded as highly feasible for root cause analysis [1].
+aboutPage.content3=ARCA tool helps you to detect the problem causes resulting to solving the problem. Additionally, the tool supports developing corrective actions to solve individual causes of the problem [2].
+aboutPage.content4=ARCA tool supports process improvement and provides you various monitoring utilities covering the problems, problem causes and related corrective actions. Detected problem causes are saved to the monitoring utility where you can inspect and change the status of individual problem causes and corrective actions throughout your projects and product releases.
+aboutPage.content5=ARCA tool is the first of its kind. Additionally, it is 100%% free and open source! The tool helps you to solve various problems especially related to quality, process, and scheduling problems. The tool can be used to detect potential risks related to your future project and to evaluate the problems occurred in your prior projects. The ARCA method has been initially developed to support software process improvement. However, we strongly believe the tool is feasible to solve numerous other problems too.
+aboutPage.content6=On behalf of the ARCA development team
+aboutPage.content7=Timo Lehtinen, PO
+aboutPage.content8=[1]	T. O. A. Lehtinen, M. V. Mäntylä and J. Vanhanen, “Development and evaluation of a lightweight root cause analysis method (ARCA method) – field studies at four software companies”, Information and Software Technology, vol. 53, 10, pp. 1045-1061, 2011
+aboutPage.content9=[2]	T. O. A. Lehtinen and M. V. Mäntylä, “What are problem causes of software projects? data of root cause analysis at four software companies”, 5th International Symposium on Empirical Software Engineering and Measurement, ESEM 2011 , pp. 388-391, 2011.
 contactPage.title=Contact
 
 # Validation messages
