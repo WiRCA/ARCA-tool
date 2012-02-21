@@ -44,10 +44,19 @@ indexPage.supportedBrowsers=Tuetut selaimet
 indexPage.bestBrowsers=Tuetut selaimet
 indexPage.partiallySupportedBrowsers=Toimii näilläkin
 
-aboutPage.title=Tietoa projektista
-aboutPage.content=ARCA-työkalu on Aalto-yliopiston Perustieteiden Korkeakoulun Ohjelmistonkehitysprojekti-kurssin \
-  ryhmä WiRCAn tuotos. Työkalu on opensourcea (MIT-lisenssi). Projekti löytyy \
-  GitHubista (linkki sivun alareunassa).
+aboutPage.title=Lisätietoa
+aboutPage.content1=ARCA-työkalu on toteutettu yhteistyössä Aalto-yliopiston tutkijoiden ja opiskelijoiden kanssa. Työkalu on julkaistu MIT-lisenssillä. Voit käyttää, ladata, ja muokata ohjelmistoa omien tarpeittesi mukaan ilman käytännön rajoitteita. Kaikkien tekijöiden nimet täytyy kuitenkin listata. Projekti löytyy GitHubista, jonka löydät tältä sivustolta.
+aboutPage.content2=ARCA-työkalu tukee ARCA-juurisyyanalyysimenetelmää  [1]. Juurisyyanalyysi on rakenteellinen tapa tunnistaa ja ratkoa ongelmia ja niiden syitä. Juurisyyanalyysi perustuu ajatukseen, ettei ongelmaa voi eliminoida ilman, että eliminoidaan ongelman aiheuttajat. Juurisyyanalyysissä esitetään kohdeongelma, jonka syitä tunnistetaan hyödyntämällä kohdeongelman asiantuntijoita. Syiden tunnistaminen tapahtuu kysymällä ”miksi?” jokaiselle tunnistetulle syylle. Ongelman syyt organisoidaan syyn alle syy-seuraus –rakenteeseen. ARCA –menetelmä hyödyntää suunnattua verkkoa syy-yhteysrakenteenaan. Suunnattu verkko toimii juurisyyanalyysissä erinomaisesti.
+aboutPage.content3=ARCA-työkalu auttaa sinua keräämään analysoituun ongelmaan syy-dataa, jonka avulla voit ratkaista ongelman. Työkalu auttaa sinua myös kehittämään ratkaisuideoita, joilla voit ratkaista ongelman yksittäisiä syitä [2].
+aboutPage.content4=ARCA-työkalu tukee prosessin kehittämistä ja prosessiongelmien monitorointia. Ongelman syyt tallennetaan monitorointiosioon, jossa voit tarkastella analysoitujen ongelmien syitä ja ideoita, sekä muuttaa niiden statusta yhdellä näkymällä. Projektisi kokemukset siirtyvät seuraavan projektisi riskeiksi, joita voit hallinoida ja ymmärtää.
+aboutPage.content5=ARCA-työkalu on ensimmäisiä juurisyyanalyysityökaluja maailmassa. Lisäksi se on ilmainen. Työkalu auttaa sinua ratkaisemaan mitä erityyppisimpiä ongelmia kuten laatu-, prosessi-, ja aikatauluongelmia. Työkalua voidaa hyödyntää riskien tunnistamiseen ja tapahtuneiden ongelmien syiden selvittämiseen. ARCA-menetelmä on kehitetty tukemaan erityisesti ohjelmistotuotannon prosessikehitystä. Uskomme kuitenkin, että saat ARCA-työkalusta apua myös lukemattomien muiden ongelmien analyysiin.
+aboutPage.content6=ARCA-kehitystiimin puolesta,
+aboutPage.content7=Timo Lehtinen, PO
+aboutPage.content8=[1]	T. O. A. Lehtinen, M. V. Mäntylä and J. Vanhanen, “Development and evaluation of a lightweight root cause analysis method (ARCA method) – field studies at four software companies”, Information and Software Technology, vol. 53, 10, pp. 1045-1061, 2011.
+aboutPage.content9=[2]	T. O. A. Lehtinen and M. V. Mäntylä, “What are problem causes of software projects? data of root cause analysis at four software companies”, 5th International Symposium on Empirical Software Engineering and Measurement, ESEM 2011 , pp. 388-391, 2011.
+
+helpPage.title=Apua
+helpPage.content=ARCA-työkalun kaikki ominaisuudet kattava käyttöohje löytyy englanniksi .pdf-muodossa GitHubista:
 
 contactPage.title=Ota yhteyttä
 

@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
+  ~ Copyright (C) 2012 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
   ~ Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus,
   ~ Timo Lehtinen, Jaakko Harjuhahto
   ~
@@ -21,11 +21,10 @@
   ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
   ~ THE SOFTWARE.
   -->
+#{extends 'main.html' /}
+#{set 'title'}&{'helpPage.title'}#{/set}
+#{set 'pageHeader'}&{'helpPage.title'}#{/set}
+#{set 'pageHeaderSmall'}#{/set}
+#{set 'activePage'}help#{/set}
 
-#{fixture delete:'all',load:'data.yml' /}
-#{selenium}
-    open('/logout')
-    open('/?language=en')
-    click('//a[contains(@href,"/about")]')
-    waitForTextPresent('&{'aboutPage.content1'}')
-#{/selenium}
+<p>&{'helpPage.content'} <a href="https://github.com/downloads/WiRCA/ARCA-tool/ARCA_manual.pdf">User Manual</a></p>
