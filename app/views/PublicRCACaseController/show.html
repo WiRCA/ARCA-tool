@@ -95,13 +95,12 @@
           </a>
       </li>
       <li class="item radmenu-button" id="radmenu-event-removeCause">
-          <a href="#" rel='twipsy' data-placement="right" title='&{'editor.delete'}'>
+          <a href="#" rel='twipsy' data-placement="left" title='&{'editor.delete'}'>
               <img src="@{'/public/images/icons/trash.png'}" height="36" width="36" style="margin-left: -8px; margin-top: -8px">
           </a>
       </li>
       <li class="item radmenu-button" id="radmenu-event-renameCause">
-          <a href="#" rel='twipsy' data-placement="right"
-             title='&{'editor.renameCause'}'>
+          <a href="#" rel='twipsy' data-placement="right" title='&{'editor.renameCause'}'>
               <img src="@{'/public/images/icons/edit.png'}" height="36" width="36" style="margin-left: -8px; margin-top: -8px">
           </a>
       </li>
@@ -267,7 +266,6 @@
         $.post(likeCauseAjax({causeId: selected.id}), function(result) {
             selected.data.hasUserLiked = result.hasliked;
             selected.data.likeCount = result.count;
-            updateLikes(selected.id, result.count);
             if (selected.data.creatorId == ${currentUser == null ? 'null' : currentUser.id}) {
                 radmenu_updateLikeButtons(selected);
             };
@@ -282,7 +280,6 @@
         $.post(dislikeCauseAjax({causeId: selected.id}), function(result) {
             selected.data.hasUserLiked = result.hasliked;
             selected.data.likeCount = result.count;
-            updateLikes(selected.id, result.count);
             if (selected.data.creatorId == ${currentUser == null ? 'null' : currentUser.id}) {
                 radmenu_updateLikeButtons(selected);
             };
@@ -784,10 +781,7 @@
                             $("#" + this.data.causeId).html(this.data.newName);
                         }
                         else if(this.data.type === 'amountOfLikesEvent') {
-                            var currentNode = fd.graph.getNode(this.data.causeId);
-
-                            var amountOfLikes = this.data.amountOfLikes;
-                            $("#" + currentNode.causeId).html(amountOfLikes);
+                            updateLikes(this.data.causeId, this.data.amountOfLikes);
                         }
                         else if(this.data.type === 'nodemovedevent'){
                           var nodeToMove = fd.graph.getNode(this.data.causeId);
