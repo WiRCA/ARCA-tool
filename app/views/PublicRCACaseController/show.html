@@ -455,6 +455,7 @@
 
 	   $(document).bind('keydown', function(e) { 
 	        if (e.which == 27) {
+				e.preventDefault();
 				relationFromNode = null;
 				$("#relation-help-message").fadeOut(500, "linear");	
 			}
