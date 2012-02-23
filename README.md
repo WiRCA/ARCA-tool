@@ -1,5 +1,7 @@
 # ARCA-tool Readme
 
+ARCA-tool is the finalist project of the [Software Development Project](http://www.soberit.hut.fi/T-76.4115/) course in Aalto University.
+
 ARCA-tool is a tool for doing root acuse analysis. It is implemented as a web application, with Play! framework.
 
 Current version includes:
