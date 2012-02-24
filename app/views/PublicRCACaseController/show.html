@@ -484,7 +484,7 @@
               jQuery("#radial_menu").radmenu("hide");
             }
             else if($selected[0].id == "radmenu-event-renameCause"){
-              $('#renamedName').val(selectedNode.name);
+              $('#renamedName').val($("<div/>").html(selectedNode.name).text());
               $('#renameCause-modal').modal('show');
               globalSelectedNode = selectedNode.id;
             }
