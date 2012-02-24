@@ -153,7 +153,8 @@ public class CauseTest extends GenericRCAUnitTest {
 		correction.removeComment(findComment);
 		int commentsSize = Comment.find("byComment", "hello world").fetch().size();
 		assertEquals(0, commentsSize);
-
+		cause1.rcaCase.deleteCause(cause1);
+		assertEquals(0, Cause.find("byName", "test cause1").fetch().size());
 	}
 
 	@Test

@@ -51,7 +51,7 @@ public class Comment extends IdComparableModel {
 	/**
 	* Id of the author user
 	*/
-	@JoinColumn(name = "userId")
+	@Column(name = "userId")
 	public Long creatorId;
 
 	/**
@@ -69,7 +69,7 @@ public class Comment extends IdComparableModel {
 	/**
 	* The comment type of the comment
 	*/
-	@JoinColumn(name = "tag")
+	@Column(name = "tag")
 	public Integer commentType;
 
 	/**
