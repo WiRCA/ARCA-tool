@@ -421,6 +421,7 @@
             "name": "${cause.name}",
             "data": {
                     "hasCorrections": ${!cause.corrections.isEmpty()},
+                    "isRootNode": #{if cause.equals(rcaCase.problem)}true#{/if}#{else}false#{/else},
                     "$type": "circle",
                     "$dim":1,
                     "parent": #{if cause.parent}${cause.parent.id}#{/if}#{else}""#{/else},
@@ -606,8 +607,12 @@
         Events: {
           enable: true,
           //Change cursor style when hovering a node
-          onMouseEnter: function() {
-            fd.canvas.getElement().style.cursor = 'move';
+          onMouseEnter: function(node) {
+            if (node.data.isRootNode) {
+                fd.canvas.getElement().style.cursor = 'pointer';
+            } else {
+                fd.canvas.getElement().style.cursor = 'move';
+            }
           },	
           onMouseLeave: function() {
             fd.canvas.getElement().style.cursor = '';
@@ -615,18 +620,26 @@
           //Update node positions when dragged
           onDragMove: function(node, eventInfo, e) {
             jQuery("#radial_menu").radmenu("hide");
-            var pos = eventInfo.getPos();
-            node.pos.setc(pos.x, pos.y);
-            node.setPos(new $jit.Complex(pos.x, pos.y), 'end');
-            fd.plot();
+            if (!node.data.isRootNode) {
+                var pos = eventInfo.getPos();
+                node.pos.setc(pos.x, pos.y);
+                node.setPos(new $jit.Complex(pos.x, pos.y), 'end');
+                fd.plot();
+            }
           },
           onDragEnd: function(node, eventInfo, e){
             var nodeParent = fd.graph.getNode(node.data.parent);
             if (nodeParent != undefined) {
               var xPos = node.getPos('end').x - nodeParent.getPos('end').x;
               var yPos = node.getPos('end').y - nodeParent.getPos('end').y;
-              $.post(moveNode({causeId: node.id, x: xPos, y: yPos}));
-              updateChildrenVectors(node);
+            } else {
+                var xPos = node.getPos('end').x;
+                var yPos = node.getPos('end').y;
+            }
+            // root node cannot be moved globally
+            if (!node.data.isRootNode) {
+                $.post(moveNode({causeId: node.id, x: xPos, y: yPos}));
+                updateChildrenVectors(node);
             }
           },
           //Implement zooming for nodes
@@ -791,8 +804,13 @@
                           var intY = parseInt(this.data.y);
                           nodeToMove.data.xCoordinate = intX;
                           nodeToMove.data.yCoordinate = intY;
-                          var xPos = nodeParent.getPos('end').x + intX;
-                          var yPos = nodeParent.getPos('end').y + intY;
+                          if (nodeParent != undefined) {
+                              var xPos = nodeParent.getPos('end').x + intX;
+                              var yPos = nodeParent.getPos('end').y + intY;
+                          } else {
+                              var xPos = intX;
+                              var yPos = intY;
+                          }
                           var nodePos = new $jit.Complex(xPos,yPos);
                           nodeToMove.setPos(nodePos, 'end');
 
@@ -830,12 +848,19 @@
         if(node.data.parent){
           nodeLevel = countParentNodes(node);
         }else{
-          rootNode = node;
           nodeLevel = 1;
         }
+        if (node.data.isRootNode) {
+            rootNode = node;
+        }
         node.data.nodeLevel = nodeLevel;
-        node.setPos(new $jit.Complex(0, -300 + nodeLevel*80), 'current');
-        node.setPos(new $jit.Complex(0, -300 + nodeLevel*80), 'end');
+        if (nodeLevel == 1) {
+            node.setPos(new $jit.Complex(node.data.xCoordinate, node.data.yCoordinate), 'current');
+            node.setPos(new $jit.Complex(node.data.xCoordinate, node.data.yCoordinate), 'end');
+        } else {
+            node.setPos(new $jit.Complex(0, -300 + nodeLevel*80), 'current');
+            node.setPos(new $jit.Complex(0, -300 + nodeLevel*80), 'end');
+        }
       });
       updateChildrenVectors(rootNode);
       fd.animate({
