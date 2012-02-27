@@ -557,8 +557,20 @@
         $("#radial_menu").disableSelection();
       }
 
-      $("#infovis").css("width", window.innerWidth + 1000);
-      $("#infovis").css("height", window.innerHeight + 1000);
+        $("#infovis").css("width", window.innerWidth + 1000);
+        $("#infovis").css("height", window.innerHeight + 1000);
+
+        function doResize() {
+            fd.canvas.resize(window.innerWidth + 1000, window.innerHeight + 1000);
+            $("#infovis").css("width", window.innerWidth + 1000);
+            $("#infovis").css("height", window.innerHeight + 1000);
+        };
+
+        var resizeTimer;
+        $(window).resize(function() {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(doResize, 100);
+        });
 
       // init ForceDirected
       var fd = new $jit.ForceDirected({
@@ -843,20 +855,19 @@
             return 0;
           }
       };
-      var rootNode;
+
+      var rootNodes = new Array();
       //First calculate levels (y-coordinates) for nodes.
       fd.graph.eachNode(function(node){
         var nodeLevel;
-        if(node.data.parent){
+        if(node.data.parent) {
           nodeLevel = countParentNodes(node);
-        }else{
+        } else {
           nodeLevel = 1;
-        }
-        if (node.data.isRootNode) {
-            rootNode = node;
+          rootNodes.push(node);
         }
         node.data.nodeLevel = nodeLevel;
-        if (nodeLevel == 1) {
+        if (nodeLevel == 1 && !node.data.isRootNode) {
             node.setPos(new $jit.Complex(node.data.xCoordinate, node.data.yCoordinate), 'current');
             node.setPos(new $jit.Complex(node.data.xCoordinate, node.data.yCoordinate), 'end');
         } else {
@@ -864,7 +875,12 @@
             node.setPos(new $jit.Complex(0, -300 + nodeLevel*80), 'end');
         }
       });
-      updateChildrenVectors(rootNode);
+
+      var rootNode;
+      for (rootNode in rootNodes) {
+          updateChildrenVectors(rootNodes[rootNode]);
+      }
+
       fd.animate({
         modes: ['linear'],
         transition: $jit.Trans.Elastic.easeOut,
