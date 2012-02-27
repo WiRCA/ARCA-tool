@@ -458,7 +458,7 @@
 	        if (e.which == 27) {
 				e.preventDefault();
 				relationFromNode = null;
-				$("#relation-help-message").fadeOut(500, "linear");	
+				$("#relation-help-message").fadeOut(80, "linear");	
 			}
 	    });
 
@@ -676,7 +676,7 @@
               if (relationFromNode) {
                 $.post(addRelation({fromId: relationFromNode.id, toID: node.id}));
                 relationFromNode = null;
-				        $("#relation-help-message").fadeOut(500, "linear");
+				        $("#relation-help-message").fadeOut(80, "linear");
               } else {
                 defaultEdgesForSelectedNode(selectedNode);
                 jQuery("#corrections_link").fadeOut(400);
