@@ -1,24 +1,25 @@
 /*
-Copyright (c) 2011 Sencha Inc. - Author: Nicolas Garcia Belmonte (http://philogb.github.com/)
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-
+ * Copyright (C) 2012 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
+ * Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus,
+ * Timo Lehtinen, Jaakko Harjuhahto
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
  */
  
  (function () { 
@@ -8611,11 +8612,55 @@ $jit.ForceDirected.$extend = true;
     },
     'arrow': {
       'render': function(adj, canvas) {
-        var from = adj.nodeFrom.pos.getc(true),
-            to = adj.nodeTo.pos.getc(true),
+        var from = adj.nodeFrom.pos.clone().getc(true),
+            to = adj.nodeTo.pos.clone().getc(true),
             dim = adj.getData('dim'),
             direction = adj.data.$direction,
             inv = (direction && direction.length>1 && direction[0] != adj.nodeFrom.id);
+
+
+        // if the adjacency is inverted, then arrowhead is drawn towards adj.nodeFrom, otherwise towards adj.nodeTo
+        if (inv) {
+            var vect = new Complex(to.x - from.x, to.y - from.y),
+                arrow = from,
+                arrowWidth = new Complex(adj.nodeFrom.data.$width >> 1, 0),
+                arrowHeight = new Complex(0, adj.nodeFrom.data.$height >> 1),
+                arrowCorner = arrowWidth.clone().$add(arrowHeight),
+                arrowTheta = vect.getp(true).theta,
+                arrowCornerTheta = arrowCorner.getp(true).theta,
+                arrowNodeWidth = adj.nodeFrom.data.$width >> 1,
+                arrowNodeHeight = adj.nodeFrom.data.$height >> 1;
+        } else {
+            var vect = new Complex(from.x - to.x, from.y - to.y),
+                to = adj.nodeTo.pos.clone().getc(true),
+                arrow = to,
+                arrowWidth = new Complex(adj.nodeTo.data.$width >> 1, 0),
+                arrowHeight = new Complex(0, adj.nodeTo.data.$height >> 1),
+                arrowCorner = arrowWidth.clone().$add(arrowHeight),
+                arrowTheta = vect.getp(true).theta,
+                arrowCornerTheta = arrowCorner.getp(true).theta,
+                arrowNodeWidth = adj.nodeTo.data.$width >> 1,
+                arrowNodeHeight = adj.nodeTo.data.$height >> 1;
+        }
+
+        // angle between nodes is compared to the "corner angle" of the node and the position of the arrowhead is adjusted accordingly
+        if (arrowTheta < arrowCornerTheta) {
+            arrow.x = arrow.x + arrowNodeWidth;
+            arrow.y = arrow.y + arrowNodeWidth * Math.tan(arrowTheta);
+        } else if (arrowTheta < Math.PI - arrowCornerTheta) {
+            arrow.x = arrow.x + arrowNodeWidth * Math.cos(Math.PI * (arrowTheta - arrowCornerTheta) / (Math.PI - 2 * arrowCornerTheta));
+            arrow.y = arrow.y + arrowNodeHeight;
+        } else if (arrowTheta < Math.PI + arrowCornerTheta) {
+            arrow.x = arrow.x - arrowNodeWidth;
+            arrow.y = arrow.y + arrowNodeHeight * Math.cos(Math.PI * (arrowTheta - (Math.PI - arrowCornerTheta)) / (2 * arrowCornerTheta));
+        } else if (arrowTheta < 2 * Math.PI - arrowCornerTheta) {
+            arrow.x = arrow.x - arrowNodeWidth * Math.cos(Math.PI * (arrowTheta - (Math.PI + arrowCornerTheta)) / (Math.PI - 2 * arrowCornerTheta));
+            arrow.y = arrow.y - arrowNodeHeight;
+        } else {
+            arrow.x = arrow.x + arrowNodeWidth;
+            arrow.y = arrow.y - (arrowNodeHeight - arrowNodeWidth * Math.tan(arrowTheta - (2 * Math.PI - arrowCornerTheta)));
+        }
+
         this.edgeHelper.arrow.render(from, to, dim, inv, canvas);
       },
       'contains': function(adj, pos) {

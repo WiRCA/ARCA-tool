@@ -219,7 +219,7 @@
                 <label for="renamedName">&{'renameCause.newName'}</label>
                 <div class="input">
                     <input class="xlarge" autofocus="autofocus" id="renamedName"
-                           name="renamedName" type="text" value="" />
+                           name="renamedName" type="text" value="" maxlength="255" />
                 </div>
             </div>
         </div>
@@ -423,7 +423,7 @@
                     "hasCorrections": ${!cause.corrections.isEmpty()},
                     "isRootNode": #{if cause.equals(rcaCase.problem)}true#{/if}#{else}false#{/else},
                     "$type": "circle",
-                    "$dim":1,
+                    "$dim": 1,
                     "parent": #{if cause.parent}${cause.parent.id}#{/if}#{else}""#{/else},
                     "creatorId": '${cause.creatorId}',
                     "xCoordinate": #{if cause.xCoordinate != null && rcaCase.problem != cause}${cause.xCoordinate}#{/if}#{else}""#{/else},
@@ -441,9 +441,9 @@
             {
               "nodeTo": "${relation.id}",
               "data": {  
-                  "$type":"arrow",  
+                  "$type":"arrow",
                   "$direction": ["${cause.id}", "${relation.id}"],
-                  "$dim":30,  
+                  "$dim":30,
                   "$color":"#FF0000",  
                   "weight": 1  
               }
@@ -722,10 +722,12 @@
           var style = domElement.style;
           var left = parseInt(style.left);
           var top = parseInt(style.top);
-          var w = parseInt(domElement.offsetWidth) >> 1;
-          var h = parseInt(domElement.offsetHeight) >> 1;
-          style.left = (left - w) + 'px';
-          style.top = (top - h) + 'px';
+          var w = parseInt(domElement.offsetWidth);
+          var h = parseInt(domElement.offsetHeight);
+          style.left = (left - (w >> 1)) + 'px';
+          style.top = (top - (h >> 1)) + 'px';
+          node.data.$height = h;
+          node.data.$width = w;
         }
       });
       var getNodes = function() {
