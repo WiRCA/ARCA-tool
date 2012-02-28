@@ -90,6 +90,8 @@ select.optionSelect=- SELECT -
 button.prev=Previous
 button.next=Next
 
+teamPoweredBy=Team powered by
+
 createRCA.title=Create a new RCA case
 createRCA.caseName=Case name (required)
 createRCA.rcaCaseType=Case type

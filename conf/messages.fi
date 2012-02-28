@@ -98,6 +98,8 @@ select.optionSelect=- VALITSE -
 button.prev=Edellinen
 button.next=Seuraava
 
+teamPoweredBy=Tiimiä avustamassa
+
 createRCA.title=Luo uusi RCA analyysi
 createRCA.caseName=Analyysin nimi (pakollinen)
 createRCA.rcaCaseType=Analyysin tyyppi
