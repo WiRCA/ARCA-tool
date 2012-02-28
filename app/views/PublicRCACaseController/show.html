@@ -309,22 +309,12 @@
       $("#correction-help-message").delay(1700).fadeOut(1600, "linear");
     });
   };
-  
-    function applyZoom() {
-        var nodes = $("#infovis-label div.node");
-        nodes.css("-webkit-transform", "scale(" + zoomLevel + ")");
-        nodes.css("-moz-transform",  "scale(" + zoomLevel + ")");
-        nodes.css("-ms-transform",  "scale(" + zoomLevel + ")");
-        nodes.css("-o-transform",  "scale(" + zoomLevel + ")");
-        nodes.css("transform",  "scale(" + zoomLevel + ")");
-    };
 
     $(document).ready(function() {
 			$("#help-message-close").click(function() {
 				$(this).parent().hide();
 			});
       init();
-      zoomLevel = 1;
 
       $("#correction-help-message").hide();
       $("#relation-help-message").hide();
@@ -564,6 +554,7 @@
             fd.canvas.resize(window.innerWidth + 1000, window.innerHeight + 1000);
             $("#infovis").css("width", window.innerWidth + 1000);
             $("#infovis").css("height", window.innerHeight + 1000);
+            applyZoom(1, false);
         };
 
         var resizeTimer;
@@ -585,7 +576,7 @@
           //Enable panning events only if we're dragging the empty
           //canvas (and not a node).
           panning: 'avoid nodes',
-          zooming: 50 //zoom speed. higher is more sensible
+          zooming: 0 //disable default zooming and implement it in zoom.js
         },
         // Change node and edge styles such as
         // color and width.
@@ -656,13 +647,8 @@
           },
           //Implement zooming for nodes
           onMouseWheel: function(delta, e) {
-            var zoom = (fd.config.Navigation.zooming / 1000 * delta) + 1;
-            zoomLevel = zoomLevel * zoom;
-
-            //hides a radial menu when zoomed as the scaling does not work yet.
-            jQuery("#radial_menu").radmenu("hide");
-            $('.popover').remove();
-            applyZoom();
+            var zoom = (50 / 1000 * delta) + 1;
+            applyZoom(zoom, true);
           },
           //Implement the same handler for touchscreens
           onTouchMove: function(node, eventInfo, e) {
@@ -742,6 +728,9 @@
           node.data.$width = w;
         }
       });
+
+      #{include 'PublicRCACaseController/zoom.js'/}
+
       var getNodes = function() {
           $.ajax({
                 url: waitMessages({lastReceived: lastReceived}),
@@ -800,7 +789,7 @@
                             transition: $jit.Trans.Elastic.easeOut,
                             duration: 1500
                           });
-                          applyZoom();
+                          applyZoom(1, false); // refresh zooming for the new node
                             $("#infovis-label div.node").disableSelection();
                         }
                         else if(this.data.type === 'causeRenameEvent') {

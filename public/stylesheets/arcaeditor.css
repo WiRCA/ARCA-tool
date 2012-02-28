@@ -144,3 +144,34 @@
     vertical-align: top;
     text-align: center;
 }
+
+#zoomSlider {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    margin-top: -135px;
+    height: 270px;
+    width: 25px;
+}
+
+#slider-vertical {
+    height: 200px;
+    margin-top: 6px;
+    width: 10px;
+    position: relative;
+    left: 50%;
+    margin-left: -5px;
+    cursor: pointer;
+}
+
+#slider-vertical .ui-slider-handle {
+    cursor: pointer;
+}
+
+#zoomSlider img {
+    cursor: pointer;
+}
+
+#zoomSlider img#zoomout {
+    margin-top: 10px;
+}
