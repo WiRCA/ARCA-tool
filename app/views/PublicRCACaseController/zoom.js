@@ -20,7 +20,8 @@
     }
 
     // add slider element to body
-    $("body").append('<div id="zoomSlider"><img id="zoomin" src="@{'/public/images/zoom-in.png'}" onclick="incZoomSlider()"/>' +
+    // icons by http://glyphicons.com/
+    $("body").append('<!--icons by http://glyphicons.com/--><div id="zoomSlider"><img id="zoomin" src="@{'/public/images/zoom-in.png'}" onclick="incZoomSlider()"/>' +
                                                        '<div id="slider-vertical"/>' +
                                                        '<img id="zoomout" src="@{'/public/images/zoom-out.png'}" onclick="decZoomSlider()" /></div>');
 
