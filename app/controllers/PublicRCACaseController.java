@@ -60,6 +60,7 @@ public class PublicRCACaseController extends Controller {
 	 */
 	public static void waitMessages(Long rcaCaseId, Long lastReceived) {
 		RCACase rcaCase = checkIfCurrentUserHasRightsForRCACase(rcaCaseId);
+		notFoundIfNull(lastReceived);
 		List<F.IndexedEvent<Event>> messages = await(rcaCase.nextMessages(lastReceived));
 		rcaCase.getCauseStream().lastEvent = messages.get(messages.size() - 1).id;
 		renderJSON(messages, new TypeToken<List<F.IndexedEvent<Event>>>() {
