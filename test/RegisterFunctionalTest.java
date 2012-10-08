@@ -179,8 +179,6 @@ public class RegisterFunctionalTest extends FunctionalTest {
 		Http.Response response = makeRequest(request);
 		assertStatus(302, response);
 
-		String wircamiesGoogleLoginUrl = response.getHeader("Location");
-
 		// false response from open id
 		request.params.put("openid.mode", "notNull");
 		response = makeRequest(request);
@@ -188,6 +186,7 @@ public class RegisterFunctionalTest extends FunctionalTest {
 		assertHeaderEquals("Location", "/", response);
 
 		/* TODO try to login with google open id
+		String wircamiesGoogleLoginUrl = response.getHeader("Location");
 		request.params.remove("openid.mode");
 		request.url = wircamiesGoogleLoginUrl;
 		request.path = wircamiesGoogleLoginUrl;

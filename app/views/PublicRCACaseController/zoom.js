@@ -11,19 +11,21 @@
     incZoomSlider = function() {
         var sliderValue = $("#slider-vertical").slider("value");
         applyZoom(((zoomMax - zoomMin) / zoomSteps * (sliderValue + 1) + zoomMin) / zoomLevel, true);
-    }
+    };
 
     // decrement zoom by one step
     decZoomSlider = function() {
         var sliderValue = $("#slider-vertical").slider("value");
         applyZoom(((zoomMax - zoomMin) / zoomSteps * (sliderValue - 1) + zoomMin) / zoomLevel, true);
-    }
+    };
 
     // add slider element to body
-    // icons by http://glyphicons.com/
-    $("body").append('<!--icons by http://glyphicons.com/--><div id="zoomSlider"><img id="zoomin" src="@{'/public/images/zoom-in.png'}" onclick="incZoomSlider()"/>' +
-                                                       '<div id="slider-vertical"/>' +
-                                                       '<img id="zoomout" src="@{'/public/images/zoom-out.png'}" onclick="decZoomSlider()" /></div>');
+    $("body").append('<!--icons by http://glyphicons.com/-->' +
+                     '<div id="zoomSlider">' +
+                     '    <img id="zoomin" src="' + "@{'/public/images/zoom-in.png'}" + ' onclick="incZoomSlider()"/>' +
+                     '    <div id="slider-vertical"/>' +
+                     '    <img id="zoomout" src="' + "@{'/public/images/zoom-out.png'}" + '" onclick="decZoomSlider()" />' +
+                     '</div>');
 
     // zooming routine
     function applyZoom(newLevel, updateSlider) {
@@ -46,12 +48,12 @@
         }
 
         // zooming nodes with CSS3 transform
-        var nodes = $("#infovis-label div.node");
-        nodes.css("-webkit-transform", "scale(" + zoomLevel + ")");
-        nodes.css("-moz-transform",  "scale(" + zoomLevel + ")");
-        nodes.css("-ms-transform",  "scale(" + zoomLevel + ")");
-        nodes.css("-o-transform",  "scale(" + zoomLevel + ")");
-        nodes.css("transform",  "scale(" + zoomLevel + ")");
+        $("#infovis-label div.node")
+            .css("-webkit-transform", "scale(" + zoomLevel + ")")
+            .css("-moz-transform",    "scale(" + zoomLevel + ")")
+            .css("-ms-transform",     "scale(" + zoomLevel + ")")
+            .css("-o-transform",      "scale(" + zoomLevel + ")")
+            .css("transform",         "scale(" + zoomLevel + ")");
 
         // force directed canvas zooming
         fd.canvas.scale(newLevel, newLevel);
@@ -60,18 +62,18 @@
         if (updateSlider) {
             $("#slider-vertical").slider("value", (zoomLevel - zoomMin) * zoomSteps / (zoomMax - zoomMin));
         }
-    };
+    }
 
     // apply slider to slider div
     $(function() {
-        $( "#slider-vertical" ).slider({
-                                           orientation: "vertical",
-                                           range: "min",
-                                           min: 0,
-                                           max: zoomSteps,
-                                           value: zoomSteps / 2,
-                                           slide: function( event, ui ) {
-                                               applyZoom(((zoomMax - zoomMin) / zoomSteps * ui.value + zoomMin) / zoomLevel, false);
-                                           }
-                                       });
+        $("#slider-vertical").slider({
+            orientation: "vertical",
+            range: "min",
+            min: 0,
+            max: zoomSteps,
+            value: zoomSteps / 2,
+            slide: function(event, ui) {
+                applyZoom(((zoomMax - zoomMin) / zoomSteps * ui.value + zoomMin) / zoomLevel, false);
+            }
+        });
     });

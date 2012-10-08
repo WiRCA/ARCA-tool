@@ -97,7 +97,7 @@ public class RCACaseController extends Controller {
 	 * @param rcaCaseId ID of the RCA case
 	 */
 	public static void getUsers(Long rcaCaseId) {
-		RCACase rcaCase = PublicRCACaseController.checkIfCurrentUserHasRightsForRCACase(rcaCaseId);
+		PublicRCACaseController.checkIfCurrentUserHasRightsForRCACase(rcaCaseId);
 		List<User> existingUsers =
 				User.find("Select u from user as u inner join u.caseIds as caseIds" + " where ? in caseIds",
 				          rcaCaseId)

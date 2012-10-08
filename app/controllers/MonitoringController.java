@@ -164,7 +164,7 @@ public class MonitoringController extends Controller {
 	/**
 	* Change the status of a corrective action
 	* @param correctionId the id of the corrective action to be updated
-	* @param statusOdCorrection the new status of the corrective action
+	* @param statusOfCorrection the new status of the corrective action
 	*/
 	public static void changeCorrectionStatus(Long correctionId, StatusOfCorrection statusOfCorrection) {
 		Correction correction = Correction.findById(correctionId);

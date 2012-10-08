@@ -71,13 +71,13 @@ public class RCACaseTest extends UnitTest {
 	public void getAndSetTest() {
 		RCACase testCase = new RCACase(user);
 		user.addRCACase(testCase, "another name");		
-		assertTrue(testCase.getOwner() == user);
-		assertTrue(testCase.problem.name == "another name");
+		assertTrue(testCase.getOwner().equals(user));
+		assertTrue(testCase.problem.name.equals("another name"));
 		testCase.setRCACaseType(rcaCaseType);
 		assertTrue(testCase.getRCACaseType() == rcaCaseType);
 		testCase.setCompanySize(size);
 		assertTrue(testCase.getCompanySize() == size);
-		assertFalse(testCase.toString() == "");
+		assertFalse(testCase.toString().equals(""));
 	}
 
 	@Test

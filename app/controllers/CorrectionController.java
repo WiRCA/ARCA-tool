@@ -65,6 +65,7 @@ public class CorrectionController extends Controller {
 		User user = SecurityController.getCurrentUser();
 		if (user == null) {
 			forbidden();
+			return;
 		}
 		if (rcaCase.getOwner().equals(user)) {
 			correction.like(user);
@@ -89,6 +90,7 @@ public class CorrectionController extends Controller {
 		User user = SecurityController.getCurrentUser();
 		if (user == null) {
 			forbidden();
+			return;
 		}
 		correction.dislike(user);
 		Logger.debug("Correction %s disliked by %s", correction, user);
