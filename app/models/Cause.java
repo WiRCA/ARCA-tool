@@ -59,7 +59,7 @@ public class Cause extends LikableIdComparableModel {
 	public Long creatorId;
 
 	/**
-	* The updated dat of the cause
+	* The updated date of the cause
 	*/
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "updated", nullable = false)

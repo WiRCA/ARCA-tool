@@ -48,6 +48,7 @@ public class UserController extends Controller {
 		if (user == null) {
 			session.remove("username");
 			redirect("/");
+			return;
 		}
 
 		Set<RCACase> cases = user.getRCACases();

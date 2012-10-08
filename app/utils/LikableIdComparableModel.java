@@ -85,14 +85,7 @@ public abstract class LikableIdComparableModel extends IdComparableModel {
 	 * @return true if user has liked, false otherwise
 	 */
 	public boolean hasUserLiked(User user) {
-		if (user == null) {
-			return false;
-		}
-		if (getLikes().contains(user.id)) {
-			return true;
-		} else {
-			return false;
-		}
+		return user != null && getLikes().contains(user.id);
 	}
 
 }

@@ -69,6 +69,7 @@ public class PublicRCACaseController extends Controller {
 
 	/**
 	 * Check if the current user has rights for a specific RCA case
+	 * @todo refactor (return value)
 	 * @param rcaCaseId The ID of the RCA case to be checked
 	 * @return the RCA case that the user has access to
 	 */

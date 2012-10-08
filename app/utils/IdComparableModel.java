@@ -49,7 +49,7 @@ public abstract class IdComparableModel extends Model implements Comparable {
 		if (this.id != null && oid == null) {
 			return -1;
 		}
-		if (this.id == null && oid == null) {
+		if (this.id == null /* && oid == null here */) {
 			return 0;
 		}
 		if (this.id < oid) {
