@@ -434,7 +434,7 @@
                   "$type":"arrow",
                   "$direction": ["${cause.id}", "${relation.id}"],
                   "$dim":15,
-                  "$color":"#FF0000",  
+                  "$color":"#23A4FF",
                   "weight": 1  
               }
             }${relation_isLast ? '' : ','}
@@ -747,7 +747,7 @@
                               "$type":"arrow",  
                               "$direction": [this.data.causeFrom, this.data.causeTo],  
                               "$dim":15,  
-                              "$color":"#FF0000",  
+                              "$color":"#23A4FF",
                               "weight": 1  
                           });
                           
@@ -967,7 +967,7 @@
           if(adj.data.$type == "arrow") {
             adj.setDataset('current', {
               lineWidth: '2',
-              color: '#F00000'
+              color: '#23A4FF'
             })
           }else
           adj.setDataset('current', {
