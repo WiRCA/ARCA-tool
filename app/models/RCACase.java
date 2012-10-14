@@ -191,6 +191,7 @@ public class RCACase extends IdComparableModel {
 		this.isCasePublic = isCasePublic;
 		this.ownerId = owner.id;
 		this.causes = new TreeSet<Cause>();
+		System.out.println("RCACase constructor called");
 	}
 
 	/**
@@ -300,5 +301,16 @@ public class RCACase extends IdComparableModel {
 			this.causes.add(cause);
 			this.save();
 		}
+	}
+
+	public List<Classification> getClassifications(int classificationDimension) {
+		Classification cc1 = new Classification(this, "MIKÄ "+(int)(Math.random()*1000), getOwner(), 1, "moro", "jes");
+		cc1.save();
+		Classification cc2 = new Classification(this, "MISSÄ "+(int)(Math.random()*1000), getOwner(), 2, "moro", "jes");
+		cc2.save();
+		List<Classification> classifications =
+				Classification.find("classificationDimension", classificationDimension).fetch();
+		System.out.println("RCACase.getClassifications called "+classifications.size()+" moi");
+		return classifications;
 	}
 }

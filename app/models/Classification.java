@@ -38,7 +38,7 @@ public class Classification extends IdComparableModel {
 	/**
 	 * The shortname of the classification
 	 */
-	@Column(unique=true)
+	//@Column(unique=true)
 	public String abbreviation;
 
 	/**
@@ -80,15 +80,6 @@ public class Classification extends IdComparableModel {
 	protected void onUpdate() {
 		updated = new Date();
 		rcaCase.updated = updated;
-	}
-
-	/**
-	 * Gets the creator of the cause
-	 *
-	 * @return the creator of the cause
-	 */
-	public User getCreator() {
-		return creatorId != null ? (User) User.findById(creatorId) : null;
 	}
 
 	public Classification(RCACase rcaCase, String name, User creator, int classificationDimension,
