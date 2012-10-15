@@ -199,13 +199,13 @@ $(function () {
                         </div>
                     </div>
                     <div>
-                        <select name="classification-1" id="causeClassification-1">
+                        <select name="classification-1" id="add-CauseClassification-1">
                             <option value=""></option>
                         #{list rcaCase.getClassifications(1), as:'classification'}
                             <option value="${classification.id}">${classification.name}</option>
                         #{/list}
                         </select>
-                        <select name="classification-2" id="causeClassification-2">
+                        <select name="classification-2" id="add-CauseClassification-2">
                             <option value=""></option>
                         #{list rcaCase.getClassifications(2), as:'classification'}
                             <option value="${classification.id}">${classification.name}</option>
@@ -236,13 +236,13 @@ $(function () {
                         </div>
                     </div>
                     <div>
-                        <select name="dimensionOne">
+                        <select name="classification-1" id="modify-CauseClassification-1">
                             <option value=""></option>
                         #{list rcaCase.getClassifications(1), as:'classification'}
                             <option value="">${classification.name}</option>
                         #{/list}
                         </select>
-                        <select name="dimensionTwo">
+                        <select name="classification-2" id="modify-CauseClassification-2">
                             <option value=""></option>
                         #{list rcaCase.getClassifications(2), as:'classification'}
                             <option value="">${classification.name}</option>
