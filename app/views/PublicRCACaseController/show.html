@@ -199,13 +199,13 @@ $(function () {
                         </div>
                     </div>
                     <div>
-                        <select>
+                        <select name="dimensionOne">
                             <option value=""></option>
                         #{list rcaCase.getClassifications(1), as:'classification'}
                             <option value="">${classification.name}</option>
                         #{/list}
                         </select>
-                        <select>
+                        <select name="dimensionTwo">
                             <option value=""></option>
                         #{list rcaCase.getClassifications(2), as:'classification'}
                             <option value="">${classification.name}</option>
@@ -234,6 +234,20 @@ $(function () {
                             <input class="xlarge" autofocus="autofocus" id="renamedName"
                                    name="renamedName" type="text" value="" maxlength="255" />
                         </div>
+                    </div>
+                    <div>
+                        <select name="dimensionOne">
+                            <option value=""></option>
+                        #{list rcaCase.getClassifications(1), as:'classification'}
+                            <option value="">${classification.name}</option>
+                        #{/list}
+                        </select>
+                        <select name="dimensionTwo">
+                            <option value=""></option>
+                        #{list rcaCase.getClassifications(2), as:'classification'}
+                            <option value="">${classification.name}</option>
+                        #{/list}
+                        </select>
                     </div>
                 </div>
 
