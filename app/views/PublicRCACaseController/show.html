@@ -198,6 +198,20 @@ $(function () {
                             <input class="xlarge" autofocus="autofocus" id="causeName" name="causeName" type="text" value="" />
                         </div>
                     </div>
+                    <div>
+                        <select>
+                            <option value=""></option>
+                        #{list rcaCase.getClassifications(1), as:'classification'}
+                            <option value="">${classification.name}</option>
+                        #{/list}
+                        </select>
+                        <select>
+                            <option value=""></option>
+                        #{list rcaCase.getClassifications(2), as:'classification'}
+                            <option value="">${classification.name}</option>
+                        #{/list}
+                        </select>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <input type="submit" value="&{'addCause.title'}" class="btn success" id="addcause-submit" />
