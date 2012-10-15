@@ -304,13 +304,8 @@ public class RCACase extends IdComparableModel {
 	}
 
 	public List<Classification> getClassifications(int classificationDimension) {
-		Classification cc1 = new Classification(this, "MIKÄ "+(int)(Math.random()*1000), getOwner(), 1, "moro", "jes");
-		cc1.save();
-		Classification cc2 = new Classification(this, "MISSÄ "+(int)(Math.random()*1000), getOwner(), 2, "moro", "jes");
-		cc2.save();
-		List<Classification> classifications =
-				Classification.find("classificationDimension", classificationDimension).fetch();
-		System.out.println("RCACase.getClassifications called "+classifications.size()+" moi");
-		return classifications;
+		return Classification.find(
+			"SELECT c FROM classification AS c WHERE rcaCaseId=? AND classificationDimension=?",
+			this.id, classificationDimension).fetch();
 	}
 }

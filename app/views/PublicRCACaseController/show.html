@@ -156,7 +156,7 @@ $(function () {
                 <h3>&{'addCorrectiveAction.title'}</h3>
             </div>
 
-            <div style="left-margin:10; text-align:left;padding:0;" class="modal-body">
+            <div style="margin-left:10;text-align:left;padding:0" class="modal-body">
                 <form class="form-stacked" action="" onsubmit="addCorrectiveIdea(); return false;">
                     <div class="clearfix">
                         <label for="ideaName">&{'addCorrectiveAction.name'}</label>
@@ -199,16 +199,16 @@ $(function () {
                         </div>
                     </div>
                     <div>
-                        <select name="dimensionOne">
+                        <select name="classification-1" id="causeClassification-1">
                             <option value=""></option>
                         #{list rcaCase.getClassifications(1), as:'classification'}
-                            <option value="">${classification.name}</option>
+                            <option value="${classification.id}">${classification.name}</option>
                         #{/list}
                         </select>
-                        <select name="dimensionTwo">
+                        <select name="classification-2" id="causeClassification-2">
                             <option value=""></option>
                         #{list rcaCase.getClassifications(2), as:'classification'}
-                            <option value="">${classification.name}</option>
+                            <option value="${classification.id}">${classification.name}</option>
                         #{/list}
                         </select>
                     </div>
@@ -258,6 +258,54 @@ $(function () {
             </form>
         </div>
 
+        <div id="addClassification-modal" class="modal hide">
+            <div class="modal-header">
+                <a href="#" class="close">&times;</a>
+                <h3>&{'addClassification.title'}</h3>
+            </div>
+
+            <!-- TODO: Refactor inline styles away -->
+            <form action="" onsubmit="addClassification(); return false;" style="margin: 0; padding: 0">
+                <div class="modal-body">
+                    <div class="clearfix">
+                        <label for="classificationType">&{'addClassification.classificationType'}</label>
+                        <select id="classificationType" name="classificationType">
+                            <option value="1">Mikä</option>
+                            <option value="2">Missä</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="classificationName">&{'addClassification.classificationName'}</label>
+                        <input type="text" id="classificationName" name="classificationName" />
+                    </div>
+
+                    <div>
+                        <label for="classificationAbbreviation">&{'addClassification.classificationAbbreviation'}</label>
+                        <input type="text" id="classificationAbbreviation" name="classificationAbbreviation" />
+                    </div>
+
+                    <div>
+                        <label for="classificationExplanation">&{'addClassification.classificationExplanation'}</label>
+                        <textarea id="classificationExplanation" name="classificationExplanation"></textarea>
+                    </div>
+
+                    <div class="error-field error"></div>
+                </div>
+
+                <div class="modal-footer">
+                    <input type="submit" value="&{'addClassification.title'}" class="btn success" id="addClassification-submit" />
+                    <a href="#" class="btn secondary" onclick="$('#addClassification-modal').modal('hide')">&{'dialog.cancel'}</a>
+                </div>
+            </form>
+        </div>
+
+        <div id="tagArea">
+            <img id="tagIcon" src="@{'/public/images/tag.png'}" alt="&{'tags.tags'}" />
+            <img id="addTag" class="hide" src="@{'/public/images/plus.png'}" alt="&{'tags.add'}" />
+            <img id="removeTag" class="hide" src="@{'/public/images/minus.png'}" alt="&{'tags.remove'}" />
+        </div>
+
         <script type="text/javascript">
 window.arca = {
     currentUser: ${currentUser == null ? 'null' : currentUser.id},
@@ -274,7 +322,9 @@ window.arca = {
         deleteCause: #{jsAction @CauseController.deleteCause(':causeId') /},
         addRelation: #{jsAction @CauseController.addRelation(':fromId', ':toID') /},
         moveNode: #{jsAction @CauseController.nodeMoved(':causeId', ':x', ':y') /},
-        getCorrections: #{jsAction @CauseController.getCorrections(':causeId') /}
+        getCorrections: #{jsAction @CauseController.getCorrections(':causeId') /},
+        addClassification: #{jsAction @ClassificationController.createClassification(rcaCase.id, ':type', ':name',
+                                                                                     ':abbreviation', ':explanation') /}
     },
     graphJson: [
     #{list rcaCase.causes, as:'cause'}

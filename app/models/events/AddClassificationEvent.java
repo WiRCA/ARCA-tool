@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
+ * Copyright (C) 2012 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
  * Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus,
  * Timo Lehtinen, Jaakko Harjuhahto
  *
@@ -25,35 +25,44 @@
 package models.events;
 
 import models.Cause;
+import models.RCACase;
+import models.enums.ClassificationDimension;
 
-/**
-* Add corrective action to cause event
-*/
-public class AddCorrectionEvent extends Event {
-
+public class AddClassificationEvent extends Event {
 	/**
-	* the name of the corrective action
-	*/
-	public final String name;
-	/**
-	* the description if the corrective action
-	*/
-	public final String description;
-	/**
-	* the id of the cause to add the corrective action
-	*/
-	public final String correctionTo;
+	 * the id of the classification
+	 */
+	public Long id;
 
 	/**
-	* Basic constructor
-	*/
-	public AddCorrectionEvent(Cause cause, String name, String description) {
-		super("addcorrectionevent");
-		this.correctionTo = Long.toString(cause.id);
+	 * the name of the classification
+	 */
+	public String name;
+
+	/**
+	 * the type (dimension) of the classification
+	 */
+	public int dimension;
+
+	/**
+	 * the abbreviation of the classification
+	 */
+	public String abbreviation;
+
+	/**
+	 * the explanation of the classification
+	 */
+	public String explanation;
+
+	/**
+	 * Basic constructor
+	 */
+	public AddClassificationEvent(Long id, String name, int dimension, String abbreviation, String explanation) {
+		super("addclassificationevent");
+		this.id = id;
 		this.name = name;
-		this.description = description;
+		this.dimension = dimension;
+		this.abbreviation = abbreviation;
+		this.explanation = explanation;
 	}
 }
-
-
-
