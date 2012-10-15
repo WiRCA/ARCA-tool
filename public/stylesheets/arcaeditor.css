@@ -175,3 +175,25 @@
 #zoomSlider img#zoomout {
     margin-top: 10px;
 }
+
+#tagArea {
+    display: none;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    border-top: 1px solid #999;
+    border-right: 1px solid #999;
+    padding: 0;
+    margin: 0;
+}
+
+#tagArea img:first-child {
+    margin: 0;
+    padding: 0;
+}
+
+#tagArea img + img {
+    margin-top: 3px;
+    margin-left: 3px;
+    cursor: pointer;
+}

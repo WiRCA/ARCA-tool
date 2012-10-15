@@ -104,6 +104,38 @@ function updateLikes (id, count) {
 }
 
 
+function addClassification () {
+    var name = $('#classificationName').val();
+    var type = $('#classificationType').val();
+    var abbreviation = $('#classificationAbbreviation').val();
+    var explanation = $('#classificationExplanation').val();
+    $.getJSON(
+        window.arca.ajax.addClassification({
+            name: name,
+            type: type,
+            abbreviation: abbreviation,
+            explanation: explanation
+        }))
+        .success(function (data) {
+            if ("error" in data) {
+                $('#addClassification-modal .error-field').text(data.error).show();
+            } else {
+                $('#addClassification-modal').modal('hide');
+            }
+        });
+    return false;
+}
+
+
+function insertClassificationItem(data) {
+    var select = $('#causeClassification-' + data.dimension);
+    console.log(select);
+    if (select.length == 0) { return false; }
+    if (select.find('option[value="' + data.id + '"]').length != 0) { return false; }
+    select.append('<option value="' + data.id + '">' + data.name + '</option>');
+}
+
+
 radmenu_fadeOut = function () {
     jQuery("#radial_menu").radmenu(
         "hide",
@@ -403,193 +435,195 @@ function init() {
         resizeTimer = setTimeout(doResize, 100);
     });
 
+
     // init ForceDirected
     var fd = new $jit.ForceDirected({
-                                        //id of the visualization container
-                                        injectInto: 'infovis',
-                                        'width': window.innerWidth + 1000,
-                                        'height': window.innerHeight + 1000,
-                                        //Enable zooming and panning
-                                        //by scrolling and DnD
-                                        Navigation: {
-                                            enable: true,
-                                            //Enable panning events only if we're dragging the empty
-                                            //canvas (and not a node).
-                                            panning: 'avoid nodes',
-                                            zooming: 0 //disable default zooming and implement it in zoom.js
-                                        },
+        //id of the visualization container
+        injectInto: 'infovis',
+        'width': window.innerWidth + 1000,
+        'height': window.innerHeight + 1000,
 
-                                        // Change node and edge styles such as
-                                        // color and width.
-                                        // These properties are also set per node
-                                        // with dollar prefixed data-properties in the
-                                        // JSON structure.
-                                        Node: {
-                                            overridable: true,
-                                            color: "#83548B",
-                                            dim: 1
-                                        },
+        //Enable zooming and panning
+        //by scrolling and DnD
+        Navigation: {
+            enable: true,
+            //Enable panning events only if we're dragging the empty
+            //canvas (and not a node).
+            panning: 'avoid nodes',
+            zooming: 0 //disable default zooming and implement it in zoom.js
+        },
 
-                                        Edge: {
-                                            overridable: true,
-                                            type: 'line',
-                                            dim: 15,
-                                            color: '#23A4FF',
-                                            lineWidth: 2
-                                        },
+        // Change node and edge styles such as
+        // color and width.
+        // These properties are also set per node
+        // with dollar prefixed data-properties in the
+        // JSON structure.
+        Node: {
+            overridable: true,
+            color: "#83548B",
+            dim: 1
+        },
 
-                                        //Native canvas text styling
-                                        Label: {
-                                            type: 'HTML', //Native or HTML
-                                            size: 10,
-                                            style: 'bold'
-                                        },
+        Edge: {
+            overridable: true,
+            type: 'line',
+            dim: 15,
+            color: '#23A4FF',
+            lineWidth: 2
+        },
 
-                                        //Add Tips
-                                        Tips: {
-                                            enable: false
-                                        },
+        //Native canvas text styling
+        Label: {
+            type: 'HTML', //Native or HTML
+            size: 10,
+            style: 'bold'
+        },
 
-                                        // Add node events
-                                        Events: {
-                                            enable: true,
-                                            //Change cursor style when hovering a node
-                                            onMouseEnter: function (node) {
-                                                if (node.data.isRootNode) {
-                                                    fd.canvas.getElement().style.cursor = 'pointer';
-                                                } else {
-                                                    fd.canvas.getElement().style.cursor = 'move';
-                                                }
-                                            },
+        //Add Tips
+        Tips: {
+            enable: false
+        },
 
-                                            onMouseLeave: function () {
-                                                fd.canvas.getElement().style.cursor = '';
-                                            },
+        // Add node events
+        Events: {
+            enable: true,
+            //Change cursor style when hovering a node
+            onMouseEnter: function (node) {
+                if (node.data.isRootNode) {
+                    fd.canvas.getElement().style.cursor = 'pointer';
+                } else {
+                    fd.canvas.getElement().style.cursor = 'move';
+                }
+            },
 
-                                            //Update node positions when dragged
-                                            onDragMove: function (node, eventInfo, e) {
-                                                jQuery("#radial_menu").radmenu("hide");
-                                                if (!node.data.isRootNode) {
-                                                    var pos = eventInfo.getPos();
-                                                    node.pos.setc(pos.x, pos.y);
-                                                    node.setPos(new $jit.Complex(pos.x, pos.y), 'end');
-                                                    fd.plot();
-                                                }
-                                            },
+            onMouseLeave: function () {
+                fd.canvas.getElement().style.cursor = '';
+            },
 
-                                            onDragEnd: function (node, eventInfo, e) {
-                                                var nodeParent = fd.graph.getNode(node.data.parent);
-                                                var xPos, yPos;
-                                                if (nodeParent != undefined) {
-                                                    xPos = node.getPos('end').x - nodeParent.getPos('end').x;
-                                                    yPos = node.getPos('end').y - nodeParent.getPos('end').y;
-                                                } else {
-                                                    xPos = node.getPos('end').x;
-                                                    yPos = node.getPos('end').y;
-                                                }
+            //Update node positions when dragged
+            onDragMove: function (node, eventInfo, e) {
+                jQuery("#radial_menu").radmenu("hide");
+                if (!node.data.isRootNode) {
+                    var pos = eventInfo.getPos();
+                    node.pos.setc(pos.x, pos.y);
+                    node.setPos(new $jit.Complex(pos.x, pos.y), 'end');
+                    fd.plot();
+                }
+            },
 
-                                                // root node cannot be moved globally
-                                                if (!node.data.isRootNode) {
-                                                    $.post(window.arca.ajax.moveNode({causeId: node.id, x: xPos, y: yPos}));
-                                                    updateChildrenVectors(node);
-                                                }
-                                            },
+            onDragEnd: function (node, eventInfo, e) {
+                var nodeParent = fd.graph.getNode(node.data.parent);
+                var xPos, yPos;
+                if (nodeParent != undefined) {
+                    xPos = node.getPos('end').x - nodeParent.getPos('end').x;
+                    yPos = node.getPos('end').y - nodeParent.getPos('end').y;
+                } else {
+                    xPos = node.getPos('end').x;
+                    yPos = node.getPos('end').y;
+                }
 
-                                            //Implement zooming for nodes
-                                            onMouseWheel: function (delta, e) {
-                                                var zoom = (50 / 1000 * delta) + 1;
-                                                applyZoom(zoom, true);
-                                            },
+                // root node cannot be moved globally
+                if (!node.data.isRootNode) {
+                    $.post(window.arca.ajax.moveNode({causeId: node.id, x: xPos, y: yPos}));
+                    updateChildrenVectors(node);
+                }
+            },
 
-                                            //Implement the same handler for touchscreens
-                                            onTouchMove: function (node, eventInfo, e) {
-                                                $jit.util.event.stop(e); //stop default touchmove event
-                                                this.onDragMove(node, eventInfo, e);
-                                            },
+            //Implement zooming for nodes
+            onMouseWheel: function (delta, e) {
+                var zoom = (50 / 1000 * delta) + 1;
+                applyZoom(zoom, true);
+            },
 
-                                            //Add also a click handler to nodes
-                                            onClick: function (node) {
-                                                $("#help-message").hide();
-                                                if (node) {
-                                                    if (relationFromNode) {
-                                                        $.post(window.arca.ajax.addRelation({fromId: relationFromNode.id,
-                                                                               toID: node.id}));
-                                                        relationFromNode = null;
-                                                        $("#relation-help-message").fadeOut(80, "linear");
-                                                    } else {
-                                                        defaultEdgesForSelectedNode(selectedNode);
-                                                        jQuery("#corrections_link").fadeOut(400);
-                                                        show_radial_menu(node);
-                                                        node.eachAdjacency(function (adj) {
-                                                            adj.setDataset('current', {
-                                                                lineWidth: '5',
-                                                                color: '#4CC417'
-                                                            });
-                                                        });
-                                                        fd.plot();
-                                                    }
-                                                } else {
-                                                    defaultEdgesForSelectedNode(selectedNode);
-                                                    jQuery("#radial_menu").radmenu("hide");
-                                                    jQuery("#corrections_link").fadeOut(400);
-                                                    $("#addCorrectiveForm").popover('hide');
-                                                    fd.plot();
-                                                }
-                                            }
-                                        },
+            //Implement the same handler for touchscreens
+            onTouchMove: function (node, eventInfo, e) {
+                $jit.util.event.stop(e); //stop default touchmove event
+                this.onDragMove(node, eventInfo, e);
+            },
 
-                                        //Number of iterations for the FD algorithm
-                                        iterations: 0,
+            //Add also a click handler to nodes
+            onClick: function (node) {
+                $("#help-message").hide();
+                if (node) {
+                    if (relationFromNode) {
+                        $.post(window.arca.ajax.addRelation({fromId: relationFromNode.id,
+                                               toID: node.id}));
+                        relationFromNode = null;
+                        $("#relation-help-message").fadeOut(80, "linear");
+                    } else {
+                        defaultEdgesForSelectedNode(selectedNode);
+                        jQuery("#corrections_link").fadeOut(400);
+                        show_radial_menu(node);
+                        node.eachAdjacency(function (adj) {
+                            adj.setDataset('current', {
+                                lineWidth: '5',
+                                color: '#4CC417'
+                            });
+                        });
+                        fd.plot();
+                    }
+                } else {
+                    defaultEdgesForSelectedNode(selectedNode);
+                    jQuery("#radial_menu").radmenu("hide");
+                    jQuery("#corrections_link").fadeOut(400);
+                    $("#addCorrectiveForm").popover('hide');
+                    fd.plot();
+                }
+            }
+        },
 
-                                        //Edge length
-                                        levelDistance: 0,
+        //Number of iterations for the FD algorithm
+        iterations: 0,
 
-                                        // Add text to the labels. This method is only triggered
-                                        // on label creation and only for DOM labels (not native canvas ones).
-                                        onCreateLabel: function (domElement, node) {
-                                            // Root node looks different.
-                                            if (node.id == window.arca.rootNodeId) {
-                                                $(domElement).addClass('rootNodeBox');
-                                            } else {
-                                                $(domElement).addClass('nodeBox');
-                                            }
+        //Edge length
+        levelDistance: 0,
 
-                                            $(domElement).html(node.name);
-                                            if (node.data.hasCorrections) {
-                                                $(domElement).addClass('nodeBoxCorrection');
-                                            }
+        // Add text to the labels. This method is only triggered
+        // on label creation and only for DOM labels (not native canvas ones).
+        onCreateLabel: function (domElement, node) {
+            // Root node looks different.
+            if (node.id == window.arca.rootNodeId) {
+                $(domElement).addClass('rootNodeBox');
+            } else {
+                $(domElement).addClass('nodeBox');
+            }
 
-                                            var pointString;
-                                            if (node.data.likeCount > 1) {
-                                                pointString = window.arca.multiplePoints;
-                                            } else {
-                                                pointString = window.arca.singlePoint;
-                                            }
+            $(domElement).html(node.name);
+            if (node.data.hasCorrections) {
+                $(domElement).addClass('nodeBoxCorrection');
+            }
 
-                                            $(domElement).append("<div id='likeBoxWrapper'>" +
-                                                                 "<div id='likeBox' class='label success'>" +
-                                                                 node.data.likeCount + " " + pointString +
-                                                                 "</div>" +
-                                                                 "</div>");
-                                            if (node.data.likeCount == 0) {
-                                                domElement.childNodes[1].childNodes[0].style.display = "none";
-                                            }
-                                        },
+            var pointString;
+            if (node.data.likeCount > 1) {
+                pointString = window.arca.multiplePoints;
+            } else {
+                pointString = window.arca.singlePoint;
+            }
 
-                                        // Change node styles when DOM labels are placed
-                                        // or moved.
-                                        onPlaceLabel: function (domElement, node) {
-                                            var style = domElement.style;
-                                            var left = parseInt(style.left);
-                                            var top = parseInt(style.top);
-                                            var w = parseInt(domElement.offsetWidth);
-                                            var h = parseInt(domElement.offsetHeight);
-                                            style.left = (left - (w / 2)) + 'px';
-                                            style.top = (top - (h / 2)) + 'px';
-                                            node.data.$height = h;
-                                            node.data.$width = w;
-                                        }
-                                    });
+            $(domElement).append("<div id='likeBoxWrapper'>" +
+                                 "<div id='likeBox' class='label success'>" +
+                                 node.data.likeCount + " " + pointString +
+                                 "</div>" +
+                                 "</div>");
+            if (node.data.likeCount == 0) {
+                domElement.childNodes[1].childNodes[0].style.display = "none";
+            }
+        },
+
+        // Change node styles when DOM labels are placed
+        // or moved.
+        onPlaceLabel: function (domElement, node) {
+            var style = domElement.style;
+            var left = parseInt(style.left);
+            var top = parseInt(style.top);
+            var w = parseInt(domElement.offsetWidth);
+            var h = parseInt(domElement.offsetHeight);
+            style.left = (left - (w / 2)) + 'px';
+            style.top = (top - (h / 2)) + 'px';
+            node.data.$height = h;
+            node.data.$width = w;
+        }
+    });
 
     // variable for current zoom level
     var zoomLevel = 1;
@@ -660,128 +694,134 @@ function init() {
     // apply slider to slider div
     $(function() {
         $("#slider-vertical").slider({
-                                         orientation: "vertical",
-                                         range: "min",
-                                         min: 0,
-                                         max: zoomSteps,
-                                         value: zoomSteps / 2,
-                                         slide: function(event, ui) {
-                                             applyZoom(((zoomMax - zoomMin) / zoomSteps * ui.value + zoomMin) / zoomLevel, false);
-                                         }
-                                     });
+            orientation: "vertical",
+            range: "min",
+            min: 0,
+            max: zoomSteps,
+            value: zoomSteps / 2,
+            slide: function(event, ui) {
+                applyZoom(((zoomMax - zoomMin) / zoomSteps * ui.value + zoomMin) / zoomLevel, false);
+            }
+        });
     });
 
     var getNodes = function () {
         $.ajax({
-                   url: window.arca.ajax.waitMessage({lastReceived: window.arca.lastReceived}),
-                   success: function (events) {
-                       $(events).each(function () {
-                           if (this.data.type === 'deletecauseevent') {
-                               fd.graph.removeNode(this.data.causeId);
-                               fd.plot();
-                               $("div.node#" + this.data.causeId).remove();
-                           }
+            url: window.arca.ajax.waitMessage({lastReceived: window.arca.lastReceived}),
+            success: function (events) {
+                $(events).each(function () {
+                    if (this.data.type === 'deletecauseevent') {
+                        fd.graph.removeNode(this.data.causeId);
+                        fd.plot();
+                        $("div.node#" + this.data.causeId).remove();
+                    }
 
-                           if (this.data.type === 'addrelationevent') {
-                               //alert(this.data.causeFrom + " " + this.data.causeTo);
-                               fd.graph.addAdjacence(
-                                   fd.graph.getNode(this.data.causeFrom),
-                                   fd.graph.getNode(this.data.causeTo),
-                                   {
-                                       "$type": "arrow",
-                                       "$direction": [this.data.causeFrom, this.data.causeTo],
-                                       "$dim": 15,
-                                       "$color": "#23A4FF",
-                                       "weight": 1
-                                   }
-                               );
+                    if (this.data.type === 'addrelationevent') {
+                        //alert(this.data.causeFrom + " " + this.data.causeTo);
+                        fd.graph.addAdjacence(
+                             fd.graph.getNode(this.data.causeFrom),
+                            fd.graph.getNode(this.data.causeTo),
+                            {
+                                "$type": "arrow",
+                                "$direction": [this.data.causeFrom, this.data.causeTo],
+                                "$dim": 15,
+                                "$color": "#23A4FF",
+                                "weight": 1
+                            }
+                        );
 
-                               fd.plot();
-                           }
+                        fd.plot();
+                    }
 
-                           if (this.data.type === 'addcorrectionevent') {
-                               $("#" + this.data.correctionTo).addClass('nodeBoxCorrection');
-                               fd.plot();
-                           }
+                    if (this.data.type === 'addcorrectionevent') {
+                        $("#" + this.data.correctionTo).addClass('nodeBoxCorrection');
+                        fd.plot();
+                    }
 
-                           else if (this.data.type === 'addcauseevent') {
-                               // This is a small fix. Now twipsy hides as it's supposed to.
-                               // $('.twipsy').remove();
-                               defaultEdgesForSelectedNode(selectedNode);
-                               var newNode = {
-                                   "id": this.data.causeTo,
-                                   "name": this.data.text,
-                                   "data": {
-                                       "parent": this.data.causeFrom,
-                                       "creatorId": '' + this.data.creatorId,
-                                       "likeCount": 0,
-                                       "hasUserLiked": false
-                                   }
-                               };
+                    else if (this.data.type === 'addcauseevent') {
+                        // This is a small fix. Now twipsy hides as it's supposed to.
+                        // $('.twipsy').remove();
+                        defaultEdgesForSelectedNode(selectedNode);
+                        var newNode = {
+                            "id": this.data.causeTo,
+                            "name": this.data.text,
+                            "data": {
+                                "parent": this.data.causeFrom,
+                                "creatorId": '' + this.data.creatorId,
+                                "likeCount": 0,
+                                "hasUserLiked": false
+                            }
+                        };
 
-                               var oldNode = fd.graph.getNode(this.data.causeFrom);
-                               var newNodesXCoordinate = 100;
-                               var newNodesYCoordinate = 100;
-                               fd.graph.addAdjacence(oldNode, newNode);
-                               newNode = fd.graph.getNode(this.data.causeTo);
-                               newNode.data.nodeLevel = oldNode.data.nodeLevel + 1;
-                               newNode.setPos(oldNode.getPos('end'), 'current');
-                               newNode.getPos('end').y = oldNode.getPos('end').y + newNodesYCoordinate;
-                               newNode.getPos('end').x = oldNode.getPos('end').x + newNodesXCoordinate;
-                               newNode.data.xCoordinate = newNodesXCoordinate;
-                               newNode.data.yCoordinate = newNodesYCoordinate;
-                               fd.plot();
-                               fd.animate({
-                                              modes: ['linear'],
-                                              transition: $jit.Trans.Elastic.easeOut,
-                                              duration: 1500
-                                          });
-                               applyZoom(1, false); // refresh zooming for the new node
-                               $("#infovis-label div.node").disableSelection();
-                           }
+                        var oldNode = fd.graph.getNode(this.data.causeFrom);
+                        var newNodesXCoordinate = 100;
+                        var newNodesYCoordinate = 100;
+                        fd.graph.addAdjacence(oldNode, newNode);
+                        newNode = fd.graph.getNode(this.data.causeTo);
+                        newNode.data.nodeLevel = oldNode.data.nodeLevel + 1;
+                        newNode.setPos(oldNode.getPos('end'), 'current');
+                        newNode.getPos('end').y = oldNode.getPos('end').y + newNodesYCoordinate;
+                        newNode.getPos('end').x = oldNode.getPos('end').x + newNodesXCoordinate;
+                        newNode.data.xCoordinate = newNodesXCoordinate;
+                        newNode.data.yCoordinate = newNodesYCoordinate;
+                        fd.plot();
+                        fd.animate({
+                            modes: ['linear'],
+                            transition: $jit.Trans.Elastic.easeOut,
+                            duration: 1500
+                        });
+                        applyZoom(1, false); // refresh zooming for the new node
+                        $("#infovis-label div.node").disableSelection();
+                    }
 
-                           else if (this.data.type === 'causeRenameEvent') {
-                               var oldNode = fd.graph.getNode(this.data.causeId);
-                               oldNode.name = this.data.newName;
-                               $("#" + this.data.causeId).html(this.data.newName);
-                           }
+                    else if (this.data.type === 'causeRenameEvent') {
+                        var oldNode = fd.graph.getNode(this.data.causeId);
+                        oldNode.name = this.data.newName;
+                        $("#" + this.data.causeId).html(this.data.newName);
+                    }
 
-                           else if (this.data.type === 'amountOfLikesEvent') {
-                               updateLikes(this.data.causeId, this.data.amountOfLikes);
-                           }
+                    else if (this.data.type === 'amountOfLikesEvent') {
+                        updateLikes(this.data.causeId, this.data.amountOfLikes);
+                    }
 
-                           else if (this.data.type === 'nodemovedevent') {
-                               var nodeToMove = fd.graph.getNode(this.data.causeId);
-                               var nodeParent = fd.graph.getNode(nodeToMove.data.parent);
-                               var intX = parseInt(this.data.x);
-                               var intY = parseInt(this.data.y);
-                               nodeToMove.data.xCoordinate = intX;
-                               nodeToMove.data.yCoordinate = intY;
-                               if (nodeParent != undefined) {
-                                   var xPos = nodeParent.getPos('end').x + intX;
-                                   var yPos = nodeParent.getPos('end').y + intY;
-                               } else {
-                                   var xPos = intX;
-                                   var yPos = intY;
-                               }
+                    else if (this.data.type === 'nodemovedevent') {
+                        var nodeToMove = fd.graph.getNode(this.data.causeId);
+                        var nodeParent = fd.graph.getNode(nodeToMove.data.parent);
+                        var intX = parseInt(this.data.x);
+                        var intY = parseInt(this.data.y);
+                        nodeToMove.data.xCoordinate = intX;
+                        nodeToMove.data.yCoordinate = intY;
+                        if (nodeParent != undefined) {
+                            var xPos = nodeParent.getPos('end').x + intX;
+                            var yPos = nodeParent.getPos('end').y + intY;
+                        } else {
+                            var xPos = intX;
+                            var yPos = intY;
+                        }
 
-                               var nodePos = new $jit.Complex(xPos, yPos);
-                               nodeToMove.setPos(nodePos, 'end');
+                        var nodePos = new $jit.Complex(xPos, yPos);
+                        nodeToMove.setPos(nodePos, 'end');
 
-                               updateChildrenVectors(nodeToMove);
-                               fd.animate({
-                                              modes: ['linear'],
-                                              transition: $jit.Trans.Elastic.easeOut,
-                                              duration: 900
-                                          });
-                           }
-                           window.arca.lastReceived = this.id
-                       });
-                       getNodes()
-                   },
-                   dataType: 'json'
-               });
+                        updateChildrenVectors(nodeToMove);
+                        fd.animate({
+                            modes: ['linear'],
+                            transition: $jit.Trans.Elastic.easeOut,
+                            duration: 900
+                        });
+                    }
+
+                    else if (this.data.type === 'addclassificationevent') {
+                        insertClassificationItem(this.data);
+                    }
+
+                    window.arca.lastReceived = this.id
+                });
+                getNodes()
+            },
+            dataType: 'json'
+        });
     };
+
     getNodes();
 
     // load JSON data.
@@ -887,4 +927,19 @@ $(document).ready(function () {
     $('#addcorrection-modal').bind('shown', function () {
         $('#ideaName').focus();
     });
+
+    $('#addClassification-modal').modal({
+                                            keyboard: true,
+                                            backdrop: true,
+                                            show: false
+                                        });
+    $('#addClassification-modal').bind('shown', function () {
+        $('#classificationName').focus();
+    });
+
+    if (window.arca.ownerId == window.arca.currentUser) {
+        $('#tagArea').show();
+        $('#tagIcon').click(function() { $('#addTag, #removeTag').slideToggle(); });
+        $('#addTag').click(function() { $('#addClassification-modal').modal('show'); });
+    }
 });
