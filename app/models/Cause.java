@@ -48,6 +48,11 @@ public class Cause extends LikableIdComparableModel {
 	public String name;
 
 	/**
+	 * the classifications of the cause
+	 */
+	public HashMap<ClassificationDimension, Classification> classifications;
+
+	/**
 	* The rca case that the cause belongs to
 	*/
 	@ManyToOne(cascade = CascadeType.PERSIST)
@@ -148,6 +153,13 @@ public class Cause extends LikableIdComparableModel {
 		this.effectRelations = new TreeSet<Relation>();
 		this.corrections = new TreeSet<Correction>();
 		this.likes = new ArrayList<Long>();
+	}
+
+	public Classification getClassification(int classificationDimension) {
+		return classifications.get(ClassificationDimension.valueOf(classificationDimension));
+	}
+	public void setClassification(Classification classification) {
+		classifications.put(ClassificationDimension.valueOf(classification.classificationDimension), classification);
 	}
 
 	/**
