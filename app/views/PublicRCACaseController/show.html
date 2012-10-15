@@ -1,4 +1,4 @@
-<!--
+import models.Classificationimport models.Classificationimport models.Classification<!--
   ~ Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen, Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus
   ~
   ~ Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -184,6 +184,20 @@
                     <div class="input">
                         <input class="xlarge" autofocus="autofocus" id="causeName" name="causeName" type="text" value="" />
                     </div>
+                </div>
+                <div>
+                    <select>
+                        <option value=""></option>
+                    #{list rcaCase.getClassifications(1), as:'classification'}
+                        <option value="">${classification.name}</option>
+                    #{/list}
+                    </select>
+                    <select>
+                        <option value=""></option>
+                    #{list rcaCase.getClassifications(2), as:'classification'}
+                        <option value="">${classification.name}</option>
+                    #{/list}
+                    </select>
                 </div>
             </div>
             <div class="modal-footer">
