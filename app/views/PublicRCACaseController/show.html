@@ -150,7 +150,7 @@ $(function () {
 });
         </script>
 
-        <div id="addcorrection-modal" class="modal hide" style="overflow: auto; max-height:580px;">
+        <div id="addcorrection-modal" class="modal hide" style="overflow:auto;max-height:580px;">
             <div class="modal-header">
                 <a href="#" class="close">&times;</a>
                 <h3>&{'addCorrectiveAction.title'}</h3>
@@ -190,7 +190,7 @@ $(function () {
                 <h3>&{'addCause.title'}</h3>
             </div>
 
-            <form action="" onsubmit="addNewCause(); return false;" style="margin: 0; padding: 0;">
+            <form action="" onsubmit="addNewCause(); return false;">
                 <div class="modal-body">
                     <div class="clearfix">
                         <label for="causeName">&{'addCause.name'}</label>
@@ -199,13 +199,13 @@ $(function () {
                         </div>
                     </div>
                     <div>
-                        <select name="classification-1" id="add-CauseClassification-1">
+                        <select name="classification-1" id="add-CauseClassification-1" class="classificationList classificationType-1">
                             <option value=""></option>
                         #{list rcaCase.getClassifications(1), as:'classification'}
                             <option value="${classification.id}">${classification.name}</option>
                         #{/list}
                         </select>
-                        <select name="classification-2" id="add-CauseClassification-2">
+                        <select name="classification-2" id="add-CauseClassification-2" class="classificationList classificationType-2">
                             <option value=""></option>
                         #{list rcaCase.getClassifications(2), as:'classification'}
                             <option value="${classification.id}">${classification.name}</option>
@@ -226,7 +226,7 @@ $(function () {
                 <h3>&{'renameCause.title'}</h3>
             </div>
 
-            <form action="" onsubmit="renameCause(); return false;" style="margin: 0; padding: 0;">
+            <form action="" onsubmit="renameCause(); return false;">
                 <div class="modal-body">
                     <div class="clearfix">
                         <label for="renamedName">&{'renameCause.newName'}</label>
@@ -236,16 +236,16 @@ $(function () {
                         </div>
                     </div>
                     <div>
-                        <select name="classification-1" id="modify-CauseClassification-1">
+                        <select name="classification-1" id="modify-CauseClassification-1" class="classificationList classificationType-1">
                             <option value=""></option>
                         #{list rcaCase.getClassifications(1), as:'classification'}
-                            <option value="">${classification.name}</option>
+                            <option value="${classification.id}">${classification.name}</option>
                         #{/list}
                         </select>
-                        <select name="classification-2" id="modify-CauseClassification-2">
+                        <select name="classification-2" id="modify-CauseClassification-2" class="classificationList classificationType-2">
                             <option value=""></option>
                         #{list rcaCase.getClassifications(2), as:'classification'}
-                            <option value="">${classification.name}</option>
+                            <option value="${classification.id}">${classification.name}</option>
                         #{/list}
                         </select>
                     </div>
@@ -264,8 +264,7 @@ $(function () {
                 <h3>&{'addClassification.title'}</h3>
             </div>
 
-            <!-- TODO: Refactor inline styles away -->
-            <form action="" onsubmit="addClassification(); return false;" style="margin: 0; padding: 0">
+            <form action="" onsubmit="addClassification(); return false;">
                 <div class="modal-body">
                     <div class="clearfix">
                         <label for="classificationType">&{'addClassification.classificationType'}</label>
@@ -295,6 +294,89 @@ $(function () {
 
                 <div class="modal-footer">
                     <input type="submit" value="&{'addClassification.title'}" class="btn success" id="addClassification-submit" />
+                    <a href="#" class="btn secondary" onclick="$('#addClassification-modal').modal('hide')">&{'dialog.cancel'}</a>
+                </div>
+            </form>
+        </div>
+
+        <div id="editClassification-modal" class="modal hide">
+            <div class="modal-header">
+                <a href="#" class="close">&times;</a>
+                <h3>&{'editClassification.title'}</h3>
+            </div>
+
+            <form action="" onsubmit="editClassification(); return false;">
+                <div class="modal-body">
+                    <div class="clearfix">
+                        <label for="edit-classificationId">&{'editClassification.classification'}</label>
+                        <select id="edit-classificationId" class="classificationList classificationType-1 classificationType-2">
+                        #{list rcaCase.getClassifications(1), as:'classification'}
+                            <option value="${classification.id}">${classification.name}</option>
+                        #{/list}
+                        #{list rcaCase.getClassifications(2), as:'classification'}
+                            <option value="${classification.id}">${classification.name}</option>
+                        #{/list}
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="edit-classificationTitle">&{'addClassification.title'}</label>
+                        <input type="text" name="classificationTitle" id="edit-classificationTitle" />
+                    </div>
+
+                    <div>
+                        <label for="edit-classificationType">&{'addClassification.classificationType'}</label>
+                        <select id="edit-classificationType" name="classificationType">
+                            <option value="1">Mikä</option>
+                            <option value="2">Missä</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="classificationAbbreviation">&{'addClassification.classificationAbbreviation'}</label>
+                        <input type="text" id="edit-classificationAbbreviation" name="classificationAbbreviation" />
+                    </div>
+
+                    <div>
+                        <label for="classificationExplanation">&{'addClassification.classificationExplanation'}</label>
+                        <textarea id="edit-classificationExplanation" name="classificationExplanation"></textarea>
+                    </div>
+
+                    <div class="error-field error"></div>
+                </div>
+
+                <div class="modal-footer">
+                    <input type="submit" value="&{'editClassification.title'}" class="btn success" id="editClassification-edit" />
+                    <a href="#" class="btn secondary" onclick="$('#addClassification-modal').modal('hide')">&{'dialog.cancel'}</a>
+                </div>
+            </form>
+        </div>
+
+        <div id="editClassification-modal" class="modal hide">
+            <div class="modal-header">
+                <a href="#" class="close">&times;</a>
+                <h3>&{'removeClassification.title'}</h3>
+            </div>
+
+            <form action="" onsubmit="removeClassification(); return false;">
+                <div class="modal-body">
+                    <div class="clearfix">
+                        <label for="remove-classificationId">&{'editClassification.classification'}</label>
+                        <select id="remove-classificationId">
+                        #{list rcaCase.getClassifications(1), as:'classification'}
+                            <option value="${classification.id}">${classification.name}</option>
+                        #{/list}
+                        #{list rcaCase.getClassifications(2), as:'classification'}
+                            <option value="${classification.id}">${classification.name}</option>
+                        #{/list}
+                        </select>
+                    </div>
+
+                    <div class="error-field error"></div>
+                </div>
+
+                <div class="modal-footer">
+                    <input type="submit" value="&{'removeClassification.title'}" class="btn success" id="removeClassification-submit" />
                     <a href="#" class="btn secondary" onclick="$('#addClassification-modal').modal('hide')">&{'dialog.cancel'}</a>
                 </div>
             </form>

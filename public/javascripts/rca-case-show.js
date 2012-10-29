@@ -104,6 +104,56 @@ function updateLikes (id, count) {
 }
 
 
+function removeVisibleClassification (id) {
+    $('select.classificationList option[value="' + id + '"]').remove();
+}
+
+
+function updateClassificationName (id, name) {
+    $('select.classificationList option[value="' + id + '"]').innerText(name);
+}
+
+
+function removeClassification () {
+    var id = $('#edit-classificationId').val();
+    $.getJSON(
+        window.arca.ajax.removeClassification({id: id}))
+        .success(function (data) {
+            if ("error" in data) {
+                $('#removeClassification-modal .error-field').text(data.error).show();
+            } else {
+                $('#removeClassification-modal').modal('hide');
+            }
+        });
+    return false;
+}
+
+
+function editClassification () {
+    var id = $('#edit-classificationId').val();
+    var name = $('#edit-classificationName').val();
+    var type = $('#edit-classificationType').val();
+    var abbreviation = $('#edit-classificationAbbreviation').val();
+    var explanation = $('#edit-classificationExplanation').val();
+    $.getJSON(
+        window.arca.ajax.editClassification({
+            id: id,
+            name: name,
+            type: type,
+            abbreviation: abbreviation,
+            explanation: explanation
+        }))
+        .success(function (data) {
+            if ("error" in data) {
+                $('#editClassification-modal .error-field').text(data.error).show();
+            } else {
+                $('#editClassification-modal').modal('hide');
+            }
+        });
+    return false;
+}
+
+
 function addClassification () {
     var name = $('#classificationName').val();
     var type = $('#classificationType').val();
@@ -128,11 +178,11 @@ function addClassification () {
 
 
 function insertClassificationItem(data) {
-    var select = $('#causeClassification-' + data.dimension);
-    console.log(select);
-    if (select.length == 0) { return false; }
-    if (select.find('option[value="' + data.id + '"]').length != 0) { return false; }
-    select.append('<option value="' + data.id + '">' + data.name + '</option>');
+    var select = $('.classificationList.classificationType-' + data.dimension);
+    select.each(function (e) {
+        if (e.find('option[value="' + data.id + '"]').length != 0) { return false; }
+        e.append('<option value="' + data.id + '">' + data.name + '</option>');
+    });
 }
 
 

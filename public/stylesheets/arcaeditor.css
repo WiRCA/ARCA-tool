@@ -197,3 +197,8 @@
     margin-left: 3px;
     cursor: pointer;
 }
+
+.modal form {
+    margin: 0;
+    padding: 0;
+}
