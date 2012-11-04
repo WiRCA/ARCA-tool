@@ -24,10 +24,7 @@
 
 package controllers;
 
-import models.Cause;
-import models.Correction;
-import models.RCACase;
-import models.User;
+import models.*;
 import models.events.*;
 import play.Logger;
 import play.data.validation.Validation;
@@ -240,7 +237,6 @@ public class CauseController extends Controller {
 
 	/**
 	 * Renames a cause.
-	 *
 	 * @param causeId rename cause with id
 	 * @param name new name of the cause
 	 */
@@ -257,7 +253,7 @@ public class CauseController extends Controller {
 		cause.name = name;
 		cause.save();
 		
-		if(cause == rcaCase.problem) {
+		if (cause == rcaCase.problem) {
 			rcaCase.caseName = name;
 			rcaCase.save();
 		}
@@ -266,8 +262,54 @@ public class CauseController extends Controller {
 		CauseStream causeEvents = rcaCase.getCauseStream();
 		causeEvents.getStream().publish(event);
 		Logger.debug("Cause %s renamed to cause %s", oldName, name);
-	}	 
-	
+	}
+
+
+	/**
+	 * A quick dual-classification setting function for the prototype.
+	 * @todo Make this properly :)
+	 * @param causeId the ID of the cause
+	 * @param classificationId1 the ID of the first classification to set
+	 * @param classificationId2 the ID of the second classification to set
+	 */
+	public static void setClassifications(Long causeId, Long classificationId1, Long classificationId2) {
+		Cause cause = Cause.findById(causeId);
+		RCACase rcaCase = cause.rcaCase;
+
+		if (!CauseController.userAllowedToClassify(cause)) {
+			forbidden();
+		}
+
+		CauseStream causeEvents = rcaCase.getCauseStream();
+		if (classificationId1 != -1) {
+			Classification classification1 = Classification.findById(classificationId1);
+			if (classification1 == null) { error(); return; }
+			cause.setClassification(classification1);
+			cause.save();
+			CauseClassificationEvent event1 = new CauseClassificationEvent(causeId, classificationId1);
+			causeEvents.getStream().publish(event1);
+			Logger.debug("Case %s reclassified to %s", cause.name, classification1.name);
+		}
+
+		if (classificationId2 != -1) {
+			Classification classification2 = Classification.findById(classificationId2);
+			if (classification2 == null) { error(); return; }
+			cause.setClassification(classification2);
+			cause.save();
+			CauseClassificationEvent event2 = new CauseClassificationEvent(causeId, classificationId2);
+			causeEvents.getStream().publish(event2);
+			Logger.debug("Case %s reclassified to %s", cause.name, classification2.name);
+		}
+	}
+
+
+	private static boolean userAllowedToClassify(Cause cause) {
+		// TODO: Who is actually allowed to (re)classify causes?
+		User current = SecurityController.getCurrentUser();
+		return current != null;
+	}
+
+
 	private static boolean userAllowedToLike(User user, RCACase rcaCase, Cause cause) {
 		return user != null && (rcaCase.getOwner().equals(user) || !cause.hasUserLiked(user));		
 	}

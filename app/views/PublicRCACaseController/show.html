@@ -125,6 +125,12 @@
                              style="margin-left: -8px; margin-top: -8px" />
                     </a>
                 </li>
+
+                <li class="item radmenu-button" id="radmenu-event-tagCause">
+                    <a href="#" rel='twipsy' data-placement="right" title='&{'editor.tagCause'}'>
+                        <img src="@{'/public/images/tag.png'}" height="24" width="24" />
+                    </a>
+                </li>
             </ul>
         </div>
 
@@ -134,8 +140,8 @@
                 <h3>&{'addCorrectiveAction.title'}</h3>
             </div>
 
-            <div style="margin-left:10px;text-align:left;padding:0" class="modal-body">
-                <form class="form-stacked" action="" onsubmit="addCorrectiveIdea(); return false;">
+            <form class="form-stacked" action="" onsubmit="addCorrectiveIdea(); return false;">
+                <div style="margin-left:10px;text-align:left;padding:0" class="modal-body">
                     <div class="clearfix">
                         <label for="ideaName">&{'addCorrectiveAction.name'}</label>
                         <div class="input">
@@ -149,17 +155,52 @@
                             <textarea rows="2" id="ideaDescription" style="width:500px;max-height:50px;"></textarea>
                         </div>
                     </div>
+                </div>
 
+                <div id="my_modal_body" style="left-margin:10px; text-align:left; padding:10px;"></div>
+
+                <div class="modal-footer">
+                    <a href="#" class="btn secondary" onclick="$('#addcorrection-modal').modal('hide')">&{'dialog.cancel'}</a>
                     <input id="submitCorrectiveActionButton" class="btn success" type="submit"
                            value="&{'addCorrectiveAction.submit'}" />
-                </form>
+                </div>
+            </form>
+        </div>
+
+        <div id="tagcause-modal" class="modal hide">
+            <div class="modal-header">
+                <a href="#" class="close">&times;</a>
+                <h3>&{'tagCause.title'}</h3>
             </div>
 
-            <div id="my_modal_body"style="left-margin:10px; text-align:left; padding:10px;"></div>
+            <form action="" onsubmit="tagCause(); return false;">
+                <div class="modal-body">
+                    <div class="clearfix">
+                        <label for="tag-causeClassification-1">Mikä</label>
+                        <select name="classification-1" id="tag-causeClassification-1" class="classificationList classificationType-1">
+                            <option value=""></option>
+                        #{list rcaCase.getClassifications(1), as:'classification'}
+                            <option value="${classification.id}">${classification.name}</option>
+                        #{/list}
+                        </select>
+                    </div>
 
-            <div class="modal-footer">
-                <a href="#" class="btn secondary" onclick="$('#addcorrection-modal').modal('hide')">&{'dialog.cancel'}</a>
-            </div>
+                    <div>
+                        <label for="tag-causeClassification-2">Mikä</label>
+                        <select name="classification-2" id="tag-causeClassification-2" class="classificationList classificationType-2">
+                            <option value=""></option>
+                        #{list rcaCase.getClassifications(2), as:'classification'}
+                            <option value="${classification.id}">${classification.name}</option>
+                        #{/list}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <input id="tagCauseButton" class="btn success" type="submit" value="&{'tagCause.title'}" />
+                    <a href="#" class="btn secondary" onclick="$('#tagcause-modal').modal('hide')">&{'dialog.cancel'}</a>
+                </div>
+            </form>
         </div>
 
         <div id="addcause-modal" class="modal hide">
@@ -196,6 +237,7 @@
                         </select>
                     </div>
                 </div>
+
                 <div class="modal-footer">
                     <input type="submit" value="&{'addCause.title'}" class="btn success" id="addcause-submit" />
                     <a href="#" class="btn secondary" onclick="$('#addcause-modal').modal('hide')">&{'dialog.cancel'}</a>
@@ -321,12 +363,12 @@
                     </div>
 
                     <div>
-                        <label for="classificationAbbreviation">&{'addClassification.classificationAbbreviation'}</label>
+                        <label for="edit-classificationAbbreviation">&{'addClassification.classificationAbbreviation'}</label>
                         <input type="text" id="edit-classificationAbbreviation" name="classificationAbbreviation" />
                     </div>
 
                     <div>
-                        <label for="classificationExplanation">&{'addClassification.classificationExplanation'}</label>
+                        <label for="edit-classificationExplanation">&{'addClassification.classificationExplanation'}</label>
                         <textarea id="edit-classificationExplanation" name="classificationExplanation"></textarea>
                     </div>
 
@@ -350,7 +392,7 @@
                 <div class="modal-body">
                     <div class="clearfix">
                         <label for="remove-classificationId">&{'editClassification.classification'}</label>
-                        <select id="remove-classificationId">
+                        <select id="remove-classificationId" class="classificationList classificationType-1 classificationType-2">
                         #{list rcaCase.getClassifications(1), as:'classification'}
                             <option value="${classification.id}">${classification.name}</option>
                         #{/list}
@@ -406,7 +448,8 @@ window.arca = {
                                                                                     ':type', ':name', ':abbreviation',
                                                                                     ':explanation') /},
         removeClassification: #{jsAction @ClassificationController.removeClassification(rcaCase.id,
-                                                                                        ':classificationId') /}
+                                                                                        ':classificationId') /},
+        tagCause: #{jsAction @CauseController.setClassifications(':causeId', ':classification1', ':classification2') /}
     },
     graphJson: [
     #{list rcaCase.causes, as:'cause'}
@@ -425,7 +468,9 @@ window.arca = {
                 "yCoordinate": #{if cause.yCoordinate != null && rcaCase.problem != cause}${cause
                 .yCoordinate}#{/if}#{else}""#{/else},
                 "likeCount": ${cause.countLikes()},
-                "hasUserLiked": ${cause.hasUserLiked(currentUser)}
+                "hasUserLiked": ${cause.hasUserLiked(currentUser)},
+                "classification1": ${cause.classifications.containsKey(1) ? cause.classifications.get(1) : -1},
+                "classification2": ${cause.classifications.containsKey(2) ? cause.classifications.get(2) : -1}
             },
             "adjacencies": [
                 #{list cause.causes, as:'causedBy'}
@@ -449,8 +494,18 @@ window.arca = {
     #{/list}
     ],
     lastReceived: ${lastMessage},
-    rootNodeId: ${rcaCase.problem.id}
-};
+    rootNodeId: ${rcaCase.problem.id},
+    classifications: {
+    #{list rcaCase.getClassifications(), as:'classification'}
+        ${classification.id}: {
+            title: "${classification.name.escapeJavaScript().raw()}",
+            dimension: ${classification.classificationDimension},
+            abbreviation: "${classification.abbreviation.escapeJavaScript().raw()}",
+            explanation: "${classification.explanation.escapeJavaScript().raw()}"
+        }${classification_isLast ? '' : ','}
+    #{/list}
+    }
+}
         </script>
     </body>
 </html>

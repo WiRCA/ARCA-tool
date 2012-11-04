@@ -50,7 +50,9 @@ public class Cause extends LikableIdComparableModel {
 	/**
 	 * the classifications of the cause
 	 */
-	public HashMap<ClassificationDimension, Classification> classifications;
+	@OneToMany(mappedBy = "cause")
+	@MapKey(name = "classificationDimension")
+	public Map<ClassificationDimension, Classification> classifications;
 
 	/**
 	* The rca case that the cause belongs to
@@ -153,14 +155,19 @@ public class Cause extends LikableIdComparableModel {
 		this.effectRelations = new TreeSet<Relation>();
 		this.corrections = new TreeSet<Correction>();
 		this.likes = new ArrayList<Long>();
+		this.classifications = new HashMap<ClassificationDimension, Classification>();
 	}
+
 
 	public Classification getClassification(int classificationDimension) {
 		return classifications.get(ClassificationDimension.valueOf(classificationDimension));
 	}
+
+
 	public void setClassification(Classification classification) {
 		classifications.put(ClassificationDimension.valueOf(classification.classificationDimension), classification);
 	}
+
 
 	/**
 	 * Return users who have liked this cause.

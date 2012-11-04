@@ -70,9 +70,11 @@ public class Classification extends IdComparableModel {
 	@Column(name = "updated", nullable = false)
 	private Date updated;
 
-
+	@Basic
 	public int classificationDimension;
 
+	@ManyToOne
+	private Cause cause;
 
 	/**
 	 * This method is called when the cause is created

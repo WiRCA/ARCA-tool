@@ -189,7 +189,7 @@ function addClassification() {
  * Reads data from #remove-classificationId
  * @return boolean
  */
-function removeClassification () {
+function removeClassification() {
     var id = $('#remove-classificationId').val();
     $.getJSON(
         arca.ajax.removeClassification({classificationId: id})
@@ -203,6 +203,26 @@ function removeClassification () {
     return false;
 }
 
+
+/**
+ * Sends an AJAX request for (re)classifying a cause
+ * Reads data from #tag-causeClassification-{1, 2}
+ * @return boolean
+ */
+function tagCause() {
+    var causeId = selectedNode.id;
+    var classification1 = $('#tag-causeClassification-1').val();
+    var classification2 = $('#tag-causeClassification-2').val();
+    if (classification1 === '') { classification1 = -1; }
+    if (classification2 === '') { classification2 = -1; }
+    $.getJSON(
+        arca.ajax.tagCause({causeId: causeId,
+                            classification1: classification1,
+                            classification2: classification2})
+    ).success(function (data) {
+        $('#tagcause-modal').modal('hide');
+    });
+}
 
 // Zoom functions //
 
@@ -284,8 +304,7 @@ function readEventStream() {
                     $("div.node#" + this.data.causeId).remove();
                 }
 
-                if (this.data.type === 'addrelationevent') {
-                    //alert(this.data.causeFrom + " " + this.data.causeTo);
+                else if (this.data.type === 'addrelationevent') {
                     fd.graph.addAdjacence(
                         fd.graph.getNode(this.data.causeFrom),
                         fd.graph.getNode(this.data.causeTo),
@@ -301,7 +320,7 @@ function readEventStream() {
                     fd.plot();
                 }
 
-                if (this.data.type === 'addcorrectionevent') {
+                else if (this.data.type === 'addcorrectionevent') {
                     $("#" + this.data.correctionTo).addClass('nodeBoxCorrection');
                     fd.plot();
                 }
@@ -377,7 +396,19 @@ function readEventStream() {
                 }
 
                 else if (this.data.type === 'addclassificationevent') {
-                    insertClassificationItem(this.data);
+                    insertClassificationHandler(this.data);
+                }
+
+                else if (this.data.type == 'editclassificationevent') {
+                    editClassificationHandler(this.data);
+                }
+
+                else if (this.data.type == 'removeclassificationevent') {
+                    removeClassificationHandler(this.data);
+                }
+
+                else if (this.data.type == 'causeclassificationevent') {
+                    causeClassificationHandler(this.data);
                 }
 
                 arca.lastReceived = this.id
@@ -387,10 +418,67 @@ function readEventStream() {
        },
        dataType: 'json'
    });
-};
+}
+
+
+/**
+ * Inserts a classification to all relevant <select> elements, used as a stream event handler
+ * @param data JSON data as returned from the event stream
+ */
+function insertClassificationHandler(data) {
+    var select = $('.classificationList.classificationType-' + data.dimension);
+    select.each(function (i, e) {
+        e = $(e);
+        if (e.find('option[value="' + data.id + '"]').length != 0) { return false; }
+        e.append('<option value="' + data.id + '">' + data.name + '</option>');
+    });
+}
+
+
+/**
+ * Removes a classification from all <select> elements, used as a stream event handler
+ * @param data JSON data as returned from the event stream
+ */
+function removeClassificationHandler(data) {
+    $('select.classificationList option[value="' + data.id + '"]').remove();
+}
+
+
+/**
+ * Updates a classification's name in all <select> elements, used as a stream event handler
+ * @param data JSON data as returned from the event stream
+ */
+function editClassificationHandler(data) {
+    $('select.classificationList option[value="' + data.id + '"]').text(data.name);
+}
+
+
+/**
+ * Updates a cause's classification, used as a stream event handler
+ * @param data JSON data as returned from the event stream
+ */
+function causeClassificationHandler(data) {
+    var index = findCause(data.causeId);
+    var key = "classification" + arca.classifications[data.classificationId].dimension;
+    if (index === null) { return; }
+    arca.graphJson[index].data[key] = data.classificationId;
+}
 
 
 // Other functions //
+
+/**
+ * A quick and dirty (and hopefully temporary) cause data finder function
+ * @param id the ID of the cause we're looking for
+ * @return index of the case in arca.graphJson
+ */
+function findCause(id) {
+    for (var i = 0; i < arca.graphJson.length; i++) {
+        if (arca.graphJson[i].id == id) { return i; }
+    }
+    return null;
+}
+
 
 /**
  * Counts the amount of direct ancestors a node has
@@ -423,42 +511,6 @@ function updateLikes(id, count) {
     } else {
         likeBox.fadeOut(400);
     }
-}
-
-
-/**
- * Removes a classification from all <select> elements
- * @todo rename
- * @param id the ID of the classification
- */
-function removeVisibleClassification(id) {
-    $('select.classificationList option[value="' + id + '"]').remove();
-}
-
-
-/**
- * Updates a classification's name in all <select> elements
- * @todo rename
- * @param id the ID of the classification
- * @param name the new name of the classification
- */
-function updateClassificationName (id, name) {
-    $('select.classificationList option[value="' + id + '"]').innerText(name);
-}
-
-
-/**
- * Inserts a classification to all relevant <select> elements
- * @todo rename
- * @param data JSON as returned from the stream
- */
-function insertClassificationItem(data) {
-    var select = $('.classificationList.classificationType-' + data.dimension);
-    select.each(function (i, e) {
-        e = $(e);
-        if (e.find('option[value="' + data.id + '"]').length != 0) { return false; }
-        e.append('<option value="' + data.id + '">' + data.name + '</option>');
-    });
 }
 
 
@@ -713,6 +765,7 @@ function init() {
 
             // Renaming of a cause
             else if ($selected[0].id == "radmenu-event-renameCause") {
+                // TODO: Potentially unsecure, change causes to .escapeJavaScript().raw() like classifications
                 $('#renamedName').val($("<div/>").html(selectedNode.name).text());
                 $('#renameCause-modal').modal('show');
             }
@@ -755,6 +808,11 @@ function init() {
             // Disliking a cause
             else if ($selected[0].id == "radmenu-event-dislikeCause") {
                 dislikeCause(selectedNode);
+            }
+
+            // Editing a cause's classifications
+            else if ($selected[0].id == "radmenu-event-tagCause") {
+                $('#tagcause-modal').modal('show');
             }
         },
 
@@ -1057,14 +1115,8 @@ $(document).ready(function () {
         keyboard: true,
         backdrop: true,
         show: false
-    });
-
-    $('#addcause-modal').bind('show', function () {
-        $('#causeName').val('');
-    });
-
-    $('#addcause-modal').bind('shown', function () {
-        $('#causeName').focus();
+    }).bind('show', function () {
+        $('#causeName').val('').focus();
     });
 
 
@@ -1073,9 +1125,7 @@ $(document).ready(function () {
         keyboard: true,
         backdrop: true,
         show: false
-    });
-
-    $('#renameCause-modal').bind('shown', function () {
+    }).bind('shown', function () {
         $('#renamedName').focus();
     });
 
@@ -1085,17 +1135,9 @@ $(document).ready(function () {
         keyboard: true,
         backdrop: true,
         show: false
-    });
-
-    $('#addcorrection-modal').bind('show', function () {
+    }).bind('show', function () {
         $('#ideaName').val('');
-    });
-
-    $('#addcorrection-modal').bind('show', function () {
         $('#ideaDescription').val('');
-    });
-
-    $('#addcorrection-modal').bind('shown', function () {
         $('#ideaName').focus();
     });
 
@@ -1105,10 +1147,40 @@ $(document).ready(function () {
         keyboard: true,
         backdrop: true,
         show: false
+    }).bind('shown', function () {
+        $('#classificationName').focus();
     });
 
-    $('#addClassification-modal').bind('shown', function () {
-        $('#classificationName').focus();
+
+    // Initialize the classification editing modal dialog
+    $('#editClassification-modal').modal({
+        keyboard: true,
+        backdrop: true,
+        show: false
+    }).bind('shown', function () {
+        $('#edit-classificationName').focus();
+    });
+
+
+    // Initialize the classification removing modal dialog
+    $('#removeClassification-modal').modal({
+        keyboard: true,
+        backdrop: true,
+        show: false
+    });
+
+
+    // Initialize the cause tagging modal dialog
+    $('#tagcause-modal').modal({
+        keyboard: true,
+        backdrop: true,
+        show: false
+    }).bind('shown', function() {
+        var index = findCause(selectedNode.id);
+        if (index === null) { return; }
+        var data = arca.graphJson[index].data;
+        $('#tag-causeClassification-1').val(data.classification1);
+        $('#tag-causeClassification-2').val(data.classification2);
     });
 
 
@@ -1117,7 +1189,17 @@ $(document).ready(function () {
         $('#tagArea').show();
         $('#tagIcon').click(function() { $('#addTag, #editTag, #removeTag').slideToggle(); });
         $('#addTag').click(function() { $('#addClassification-modal').modal('show'); });
-        $('#editTag').click(function() { $('#editClassification-modal').modal('show'); });
+        $('#editTag').click(function() {
+            $('#editClassification-modal').modal('show');
+            $('#edit-classificationId').change(function () {
+                var id = $('#edit-classificationId').val();
+                var c = arca.classifications[id];
+                $('#edit-classificationTitle').val(c.title);
+                $('#edit-classificationType').val(c.dimension);
+                $('#edit-classificationAbbreviation').val(c.abbreviation);
+                $('#edit-classificationExplanation').val(c.explanation);
+            });
+        });
         $('#removeTag').click(function() { $('#removeClassification-modal').modal('show'); });
     }
 });
