@@ -33,6 +33,8 @@ import models.enums.CompanySize;
 import models.enums.RCACaseType;
 import models.events.AddClassificationEvent;
 import models.events.CauseStream;
+import models.events.EditClassificationEvent;
+import models.events.RemoveClassificationEvent;
 import notifiers.Mails;
 import play.Logger;
 import play.mvc.Before;
@@ -72,7 +74,7 @@ public class ClassificationController extends Controller {
 		}
 
 		// Ensure that the user is allowed to create classifications for the case
-		if (!ClassificationController.canCreateClassification(rcaCase)) {
+		if (!ClassificationController.canEditClassifications(rcaCase)) {
 			renderJSON("{\"error\": \"Permission denied\"}");
 			return;
 		}
@@ -97,11 +99,104 @@ public class ClassificationController extends Controller {
 
 
 	/**
-	 * Returns whether or not the current user is allowed to create a classification for the given case.
+	 * Edits the given classification.
+	 * @param rcaCaseId the ID of the case the classification belongs to
+	 * @param classificationId the ID of the classification
+	 * @param type the new type of the classification
+	 * @param name the new name of the classification
+	 * @param abbreviation the new abbreviation of the classification
+	 * @param explanation the new long explanation of the classification
+	 */
+	public static void editClassification(Long rcaCaseId,
+	                                      Long classificationId,
+	                                      int type,
+	                                      String name,
+	                                      String abbreviation,
+	                                      String explanation) {
+
+		// Ensure that the case exists
+		RCACase rcaCase = RCACase.findById(rcaCaseId);
+		if (rcaCase == null) {
+			renderJSON("{\"error\": \"Invalid RCA case\"}");
+			return;
+		}
+
+		// Ensure that the user is allowed to create classifications for the case
+		if (!ClassificationController.canEditClassifications(rcaCase)) {
+			renderJSON("{\"error\": \"Permission denied\"}");
+			return;
+		}
+
+		// Ensure that the classification type is correct
+		if (ClassificationDimension.valueOf(type) == null) {
+			renderJSON("{\"error\": \"Invalid classification type\"}");
+			return;
+		}
+
+		Classification classification = Classification.findById(classificationId);
+		if (classification == null) {
+			renderJSON("\"error\": \"Invalid cause ID\"");
+			return;
+		}
+
+		classification.abbreviation = abbreviation;
+		classification.explanation = explanation;
+		classification.name = name;
+		classification.classificationDimension = type;
+		classification.save();
+
+		EditClassificationEvent event = new EditClassificationEvent(classification.id, name, type,
+		                                                          abbreviation, explanation);
+		CauseStream causeEvents = rcaCase.getCauseStream();
+		causeEvents.getStream().publish(event);
+		Logger.debug("Classification %s (%s) edited for case %s", name, ClassificationDimension.valueOf(type),
+		             rcaCase.caseName);
+		renderJSON("{\"success\": true}");
+	}
+
+
+	/**
+	 * Edits the given classification.
+	 * @param rcaCaseId the ID of the case the classification belongs to
+	 * @param classificationId the ID of the classification
+	 */
+	public static void removeClassification(Long rcaCaseId,
+	                                        Long classificationId) {
+
+		// Ensure that the case exists
+		RCACase rcaCase = RCACase.findById(rcaCaseId);
+		if (rcaCase == null) {
+			renderJSON("{\"error\": \"Invalid RCA case\"}");
+			return;
+		}
+
+		// Ensure that the user is allowed to create classifications for the case
+		if (!ClassificationController.canEditClassifications(rcaCase)) {
+			renderJSON("{\"error\": \"Permission denied\"}");
+			return;
+		}
+
+		Classification classification = Classification.findById(classificationId);
+		if (classification == null) {
+			renderJSON("\"error\": \"Invalid cause ID\"");
+			return;
+		}
+		classification.delete();
+
+		RemoveClassificationEvent event = new RemoveClassificationEvent(classification.id);
+		CauseStream causeEvents = rcaCase.getCauseStream();
+		causeEvents.getStream().publish(event);
+		Logger.debug("Classification #%d removed from case %s", classificationId, rcaCase.caseName);
+		renderJSON("{\"success\": true}");
+	}
+
+
+	/**
+	 * Returns whether or not the current user is allowed to create and edit classifications for the given case.
 	 * @param rcaCase the RCA case to check against
 	 * @return whether the current user is allowed to create a classification
 	 */
-	public static boolean canCreateClassification(RCACase rcaCase) {
+	public static boolean canEditClassifications(RCACase rcaCase) {
 		User current = SecurityController.getCurrentUser();
 		return current != null && current.id.equals(rcaCase.ownerId);
 	}

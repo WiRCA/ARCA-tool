@@ -31,21 +31,7 @@ import utils.IdComparableModel;
 import javax.persistence.*;
 import java.util.Date;
 
-/**
- * Created with IntelliJ IDEA.
- * User: jaffa
- * Date: 10/8/12
- * Time: 5:10 PM
- * To change this template use File | Settings | File Templates.
- */
 
-/**
- * Nimi
- * Selite
- * Dimensio
- * Lyhenne
- *
- */
 @PersistenceUnit(name = "maindb")
 @Entity(name = "classification")
 public class Classification extends IdComparableModel {

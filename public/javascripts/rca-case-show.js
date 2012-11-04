@@ -1,4 +1,27 @@
-function addNewCause () {
+// Variables //
+// (defined within show.html: arca)
+
+// Current zoom level
+var zoomLevel = 1;
+// Minimum zoom level
+var zoomMin = 1 / 32;
+// Maximum zoom level
+var zoomMax = 2;
+// Steps in zoom slider
+var zoomSteps = 64;
+// Placeholder for the #radial_menu jQuery object
+var $radial_menu;
+// Placeholder for the ForceDirected object
+var fd;
+// Selected node data
+var selectedNode;
+
+// AJAX functions //
+
+/**
+ * Sends an AJAX request for adding a new cause, reads data from #causeName
+ */
+function addNewCause() {
     var name = $.trim($("#causeName").val());
     if (name == undefined || name == "") {
         $("#causeName").parents(".clearfix").addClass("error");
@@ -9,11 +32,14 @@ function addNewCause () {
 
     radmenu_fadeOut();
     $("#addcause-modal").modal('hide');
-    $.post(window.arca.ajax.addNewCause({causeId: globalSelectedNode, name: encodeURIComponent(name)}));
+    $.post(arca.ajax.addNewCause({causeId: selectedNode.id, name: encodeURIComponent(name)}));
 }
 
 
-function renameCause () {
+/**
+ * Sends an AJAX request for renaming a cause, reads data from #renamedName
+ */
+function renameCause() {
     var name = $.trim($("#renamedName").val());
     if (name == undefined || name == "") {
         $("#renamedName").parents(".clearfix").addClass("error");
@@ -23,41 +49,53 @@ function renameCause () {
     }
     radmenu_fadeOut();
     $("#renameCause-modal").modal('hide');
-    $.post(window.arca.ajax.renameCause({causeId: globalSelectedNode, name: encodeURIComponent(name)}));
+    $.post(arca.ajax.renameCause({causeId: selectedNode.id, name: encodeURIComponent(name)}));
 }
 
 
-function likeCause (selected) {
-    if (window.arca.ownerId != window.arca.currentUser) {
+/**
+ * Sends an AJAX request for liking a cause
+ * @param selected the selected node
+ */
+function likeCause(selected) {
+    if (arca.ownerId != arca.currentUser) {
         radmenu_fadeOut();
     }
 
-    $.post(window.arca.ajax.likeCause({causeId: selected.id}), function (result) {
+    $.post(arca.ajax.likeCause({causeId: selected.id}), function (result) {
         selected.data.hasUserLiked = result.hasliked;
         selected.data.likeCount = result.count;
-        if (window.arca.ownerId != window.arca.currentUser) {
+        if (arca.ownerId != arca.currentUser) {
             radmenu_updateLikeButtons(selected);
         }
     });
 }
 
 
-function dislikeCause (selected) {
-    if (window.arca.ownerId != window.arca.currentUser) {
+/**
+ * Sends an AJAX request for disliking (unliking) a cause
+ * @param selected the selected node
+ */
+function dislikeCause(selected) {
+    if (arca.ownerId != arca.currentUser) {
         radmenu_fadeOut();
     }
 
-    $.post(window.arca.ajax.dislikeCause({causeId: selected.id}), function (result) {
+    $.post(arca.ajax.dislikeCause({causeId: selected.id}), function (result) {
         selected.data.hasUserLiked = result.hasliked;
         selected.data.likeCount = result.count;
-        if (window.arca.ownerId != window.arca.currentUser) {
+        if (arca.ownerId != arca.currentUser) {
             radmenu_updateLikeButtons(selected);
         }
     });
 }
 
 
-function addCorrectiveIdea () {
+/**
+ * Sends an AJAX request for adding a corrective idea
+ * Reads data from #ideaName, #ideaDescription
+ */
+function addCorrectiveIdea() {
     var name = $("#ideaName").val();
     if (name == undefined || name == "") {
         $("#ideaName").parents(".clearfix").addClass("error");
@@ -74,10 +112,9 @@ function addCorrectiveIdea () {
         $("#ideaDescription").parents(".clearfix").removeClass("error");
     }
 
-
     $.post(
-        window.arca.ajax.addCorrectiveIdea(
-            {toId: globalSelectedNode, name: name, description: description}
+        arca.ajax.addCorrectiveIdea(
+            {toId: selectedNode.id, name: name, description: description}
         ),
         function (data) {
             radmenu_fadeOut();
@@ -89,13 +126,298 @@ function addCorrectiveIdea () {
 }
 
 
-function updateLikes (id, count) {
+/**
+ * Sends an AJAX request for editing a classification
+ * Reads data from #edit-classification{Id, Title, Type, Abbreviation, Explanation}
+ * @return boolean
+ */
+function editClassification() {
+    var id = $('#edit-classificationId').val();
+    var name = $('#edit-classificationTitle').val();
+    var type = $('#edit-classificationType').val();
+    var abbreviation = $('#edit-classificationAbbreviation').val();
+    var explanation = $('#edit-classificationExplanation').val();
+    $.getJSON(
+        arca.ajax.editClassification({
+            classificationId: id,
+            name: name,
+            type: type,
+            abbreviation: abbreviation,
+            explanation: explanation
+        })
+    ).success(function (data) {
+        if ("error" in data) {
+            $('#editClassification-modal .error-field').text(data.error).show();
+        } else {
+            $('#editClassification-modal').modal('hide');
+        }
+    });
+    return false;
+}
+
+
+/**
+ * Sends an AJAX request for adding a new classification
+ * Reads data from $classification{Name, Type, Abbreviation, Explanation}
+ * @return boolean
+ */
+function addClassification() {
+    var name = $('#classificationName').val();
+    var type = $('#classificationType').val();
+    var abbreviation = $('#classificationAbbreviation').val();
+    var explanation = $('#classificationExplanation').val();
+    $.getJSON(
+        arca.ajax.addClassification({
+            name: name,
+            type: type,
+            abbreviation: abbreviation,
+            explanation: explanation
+        })
+    ).success(function (data) {
+        if ("error" in data) {
+            $('#addClassification-modal .error-field').text(data.error).show();
+        } else {
+            $('#addClassification-modal').modal('hide');
+        }
+    });
+    return false;
+}
+
+
+/**
+ * Sends an AJAX request for removing a classification
+ * Reads data from #remove-classificationId
+ * @return boolean
+ */
+function removeClassification () {
+    var id = $('#remove-classificationId').val();
+    $.getJSON(
+        arca.ajax.removeClassification({classificationId: id})
+    ).success(function (data) {
+        if ("error" in data) {
+            $('#removeClassification-modal .error-field').text(data.error).show();
+        } else {
+            $('#removeClassification-modal').modal('hide');
+        }
+    });
+    return false;
+}
+
+
+// Zoom functions //
+
+/**
+ * Increments zoom by one step
+ */
+function incZoomSlider() {
+    var sliderValue = $("#slider-vertical").slider("value");
+    applyZoom(((zoomMax - zoomMin) / zoomSteps * (sliderValue + 1) + zoomMin) / zoomLevel, true);
+}
+
+
+/**
+ * Decrements zoom by one step
+ */
+function decZoomSlider() {
+    var sliderValue = $("#slider-vertical").slider("value");
+    applyZoom(((zoomMax - zoomMin) / zoomSteps * (sliderValue - 1) + zoomMin) / zoomLevel, true);
+}
+
+
+/**
+ * Applies the given zoom level to the canvas
+ * @param newLevel the new zoom level
+ * @param updateSlider whether to update the slider or not
+ */
+function applyZoom(newLevel, updateSlider) {
+    // Hides a radial menu when zoomed as the scaling does not quite work
+    jQuery("#radial_menu").radmenu("hide");
+    $('.popover').remove();
+
+    // Reset the zoom of the canvas if the canvas has been moved or resized
+    if (fd.canvas.scaleOffsetX != zoomLevel) {
+        newLevel = zoomLevel / fd.canvas.scaleOffsetX;
+    }
+
+    // Enforce zoom limits
+    else if (zoomLevel * newLevel < zoomMax && zoomLevel * newLevel > zoomMin) {
+        zoomLevel = zoomLevel * newLevel;
+    } else if (zoomLevel * newLevel > zoomMin) {
+        newLevel = zoomMax / zoomLevel;
+        zoomLevel = zoomMax;
+    } else {
+        newLevel = zoomMin / zoomLevel;
+        zoomLevel = zoomMin;
+    }
+
+    // Zoom the nodes with CSS3's transform
+    $("#infovis-label div.node")
+        .css("-webkit-transform", "scale(" + zoomLevel + ")")
+        .css("-moz-transform",    "scale(" + zoomLevel + ")")
+        .css("-ms-transform",     "scale(" + zoomLevel + ")")
+        .css("-o-transform",      "scale(" + zoomLevel + ")")
+        .css("transform",         "scale(" + zoomLevel + ")");
+
+    // Apply ForceDirected's zoom
+    fd.canvas.scale(newLevel, newLevel);
+
+    // Update the slider if necessary
+    if (updateSlider) {
+        $("#slider-vertical").slider("value", (zoomLevel - zoomMin) * zoomSteps / (zoomMax - zoomMin));
+    }
+}
+
+
+// Event stream functions //
+
+/**
+ * Reads an event from the AJAX event stream and processes it.
+ */
+function readEventStream() {
+    $.ajax({
+        url: arca.ajax.waitMessage({lastReceived: arca.lastReceived}),
+        success: function (events) {
+            $(events).each(function () {
+                if (this.data.type === 'deletecauseevent') {
+                    fd.graph.removeNode(this.data.causeId);
+                    fd.plot();
+                    $("div.node#" + this.data.causeId).remove();
+                }
+
+                if (this.data.type === 'addrelationevent') {
+                    //alert(this.data.causeFrom + " " + this.data.causeTo);
+                    fd.graph.addAdjacence(
+                        fd.graph.getNode(this.data.causeFrom),
+                        fd.graph.getNode(this.data.causeTo),
+                        {
+                            "$type": "arrow",
+                            "$direction": [this.data.causeFrom, this.data.causeTo],
+                            "$dim": 15,
+                            "$color": "#23A4FF",
+                            "weight": 1
+                        }
+                    );
+
+                    fd.plot();
+                }
+
+                if (this.data.type === 'addcorrectionevent') {
+                    $("#" + this.data.correctionTo).addClass('nodeBoxCorrection');
+                    fd.plot();
+                }
+
+                else if (this.data.type === 'addcauseevent') {
+                    resetNodeEdges(selectedNode);
+                    var newNode = {
+                        "id": this.data.causeTo,
+                        "name": this.data.text,
+                        "data": {
+                            "parent": this.data.causeFrom,
+                            "creatorId": '' + this.data.creatorId,
+                            "likeCount": 0,
+                            "hasUserLiked": false
+                        }
+                    };
+
+                    var oldNode = fd.graph.getNode(this.data.causeFrom);
+                    var newNodesXCoordinate = 100;
+                    var newNodesYCoordinate = 100;
+                    fd.graph.addAdjacence(oldNode, newNode);
+                    newNode = fd.graph.getNode(this.data.causeTo);
+                    newNode.data.nodeLevel = oldNode.data.nodeLevel + 1;
+                    newNode.setPos(oldNode.getPos('end'), 'current');
+                    newNode.getPos('end').y = oldNode.getPos('end').y + newNodesYCoordinate;
+                    newNode.getPos('end').x = oldNode.getPos('end').x + newNodesXCoordinate;
+                    newNode.data.xCoordinate = newNodesXCoordinate;
+                    newNode.data.yCoordinate = newNodesYCoordinate;
+                    fd.plot();
+                    fd.animate({
+                        modes: ['linear'],
+                        transition: $jit.Trans.Elastic.easeOut,
+                        duration: 1500
+                    });
+                    applyZoom(1, false); // refresh zooming for the new node
+                    $("#infovis-label div.node").disableSelection();
+                }
+
+                else if (this.data.type === 'causeRenameEvent') {
+                    var oldNode = fd.graph.getNode(this.data.causeId);
+                    oldNode.name = this.data.newName;
+                    $("#" + this.data.causeId).html(this.data.newName);
+                }
+
+                else if (this.data.type === 'amountOfLikesEvent') {
+                    updateLikes(this.data.causeId, this.data.amountOfLikes);
+                }
+
+                else if (this.data.type === 'nodemovedevent') {
+                    var nodeToMove = fd.graph.getNode(this.data.causeId);
+                    var nodeParent = fd.graph.getNode(nodeToMove.data.parent);
+                    var intX = parseInt(this.data.x);
+                    var intY = parseInt(this.data.y);
+                    nodeToMove.data.xCoordinate = intX;
+                    nodeToMove.data.yCoordinate = intY;
+                    if (nodeParent != undefined) {
+                        var xPos = nodeParent.getPos('end').x + intX;
+                        var yPos = nodeParent.getPos('end').y + intY;
+                    } else {
+                        var xPos = intX;
+                        var yPos = intY;
+                    }
+
+                    var nodePos = new $jit.Complex(xPos, yPos);
+                    nodeToMove.setPos(nodePos, 'end');
+
+                    updateChildrenVectors(nodeToMove);
+                    fd.animate({
+                        modes: ['linear'],
+                        transition: $jit.Trans.Elastic.easeOut,
+                        duration: 900
+                    });
+                }
+
+                else if (this.data.type === 'addclassificationevent') {
+                    insertClassificationItem(this.data);
+                }
+
+                arca.lastReceived = this.id
+            });
+
+            readEventStream();
+       },
+       dataType: 'json'
+   });
+};
+
+
+// Other functions //
+
+/**
+ * Counts the amount of direct ancestors a node has
+ * @param node the node ID
+ * @return int
+ */
+function countParentNodes(node) {
+    if (node) {
+        return countParentNodes(fd.graph.getNode(node.data.parent)) + 1;
+    } else {
+        return 0;
+    }
+}
+
+
+/**
+ * Updates the amount of likes for the selected cause ID
+ * @param id the cause ID
+ * @param count the new amount of likes
+ */
+function updateLikes(id, count) {
     var likeBox = $("#" + id + " div.label");
     if (count > 0) {
         if (count > 1) {
-            likeBox.text(count + window.arca.multiplePoints);
+            likeBox.text(count + arca.multiplePoints);
         } else {
-            likeBox.text(count + window.arca.singlePoint);
+            likeBox.text(count + arca.singlePoint);
         }
         likeBox.fadeIn(400);
     } else {
@@ -104,133 +426,65 @@ function updateLikes (id, count) {
 }
 
 
-function removeVisibleClassification (id) {
+/**
+ * Removes a classification from all <select> elements
+ * @todo rename
+ * @param id the ID of the classification
+ */
+function removeVisibleClassification(id) {
     $('select.classificationList option[value="' + id + '"]').remove();
 }
 
 
+/**
+ * Updates a classification's name in all <select> elements
+ * @todo rename
+ * @param id the ID of the classification
+ * @param name the new name of the classification
+ */
 function updateClassificationName (id, name) {
     $('select.classificationList option[value="' + id + '"]').innerText(name);
 }
 
 
-function removeClassification () {
-    var id = $('#edit-classificationId').val();
-    $.getJSON(
-        window.arca.ajax.removeClassification({id: id}))
-        .success(function (data) {
-            if ("error" in data) {
-                $('#removeClassification-modal .error-field').text(data.error).show();
-            } else {
-                $('#removeClassification-modal').modal('hide');
-            }
-        });
-    return false;
-}
-
-
-function editClassification () {
-    var id = $('#edit-classificationId').val();
-    var name = $('#edit-classificationName').val();
-    var type = $('#edit-classificationType').val();
-    var abbreviation = $('#edit-classificationAbbreviation').val();
-    var explanation = $('#edit-classificationExplanation').val();
-    $.getJSON(
-        window.arca.ajax.editClassification({
-            id: id,
-            name: name,
-            type: type,
-            abbreviation: abbreviation,
-            explanation: explanation
-        }))
-        .success(function (data) {
-            if ("error" in data) {
-                $('#editClassification-modal .error-field').text(data.error).show();
-            } else {
-                $('#editClassification-modal').modal('hide');
-            }
-        });
-    return false;
-}
-
-
-function addClassification () {
-    var name = $('#classificationName').val();
-    var type = $('#classificationType').val();
-    var abbreviation = $('#classificationAbbreviation').val();
-    var explanation = $('#classificationExplanation').val();
-    $.getJSON(
-        window.arca.ajax.addClassification({
-            name: name,
-            type: type,
-            abbreviation: abbreviation,
-            explanation: explanation
-        }))
-        .success(function (data) {
-            if ("error" in data) {
-                $('#addClassification-modal .error-field').text(data.error).show();
-            } else {
-                $('#addClassification-modal').modal('hide');
-            }
-        });
-    return false;
-}
-
-
+/**
+ * Inserts a classification to all relevant <select> elements
+ * @todo rename
+ * @param data JSON as returned from the stream
+ */
 function insertClassificationItem(data) {
     var select = $('.classificationList.classificationType-' + data.dimension);
-    select.each(function (e) {
+    select.each(function (i, e) {
+        e = $(e);
         if (e.find('option[value="' + data.id + '"]').length != 0) { return false; }
         e.append('<option value="' + data.id + '">' + data.name + '</option>');
     });
 }
 
 
-radmenu_fadeOut = function () {
-    jQuery("#radial_menu").radmenu(
-        "hide",
-        function (items) {
-            items.fadeOut(4000);
+/**
+ * Resets a node's edges to the default style
+ * @param node the node data
+ */
+function resetNodeEdges(node) {
+    if (node != undefined && node != null) {
+        if (node.id == arca.rootNodeId) {
+            $("#" + node.id).removeClass("nodeBoxSelected").addClass("rootNodeBox");
+        } else {
+            $("#" + node.id).removeClass("nodeBoxSelected").addClass("nodeBox");
         }
-    );
-};
 
-
-function defaultEdgesForSelectedNode (selectedNode) {
-    if (selectedNode != undefined && selectedNode != null) {
-        if (selectedNode.id == window.arca.rootNodeId) {
-            $("#" + selectedNode.id).removeClass("nodeBoxSelected").addClass("rootNodeBox");
-        }
-        else {
-            $("#" + selectedNode.id).removeClass("nodeBoxSelected").addClass("nodeBox");
-        }
-        selectedNode.eachAdjacency(function (adj) {
-            if (adj.data.$type == "arrow") {
-                adj.setDataset('current', {
-                    lineWidth: '2',
-                    color: '#23A4FF'
-                })
-            } else {
-                adj.setDataset('current', {
-                    lineWidth: '2',
-                    color: '#23A4FF'
-                });
-            }
+        node.eachAdjacency(function (adj) {
+            adj.setDataset('current', {
+                lineWidth: '2',
+                color: '#23A4FF'
+            });
         });
     }
 }
 
 
-function radmenu_fadeOut () {
-    jQuery("#radial_menu").radmenu(
-        "hide",
-        function (items) {
-            items.fadeOut(4000);
-        }
-    );
-}
-
-
+// Add the function $.disableSelection() to jQuery
 (function ($) {
     $.fn.disableSelection = function () {
         return this.each(function () {
@@ -254,6 +508,7 @@ function radmenu_fadeOut () {
 })(jQuery);
 
 
+// Browser functionality identification
 var labelType, useGradients, nativeTextSupport, animate;
 (function () {
     var ua = navigator.userAgent,
@@ -270,10 +525,14 @@ var labelType, useGradients, nativeTextSupport, animate;
 })();
 
 
+/**
+ * Updates the children vectors (ie. arrows) of the selected node, recursively
+ * @param node the ID of the node to update
+ */
 function updateChildrenVectors (node) {
     node.eachAdjacency(function (adj) {
         if (adj.data.$type != "arrow" &&
-            adj.nodeTo.data.nodeLevel > node.data.nodeLevel && !(adj.nodeTo.data.locked)) {
+                adj.nodeTo.data.nodeLevel > node.data.nodeLevel && !(adj.nodeTo.data.locked)) {
             var xAdjPos = node.getPos('end').x + adj.nodeTo.data.xCoordinate;
             var yAdjPos = node.getPos('end').y + adj.nodeTo.data.yCoordinate;
             adj.nodeTo.pos.setc(xAdjPos, yAdjPos);
@@ -285,7 +544,7 @@ function updateChildrenVectors (node) {
 
 
 function radmenu_updateLikeButtons (selectedNode) {
-    if (window.arca.currentUser != 'null') {
+    if (arca.currentUser != 'null') {
         // hide like buttons if user is not logged in
         jQuery("#radial_menu").radmenu("items")[5].style.visibility = "hidden";
         // dislike
@@ -295,7 +554,7 @@ function radmenu_updateLikeButtons (selectedNode) {
         jQuery("#radial_menu").radmenu("items")[5].style.visibility = "visible";
         // hide dislike button if user has not liked
         jQuery("#radial_menu").radmenu("items")[6].style.visibility = "hidden";
-    } else if (selectedNode.data.hasUserLiked && window.arca.currentUser != window.arca.ownerId) {
+    } else if (selectedNode.data.hasUserLiked && arca.currentUser != arca.ownerId) {
         // hide like button if user has liked and is not the owner of the rca case
         jQuery("#radial_menu").radmenu("items")[5].style.visibility = "hidden";
         // show dislike button if user has liked
@@ -306,7 +565,17 @@ function radmenu_updateLikeButtons (selectedNode) {
         // show dislike button if user has liked and is the owner
         jQuery("#radial_menu").radmenu("items")[6].style.visibility = "visible";
     }
-};
+}
+
+
+function radmenu_fadeOut () {
+    jQuery("#radial_menu").radmenu(
+        "hide",
+        function (items) {
+            items.fadeOut(4000);
+        }
+    );
+}
 
 
 function radmenu_fadeIn (selectedNode) {
@@ -315,7 +584,7 @@ function radmenu_fadeIn (selectedNode) {
         function (items) {
             items.fadeIn(400);
 
-            if (selectedNode.id == window.arca.rootNodeId || !(selectedNode.data.creatorId == window.arca.currentUser)) {
+            if (selectedNode.id == arca.rootNodeId || !(selectedNode.data.creatorId == arca.currentUser)) {
                 // hide remove-cause button, if user has no rights to remove selected
                 // cause
                 jQuery("#radial_menu").radmenu("items")[3].style.visibility = "hidden";
@@ -324,7 +593,7 @@ function radmenu_fadeIn (selectedNode) {
                 jQuery("#radial_menu").radmenu("items")[4].style.visibility = "hidden";
             }
 
-            if (window.arca.currentUser == 'null') {
+            if (arca.currentUser == 'null') {
                 // hide like buttons if user is not logged in
                 jQuery("#radial_menu").radmenu("items")[5].style.visibility = "hidden";
                 // dislike
@@ -334,150 +603,167 @@ function radmenu_fadeIn (selectedNode) {
                 jQuery("#radial_menu").radmenu("items")[6].style.visibility = "hidden";
             }
 
-            else if (selectedNode.data.hasUserLiked && window.arca.ownerId != window.arca.currentUser) {
+            else if (selectedNode.data.hasUserLiked && arca.ownerId != arca.currentUser) {
                 // hide like button if user has liked and is not the owner of the rca case
                 jQuery("#radial_menu").radmenu("items")[5].style.visibility = "hidden";
             }
         }
     );
-};
+}
+
+
+function show_radial_menu(given_node) {
+    // Set the global selectedNode to the current node data
+    selectedNode = given_node;
+
+    $("#" + given_node.id).addClass("nodeBoxSelected");
+
+    // Get the position of the placeholder element
+    var menupos = $("#" + given_node.id).offset();
+    var menuwidth = $("#" + given_node.id).width();
+    var menuheight = $("#" + given_node.id).height();
+
+    var isFirefox = 0; // This is 1 if Firefox is used.
+    var isChrome = 0;  // This is 1 if Chrome or Safari is used.
+    var isIE = 0;      // This is 1 if IE is used.
+
+    // Identify the browser
+    if ($.browser.mozilla) {
+        isFirefox = 1;
+    } else if ($.browser.msie) {
+        isIE = 1;
+    } else {
+        isChrome = 1;
+    }
+
+    // Border radius needs to be taken to account while calculating height and width for a node
+    var halfNodeWidth = isChrome * ((menuwidth / 2) * zoomLevel - 10)
+                      + isFirefox * (menuwidth / 2 - 10)
+                      + isIE * ((menuwidth / 2) * zoomLevel - 10);
+    var halfNodeHeight = isChrome * ((menuheight / 2) * zoomLevel - 20)
+                       + isFirefox * (menuheight / 2 - 20)
+                       + isIE * ((menuheight / 2) * zoomLevel - 20);
+    var newRadius = Math.sqrt(Math.pow(halfNodeWidth, 2) + Math.pow(halfNodeHeight, 2));
+
+    // radius algorithm depends on amount of menu items in radial menu
+    if (menuheight > menuwidth) {
+        newRadius += 50;
+    } else {
+        newRadius += 40;
+    }
+    jQuery("#radial_menu").radmenu("opts").radius = newRadius;
+
+    // show the menu directly over the placeholder
+    $radial_menu.css({
+        "left": menupos.left + halfNodeWidth + "px",
+        "top": menupos.top + halfNodeHeight + "px"
+    }).show();
+
+    radmenu_fadeIn(selectedNode);
+    $("#radial_menu").disableSelection();
+}
+
+
+function doResize() {
+    fd.canvas.resize(window.innerWidth + 1000, window.innerHeight + 1000);
+    $("#infovis").css("width", window.innerWidth + 1000);
+    $("#infovis").css("height", window.innerHeight + 1000);
+    applyZoom(1, false);
+}
 
 
 function init() {
+    // Bind the Escape key to exit the relation mode
     $(document).bind('keydown', function (e) {
-        if (e.which == 27) {
+        if (e.which == 27) { // Keycode 27 == Esc
             e.preventDefault();
             relationFromNode = null;
             $("#relation-help-message").fadeOut(80, "linear");
         }
     });
 
-    var $radial_menu = $("#radial_menu"), menupos, menuwidth, selectedNode, relationFromNode;
+    $radial_menu = $("#radial_menu");
+    var menupos, menuwidth, relationFromNode;
 
     jQuery("#radial_menu").radmenu({
-                                       listClass: 'list', // the list class to look within for items
-                                       itemClass: 'item', // the items - NOTE: the HTML inside the item is
-                                       // copied into the menu item
-                                       radius: 50, // radius in pixels
-                                       animSpeed: 2000, // animation speed in millis
-                                       centerX: -5, // the center x axis offset
-                                       centerY: -10, // the center y axis offset
-                                       selectEvent: "click", // the select event (click)
-                                       onSelect: function ($selected) { // show what is returned
-                                           $('.twipsy').remove();
-                                           if ($selected[0].id == "radmenu-event-removeCause") {
-                                               $.post(window.arca.ajax.deleteCause({causeId: selectedNode.id}));
-                                               jQuery("#radial_menu").radmenu("hide");
-                                           }
+        // The list class inside which to look for menu items
+        listClass: 'list',
+        // The items - NOTE: the HTML inside the item is copied into the menu item
+        itemClass: 'item',
+        // The menu radius in pixels
+        radius: 50,
+        // The animation speed in milliseconds
+        animSpeed: 2000,
+        // The X axis offset of the center
+        centerX: -5,
+        // The Y axis offset of the center
+        centerY: -10,
+        // The name of the selection event
+        selectEvent: "click",
 
-                                           else if ($selected[0].id == "radmenu-event-renameCause") {
-                                               $('#renamedName').val($("<div/>").html(selectedNode.name).text());
-                                               $('#renameCause-modal').modal('show');
-                                               globalSelectedNode = selectedNode.id;
-                                           }
+        // The actual functionality for the menu
+        onSelect: function ($selected) {
+            $('.twipsy').remove();
 
-                                           else if ($selected[0].id == "radmenu-event-addCause") {
-                                               $('#addcause-modal').modal('show');
-                                               globalSelectedNode = selectedNode.id;
-                                           }
+            // Removal of a cause
+            if ($selected[0].id == "radmenu-event-removeCause") {
+                $.post(arca.ajax.deleteCause({causeId: selectedNode.id}));
+                jQuery("#radial_menu").radmenu("hide");
+            }
 
-                                           else if ($selected[0].id == "radmenu-event-addRelation") {
-                                               relationFromNode = selectedNode;
-                                               $("#relation-help-message").show();
-                                               radmenu_fadeOut();
-                                               defaultEdgesForSelectedNode(selectedNode);
-                                           }
+            // Renaming of a cause
+            else if ($selected[0].id == "radmenu-event-renameCause") {
+                $('#renamedName').val($("<div/>").html(selectedNode.name).text());
+                $('#renameCause-modal').modal('show');
+            }
 
-                                           else if ($selected[0].id == "radmenu-event-addCorrection") {
-                                               var $modal_body = $("#my_modal_body");
-                                               $.get(
-                                                   window.arca.ajax.getCorrections(
-                                                       {causeId: selectedNode.id}
-                                                   ),
-                                                   function (data) {
-                                                       $modal_body.html(" ");
-                                                       if (data) {
-                                                           $("#my_modal_body").html(data);
-                                                       }
-                                                   }
-                                               );
-                                               $('#addcorrection-modal').modal('show');
-                                               globalSelectedNode = selectedNode.id;
-                                           }
+            // Adding a new cause
+            else if ($selected[0].id == "radmenu-event-addCause") {
+                $('#addcause-modal').modal('show');
+            }
 
-                                           else if ($selected[0].id == "radmenu-event-likeCause") {
-                                               likeCause(selectedNode);
-                                           }
+            // Adding a new relation
+            else if ($selected[0].id == "radmenu-event-addRelation") {
+                relationFromNode = selectedNode;
+                $("#relation-help-message").show();
+                radmenu_fadeOut();
+                resetNodeEdges(selectedNode);
+            }
 
-                                           else if ($selected[0].id == "radmenu-event-dislikeCause") {
-                                               dislikeCause(selectedNode);
-                                           }
-                                       },
-                                       angleOffset: 90 // in degrees
-                                   });
+            // Adding a correction
+            else if ($selected[0].id == "radmenu-event-addCorrection") {
+                var $modal_body = $("#my_modal_body");
+                $.get(
+                    arca.ajax.getCorrections(
+                        {causeId: selectedNode.id}
+                    ),
+                    function (data) {
+                        $modal_body.html(" ");
+                        if (data) {
+                            $("#my_modal_body").html(data);
+                        }
+                    }
+                );
+                $('#addcorrection-modal').modal('show');
+            }
 
-    function show_radial_menu(given_node) {
-        selectedNode = given_node;
-        $("#" + given_node.id).addClass("nodeBoxSelected");
+            // Liking a cause
+            else if ($selected[0].id == "radmenu-event-likeCause") {
+                likeCause(selectedNode);
+            }
 
-        // get the position of the placeholder element
-        menupos = $("#" + given_node.id).offset();
-        menuwidth = $("#" + given_node.id).width();
-        menuheight = $("#" + given_node.id).height();
+            // Disliking a cause
+            else if ($selected[0].id == "radmenu-event-dislikeCause") {
+                dislikeCause(selectedNode);
+            }
+        },
 
-        isFirefox = 0; // this is 1 if Firefox is used.
-        isChrome = 0; // this is 1 if Chrome or Safari is used.
-        isIE = 0; // this is 1 if IE is used.
-
-        // checks the browser
-        if ($.browser.mozilla) {
-            isFirefox = 1;
-        }
-        else if ($.browser.msie) {
-            isIE = 1;
-        }
-        else {
-            isChrome = 1;
-        }
-
-        // border radius needs to be concerned while calculating height and width for a node
-        halfNodeWidth = isChrome * ((menuwidth / 2) * zoomLevel - 10)
-                            + isFirefox * (menuwidth / 2 - 10)
-            + isIE * ((menuwidth / 2) * zoomLevel - 10);
-        halfNodeHeight = isChrome * ((menuheight / 2) * zoomLevel - 20)
-                             + isFirefox * (menuheight / 2 - 20)
-            + isIE * ((menuheight / 2) * zoomLevel - 20);
-        newRadius = Math.sqrt(Math.pow(halfNodeWidth, 2) + Math.pow(halfNodeHeight, 2));
-
-        // radius algorithm depends on amount of menu items in radial menu
-        if (menuheight > menuwidth) {
-            newRadius += 50;
-        } else {
-            newRadius += 40;
-        }
-        jQuery("#radial_menu").radmenu("opts").radius = newRadius;
-
-        // show the menu directly over the placeholder
-        $radial_menu.css({
-                             "left": menupos.left + halfNodeWidth + "px",
-                             "top": menupos.top + halfNodeHeight + "px"
-                         }).show();
-
-        radmenu_fadeIn(selectedNode);
-        $("#radial_menu").disableSelection();
-    }
+        // The base angle offset in degrees
+        angleOffset: 90
+    });
 
     $("#infovis").css("width", window.innerWidth + 1000);
     $("#infovis").css("height", window.innerHeight + 1000);
-
-
-
-    function doResize() {
-        fd.canvas.resize(window.innerWidth + 1000, window.innerHeight + 1000);
-        $("#infovis").css("width", window.innerWidth + 1000);
-        $("#infovis").css("height", window.innerHeight + 1000);
-        applyZoom(1, false);
-    }
 
     var resizeTimer;
     $(window).resize(function () {
@@ -486,28 +772,26 @@ function init() {
     });
 
 
-    // init ForceDirected
-    var fd = new $jit.ForceDirected({
-        //id of the visualization container
+    // Initialize the ForceDirected for the canvas
+    fd = new $jit.ForceDirected({
+        // ID of the visualization container
         injectInto: 'infovis',
-        'width': window.innerWidth + 1000,
-        'height': window.innerHeight + 1000,
 
-        //Enable zooming and panning
-        //by scrolling and DnD
+        // Dimensions
+        width: window.innerWidth + 1000,
+        height: window.innerHeight + 1000,
+
+        // Enable zooming and panning by scrolling and drag/drop
         Navigation: {
             enable: true,
-            //Enable panning events only if we're dragging the empty
-            //canvas (and not a node).
+            // Enable panning events only if we're dragging the empty
+            // canvas (and not a node).
             panning: 'avoid nodes',
-            zooming: 0 //disable default zooming and implement it in zoom.js
+            zooming: 0 // Disable default zooming as it's customized
         },
 
-        // Change node and edge styles such as
-        // color and width.
-        // These properties are also set per node
-        // with dollar prefixed data-properties in the
-        // JSON structure.
+        // Change node and edge styles.
+        // These properties are also set per node with dollar prefixed data-properties in the JSON structure.
         Node: {
             overridable: true,
             color: "#83548B",
@@ -522,14 +806,14 @@ function init() {
             lineWidth: 2
         },
 
-        //Native canvas text styling
+        // Native canvas text styling
         Label: {
-            type: 'HTML', //Native or HTML
+            type: 'HTML', // Native or HTML
             size: 10,
             style: 'bold'
         },
 
-        //Add Tips
+        // Tooltips
         Tips: {
             enable: false
         },
@@ -537,7 +821,8 @@ function init() {
         // Add node events
         Events: {
             enable: true,
-            //Change cursor style when hovering a node
+
+            // Change cursor style when the mouse cursor is on a non-root node
             onMouseEnter: function (node) {
                 if (node.data.isRootNode) {
                     fd.canvas.getElement().style.cursor = 'pointer';
@@ -546,11 +831,13 @@ function init() {
                 }
             },
 
+            // Restore mouse cursor when moving outside a node
             onMouseLeave: function () {
                 fd.canvas.getElement().style.cursor = '';
             },
 
-            //Update node positions when dragged
+            // Update node positions when dragged
+            // TODO: Add a notification like "You cannot move the root node"
             onDragMove: function (node, eventInfo, e) {
                 jQuery("#radial_menu").radmenu("hide");
                 if (!node.data.isRootNode) {
@@ -572,36 +859,36 @@ function init() {
                     yPos = node.getPos('end').y;
                 }
 
-                // root node cannot be moved globally
+                // The root node cannot be moved globally
                 if (!node.data.isRootNode) {
-                    $.post(window.arca.ajax.moveNode({causeId: node.id, x: xPos, y: yPos}));
+                    $.post(arca.ajax.moveNode({causeId: node.id, x: xPos, y: yPos}));
                     updateChildrenVectors(node);
                 }
             },
 
-            //Implement zooming for nodes
+            // Implement zooming for nodes
             onMouseWheel: function (delta, e) {
                 var zoom = (50 / 1000 * delta) + 1;
                 applyZoom(zoom, true);
             },
 
-            //Implement the same handler for touchscreens
+            // Implement the same handler for touchscreens
             onTouchMove: function (node, eventInfo, e) {
-                $jit.util.event.stop(e); //stop default touchmove event
+                $jit.util.event.stop(e); // Stop the default touchmove event
                 this.onDragMove(node, eventInfo, e);
             },
 
-            //Add also a click handler to nodes
+            // Add the click handler for opening a radial menu for nodes
             onClick: function (node) {
                 $("#help-message").hide();
                 if (node) {
                     if (relationFromNode) {
-                        $.post(window.arca.ajax.addRelation({fromId: relationFromNode.id,
-                                               toID: node.id}));
+                        $.post(arca.ajax.addRelation({fromId: relationFromNode.id,
+                                                      toID: node.id}));
                         relationFromNode = null;
                         $("#relation-help-message").fadeOut(80, "linear");
                     } else {
-                        defaultEdgesForSelectedNode(selectedNode);
+                        resetNodeEdges(selectedNode);
                         jQuery("#corrections_link").fadeOut(400);
                         show_radial_menu(node);
                         node.eachAdjacency(function (adj) {
@@ -613,7 +900,7 @@ function init() {
                         fd.plot();
                     }
                 } else {
-                    defaultEdgesForSelectedNode(selectedNode);
+                    resetNodeEdges(selectedNode);
                     jQuery("#radial_menu").radmenu("hide");
                     jQuery("#corrections_link").fadeOut(400);
                     $("#addCorrectiveForm").popover('hide');
@@ -622,46 +909,49 @@ function init() {
             }
         },
 
-        //Number of iterations for the FD algorithm
+        // Number of iterations for the FD algorithm
         iterations: 0,
 
-        //Edge length
+        // Edge length
         levelDistance: 0,
 
-        // Add text to the labels. This method is only triggered
-        // on label creation and only for DOM labels (not native canvas ones).
+        // Add text to the labels
         onCreateLabel: function (domElement, node) {
-            // Root node looks different.
-            if (node.id == window.arca.rootNodeId) {
+            // The root node has its own style
+            if (node.id == arca.rootNodeId) {
                 $(domElement).addClass('rootNodeBox');
             } else {
                 $(domElement).addClass('nodeBox');
             }
 
+            // Nodes that have corrections have their own style
             $(domElement).html(node.name);
             if (node.data.hasCorrections) {
                 $(domElement).addClass('nodeBoxCorrection');
             }
 
+            // Choose the singular or plural "point" / "points"
             var pointString;
             if (node.data.likeCount > 1) {
-                pointString = window.arca.multiplePoints;
+                pointString = arca.multiplePoints;
             } else {
-                pointString = window.arca.singlePoint;
+                pointString = arca.singlePoint;
             }
 
-            $(domElement).append("<div id='likeBoxWrapper'>" +
-                                 "<div id='likeBox' class='label success'>" +
-                                 node.data.likeCount + " " + pointString +
-                                 "</div>" +
-                                 "</div>");
+            // Add the like box to the node if there are any
+            $(domElement).append(
+                "<div id='likeBoxWrapper'>" +
+                    "<div id='likeBox' class='label success'>" +
+                        node.data.likeCount + " " + pointString +
+                    "</div>" +
+                "</div>");
+
             if (node.data.likeCount == 0) {
                 domElement.childNodes[1].childNodes[0].style.display = "none";
             }
         },
 
-        // Change node styles when DOM labels are placed
-        // or moved.
+        // Change node styles when DOM labels are placed or moved.
         onPlaceLabel: function (domElement, node) {
             var style = domElement.style;
             var left = parseInt(style.left);
@@ -675,220 +965,47 @@ function init() {
         }
     });
 
-    // variable for current zoom level
-    var zoomLevel = 1;
-    // variable for minimum zoom level
-    var zoomMin = 1 / 32;
-    // variable for maximum zoom level
-    var zoomMax = 2;
-    // steps in zoom slider
-    var zoomSteps = 64;
 
-    // increment zoom by one step
-    var incZoomSlider = function() {
-        var sliderValue = $("#slider-vertical").slider("value");
-        applyZoom(((zoomMax - zoomMin) / zoomSteps * (sliderValue + 1) + zoomMin) / zoomLevel, true);
-    };
-
-    // decrement zoom by one step
-    var decZoomSlider = function() {
-        var sliderValue = $("#slider-vertical").slider("value");
-        applyZoom(((zoomMax - zoomMin) / zoomSteps * (sliderValue - 1) + zoomMin) / zoomLevel, true);
-    };
-
-    // add slider element to body
-    $("body").append('<!--icons by http://glyphicons.com/-->' +
-                     '<div id="zoomSlider">' +
-                     '    <img id="zoomin" src="' + window.arca.zoomInUrl + '" onclick="incZoomSlider()"/>' +
-                     '    <div id="slider-vertical"/>' +
-                     '    <img id="zoomout" src="' + window.arca.zoomOutUrl + '" onclick="decZoomSlider()" />' +
-                     '</div>');
-
-    // zooming routine
-    function applyZoom(newLevel, updateSlider) {
-        // hides a radial menu when zoomed as the scaling does not work yet.
-        jQuery("#radial_menu").radmenu("hide");
-        $('.popover').remove();
-        // is true if canvas has been scaled or resized, this will reset the zoom of the canvas
-        if (fd.canvas.scaleOffsetX != zoomLevel) {
-            newLevel = zoomLevel / fd.canvas.scaleOffsetX;
+    // Add slider functionality to the element
+    $("#slider-vertical").slider({
+        orientation: "vertical",
+        range: "min",
+        min: 0,
+        max: zoomSteps,
+        value: zoomSteps / 2,
+        slide: function(event, ui) {
+            applyZoom(((zoomMax - zoomMin) / zoomSteps * ui.value + zoomMin) / zoomLevel, false);
         }
-        // check if zoomMax and zoomMin have been crossed
-        else if (zoomLevel * newLevel < zoomMax && zoomLevel * newLevel > zoomMin) {
-            zoomLevel = zoomLevel * newLevel;
-        } else if (zoomLevel * newLevel > zoomMin) {
-            newLevel = zoomMax / zoomLevel;
-            zoomLevel = zoomMax;
-        } else {
-            newLevel = zoomMin / zoomLevel;
-            zoomLevel = zoomMin;
-        }
-
-        // zooming nodes with CSS3 transform
-        $("#infovis-label div.node")
-            .css("-webkit-transform", "scale(" + zoomLevel + ")")
-            .css("-moz-transform",    "scale(" + zoomLevel + ")")
-            .css("-ms-transform",     "scale(" + zoomLevel + ")")
-            .css("-o-transform",      "scale(" + zoomLevel + ")")
-            .css("transform",         "scale(" + zoomLevel + ")");
-
-        // force directed canvas zooming
-        fd.canvas.scale(newLevel, newLevel);
-
-        // lets update slider value if necessary
-        if (updateSlider) {
-            $("#slider-vertical").slider("value", (zoomLevel - zoomMin) * zoomSteps / (zoomMax - zoomMin));
-        }
-    }
-
-    // apply slider to slider div
-    $(function() {
-        $("#slider-vertical").slider({
-            orientation: "vertical",
-            range: "min",
-            min: 0,
-            max: zoomSteps,
-            value: zoomSteps / 2,
-            slide: function(event, ui) {
-                applyZoom(((zoomMax - zoomMin) / zoomSteps * ui.value + zoomMin) / zoomLevel, false);
-            }
-        });
     });
 
-    var getNodes = function () {
-        $.ajax({
-            url: window.arca.ajax.waitMessage({lastReceived: window.arca.lastReceived}),
-            success: function (events) {
-                $(events).each(function () {
-                    if (this.data.type === 'deletecauseevent') {
-                        fd.graph.removeNode(this.data.causeId);
-                        fd.plot();
-                        $("div.node#" + this.data.causeId).remove();
-                    }
+    // Initialize Twipsy
+    $("a[rel=twipsy]").twipsy({live: true});
 
-                    if (this.data.type === 'addrelationevent') {
-                        //alert(this.data.causeFrom + " " + this.data.causeTo);
-                        fd.graph.addAdjacence(
-                             fd.graph.getNode(this.data.causeFrom),
-                            fd.graph.getNode(this.data.causeTo),
-                            {
-                                "$type": "arrow",
-                                "$direction": [this.data.causeFrom, this.data.causeTo],
-                                "$dim": 15,
-                                "$color": "#23A4FF",
-                                "weight": 1
-                            }
-                        );
+    $('#infovis').live("mousedown", function(event) {
+        jQuery("#radial_menu").radmenu("hide");
+        $('.popover').remove();
+        jQuery("#corrections_link").hide();
+    });
 
-                        fd.plot();
-                    }
+    $("div[rel=popover]").popover({
+        offset: 10,
+        html: true
+    }).click(function(e) {
+        isVisible = true; // TODO: $('div').visible() oslt?
+        e.preventDefault();
+    });
 
-                    if (this.data.type === 'addcorrectionevent') {
-                        $("#" + this.data.correctionTo).addClass('nodeBoxCorrection');
-                        fd.plot();
-                    }
+    $("#help-message").delay(5000).fadeOut("slow");
 
-                    else if (this.data.type === 'addcauseevent') {
-                        // This is a small fix. Now twipsy hides as it's supposed to.
-                        // $('.twipsy').remove();
-                        defaultEdgesForSelectedNode(selectedNode);
-                        var newNode = {
-                            "id": this.data.causeTo,
-                            "name": this.data.text,
-                            "data": {
-                                "parent": this.data.causeFrom,
-                                "creatorId": '' + this.data.creatorId,
-                                "likeCount": 0,
-                                "hasUserLiked": false
-                            }
-                        };
+    // Start the event stream reader
+    readEventStream();
 
-                        var oldNode = fd.graph.getNode(this.data.causeFrom);
-                        var newNodesXCoordinate = 100;
-                        var newNodesYCoordinate = 100;
-                        fd.graph.addAdjacence(oldNode, newNode);
-                        newNode = fd.graph.getNode(this.data.causeTo);
-                        newNode.data.nodeLevel = oldNode.data.nodeLevel + 1;
-                        newNode.setPos(oldNode.getPos('end'), 'current');
-                        newNode.getPos('end').y = oldNode.getPos('end').y + newNodesYCoordinate;
-                        newNode.getPos('end').x = oldNode.getPos('end').x + newNodesXCoordinate;
-                        newNode.data.xCoordinate = newNodesXCoordinate;
-                        newNode.data.yCoordinate = newNodesYCoordinate;
-                        fd.plot();
-                        fd.animate({
-                            modes: ['linear'],
-                            transition: $jit.Trans.Elastic.easeOut,
-                            duration: 1500
-                        });
-                        applyZoom(1, false); // refresh zooming for the new node
-                        $("#infovis-label div.node").disableSelection();
-                    }
-
-                    else if (this.data.type === 'causeRenameEvent') {
-                        var oldNode = fd.graph.getNode(this.data.causeId);
-                        oldNode.name = this.data.newName;
-                        $("#" + this.data.causeId).html(this.data.newName);
-                    }
-
-                    else if (this.data.type === 'amountOfLikesEvent') {
-                        updateLikes(this.data.causeId, this.data.amountOfLikes);
-                    }
-
-                    else if (this.data.type === 'nodemovedevent') {
-                        var nodeToMove = fd.graph.getNode(this.data.causeId);
-                        var nodeParent = fd.graph.getNode(nodeToMove.data.parent);
-                        var intX = parseInt(this.data.x);
-                        var intY = parseInt(this.data.y);
-                        nodeToMove.data.xCoordinate = intX;
-                        nodeToMove.data.yCoordinate = intY;
-                        if (nodeParent != undefined) {
-                            var xPos = nodeParent.getPos('end').x + intX;
-                            var yPos = nodeParent.getPos('end').y + intY;
-                        } else {
-                            var xPos = intX;
-                            var yPos = intY;
-                        }
-
-                        var nodePos = new $jit.Complex(xPos, yPos);
-                        nodeToMove.setPos(nodePos, 'end');
-
-                        updateChildrenVectors(nodeToMove);
-                        fd.animate({
-                            modes: ['linear'],
-                            transition: $jit.Trans.Elastic.easeOut,
-                            duration: 900
-                        });
-                    }
-
-                    else if (this.data.type === 'addclassificationevent') {
-                        insertClassificationItem(this.data);
-                    }
-
-                    window.arca.lastReceived = this.id
-                });
-                getNodes()
-            },
-            dataType: 'json'
-        });
-    };
-
-    getNodes();
-
-    // load JSON data.
-    fd.loadJSON(window.arca.graphJson);
+    // Initialize the graph from the JSON data
+    fd.loadJSON(arca.graphJson);
     fd.plot();
 
-    // compute positions.
-    function countParentNodes(node) {
-        if (node) {
-            return countParentNodes(fd.graph.getNode(node.data.parent)) + 1;
-        } else {
-            return 0;
-        }
-    }
-
+    // Calculate the node coordinates by their ancestors
     var rootNodes = new Array();
-    //First calculate levels (y-coordinates) for nodes.
     fd.graph.eachNode(function (node) {
         var nodeLevel;
         if (node.data.parent) {
@@ -907,6 +1024,7 @@ function init() {
         }
     });
 
+    // Draw the arrows for each node
     var rootNode;
     for (rootNode in rootNodes) {
         //noinspection JSUnfilteredForInLoop
@@ -914,11 +1032,12 @@ function init() {
     }
 
     fd.animate({
-                   modes: ['linear'],
-                   transition: $jit.Trans.Elastic.easeOut,
-                   duration: 1500
-               });
+        modes: ['linear'],
+        transition: $jit.Trans.Elastic.easeOut,
+        duration: 1500
+    });
 }
+
 
 $(document).ready(function () {
     $("#help-message-close").click(function () {
@@ -933,12 +1052,12 @@ $(document).ready(function () {
     $("#ideaHeader").hide();
     $("#infovis").disableSelection();
 
-    // initialize addCause modal window
+    // Initialize the cause adding dialog
     $('#addcause-modal').modal({
-                                   keyboard: true,
-                                   backdrop: true,
-                                   show: false
-                               });
+        keyboard: true,
+        backdrop: true,
+        show: false
+    });
 
     $('#addcause-modal').bind('show', function () {
         $('#causeName').val('');
@@ -948,23 +1067,25 @@ $(document).ready(function () {
         $('#causeName').focus();
     });
 
-    // initialize renameCause modal window
+
+    // Initialize the cause renaming dialog
     $('#renameCause-modal').modal({
-                                      keyboard: true,
-                                      backdrop: true,
-                                      show: false
-                                  });
+        keyboard: true,
+        backdrop: true,
+        show: false
+    });
 
     $('#renameCause-modal').bind('shown', function () {
         $('#renamedName').focus();
     });
 
-    // initialize addCorrection modal window
+
+    // Initialize the correction adding dialog
     $('#addcorrection-modal').modal({
-                                        keyboard: true,
-                                        backdrop: true,
-                                        show: false
-                                    });
+        keyboard: true,
+        backdrop: true,
+        show: false
+    });
 
     $('#addcorrection-modal').bind('show', function () {
         $('#ideaName').val('');
@@ -978,18 +1099,25 @@ $(document).ready(function () {
         $('#ideaName').focus();
     });
 
+
+    // Initialize the classification adding modal dialog
     $('#addClassification-modal').modal({
-                                            keyboard: true,
-                                            backdrop: true,
-                                            show: false
-                                        });
+        keyboard: true,
+        backdrop: true,
+        show: false
+    });
+
     $('#addClassification-modal').bind('shown', function () {
         $('#classificationName').focus();
     });
 
-    if (window.arca.ownerId == window.arca.currentUser) {
+
+    // Show the classification editing functionality if the user is the case owner
+    if (arca.ownerId == arca.currentUser) {
         $('#tagArea').show();
-        $('#tagIcon').click(function() { $('#addTag, #removeTag').slideToggle(); });
+        $('#tagIcon').click(function() { $('#addTag, #editTag, #removeTag').slideToggle(); });
         $('#addTag').click(function() { $('#addClassification-modal').modal('show'); });
+        $('#editTag').click(function() { $('#editClassification-modal').modal('show'); });
+        $('#removeTag').click(function() { $('#removeClassification-modal').modal('show'); });
     }
 });
