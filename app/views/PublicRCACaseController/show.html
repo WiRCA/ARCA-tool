@@ -178,7 +178,7 @@
                     <div class="clearfix">
                         <label for="tag-causeClassification-1">Mikä</label>
                         <select name="classification-1" id="tag-causeClassification-1" class="classificationList classificationType-1">
-                            <option value=""></option>
+                            <option value="-1">&{'classification.none'}</option>
                         #{list rcaCase.getClassifications(1), as:'classification'}
                             <option value="${classification.id}">${classification.name}</option>
                         #{/list}
@@ -188,7 +188,7 @@
                     <div>
                         <label for="tag-causeClassification-2">Mikä</label>
                         <select name="classification-2" id="tag-causeClassification-2" class="classificationList classificationType-2">
-                            <option value=""></option>
+                            <option value="-1">&{'classification.none'}</option>
                         #{list rcaCase.getClassifications(2), as:'classification'}
                             <option value="${classification.id}">${classification.name}</option>
                         #{/list}
@@ -218,9 +218,9 @@
                         </div>
                     </div>
                     <div>
-                        <label for="add-CauseClassification-1">Mikä</label>
-                        <select name="classification-1" id="add-CauseClassification-1" class="classificationList classificationType-1">
-                            <option value=""></option>
+                        <label for="add-causeClassification-1">Mikä</label>
+                        <select name="classification-1" id="add-causeClassification-1" class="classificationList classificationType-1">
+                            <option value="-1">&{'classification.none'}</option>
                         #{list rcaCase.getClassifications(1), as:'classification'}
                             <option value="${classification.id}">${classification.name}</option>
                         #{/list}
@@ -228,9 +228,9 @@
                     </div>
 
                     <div>
-                        <label for="add-CauseClassification-2">Missä</label>
-                        <select name="classification-2" id="add-CauseClassification-2" class="classificationList classificationType-2">
-                            <option value=""></option>
+                        <label for="add-causeClassification-2">Missä</label>
+                        <select name="classification-2" id="add-causeClassification-2" class="classificationList classificationType-2">
+                            <option value="-1">&{'classification.none'}</option>
                         #{list rcaCase.getClassifications(2), as:'classification'}
                             <option value="${classification.id}">${classification.name}</option>
                         #{/list}
@@ -263,7 +263,7 @@
                     <div>
                         <label for="modify-CauseClassification-1">Mikä</label>
                         <select name="classification-1" id="modify-CauseClassification-1" class="classificationList classificationType-1">
-                            <option value=""></option>
+                            <option value="-1">&{'classification.none'}</option>
                         #{list rcaCase.getClassifications(1), as:'classification'}
                             <option value="${classification.id}">${classification.name}</option>
                         #{/list}
@@ -273,7 +273,7 @@
                     <div>
                         <label for="modify-CauseClassification-2">Missä</label>
                         <select name="classification-2" id="modify-CauseClassification-2" class="classificationList classificationType-2">
-                            <option value=""></option>
+                            <option value="-1">&{'classification.none'}</option>
                         #{list rcaCase.getClassifications(2), as:'classification'}
                             <option value="${classification.id}">${classification.name}</option>
                         #{/list}
@@ -350,7 +350,7 @@
                     </div>
 
                     <div>
-                        <label for="edit-classificationTitle">&{'addClassification.title'}</label>
+                        <label for="edit-classificationTitle">&{'addClassification.classificationName'}</label>
                         <input type="text" name="classificationTitle" id="edit-classificationTitle" />
                     </div>
 
@@ -432,7 +432,8 @@ window.arca = {
     singlePoint: ' &{'editor.singlePoint'}',
     multiplePoints: ' &{'editor.multiplePoints'}',
     ajax: {
-        addNewCause: #{jsAction @CauseController.addCause(':causeId', ':name') /},
+        addNewCause: #{jsAction @CauseController.addCause(':causeId', ':name',
+                                                          ':classification1', ':classification2') /},
         renameCause: #{jsAction @CauseController.renameCause(':causeId', ':name') /},
         likeCause: #{jsAction @CauseController.like(':causeId') /},
         dislikeCause: #{jsAction @CauseController.dislike(':causeId') /},

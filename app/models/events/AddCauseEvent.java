@@ -35,28 +35,43 @@ public class AddCauseEvent extends Event {
 	* the name of the new cause
 	*/
 	public final String text;
+
 	/**
 	* the id of the old cause
 	*/
 	public final String causeFrom;
+
 	/**
 	* the id of te new sub cause
 	*/
 	public final String causeTo;
+
 	/**
 	* id of the creator user of the sub cause
 	*/
 	public final String creatorId;
 
 	/**
+	 * ID of the first classification
+	 */
+	public final Long classificationId1;
+
+	/**
+	 * ID of the second classification
+	 */
+	public final Long classificationId2;
+
+	/**
 	* Basic constructor
 	*/
-	public AddCauseEvent(Cause cause, Long causeFrom) {
+	public AddCauseEvent(Cause cause, Long causeFrom, Long classificationId1, Long classificationId2) {
 		super("addcauseevent");
 		this.causeTo = Long.toString(cause.id);
 		this.text = cause.name.replaceAll("&", "&amp;").replaceAll(">", "&gt;").replaceAll("<", "&lt;");
 		this.causeFrom = String.valueOf(causeFrom);
 		this.creatorId = cause.creatorId == null ? null : Long.toString(cause.creatorId);
+		this.classificationId1 = classificationId1;
+		this.classificationId2 = classificationId2;
 	}
 
 }

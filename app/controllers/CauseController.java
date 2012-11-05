@@ -64,18 +64,34 @@ public class CauseController extends Controller {
 	 *
 	 * @param causeId id of the cause to which the new cause is added
 	 * @param name the name of the new cause
+	 * @param classificationId1 the ID of the first classification
+	 * @param classificationId2 the ID of the second classification
 	 */
-	public static void addCause(Long causeId, String name) {
+	public static void addCause(Long causeId, String name, Long classificationId1, Long classificationId2) {
 		// causeId is used later as a String
 		Cause cause = Cause.findById(causeId);
 		RCACase rcaCase = cause.rcaCase;
 
+		Classification classification1 = null, classification2 = null;
+		if (classificationId1 != -1) {
+			classification1 = Classification.findById(classificationId1);
+			if (classification1 == null) { error(); }
+		}
+		if (classificationId2 != -1) {
+			classification2 = Classification.findById(classificationId2);
+			if (classification2 == null) { error(); }
+		}
+
 		Cause newCause = cause.addCause(name, SecurityController.getCurrentUser());
 
-		AddCauseEvent event = new AddCauseEvent(newCause, causeId);
+		if (classification1 != null) { newCause.setClassification(classification1); }
+		if (classification2 != null) { newCause.setClassification(classification2); }
+
+		AddCauseEvent event = new AddCauseEvent(newCause, causeId, classificationId1, classificationId2);
 		CauseStream causeEvents = rcaCase.getCauseStream();
 		causeEvents.getStream().publish(event);
-		Logger.debug("Cause %s added to cause %s", name, cause);
+		Logger.debug("Cause %s added to cause %s with classifications %d and %d",
+		             name, cause, classificationId1, classificationId2);
 	}
 
 	/**

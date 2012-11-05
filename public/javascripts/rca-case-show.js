@@ -19,10 +19,12 @@ var selectedNode;
 // AJAX functions //
 
 /**
- * Sends an AJAX request for adding a new cause, reads data from #causeName
+ * Sends an AJAX request for adding a new cause, reads data from #causeName, #add-causeClassification-{1, 2}
  */
 function addNewCause() {
     var name = $.trim($("#causeName").val());
+    var classification1 = $("#add-causeClassification-1").val();
+    var classification2 = $("#add-causeClassification-2").val();
     if (name == undefined || name == "") {
         $("#causeName").parents(".clearfix").addClass("error");
         return;
@@ -32,7 +34,10 @@ function addNewCause() {
 
     radmenu_fadeOut();
     $("#addcause-modal").modal('hide');
-    $.post(arca.ajax.addNewCause({causeId: selectedNode.id, name: encodeURIComponent(name)}));
+    $.post(arca.ajax.addNewCause({causeId: selectedNode.id,
+                                  name: encodeURIComponent(name),
+                                  classification1: classification1,
+                                  classification2: classification2}));
 }
 
 
@@ -334,9 +339,12 @@ function readEventStream() {
                             "parent": this.data.causeFrom,
                             "creatorId": '' + this.data.creatorId,
                             "likeCount": 0,
-                            "hasUserLiked": false
+                            "hasUserLiked": false,
+                            "classification1": this.data.classificationId1,
+                            "classification2": this.data.classificationId2
                         }
                     };
+                    arca.graphJson.push(newNode);
 
                     var oldNode = fd.graph.getNode(this.data.causeFrom);
                     var newNodesXCoordinate = 100;
