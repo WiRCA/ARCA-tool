@@ -22,9 +22,12 @@
  * THE SOFTWARE.
  */
 
-package models.enums;
+package models;
 
 import utils.IdComparableModel;
+
+import javax.persistence.*;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -33,34 +36,40 @@ import utils.IdComparableModel;
  * Time: 5:15 PM
  * To change this template use File | Settings | File Templates.
  */
-public enum ClassificationDimension {
 
-	WHAT(1),
-	WHERE(2);
+@PersistenceUnit(name = "maindb")
+@Entity(name = "dimension")
+public class ClassificationDimension extends IdComparableModel {
 
 	/**
-	 * the value of the enum
+	 * the name of the dimension
 	 */
-	public Integer value;
+	public String name;
+
+	/**
+	 * the id number of the dimension
+	 */
+	public Integer dimensionId;
 
 	/**
 	 * Basic constructor
 	 */
-	ClassificationDimension(Integer value) {
-		this.value = value;
+	public ClassificationDimension(String name, Integer dimensionId) {
+		this.name = name;
+		this.dimensionId = dimensionId;
 	}
 
 	/**
-	 * Get the ClassificationDimension vith value
-	 * @param id of the status
-	 * @return found StatusOfCause or null
+	 *  Returns the corresponding classification dimension for given id number
 	 */
-	public static ClassificationDimension valueOf(Integer id) {
-		for (ClassificationDimension status : ClassificationDimension.values()) {
-			if (status.value.equals(id)) {
-				return status;
-			}
-		}
-		return null;
+	public static ClassificationDimension valueOf(Integer classificationDimensionId) {
+		List<ClassificationDimension> dimensionList = ClassificationDimension.find(
+				"SELECT c FROM dimension AS c WHERE dimensionId=?",
+				classificationDimensionId
+		        ).fetch();
+		if (dimensionList != null)
+		{
+			return dimensionList.get(0);
+		} else return null;
 	}
 }

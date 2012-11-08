@@ -45,6 +45,7 @@ package job;/*
  */
 
 import models.Cause;
+import models.ClassificationDimension;
 import models.RCACase;
 import models.User;
 import play.jobs.Job;
@@ -73,6 +74,12 @@ public class Bootstrap extends Job {
 	        User tester = new User(TEST_USER_EMAIL, TEST_USER_PASSWORD);
 		    tester.name = "Test user";
 		    tester.save();
+
+	        // Create dimensions
+	        ClassificationDimension dimensionOne = new ClassificationDimension("WHAT", 1);
+	        ClassificationDimension dimensionTwo = new ClassificationDimension("WHERE", 2);
+	        dimensionOne.save();
+	        dimensionTwo.save();
 
 	        // First RCA case
 	        RCACase firstRCACase = new RCACase(tester);

@@ -1,10 +1,7 @@
 import models.Classification;
-import models.RCACase;
-import models.User;
-import models.enums.ClassificationDimension;
+import models.ClassificationDimension;
 import org.junit.Before;
 import org.junit.Test;
-import play.test.UnitTest;
 
 /**
  * Created with IntelliJ IDEA.

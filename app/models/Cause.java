@@ -24,7 +24,6 @@
 
 package models;
 
-import models.enums.ClassificationDimension;
 import models.enums.StatusOfCause;
 import org.hibernate.annotations.Sort;
 import org.hibernate.annotations.SortType;

@@ -25,23 +25,16 @@
 package controllers;
 
 import models.Classification;
-import models.Invitation;
 import models.RCACase;
 import models.User;
-import models.enums.ClassificationDimension;
-import models.enums.CompanySize;
-import models.enums.RCACaseType;
+import models.ClassificationDimension;
 import models.events.AddClassificationEvent;
 import models.events.CauseStream;
 import models.events.EditClassificationEvent;
 import models.events.RemoveClassificationEvent;
-import notifiers.Mails;
 import play.Logger;
-import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.With;
-
-import static play.Logger.*;
 
 
 /**

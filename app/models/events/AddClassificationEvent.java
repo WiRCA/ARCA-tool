@@ -24,10 +24,6 @@
 
 package models.events;
 
-import models.Cause;
-import models.RCACase;
-import models.enums.ClassificationDimension;
-
 public class AddClassificationEvent extends Event {
 	/**
 	 * the id of the classification

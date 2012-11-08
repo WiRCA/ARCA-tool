@@ -24,8 +24,6 @@
 
 package models;
 
-import models.RCACase;
-import models.enums.ClassificationDimension;
 import utils.IdComparableModel;
 
 import javax.persistence.*;
