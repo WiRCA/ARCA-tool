@@ -38,10 +38,7 @@ import play.libs.F.Promise;
 import utils.IdComparableModel;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.List;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * This class represents an RCA case in the application.
@@ -327,4 +324,63 @@ public class RCACase extends IdComparableModel {
             this.id, classificationDimension
         ).fetch();
     }
+
+	public ClassificationTable getTableCellObjectList() {
+		ClassificationTable classificationTable = new ClassificationTable();
+		List<Classification> firstDimension = this.getClassifications(1);
+		for (Classification c : firstDimension) {
+			classificationTable.rowNames.add(c.name);
+		}
+		List<Classification> secondDimension = this.getClassifications(2);
+		for (Classification c : secondDimension) {
+			classificationTable.colNames.add(c.name);
+		}
+		TableCellObject table[][] = new TableCellObject[firstDimension.size()][secondDimension.size()];
+		for (int i = 0; i < table.length; i++) {
+			for (int j = 0; j < table[i].length; j++) {
+				table[i][j] = new TableCellObject();
+			}
+		}
+		for (Cause cause : this.causes) {
+			List<ClassificationPair> pairs = new ArrayList<ClassificationPair>(); // cause.getClassificationPairs();
+			for (ClassificationPair pair : pairs) {
+				int i = firstDimension.indexOf(pair.first);
+				int j = secondDimension.indexOf(pair.second);
+				TableCellObject object = table[i][j];
+				object.numberOfCauses++;
+				if (cause.countLikes() > 0) {
+					object.numberOfProposedCauses++;
+				}
+				if (cause.corrections.size() > 0) {
+					object.numberOfSolvedCauses++;
+				}
+			}
+		}
+	classificationTable.tableCells = table;
+	return classificationTable;
+	}
+
+	// This class should be removed and replaced with a proper one in a proper place
+	public class ClassificationPair {
+
+		//Classifications in first dimension (WHAT)
+		public Classification first;
+
+		//Classification in second dimension (WHERE)
+		public Classification second;
+	}
+
+	public class TableCellObject {
+
+		public int numberOfCauses = 0;
+		public int numberOfProposedCauses = 0;
+		public int numberOfSolvedCauses = 0;
+	}
+
+	public class ClassificationTable {
+
+		public TableCellObject[][] tableCells;
+		public List<String> rowNames;
+		public List<String> colNames;
+	}
 }

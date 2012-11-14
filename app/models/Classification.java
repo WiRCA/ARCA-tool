@@ -50,7 +50,7 @@ public class Classification extends IdComparableModel {
 	public String abbreviation;
 
 	/**
-	 * The rca case that the cause belongs to
+	 * The rca case that the classification belongs to
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "rcaCaseId")
