@@ -26,6 +26,7 @@ package models;
 
 import models.enums.CompanySize;
 import models.enums.RCACaseType;
+import models.ClassificationTable;
 import models.events.CauseStream;
 import models.events.Event;
 import org.hibernate.annotations.Sort;
@@ -39,6 +40,8 @@ import utils.IdComparableModel;
 
 import javax.persistence.*;
 import java.util.*;
+
+import static models.ClassificationTable.*;
 
 /**
  * This class represents an RCA case in the application.
@@ -325,62 +328,48 @@ public class RCACase extends IdComparableModel {
         ).fetch();
     }
 
-	public ClassificationTable getTableCellObjectList() {
-		ClassificationTable classificationTable = new ClassificationTable();
+	/**
+	 * Returns and calculates ClassificationTable
+	 * @return the classification table, look ClassificationTable for more information
+	 */
+	public ClassificationTable getClassificationTable() {
 		List<Classification> firstDimension = this.getClassifications(1);
-		for (Classification c : firstDimension) {
-			classificationTable.rowNames.add(c.name);
-		}
 		List<Classification> secondDimension = this.getClassifications(2);
+
+		ClassificationTable table = new ClassificationTable(firstDimension.size(), secondDimension.size());
+
+		for (Classification c : firstDimension) {
+			table.rowNames.add(c.name);
+		}
+
 		for (Classification c : secondDimension) {
-			classificationTable.colNames.add(c.name);
+			table.colNames.add(c.name);
 		}
-		TableCellObject table[][] = new TableCellObject[firstDimension.size()][secondDimension.size()];
-		for (int i = 0; i < table.length; i++) {
-			for (int j = 0; j < table[i].length; j++) {
-				table[i][j] = new TableCellObject();
-			}
-		}
+
 		for (Cause cause : this.causes) {
 			List<ClassificationPair> pairs = new ArrayList<ClassificationPair>(); // cause.getClassificationPairs();
 			for (ClassificationPair pair : pairs) {
-				int i = firstDimension.indexOf(pair.first);
-				int j = secondDimension.indexOf(pair.second);
-				TableCellObject object = table[i][j];
+				int i = firstDimension.indexOf(pair.parent);
+				int j = secondDimension.indexOf(pair.child);
+				ClassificationTable.TableCellObject object = table.tableCells[i][j];
 				object.numberOfCauses++;
 				if (cause.countLikes() > 0) {
 					object.numberOfProposedCauses++;
 				}
 				if (cause.corrections.size() > 0) {
-					object.numberOfSolvedCauses++;
+					object.numberOfCorrectionCauses++;
 				}
 			}
 		}
-	classificationTable.tableCells = table;
-	return classificationTable;
-	}
 
-	// This class should be removed and replaced with a proper one in a proper place
-	public class ClassificationPair {
-
-		//Classifications in first dimension (WHAT)
-		public Classification first;
-
-		//Classification in second dimension (WHERE)
-		public Classification second;
-	}
-
-	public class TableCellObject {
-
-		public int numberOfCauses = 0;
-		public int numberOfProposedCauses = 0;
-		public int numberOfSolvedCauses = 0;
-	}
-
-	public class ClassificationTable {
-
-		public TableCellObject[][] tableCells;
-		public List<String> rowNames;
-		public List<String> colNames;
+		for (int i = 0; i < table.tableCells.length; i++) {
+			for (int j = 0; j < table.tableCells[i].length; j++) {
+				ClassificationTable.TableCellObject object = table.tableCells[i][j];
+				object.percentOfCauses = object.numberOfCauses/this.causes.size()*100.0;
+				object.percentOfProposedCauses = object.numberOfProposedCauses/this.causes.size()*100.0;
+				object.percentOfCauses = object.numberOfCorrectionCauses/this.causes.size()*100.0;
+			}
+		}
+		return table;
 	}
 }
