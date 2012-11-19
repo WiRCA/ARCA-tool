@@ -283,7 +283,6 @@ public class CauseController extends Controller {
 		// by a colon. If an invalid item is found, an error page is returned and the method terminated before any
 		// changes are done to the cause (ie. this method tries to be as atomic as possible).
 		String[] pairs = rawClassifications.split(";");
-
 		TreeSet<ClassificationPair> classificationPairs = new TreeSet<ClassificationPair>();
 		String[] pair;
 		Classification parent, child;
@@ -316,6 +315,7 @@ public class CauseController extends Controller {
 		cause.setClassifications(classificationPairs);
 		cause.save();
 
+		// Send event to stream
 		CauseStream causeEvents = rcaCase.getCauseStream();
 		CauseClassificationEvent event = new CauseClassificationEvent(causeId, classificationPairs);
 		causeEvents.getStream().publish(event);

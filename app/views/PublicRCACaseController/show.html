@@ -42,6 +42,7 @@
         #{press.script 'bootstrap-twipsy.js' /}
         #{press.script 'bootstrap-popover.js' /}
         #{press.script src:'jquery-ui-1.8.16.custom.min.js', compress:false /}
+        #{press.script src:'jquery.tagsinput.js', compress:false /}
         #{press.script 'smalljit.js' /}
         #{press.script 'jQuery.radmenu.js' /}
         #{press.script 'rca-case-show.js' /}
@@ -175,25 +176,24 @@
 
             <form action="" onsubmit="tagCause(); return false;">
                 <div class="modal-body">
-                    <div class="clearfix">
-                        <label for="tag-causeClassification-1">Mikä</label>
-                        <select name="classification-1" id="tag-causeClassification-1" class="classificationList classificationType-1">
-                            <option value="-1">&{'classification.none'}</option>
+                    <div id="tagAreaLeft">
+                        <h4>&{'tagCause.processArea'}</h4>
                         #{list rcaCase.getClassifications(1), as:'classification'}
-                            <option value="${classification.id}">${classification.name}</option>
+                        <div id="addTagArea-${classification.id}">${classification.name}</div>
                         #{/list}
-                        </select>
                     </div>
 
-                    <div>
-                        <label for="tag-causeClassification-2">Missä</label>
-                        <select name="classification-2" id="tag-causeClassification-2" class="classificationList classificationType-2">
-                            <option value="-1">&{'classification.none'}</option>
-                        #{list rcaCase.getClassifications(2), as:'classification'}
-                            <option value="${classification.id}">${classification.name}</option>
-                        #{/list}
-                        </select>
+                    <div id="tagAreaMiddle">
                     </div>
+
+                    <div id="tagAreaRight">
+                        <h4>&{'tagCause.causeClass'}</h4>
+                        #{list rcaCase.getClassifications(2), as:'classification'}
+                        <div id="addTag-${classification.id}">${classification.name}</div>
+                        #{/list}
+                    </div>
+
+                    <div class="cleaner"></div>
                 </div>
 
                 <div class="modal-footer">
@@ -216,25 +216,6 @@
                         <div class="input">
                             <input class="xlarge" autofocus="autofocus" id="causeName" name="causeName" type="text" value="" />
                         </div>
-                    </div>
-                    <div>
-                        <label for="add-causeClassification-1">Mikä</label>
-                        <select name="classification-1" id="add-causeClassification-1" class="classificationList classificationType-1">
-                            <option value="-1">&{'classification.none'}</option>
-                        #{list rcaCase.getClassifications(1), as:'classification'}
-                            <option value="${classification.id}">${classification.name}</option>
-                        #{/list}
-                        </select>
-                    </div>
-
-                    <div>
-                        <label for="add-causeClassification-2">Missä</label>
-                        <select name="classification-2" id="add-causeClassification-2" class="classificationList classificationType-2">
-                            <option value="-1">&{'classification.none'}</option>
-                        #{list rcaCase.getClassifications(2), as:'classification'}
-                            <option value="${classification.id}">${classification.name}</option>
-                        #{/list}
-                        </select>
                     </div>
                 </div>
 

@@ -446,6 +446,12 @@ function insertClassificationHandler(data) {
         if (e.find('option[value="' + data.id + '"]').length != 0) { return false; }
         e.append('<option value="' + data.id + '">' + data.name + '</option>');
     });
+
+    if (data.dimension == 1) {
+        $('#tagAreaLeft').append('<div id="addTagArea-' + data.id + '">' + data.name + '</div>').click(addTagArea);
+    } else {
+        $('#tagAreaRight').append('<div id="addTag-' + data.id + '">' + data.name + '</div>').click(addTag);
+    }
 }
 
 
@@ -481,6 +487,105 @@ function causeClassificationHandler(data) {
     var key = "classification" + arca.classifications[data.classificationId].dimension;
     if (index === null) { return; }
     arca.graphJson[index].data[key] = data.classificationId;
+}
+
+
+// Tag editor functions //
+
+/**
+ * Initializes the tag editor
+ */
+function initTagEditor() {
+    $('#tagAreaLeft > div').click(addTagArea);
+    $('#tagAreaRight:not(.disabled) > div').click(addTag);
+    $('#tagAreaRight').addClass('disabled');
+}
+
+
+/**
+ * Adds a tag area to the tag editor
+ * @param e jQuery event object
+ */
+function addTagArea(e) {
+    // TODO: Test for potential XSS - is this escaped and if it is, where?
+
+    // Create the tag area for the relevant classification ID
+    var elem = e.target;
+    var id = elem.id.substring(11); // "addTagArea-".length == 11
+    var name = arca.classifications[id].title;
+    $('#tagAreaMiddle').append(
+        '<div id="tagArea-' + id + '" class="tagAreaSection">' +
+            '<span class="tagAreaTitle">' + name + '</span>' +
+            '<a href="javascript:removeTagArea(' + id + ')" class="removeTagArea">X</a>' +
+            '<input class="childTags" id="childTags-' + id + '" name="childTags-' + id + '" />' +
+        '</div>'
+    );
+    $('#tagArea-' + id).click(selectTagArea);
+
+    // Enable tag input on the element
+    $('#childTags-' + id).tagsInput({
+        interactive: false,
+        'width': '95%',
+        'height': '30px'
+    });
+
+    // Select the given tag area
+    selectTagArea(id);
+
+    // Hide the tag area adding button for the ID
+    $('#addTagArea-' + id).hide();
+}
+
+
+/**
+ * Removes a tag area completely.
+ * @param id numeric tag area ID
+ */
+function removeTagArea(id) {
+    // If the tag area to be removed was selected, disable the right-side menu
+    if ($('#tagArea-' + id).hasClass("selected")) {
+        $('#tagAreaRight').addClass('disabled');
+    }
+
+    // Remove the current tag area, show the tag area adding button
+    $('#tagArea-' + id).remove();
+    $('#addTagArea-' + id).show();
+}
+
+
+/**
+ * Selects a tag area by jQuery event or numeric ID
+ * @param evt jQuery event object or a numeric tag area ID
+ */
+function selectTagArea(evt) {
+    // Check if we have a jQuery object or a numeric ID
+    var id;
+    if (evt.hasOwnProperty("delegateTarget")) {
+        // Ensure that we did not click on the remove button
+        if ($(evt.target).hasClass("removeTagArea")) { return; }
+        id = evt.delegateTarget.id.substring(8); // "tagArea-".length == 8
+    } else {
+        id = evt;
+    }
+
+    // Unselect all tag areas, select the current one and enable the right-side tag menu
+    $('div[id^=tagArea-].selected').removeClass('selected');
+    $('#tagArea-' + id).addClass('selected');
+    $('#tagAreaRight').removeClass('disabled');
+
+    // Refresh the right-side tag menu
+    // TODO
+}
+
+
+/**
+ * Adds a tag to the selected tag area
+ * @param evt jQuery event object
+ */
+function addTag(evt) {
+    var id = evt.delegateTarget.id.substring(7); // "addTag-".length == 7
+    $('#[id^=tagArea-].selected .childTags').addTag(arca.classifications[id].title);
+    $(evt.delegateTarget).hide();
 }
 
 
@@ -1202,6 +1307,7 @@ $(document).ready(function () {
         $('#tag-causeClassification-2').val(data.classification2);
     });
 
+    initTagEditor();
 
     // Show the classification editing functionality if the user is the case owner
     if (arca.ownerId == arca.currentUser) {
