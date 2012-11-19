@@ -51,7 +51,7 @@ public class Cause extends LikableIdComparableModel {
 	 * the classifications of the cause
 	 */
 	@OneToMany(cascade = CascadeType.PERSIST)
-	@Sort
+	@Sort(type = SortType.NATURAL)
 	public SortedSet<ClassificationPair> classifications;
 
 	/**
@@ -160,24 +160,11 @@ public class Cause extends LikableIdComparableModel {
 
 
 	/**
-	 * Returns all classifications with the given dimension related to the cause
-	 * @param classificationDimension the dimension of the classification
-	 * @return a list of Classification objects
+	 * Returns all classifications related to the case
+	 * @return a set of classification pairs
 	 */
-	public ArrayList<Classification> getClassifications(int classificationDimension) {
-		ArrayList<Classification> out = new ArrayList<Classification>();
-
-		for (ClassificationPair c : this.classifications) {
-			if (c.parent.classificationDimension == classificationDimension) {
-				out.add(c.parent);
-			}
-
-			if (c.child.classificationDimension == classificationDimension) {
-				out.add(c.child);
-			}
-		}
-
-		return out;
+	public SortedSet<ClassificationPair> getClassifications() {
+		return this.classifications;
 	}
 
 

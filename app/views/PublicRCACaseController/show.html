@@ -432,8 +432,7 @@ window.arca = {
     singlePoint: ' &{'editor.singlePoint'}',
     multiplePoints: ' &{'editor.multiplePoints'}',
     ajax: {
-        addNewCause: #{jsAction @CauseController.addCause(':causeId', ':name',
-                                                          ':classification1', ':classification2') /},
+        addNewCause: #{jsAction @CauseController.addCause(':causeId', ':name') /},
         renameCause: #{jsAction @CauseController.renameCause(':causeId', ':name') /},
         likeCause: #{jsAction @CauseController.like(':causeId') /},
         dislikeCause: #{jsAction @CauseController.dislike(':causeId') /},
@@ -450,7 +449,7 @@ window.arca = {
                                                                                     ':explanation') /},
         removeClassification: #{jsAction @ClassificationController.removeClassification(rcaCase.id,
                                                                                         ':classificationId') /},
-        tagCause: #{jsAction @CauseController.setClassifications(':causeId', ':classification1', ':classification2') /}
+        tagCause: #{jsAction @CauseController.setClassifications(':causeId', ':classifications') /}
     },
     graphJson: [
     #{list rcaCase.causes, as:'cause'}
