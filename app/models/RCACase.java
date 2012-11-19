@@ -25,6 +25,7 @@
 package models;
 
 import models.enums.CompanySize;
+import models.enums.DimensionType;
 import models.enums.RCACaseType;
 import models.ClassificationTable;
 import models.events.CauseStream;
@@ -333,43 +334,55 @@ public class RCACase extends IdComparableModel {
 	 * @return the classification table, look ClassificationTable for more information
 	 */
 	public ClassificationTable getClassificationTable() {
-		List<Classification> firstDimension = this.getClassifications(1);
-		List<Classification> secondDimension = this.getClassifications(2);
+		List<Classification> parentDimension = this.getClassifications(DimensionType.WHAT.getId());
+		List<Classification> childDimension = this.getClassifications(DimensionType.WHERE.getId());
 
-		ClassificationTable table = new ClassificationTable(firstDimension.size(), secondDimension.size());
+		ClassificationTable table = new ClassificationTable(parentDimension.size(), childDimension.size());
 
-		for (Classification c : firstDimension) {
+		// Set row and column names as classification names
+		for (Classification c : parentDimension) {
 			table.rowNames.add(c.name);
 		}
 
-		for (Classification c : secondDimension) {
+		for (Classification c : childDimension) {
 			table.colNames.add(c.name);
 		}
 
 		for (Cause cause : this.causes) {
-			List<ClassificationPair> pairs = new ArrayList<ClassificationPair>(); // cause.getClassificationPairs();
+			SortedSet<ClassificationPair> pairs = cause.getClassifications();
+			// Loop through all classification pairs for each cause
 			for (ClassificationPair pair : pairs) {
-				int i = firstDimension.indexOf(pair.parent);
-				int j = secondDimension.indexOf(pair.child);
+				int i = parentDimension.indexOf(pair.parent);
+				int j = childDimension.indexOf(pair.child);
 				ClassificationTable.TableCellObject object = table.tableCells[i][j];
+
+				// Increase the cause counter for the classification pair
 				object.numberOfCauses++;
+
+				// Increase the proposed counter for the classification pair if cause is liked
 				if (cause.countLikes() > 0) {
 					object.numberOfProposedCauses++;
 				}
+
+				// Increase the correction counter for the classification pair if cause has correction proposal
 				if (cause.corrections.size() > 0) {
 					object.numberOfCorrectionCauses++;
 				}
 			}
 		}
+		calculateClassificationTablePercentages(table);
 
+		return table;
+	}
+
+	public void calculateClassificationTablePercentages(ClassificationTable table) {
 		for (int i = 0; i < table.tableCells.length; i++) {
 			for (int j = 0; j < table.tableCells[i].length; j++) {
 				ClassificationTable.TableCellObject object = table.tableCells[i][j];
-				object.percentOfCauses = object.numberOfCauses/this.causes.size()*100.0;
-				object.percentOfProposedCauses = object.numberOfProposedCauses/this.causes.size()*100.0;
-				object.percentOfCauses = object.numberOfCorrectionCauses/this.causes.size()*100.0;
+				object.percentOfCauses = object.numberOfCauses / this.causes.size() * 100.0;
+				object.percentOfProposedCauses = object.numberOfProposedCauses / this.causes.size() * 100.0;
+				object.percentOfCauses = object.numberOfCorrectionCauses / this.causes.size() * 100.0;
 			}
 		}
-		return table;
 	}
 }
