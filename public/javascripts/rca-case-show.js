@@ -434,6 +434,12 @@ function readEventStream() {
  * @param data JSON data as returned from the event stream
  */
 function insertClassificationHandler(data) {
+    arca.classifications[data.id] = {
+        name: data.name,
+        dimension: data.dimension,
+        abbreviation: data.abbreviation,
+        explanation: data.explanation
+    };
     var select = $('.classificationList.classificationType-' + data.dimension);
     select.each(function (i, e) {
         e = $(e);
@@ -448,6 +454,7 @@ function insertClassificationHandler(data) {
  * @param data JSON data as returned from the event stream
  */
 function removeClassificationHandler(data) {
+    delete arca.classifications[data.id];
     $('select.classificationList option[value="' + data.id + '"]').remove();
 }
 
@@ -457,6 +464,10 @@ function removeClassificationHandler(data) {
  * @param data JSON data as returned from the event stream
  */
 function editClassificationHandler(data) {
+    arca.classifications[data.id].name = data.name;
+    arca.classifications[data.id].dimension = data.dimension;
+    arca.classifications[data.id].abbreviation = data.abbreviation;
+    arca.classifications[data.id].explanation = data.explanation;
     $('select.classificationList option[value="' + data.id + '"]').text(data.name);
 }
 

@@ -33,6 +33,7 @@ import play.mvc.Controller;
 import play.mvc.With;
 
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Methods related to causes.
@@ -64,34 +65,18 @@ public class CauseController extends Controller {
 	 *
 	 * @param causeId id of the cause to which the new cause is added
 	 * @param name the name of the new cause
-	 * @param classificationId1 the ID of the first classification
-	 * @param classificationId2 the ID of the second classification
 	 */
-	public static void addCause(Long causeId, String name, Long classificationId1, Long classificationId2) {
+	public static void addCause(Long causeId, String name) {
 		// causeId is used later as a String
 		Cause cause = Cause.findById(causeId);
 		RCACase rcaCase = cause.rcaCase;
 
-		Classification classification1 = null, classification2 = null;
-		if (classificationId1 != -1) {
-			classification1 = Classification.findById(classificationId1);
-			if (classification1 == null) { error(); }
-		}
-		if (classificationId2 != -1) {
-			classification2 = Classification.findById(classificationId2);
-			if (classification2 == null) { error(); }
-		}
-
 		Cause newCause = cause.addCause(name, SecurityController.getCurrentUser());
 
-		if (classification1 != null) { newCause.setClassification(classification1); }
-		if (classification2 != null) { newCause.setClassification(classification2); }
-
-		AddCauseEvent event = new AddCauseEvent(newCause, causeId, classificationId1, classificationId2);
+		AddCauseEvent event = new AddCauseEvent(newCause, causeId);
 		CauseStream causeEvents = rcaCase.getCauseStream();
 		causeEvents.getStream().publish(event);
-		Logger.debug("Cause %s added to cause %s with classifications %d and %d",
-		             name, cause, classificationId1, classificationId2);
+		Logger.debug("Cause %s added to cause %s", name, cause);
 	}
 
 	/**
@@ -282,13 +267,11 @@ public class CauseController extends Controller {
 
 
 	/**
-	 * A quick dual-classification setting function for the prototype.
-	 * @todo Make this properly :)
+	 * Sets the classifications of a cause
 	 * @param causeId the ID of the cause
-	 * @param classificationId1 the ID of the first classification to set
-	 * @param classificationId2 the ID of the second classification to set
+	 * @param rawClassifications a string to be parsed in the form parent:child;parent:child;...
 	 */
-	public static void setClassifications(Long causeId, Long classificationId1, Long classificationId2) {
+	public static void setClassifications(Long causeId, String rawClassifications) {
 		Cause cause = Cause.findById(causeId);
 		RCACase rcaCase = cause.rcaCase;
 
@@ -296,26 +279,47 @@ public class CauseController extends Controller {
 			forbidden();
 		}
 
-		CauseStream causeEvents = rcaCase.getCauseStream();
-		if (classificationId1 != -1) {
-			Classification classification1 = Classification.findById(classificationId1);
-			if (classification1 == null) { error(); return; }
-			cause.setClassification(classification1);
-			cause.save();
-			CauseClassificationEvent event1 = new CauseClassificationEvent(causeId, classificationId1);
-			causeEvents.getStream().publish(event1);
-			Logger.debug("Case %s reclassified to %s", cause.name, classification1.name);
+		// Parse the raw string. The string should be a semicolon-delimited list of parent:child pairs delimited
+		// by a colon. If an invalid item is found, an error page is returned and the method terminated before any
+		// changes are done to the cause (ie. this method tries to be as atomic as possible).
+		String[] pairs = rawClassifications.split(";");
+
+		TreeSet<ClassificationPair> classificationPairs = new TreeSet<ClassificationPair>();
+		String[] pair;
+		Classification parent, child;
+		for (String rawPair : pairs) {
+			// Ensure that the length is correct
+			pair = rawPair.split(":");
+			if (pair.length != 2) {
+				error();
+				return;
+			}
+
+			// Ensure that the parent ID is valid
+			parent = Classification.findById(Long.parseLong(pair[0]));
+			if (parent == null) {
+				error();
+				return;
+			}
+
+			// Ensure that the child ID is valid
+			child = Classification.findById(Long.parseLong(pair[1]));
+			if (child == null) {
+				error();
+				return;
+			}
+
+			// Construct the pair and add to list
+			classificationPairs.add(new ClassificationPair(parent, child));
 		}
 
-		if (classificationId2 != -1) {
-			Classification classification2 = Classification.findById(classificationId2);
-			if (classification2 == null) { error(); return; }
-			cause.setClassification(classification2);
-			cause.save();
-			CauseClassificationEvent event2 = new CauseClassificationEvent(causeId, classificationId2);
-			causeEvents.getStream().publish(event2);
-			Logger.debug("Case %s reclassified to %s", cause.name, classification2.name);
-		}
+		cause.setClassifications(classificationPairs);
+		cause.save();
+
+		CauseStream causeEvents = rcaCase.getCauseStream();
+		CauseClassificationEvent event = new CauseClassificationEvent(causeId, classificationPairs);
+		causeEvents.getStream().publish(event);
+		Logger.debug("Case %s reclassified with %d pair(s)", cause.name, classificationPairs.size());
 	}
 
 

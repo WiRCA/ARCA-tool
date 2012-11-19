@@ -36,6 +36,7 @@ import java.util.*;
  * Cause in RCA case tree.
  *
  * @author Eero Laukkanen
+ * @author AM Helin
  */
 @PersistenceUnit(name = "maindb")
 @Entity(name = "cause")
@@ -49,12 +50,12 @@ public class Cause extends LikableIdComparableModel {
 	/**
 	 * the classifications of the cause
 	 */
-	@OneToMany(mappedBy = "cause")
-	@MapKey(name = "classificationDimension")
-	public Map<ClassificationDimension, Classification> classifications;
+	@OneToMany(cascade = CascadeType.PERSIST)
+	@Sort
+	public SortedSet<ClassificationPair> classifications;
 
 	/**
-	* The rca case that the cause belongs to
+	* the RCA case that the cause belongs to
 	*/
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "rcaCaseId")
@@ -154,17 +155,38 @@ public class Cause extends LikableIdComparableModel {
 		this.effectRelations = new TreeSet<Relation>();
 		this.corrections = new TreeSet<Correction>();
 		this.likes = new ArrayList<Long>();
-		this.classifications = new HashMap<ClassificationDimension, Classification>();
+		this.classifications = new TreeSet<ClassificationPair>();
 	}
 
 
-	public Classification getClassification(int classificationDimension) {
-		return classifications.get(ClassificationDimension.valueOf(classificationDimension));
+	/**
+	 * Returns all classifications with the given dimension related to the cause
+	 * @param classificationDimension the dimension of the classification
+	 * @return a list of Classification objects
+	 */
+	public ArrayList<Classification> getClassifications(int classificationDimension) {
+		ArrayList<Classification> out = new ArrayList<Classification>();
+
+		for (ClassificationPair c : this.classifications) {
+			if (c.parent.classificationDimension == classificationDimension) {
+				out.add(c.parent);
+			}
+
+			if (c.child.classificationDimension == classificationDimension) {
+				out.add(c.child);
+			}
+		}
+
+		return out;
 	}
 
 
-	public void setClassification(Classification classification) {
-		classifications.put(ClassificationDimension.valueOf(classification.classificationDimension), classification);
+	/**
+	 * Sets the cause's classifications to the given ones.
+	 * @param classifications the set of classification pairs to use
+	 */
+	public void setClassifications(SortedSet<ClassificationPair> classifications) {
+		this.classifications = classifications;
 	}
 
 
@@ -176,6 +198,7 @@ public class Cause extends LikableIdComparableModel {
 	public List<Long> getLikes() {
 		return this.likes;
 	}
+
 
 	/**
 	 * Adds a corrective action for a cause.

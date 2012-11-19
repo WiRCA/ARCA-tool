@@ -66,10 +66,11 @@ public class ClassificationDimension extends IdComparableModel {
 		List<ClassificationDimension> dimensionList = ClassificationDimension.find(
 				"SELECT c FROM dimension AS c WHERE dimensionId=?",
 				classificationDimensionId
-		        ).fetch();
-		if (dimensionList != null)
-		{
+		).fetch();
+		if (dimensionList != null) {
 			return dimensionList.get(0);
-		} else return null;
+		} else {
+			return null;
+		}
 	}
 }

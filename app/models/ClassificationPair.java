@@ -22,28 +22,37 @@
  * THE SOFTWARE.
  */
 
-package models.events;
+package models;
 
-import models.Classification;
-import models.ClassificationPair;
+import utils.IdComparableModel;
 
-import java.util.SortedSet;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.PersistenceUnit;
 
-public class CauseClassificationEvent extends Event {
-	/**
-	 * the cause ID
-	 */
-	public Long causeId;
+/**
+ * A representation of a child-parent classification relationship related to a cause - that is, a parent-child pair of
+ * classifications.
+ */
+@PersistenceUnit(name = "maindb")
+@Entity(name = "classificationpair")
+public class ClassificationPair extends IdComparableModel {
+	@ManyToOne
+	public Classification parent;
 
-	/**
-	 * the new set of classifications
-	 */
-	public SortedSet<ClassificationPair> classifications;
+	@ManyToOne
+	public Classification child;
 
+	public ClassificationPair(Classification parent, Classification child) {
+		this.parent = parent;
+		this.child = child;
+	}
 
-	public CauseClassificationEvent(Long causeId, SortedSet<ClassificationPair> classifications) {
-		super("causeclassificationevent");
-		this.causeId = causeId;
-		this.classifications = classifications;
+	public Classification getParent() {
+		return parent;
+	}
+
+	public Classification getChild() {
+		return child;
 	}
 }

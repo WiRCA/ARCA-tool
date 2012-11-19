@@ -465,30 +465,30 @@ window.arca = {
                 "parent": #{if cause.parent}${cause.parent.id}#{/if}#{else}""#{/else},
                 "creatorId": '${cause.creatorId}',
                 "xCoordinate": #{if cause.xCoordinate != null && rcaCase.problem != cause}${cause
-                .xCoordinate}#{/if}#{else}""#{/else},
+                               .xCoordinate}#{/if}#{else}""#{/else},
                 "yCoordinate": #{if cause.yCoordinate != null && rcaCase.problem != cause}${cause
-                .yCoordinate}#{/if}#{else}""#{/else},
+                               .yCoordinate}#{/if}#{else}""#{/else},
                 "likeCount": ${cause.countLikes()},
                 "hasUserLiked": ${cause.hasUserLiked(currentUser)},
-                "classification1": ${cause.classifications.containsKey(1) ? cause.classifications.get(1) : -1},
-                "classification2": ${cause.classifications.containsKey(2) ? cause.classifications.get(2) : -1}
+                "classifications": ${cause.classifications}
             },
             "adjacencies": [
                 #{list cause.causes, as:'causedBy'}
-                    {nodeTo: "${causedBy.id}"}${causedBy_isLast && !cause.relations ? '' : ','}
+                {nodeTo: "${causedBy.id}"}${causedBy_isLast && !cause.relations ? '' : ','}
+
                 #{/list}
 
                 #{list cause.relations, as:'relation'}
-                    {
-                        "nodeTo": "${relation.id}",
-                        "data": {
-                            "$type": "arrow",
-                            "$direction": ["${cause.id}", "${relation.id}"],
-                            "$dim": 15,
-                            "$color": "#23A4FF",
-                            "weight": 1
-                        }
-                    }${relation_isLast ? '' : ','}
+                {
+                    "nodeTo": "${relation.id}",
+                    "data": {
+                        "$type": "arrow",
+                        "$direction": ["${cause.id}", "${relation.id}"],
+                        "$dim": 15,
+                        "$color": "#23A4FF",
+                        "weight": 1
+                    }
+                }${relation_isLast ? '' : ','}
                 #{/list}
             ]
         }${cause_isLast ? '' : ','}
