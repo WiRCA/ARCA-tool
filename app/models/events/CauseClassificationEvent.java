@@ -27,6 +27,8 @@ package models.events;
 import models.Classification;
 import models.ClassificationPair;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.SortedSet;
 
 public class CauseClassificationEvent extends Event {
@@ -36,14 +38,16 @@ public class CauseClassificationEvent extends Event {
 	public Long causeId;
 
 	/**
-	 * the new set of classifications
+	 * the new set of classifications, as a list of 2-lists
 	 */
-	public SortedSet<ClassificationPair> classifications;
-
+	public ArrayList<Long[]> classifications;
 
 	public CauseClassificationEvent(Long causeId, SortedSet<ClassificationPair> classifications) {
 		super("causeclassificationevent");
 		this.causeId = causeId;
-		this.classifications = classifications;
+		this.classifications = new ArrayList<Long[]>();
+		for (ClassificationPair pair : classifications) {
+			this.classifications.add(new Long[]{pair.parent.id, pair.child.id});
+		}
 	}
 }

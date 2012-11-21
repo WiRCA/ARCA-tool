@@ -211,19 +211,12 @@ function removeClassification() {
 
 /**
  * Sends an AJAX request for (re)classifying a cause
- * Reads data from #tag-causeClassification-{1, 2}
- * @return boolean
  */
 function tagCause() {
     var causeId = selectedNode.id;
-    var classification1 = $('#tag-causeClassification-1').val();
-    var classification2 = $('#tag-causeClassification-2').val();
-    if (classification1 === '') { classification1 = -1; }
-    if (classification2 === '') { classification2 = -1; }
     $.getJSON(
         arca.ajax.tagCause({causeId: causeId,
-                            classification1: classification1,
-                            classification2: classification2})
+                            classifications: constructTagString()})
     ).success(function (data) {
         $('#tagcause-modal').modal('hide');
     });
@@ -484,9 +477,12 @@ function editClassificationHandler(data) {
  */
 function causeClassificationHandler(data) {
     var index = findCause(data.causeId);
-    var key = "classification" + arca.classifications[data.classificationId].dimension;
-    if (index === null) { return; }
-    arca.graphJson[index].data[key] = data.classificationId;
+    arca.graphJson[index].data.classifications = data.classifications;
+
+    // Reset the selected node data if it was the one modified
+    if (selectedNode.id == data.causeId) {
+        selectedNode = arca.graphJson[index];
+    }
 }
 
 
@@ -498,20 +494,72 @@ function causeClassificationHandler(data) {
 function initTagEditor() {
     $('#tagAreaLeft > div').click(addTagArea);
     $('#tagAreaRight:not(.disabled) > div').click(addTag);
+}
+
+
+/**
+ * Populates the tag editor with the tags of the currently selected cause
+ */
+function populateTagEditor() {
+    // Empty the editor
+    $('#tagAreaLeft > div').remove();
+    $('#tagAreaMiddle > div').remove();
+    $('#tagAreaRight > div').remove();
+
+    var tags = selectedNode.data.classifications;
+    var i, j, curr;
+
+    // Group the tags under a where->what object
+    var grouped_tags = {};
+    for (i = 0; i < tags.length; i++) {
+        curr = tags[i];
+        if (!grouped_tags.hasOwnProperty(curr[0])) {
+            grouped_tags[curr[0]] = [curr[1]];
+        } else {
+            grouped_tags[curr[0]].push(curr[1]);
+        }
+    }
+
+    // Sort and add the UI elements for the areas
+    var areas = Object.getOwnPropertyNames(grouped_tags);
+    areas.sort();
+    for (i = 0; i < areas.length; i++) {
+        curr = areas[i];
+        addTagArea(curr, false);
+    }
+
+    // Then add each tag as necessary
+    for (i in grouped_tags) {
+        if (!grouped_tags.hasOwnProperty(i)) { continue; }
+        selectTagArea(i);
+        for (j = 0; j < grouped_tags[i].length; j++) {
+            addTag(grouped_tags[i][j]);
+        }
+    }
+
+    // Finally unselect all tag areas and disable the right-side menu
+    $('div[id^=tagArea-].selected').removeClass('selected');
     $('#tagAreaRight').addClass('disabled');
 }
 
 
 /**
  * Adds a tag area to the tag editor
- * @param e jQuery event object
+ * @param e jQuery event object or numeric area ID
+ * @param batch whether or not the function is being run in batch mode (ie. while populating the tag editor)
  */
-function addTagArea(e) {
+function addTagArea(e, batch) {
     // TODO: Test for potential XSS - is this escaped and if it is, where?
 
+    // Check if we have a jQuery object or a numeric ID
+    var id;
+    if (e.hasOwnProperty('target')) {
+        id = e.target.id.substring(11); // "addTagArea-".length == 11
+    } else {
+        id = e;
+    }
+
     // Create the tag area for the relevant classification ID
-    var elem = e.target;
-    var id = elem.id.substring(11); // "addTagArea-".length == 11
     var name = arca.classifications[id].title;
     $('#tagAreaMiddle').append(
         '<div id="tagArea-' + id + '" class="tagAreaSection">' +
@@ -525,12 +573,15 @@ function addTagArea(e) {
     // Enable tag input on the element
     $('#childTags-' + id).tagsInput({
         interactive: false,
-        'width': '95%',
-        'height': '30px'
+        width: '95%',
+        height: '30px',
+        onRemoveTag: updateTagMenu
     });
 
     // Select the given tag area
-    selectTagArea(id);
+    if (!batch) {
+        selectTagArea(id);
+    }
 
     // Hide the tag area adding button for the ID
     $('#addTagArea-' + id).hide();
@@ -550,6 +601,9 @@ function removeTagArea(id) {
     // Remove the current tag area, show the tag area adding button
     $('#tagArea-' + id).remove();
     $('#addTagArea-' + id).show();
+
+    // Update the right-side menu (purely visual)
+    updateTagMenu();
 }
 
 
@@ -573,19 +627,113 @@ function selectTagArea(evt) {
     $('#tagArea-' + id).addClass('selected');
     $('#tagAreaRight').removeClass('disabled');
 
-    // Refresh the right-side tag menu
-    // TODO
+    updateTagMenu();
+}
+
+
+/**
+ * Updates the right-hand tag menu of the tag editor
+ */
+function updateTagMenu() {
+    // Empty the area
+    $('#tagAreaRight > div').remove();
+
+    // Get the list of classifications
+    var classifications = arca.classifications;
+
+    // Filter the list by removing classifications in an invalid dimension and already selected ones
+    // First get the selected area ID
+    var id = $('div[id^=tagArea-].selected').attr('id');
+    var filtered = [];
+    var i;
+
+    // An area is selected: Filter selected ones away
+    if (id) {
+        // Parse the area ID (ie. WHERE classification ID) from the element ID
+        id = id.substring(8); // "tagArea-".length == 8
+
+        // Get the selected tags
+        var tags = $('#childTags-' + id);
+        if (tags.length > 0) {
+            tags = tags.val().split(",")
+        } else {
+            tags = [];
+        }
+
+        // Filter the classifications
+        for (i in classifications) {
+            if (!classifications.hasOwnProperty(i)) { continue; }
+
+            // Check if the classification is in the WHAT dimension and that it is not in the tag list already
+            // '' + id coerces the ID to a string, which is the type of the items in the list
+            if (classifications[i].dimension == 1 && tags.indexOf('' + classifications[i].id) == -1) {
+                filtered.push(classifications[i]);
+            }
+        }
+    }
+
+    // No area selected, just add classifications in the correct dimension
+    else {
+        for (i in classifications) {
+            if (classifications[i].dimension == 1) {
+                filtered.push(classifications[i]);
+            }
+        }
+    }
+
+    // Append the items to the tag menu
+    for (i = 0; i < filtered.length; i++) {
+        $('#tagAreaRight').append('<div id="addTag-' + filtered[i].id + '">' + filtered[i].title + '</div>');
+    }
+
+    // Add click handlers to all of them
+    $('div[id^=addTag-]').click(addTag);
 }
 
 
 /**
  * Adds a tag to the selected tag area
- * @param evt jQuery event object
+ * @param evt jQuery event object or a numeric ID
  */
 function addTag(evt) {
-    var id = evt.delegateTarget.id.substring(7); // "addTag-".length == 7
-    $('#[id^=tagArea-].selected .childTags').addTag(arca.classifications[id].title);
+    // Check that we have a selected tag area
+    if ($('#[id^=tagArea-].selected').length == 0) { return; }
+
+    // Check if we have a jQuery event object or a numeric ID
+    if (evt.hasOwnProperty('delegateTarget')) {
+        var id = evt.delegateTarget.id.substring(7); // "addTag-".length == 7
+    } else {
+        id = evt;
+    }
+    $('#[id^=tagArea-].selected .childTags').addTag(id, arca.classifications[id].title);
     $(evt.delegateTarget).hide();
+}
+
+
+/**
+ * Constructs the actual data string to send to the server from the tag editor
+ * @return string
+ */
+function constructTagString() {
+    var out = [];
+    var tags, id, i;
+
+    // Loop through each childTags input field, which have the actual tag data
+    $('input[id^=childTags-]').each(function (i, e) {
+        // Parse the ID from the element ID
+        id = e.id.substring(10); // "childTags-".length == 10
+
+        // Get the tags and add them to the list as a "parent:child" string
+        tags = e.value.split(",");
+        if (tags[0] != '') {
+            for (i = 0; i < tags.length; i++) {
+                out.push(id + ":" + tags[i]);
+            }
+        }
+    });
+
+    // Return the pairs as a string delimited by semicolon
+    return out.join(";");
 }
 
 
@@ -937,6 +1085,7 @@ function init() {
             // Editing a cause's classifications
             else if ($selected[0].id == "radmenu-event-tagCause") {
                 $('#tagcause-modal').modal('show');
+                populateTagEditor();
             }
         },
 

@@ -309,7 +309,8 @@ public class CauseController extends Controller {
 			}
 
 			// Construct the pair and add to list
-			classificationPairs.add(new ClassificationPair(parent, child));
+			ClassificationPair finalPair = ClassificationPair.createFromClassifications(parent, child);
+			classificationPairs.add(finalPair);
 		}
 
 		cause.setClassifications(classificationPairs);

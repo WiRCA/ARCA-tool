@@ -24,8 +24,6 @@
 
 package models.enums;
 
-import java.util.List;
-
 /**
  * Type for dimensions.
  */
@@ -38,6 +36,7 @@ public enum DimensionType {
 	 * the value of the enum
 	 */
 	public Integer dimensionId;
+
 	/**
 	 * the text of the enum
 	 */
@@ -46,12 +45,26 @@ public enum DimensionType {
 	/**
 	 * Basic constructor
 	 */
-	DimensionType(Integer value, String text) {
+	DimensionType(Integer dimensionId, String text) {
 		this.dimensionId = dimensionId;
 		this.text = text;
 	}
 
 	public int getId() {
 		return dimensionId;
+	}
+
+	/**
+	 * Get the DimensionType with the given ID
+	 * @param id of the DimensionType
+	 * @return found DimensionType or null
+	 */
+	public static DimensionType valueOf(int id) {
+		for (DimensionType dim : DimensionType.values()) {
+			if (dim.dimensionId.equals(id)) {
+				return dim;
+			}
+		}
+		return null;
 	}
 }

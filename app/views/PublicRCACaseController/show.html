@@ -178,7 +178,7 @@
                 <div class="modal-body">
                     <div id="tagAreaLeft">
                         <h4>&{'tagCause.processArea'}</h4>
-                        #{list rcaCase.getClassifications(1), as:'classification'}
+                        #{list rcaCase.getClassifications(2), as:'classification'}
                         <div id="addTagArea-${classification.id}">${classification.name}</div>
                         #{/list}
                     </div>
@@ -188,7 +188,7 @@
 
                     <div id="tagAreaRight">
                         <h4>&{'tagCause.causeClass'}</h4>
-                        #{list rcaCase.getClassifications(2), as:'classification'}
+                        #{list rcaCase.getClassifications(1), as:'classification'}
                         <div id="addTag-${classification.id}">${classification.name}</div>
                         #{/list}
                     </div>
@@ -450,7 +450,11 @@ window.arca = {
                                .yCoordinate}#{/if}#{else}""#{/else},
                 "likeCount": ${cause.countLikes()},
                 "hasUserLiked": ${cause.hasUserLiked(currentUser)},
-                "classifications": ${cause.classifications}
+                "classifications": [
+                    #{list cause.classifications, as:'pair'}
+                    [${pair.parent.id}, ${pair.child.id}]${pair_islast ? '' : ','}
+                    #{/list}
+                ]
             },
             "adjacencies": [
                 #{list cause.causes, as:'causedBy'}
@@ -479,6 +483,7 @@ window.arca = {
     classifications: {
     #{list rcaCase.getClassifications(), as:'classification'}
         ${classification.id}: {
+            id: ${classification.id}, *{for easier usage with the tag editor}*
             title: "${classification.name.escapeJavaScript().raw()}",
             dimension: ${classification.classificationDimension},
             abbreviation: "${classification.abbreviation.escapeJavaScript().raw()}",

@@ -50,7 +50,7 @@ public class Cause extends LikableIdComparableModel {
 	/**
 	 * the classifications of the cause
 	 */
-	@OneToMany(cascade = CascadeType.PERSIST)
+	@OneToMany(cascade = CascadeType.PERSIST, fetch=FetchType.EAGER) // eager to avoid reclassification problems
 	@Sort(type = SortType.NATURAL)
 	public SortedSet<ClassificationPair> classifications;
 

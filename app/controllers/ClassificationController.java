@@ -27,7 +27,7 @@ package controllers;
 import models.Classification;
 import models.RCACase;
 import models.User;
-import models.ClassificationDimension;
+import models.enums.DimensionType;
 import models.events.AddClassificationEvent;
 import models.events.CauseStream;
 import models.events.EditClassificationEvent;
@@ -73,7 +73,7 @@ public class ClassificationController extends Controller {
 		}
 
 		// Ensure that the classification type is correct
-		if (ClassificationDimension.valueOf(type) == null) {
+		if (DimensionType.valueOf(type) == null) {
 			renderJSON("{\"error\": \"Invalid classification type\"}");
 		}
 
@@ -85,7 +85,7 @@ public class ClassificationController extends Controller {
 		                                                          abbreviation, explanation);
 		CauseStream causeEvents = rcaCase.getCauseStream();
 		causeEvents.getStream().publish(event);
-		Logger.debug("Classification %s (%s) added for case %s", name, ClassificationDimension.valueOf(type),
+		Logger.debug("Classification %s (%s) added for case %s", name, DimensionType.valueOf(type),
 		                                                         rcaCase.caseName);
 		renderJSON("{\"success\": true}");
 	}
@@ -121,7 +121,7 @@ public class ClassificationController extends Controller {
 		}
 
 		// Ensure that the classification type is correct
-		if (ClassificationDimension.valueOf(type) == null) {
+		if (DimensionType.valueOf(type) == null) {
 			renderJSON("{\"error\": \"Invalid classification type\"}");
 			return;
 		}
@@ -142,7 +142,7 @@ public class ClassificationController extends Controller {
 		                                                          abbreviation, explanation);
 		CauseStream causeEvents = rcaCase.getCauseStream();
 		causeEvents.getStream().publish(event);
-		Logger.debug("Classification %s (%s) edited for case %s", name, ClassificationDimension.valueOf(type),
+		Logger.debug("Classification %s (%s) edited for case %s", name, DimensionType.valueOf(type),
 		             rcaCase.caseName);
 		renderJSON("{\"success\": true}");
 	}

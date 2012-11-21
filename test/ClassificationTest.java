@@ -1,5 +1,5 @@
 import models.Classification;
-import models.ClassificationDimension;
+import models.enums.DimensionType;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -14,7 +14,7 @@ public class ClassificationTest extends GenericRCAUnitTest {
 	private String name;
 	private String abbreviation;
 	private String explanation;
-	private ClassificationDimension classificationDimension;
+	private DimensionType dimensiontype;
 
 	@Before
 	public void setUp() {
@@ -22,7 +22,7 @@ public class ClassificationTest extends GenericRCAUnitTest {
 
 		abbreviation = "pla";
 		explanation = "In planning phase.";
-		classificationDimension = ClassificationDimension.valueOf(2);
+		dimensiontype = DimensionType.valueOf(2);
 	}
 
 	@Test
