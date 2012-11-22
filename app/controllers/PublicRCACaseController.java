@@ -53,6 +53,7 @@ public class PublicRCACaseController extends Controller {
 		render(rcaCase, lastMessage, currentUser);
 	}
 
+
 	/**
 	 * Publishes new events to clients that are viewing the case.
 	 * @param rcaCaseId ID of the RCA case
@@ -63,9 +64,9 @@ public class PublicRCACaseController extends Controller {
 		notFoundIfNull(lastReceived);
 		List<F.IndexedEvent<Event>> messages = await(rcaCase.nextMessages(lastReceived));
 		rcaCase.getCauseStream().lastEvent = messages.get(messages.size() - 1).id;
-		renderJSON(messages, new TypeToken<List<F.IndexedEvent<Event>>>() {
-		}.getType());
+		renderJSON(messages, new TypeToken<List<F.IndexedEvent<Event>>>(){}.getType());
 	}
+
 
 	/**
 	 * Check if the current user has rights for a specific RCA case

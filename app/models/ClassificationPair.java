@@ -24,11 +24,13 @@
 
 package models;
 
+import com.google.gson.*;
 import utils.IdComparableModel;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.PersistenceUnit;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 

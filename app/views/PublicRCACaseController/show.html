@@ -490,8 +490,9 @@ window.arca = {
             explanation: "${classification.explanation.escapeJavaScript().raw()}"
         }${classification_isLast ? '' : ','}
     #{/list}
-    }
-}
+    },
+    classificationMap: ${models.ClassificationRelationMap.fromCase(rcaCase).toJson().raw()}
+};
         </script>
     </body>
 </html>

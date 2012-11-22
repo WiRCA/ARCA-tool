@@ -62,6 +62,7 @@ public class RCACaseController extends Controller {
         Secure.checkAccess();
     }
 
+
 	/**
 	 * Opens the new RCA case creation form.
 	 */
@@ -71,6 +72,7 @@ public class RCACaseController extends Controller {
 		CompanySize[] companySizes = CompanySize.values();
 		render(rcaCase, types, companySizes);
 	}
+
 
 	/**
 	 * Creates a new RCA case with the values given in the RCA case creation form.
@@ -92,6 +94,7 @@ public class RCACaseController extends Controller {
 		PublicRCACaseController.show(rcaCase.id);
 	}
 
+
 	/**
 	 * Views users that have access to the RCA case.
 	 * @param rcaCaseId ID of the RCA case
@@ -108,6 +111,7 @@ public class RCACaseController extends Controller {
 		request.format = "json";
 		render(existingUsers, invitedUsers);
 	}
+
 
 	/**
 	 * Invites the user with the given email address to the RCA case.
@@ -147,6 +151,7 @@ public class RCACaseController extends Controller {
 		}
 	}
 
+
 	/**
 	 * Removes a user from the RCA case.
 	 * Only the RCA case owner can remove users from his case.
@@ -179,6 +184,7 @@ public class RCACaseController extends Controller {
 		}
 		renderJSON("{\"success\":\"false\"}");
 	}
+
 
 	/**
 	 * Exports the RCA case to csv format, that the user can download.
