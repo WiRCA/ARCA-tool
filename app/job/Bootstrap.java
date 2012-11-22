@@ -45,6 +45,7 @@ package job;/*
  */
 
 import models.Cause;
+import models.ClassificationDimension;
 import models.RCACase;
 import models.User;
 import play.jobs.Job;
@@ -64,6 +65,14 @@ public class Bootstrap extends Job {
     public void doJob() {
         // Check if the database is empty
         if(User.count() == 0) {
+	        // Create classification dimensions
+	        ClassificationDimension whatDimension = new
+			        ClassificationDimension("What", ClassificationDimension.FIRST_DIMENSION_ID);
+	        ClassificationDimension whereDimension = new
+			        ClassificationDimension("Where", ClassificationDimension.SECOND_DIMENSION_ID);
+	        whatDimension.save();
+	        whereDimension.save();
+
 	        // Admin user
 	        User admin = new User(ADMIN_USER_EMAIL, ADMIN_USER_PASSWORD);
 	        admin.name = "Admin user";

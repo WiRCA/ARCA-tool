@@ -1,5 +1,5 @@
 import models.Classification;
-import models.enums.DimensionType;
+import models.ClassificationDimension;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -14,7 +14,7 @@ public class ClassificationTest extends GenericRCAUnitTest {
 	private String name;
 	private String abbreviation;
 	private String explanation;
-	private DimensionType dimensiontype;
+	private ClassificationDimension classificationDimension;
 
 	@Before
 	public void setUp() {
@@ -22,14 +22,15 @@ public class ClassificationTest extends GenericRCAUnitTest {
 
 		abbreviation = "pla";
 		explanation = "In planning phase.";
-		dimensiontype = DimensionType.valueOf(2);
+		classificationDimension = ClassificationDimension.valueOf(ClassificationDimension.SECOND_DIMENSION_ID);
 	}
 
 	@Test
 	public void createClassificationTest() {
 		super.setUp();
 		Classification classification = new Classification(testCase, name, user,
-		                                                   2, explanation, abbreviation);
+		                                                   ClassificationDimension.SECOND_DIMENSION_ID,
+		                                                   explanation, abbreviation);
 		assertTrue(classification.name.equals(name));
 		assertTrue(classification.creatorId.equals(user.getId()));
 		assertTrue(classification.explanation.equals(explanation));

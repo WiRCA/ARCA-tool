@@ -22,49 +22,53 @@
  * THE SOFTWARE.
  */
 
-package models.enums;
+package models;
 
-/**
- * Type for dimensions.
- */
-public enum DimensionType {
+import utils.IdComparableModel;
 
-	WHAT(1, "What"),
-	WHERE(2, "Where");
+import javax.persistence.*;
+import java.util.List;
+
+@PersistenceUnit(name = "maindb")
+@Entity(name = "dimension")
+public class ClassificationDimension extends IdComparableModel {
 
 	/**
-	 * the value of the enum
+	 * Consts for dimension IDs
+	 */
+	public static final int FIRST_DIMENSION_ID = 1;
+	public static final int SECOND_DIMENSION_ID = 2;
+
+	/**
+	 * the name of the dimension
+	 */
+	public String name;
+
+	/**
+	 * the id number of the dimension
 	 */
 	public Integer dimensionId;
 
 	/**
-	 * the text of the enum
-	 */
-	public String text;
-
-	/**
 	 * Basic constructor
 	 */
-	DimensionType(Integer dimensionId, String text) {
+	public ClassificationDimension(String name, Integer dimensionId) {
+		this.name = name;
 		this.dimensionId = dimensionId;
-		this.text = text;
-	}
-
-	public int getId() {
-		return dimensionId;
 	}
 
 	/**
-	 * Get the DimensionType with the given ID
-	 * @param id of the DimensionType
-	 * @return found DimensionType or null
+	 *  Returns the corresponding classification dimension for given id number
 	 */
-	public static DimensionType valueOf(int id) {
-		for (DimensionType dim : DimensionType.values()) {
-			if (dim.dimensionId.equals(id)) {
-				return dim;
-			}
+	public static ClassificationDimension valueOf(Integer classificationDimensionId) {
+		List<ClassificationDimension> dimensionList = ClassificationDimension.find(
+				"SELECT c FROM dimension AS c WHERE dimensionId=?",
+				classificationDimensionId
+		).fetch();
+		if (dimensionList != null) {
+			return dimensionList.get(0);
+		} else {
+			return null;
 		}
-		return null;
 	}
 }

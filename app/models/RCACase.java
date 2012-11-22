@@ -25,7 +25,7 @@
 package models;
 
 import models.enums.CompanySize;
-import models.enums.DimensionType;
+import models.ClassificationDimension;
 import models.enums.RCACaseType;
 import models.ClassificationTable;
 import models.events.CauseStream;
@@ -334,8 +334,8 @@ public class RCACase extends IdComparableModel {
 	 * @return the classification table, look ClassificationTable for more information
 	 */
 	public ClassificationTable getClassificationTable() {
-		List<Classification> parentDimension = this.getClassifications(DimensionType.WHAT.getId());
-		List<Classification> childDimension = this.getClassifications(DimensionType.WHERE.getId());
+		List<Classification> parentDimension = this.getClassifications(ClassificationDimension.FIRST_DIMENSION_ID);
+		List<Classification> childDimension = this.getClassifications(ClassificationDimension.SECOND_DIMENSION_ID);
 
 		ClassificationTable table = new ClassificationTable(parentDimension.size(), childDimension.size());
 
