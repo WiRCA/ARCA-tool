@@ -330,8 +330,11 @@ public class RCACase extends IdComparableModel {
     }
 
 	/**
-	 * Returns and calculates ClassificationTable
-	 * @return the classification table, look ClassificationTable for more information
+	 * Returns and calculates ClassificationTable. Initially it creates ClassificationTable and initializes
+	 * row and column names. Then Causes and each ClassificationPair for them are looped through and table
+	 * values are updated accordingly. Finally percentages are calculated and table is returned.
+	 * @return the classification table
+	 * @see ClassificationTable
 	 */
 	public ClassificationTable getClassificationTable() {
 		List<Classification> parentDimension = this.getClassifications(ClassificationDimension.FIRST_DIMENSION_ID);
@@ -375,7 +378,12 @@ public class RCACase extends IdComparableModel {
 		return table;
 	}
 
-	public void calculateClassificationTablePercentages(ClassificationTable table) {
+	/**
+	 * Calculates percentages for numberOfCauses, numberOfProposedCauses and numberOfCorrectionCauses
+	 * that are used in the Classification Table
+	 * @param table ClassificationTable where percentages should be calculated
+	 */
+	private void calculateClassificationTablePercentages(ClassificationTable table) {
 		for (int i = 0; i < table.tableCells.length; i++) {
 			for (int j = 0; j < table.tableCells[i].length; j++) {
 				ClassificationTable.TableCellObject object = table.tableCells[i][j];
@@ -384,5 +392,13 @@ public class RCACase extends IdComparableModel {
 				object.percentOfCauses = object.numberOfCorrectionCauses / this.causes.size() * 100.0;
 			}
 		}
+	}
+
+	/**
+	 * Return dimensions
+	 * @return list of classification dimensions
+	 */
+	public List<ClassificationDimension> getClassificationDimensions() {
+		return ClassificationDimension.find("SELECT c FROM dimension AS c").fetch();
 	}
 }

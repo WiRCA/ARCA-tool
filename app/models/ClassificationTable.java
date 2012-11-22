@@ -26,6 +26,11 @@ package models;
 
 import java.util.List;
 
+/**
+ * This class represents the Classification Table. It shows how many of the causes contain certain ClassificationPair.
+ * Each table cell is represented as TableCellObject
+ * @see TableCellObject
+ */
 public class ClassificationTable {
 
 	public TableCellObject[][] tableCells;
@@ -41,12 +46,24 @@ public class ClassificationTable {
 		}
 	}
 
+	/**
+	 * This is a representation of table cell.
+	 */
 	public class TableCellObject {
 		public int numberOfCauses = 0;
+		/**
+		 * Tells the proportion of causes where ClassificationPair is found from all causes
+		 */
 		public double percentOfCauses = 0;
 		public int numberOfProposedCauses = 0;
+		/**
+		 * Tells the proportion of causes that have likes and where ClassificationPair is found from all causes
+		 */
 		public double percentOfProposedCauses = 0;
 		public int numberOfCorrectionCauses = 0;
+		/**
+		 * Tells the proportion of causes that have corrections and where ClassificationPair is found from all causes
+		 */
 		public double percentOfCorrectionCauses = 0;
 	}
 }
