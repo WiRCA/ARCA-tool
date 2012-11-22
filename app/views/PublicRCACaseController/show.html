@@ -280,8 +280,18 @@
                     <div class="clearfix">
                         <label for="classificationType">&{'addClassification.classificationType'}</label>
                         <select id="classificationType" name="classificationType">
-                            <option value="1">Mikä</option>
-                            <option value="2">Missä</option>
+                            #{list rcaCase.getClassificationDimensions(), as:'dimension'}
+                                #{if dimension.dimensionId == 1}
+                                    <option value="${dimension.dimensionId}">&{'dimensions.one'}</option>
+                                #{/if}#{else}
+                                #{if dimension.dimensionId == 2}
+                                    <option value="${dimension.dimensionId}">&{'dimensions.two'}</option>
+                                #{/if}
+                                #{else}
+                                    <option value="${dimension.dimensionId}">${dimension.name}</option>
+                                #{/else}
+                            #{/else}
+                            #{/list}
                         </select>
                     </div>
 
@@ -338,8 +348,18 @@
                     <div>
                         <label for="edit-classificationType">&{'addClassification.classificationType'}</label>
                         <select id="edit-classificationType" name="classificationType">
-                            <option value="1">Mikä</option>
-                            <option value="2">Missä</option>
+                            #{list rcaCase.getClassificationDimensions(), as:'dimension'}
+                                #{if dimension.dimensionId == 1}
+                                    <option value="${dimension.dimensionId}">&{'dimensions.one'}</option>
+                                #{/if}#{else}
+                                    #{if dimension.dimensionId == 2}
+                                        <option value="${dimension.dimensionId}">&{'dimensions.two'}</option>
+                                    #{/if}
+                                    #{else}
+                                        <option value="${dimension.dimensionId}">${dimension.name}</option>
+                                    #{/else}
+                                #{/else}
+                            #{/list}
                         </select>
                     </div>
 

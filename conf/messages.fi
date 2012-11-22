@@ -243,3 +243,6 @@ addCorrectiveAction.ideaHeader=Korjaavat ideat
 classification.none=(ei mitään)
 
 contactPage.feedbackFormTitle=Ota meihin yhteyttä tai lähetä palautetta
+
+dimensions.one=Mikä
+dimensions.two=Missä
