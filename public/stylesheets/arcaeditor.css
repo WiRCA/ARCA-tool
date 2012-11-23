@@ -176,6 +176,12 @@
     margin-top: 10px;
 }
 
+#tableButton {
+    position: absolute;
+    top: 43px;
+    left: 3px;
+}
+
 #tagArea {
     display: none;
     position: absolute;

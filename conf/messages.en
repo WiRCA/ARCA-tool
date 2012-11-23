@@ -49,6 +49,8 @@ indexPage.partiallySupportedBrowsers=Works with
 helpPage.title=Help
 helpPage.content= You can find the .pdf user manual covering all the aspects of the ARCA tool in Git Hub:
 
+classificationTablePage.title=Classification Table
+
 aboutPage.title=About
 aboutPage.content1=ARCA tool has been implemented in co-operation with researchers and students from Aalto University. The tool is licensed under the MIT open source license. You can use, download, and modify the software without practical limitations. However, the names of contributors have to be listed. You can download the project from GitHub you can find from this forum.
 aboutPage.content2=ARCA tool supports the ARCA root cause analysis method [1]. Root cause analysis is a structured investigation of a problem to detect and eliminate the causes of the problem. The theoretical foundation is that you cannot solve the problem without elimination of its causes. In root cause analysis, the problem and its causes are detected by utilizing expertise of various stakeholders. The problem causes are detected by constantly asking “why?” for every cause detected. The causes are organized into a cause and effect structure by utilizing a cause and effect diagram. The ARCA method utilizes a directed graph as its cause and effect diagram. The directed graph has been concluded as highly feasible for root cause analysis [1].

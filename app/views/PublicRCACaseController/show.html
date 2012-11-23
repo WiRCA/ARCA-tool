@@ -419,6 +419,12 @@
             <img id="zoomout" src="@{'/public/images/zoom-out.png'}" onclick="decZoomSlider()" />
         </div>
 
+        <div id="tableButton">
+            <a href="@{ClassificationTableController.index(rcaCase.id)}">
+                <img height="50" width="43" id="tableButtonImage" src="@{'/public/images/icons/classification_table_link.png'}" />
+            </a>
+        </div>
+
         <div id="tagArea">
             <img id="tagIcon" src="@{'/public/images/tag.png'}" alt="&{'tags.tags'}" />
             <img id="addTag" class="hide" src="@{'/public/images/plus.png'}" alt="&{'tags.add'}" />

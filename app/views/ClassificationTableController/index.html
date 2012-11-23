@@ -1,0 +1,156 @@
+<!--
+  ~ Copyright (C) 2012 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
+  ~ Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus,
+  ~ Timo Lehtinen, Jaakko Harjuhahto
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in
+  ~ all copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+  ~ THE SOFTWARE.
+  -->
+#{extends 'main.html' /}
+#{set 'title'}&{'classificationTablePage.title'}#{/set}
+#{set 'pageHeader'}&{'classificationTablePage.title'}#{/set}
+#{set 'pageHeaderSmall'}#{/set}
+#{set 'activePage'}help#{/set}
+
+
+<script type="text/javascript">
+
+    //Calculates how many checkbox buttons are checked
+    function howManyRadioButtonsChecked() {
+        var i = 0;
+        if (document.getElementById('all').checked)
+            i++;
+        if (document.getElementById('liked').checked)
+            i++;
+        if (document.getElementById('corrections').checked)
+            i++;
+        return i;
+    }
+
+    //Generates the HTML classification table and fills it with correspondin data
+    function generateClassificationTable() {
+        var buttonsChecked = howManyRadioButtonsChecked();
+        if (buttonsChecked == 0) {
+            $('#classificationTable').replaceWith('<table id="classificationTable"></table>');
+            return;
+        }
+
+        var rows = tableView.classificationTable[0].rowNames.length;
+        var cols = tableView.classificationTable[0].colNames.length;
+        var table = $('<table id="classificationTable" class="condensed-table bordered-table"><tbody>');
+
+        for(var r = -1; r < rows; r++) {
+            var tr = $('<tr>');
+            for (var c = -1; c < cols; c++) {
+                if (r == -1 || c == -1) {
+                    if (r == -1 && c == -1) {
+                        $('<th>#</th>').appendTo(tr);
+                    }
+                    else if (r == -1) {
+                        $('<th colspan=' + buttonsChecked + '" >' + tableView.classificationTable[0].colNames[c].name + '</br>C% P% E%</th>').appendTo(tr);
+                        //c = c + 2;
+                    }
+                    else {
+                        $('<th>' + tableView.classificationTable[0].rowNames[r].name + '</th>').appendTo(tr);
+                    }
+                }
+                else {
+                    var percentOfCauses = tableView.classificationTable[0].table[r].column[c].percentOfCauses;
+                    var percentOfCorrectionCauses = tableView.classificationTable[0].table[r].column[c].percentOfCorrectionCauses;
+                    var percentOfProposedCauses = tableView.classificationTable[0].table[r].column[c].percentOfProposedCauses;
+                    if (document.getElementById('all').checked) {
+                        if (percentOfCauses == 0)
+                            $('<td> - </td>').appendTo(tr);
+                        else
+                            $('<td title="Percent of all causes">' + percentOfCauses + ' %</td>').appendTo(tr);
+                    }
+                    if (document.getElementById('liked').checked) {
+                        if (percentOfProposedCauses == 0)
+                            $('<td> - </td>').appendTo(tr);
+                        else
+                            $('<td title="Percent of proposed causes from all causes">' + percentOfProposedCauses + ' %</td>').appendTo(tr);
+                    }
+                    if (document.getElementById('corrections').checked) {
+                        if (percentOfCorrectionCauses == 0)
+                            $('<td> - </td>').appendTo(tr);
+                        else
+                            $('<td title="Percent of processed causes from all causes">' + percentOfCorrectionCauses + ' %</td>').appendTo(tr);
+                    }
+                }
+            }
+            tr.appendTo(table);
+        }
+        $('#classificationTable').replaceWith(table);
+    }
+
+    window.tableView = {
+
+        classificationTable: [
+        #{list rcaCase.getClassificationTable(), as:'classificationTable'}
+            {
+                "rowNames": [
+                    #{list classificationTable.rowNames, as:'rowName'}
+                        {name: "${rowName}"}${rowName_isLast ? '' : ','}
+                    #{/list}
+                ],
+                "colNames": [
+                    #{list classificationTable.colNames, as:'colName'}
+                        {name: "${colName}"}${colName_isLast ? '' : ','}
+                    #{/list}
+                ],
+
+
+                "table": [
+                    #{list classificationTable.tableCells, as:'tableCellRow'}
+                        {column: [
+                            #{list tableCellRow, as:'tableCellCol'}
+                                {percentOfCauses: "${tableCellCol.percentOfCauses}",
+                                    percentOfCorrectionCauses: "${tableCellCol.percentOfCorrectionCauses}",
+                                    percentOfProposedCauses: "${tableCellCol.percentOfProposedCauses}"}
+                            ${tableCellCol_isLast ? '' : ','}
+                            #{/list}
+                        ]}
+                    ${tableCellRow_isLast ? '' : ','}
+                    #{/list}
+                ]
+
+
+            }${classificationTable_isLast ? '' : ','}
+        #{/list}
+        ]
+
+    }
+
+</script>
+
+<body onload="generateClassificationTable()">
+<div id="classificationCheckbox">
+    <label class="checkbox">
+        <input id="all" onclick="generateClassificationTable()" type="checkbox" checked="true">Percent of all causes</input>
+    </label>
+    <label class="checkbox">
+        <input id="liked" onclick="generateClassificationTable()" type="checkbox" checked="true"/>Percent of liked causes</input>
+    </label>
+    <label class="checkbox">
+        <input id="corrections" onclick="generateClassificationTable()" type="checkbox" checked="true"/>Percent of causes with corrections</input>
+    </label>
+</div>
+<div>
+    <table id="classificationTable"></table>
+</div>
+</body>

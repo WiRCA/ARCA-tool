@@ -24,6 +24,7 @@
 
 package models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -44,6 +45,8 @@ public class ClassificationTable {
 				tableCells[i][j] = new TableCellObject();
 			}
 		}
+		this.colNames = new ArrayList<String>();
+		this.rowNames = new ArrayList<String>();
 	}
 
 	/**

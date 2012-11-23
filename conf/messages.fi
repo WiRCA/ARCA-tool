@@ -58,6 +58,8 @@ aboutPage.content9=[2]	T. O. A. Lehtinen and M. V. Mäntylä, “What are proble
 helpPage.title=Apua
 helpPage.content=ARCA-työkalun kaikki ominaisuudet kattava käyttöohje löytyy englanniksi .pdf-muodossa GitHubista:
 
+classificationTablePage.title=Luokittelutaulukko
+
 contactPage.title=Ota yhteyttä
 
 error.errorsInForm=Lomake sisältää virheitä
