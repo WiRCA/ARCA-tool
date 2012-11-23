@@ -337,8 +337,12 @@ public class RCACase extends IdComparableModel {
 	 * @see ClassificationTable
 	 */
 	public ClassificationTable getClassificationTable() {
-		List<Classification> parentDimension = this.getClassifications(ClassificationDimension.FIRST_DIMENSION_ID);
-		List<Classification> childDimension = this.getClassifications(ClassificationDimension.SECOND_DIMENSION_ID);
+		List<Classification> parentDimension = this.getClassifications(ClassificationDimension.SECOND_DIMENSION_ID);
+		List<Classification> childDimension = this.getClassifications(ClassificationDimension.FIRST_DIMENSION_ID);
+
+		if (parentDimension.size() == 0 || childDimension.size() == 0) {
+			return null;
+		}
 
 		ClassificationTable table = new ClassificationTable(parentDimension.size(), childDimension.size());
 
@@ -387,9 +391,9 @@ public class RCACase extends IdComparableModel {
 		for (int i = 0; i < table.tableCells.length; i++) {
 			for (int j = 0; j < table.tableCells[i].length; j++) {
 				ClassificationTable.TableCellObject object = table.tableCells[i][j];
-				object.percentOfCauses = object.numberOfCauses / this.causes.size() * 100.0;
-				object.percentOfProposedCauses = object.numberOfProposedCauses / this.causes.size() * 100.0;
-				object.percentOfCauses = object.numberOfCorrectionCauses / this.causes.size() * 100.0;
+				object.percentOfCauses = (double)object.numberOfCauses / this.causes.size() * 100.0;
+				object.percentOfProposedCauses = (double)object.numberOfProposedCauses / this.causes.size() * 100.0;
+				object.percentOfCorrectionCauses = (double)object.numberOfCorrectionCauses / this.causes.size() * 100.0;
 			}
 		}
 	}
