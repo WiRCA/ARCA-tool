@@ -46,6 +46,7 @@ package job;/*
 
 import models.Cause;
 import models.ClassificationDimension;
+import models.Classification;
 import models.RCACase;
 import models.User;
 import play.jobs.Job;
@@ -128,6 +129,8 @@ public class Bootstrap extends Job {
 	        testNode8.addCause(testNode6);
 	        testNode10.addCause(testNode6);
 
+
+
 	        RCACase adminsPrivateCase = new RCACase(admin);
 	        adminsPrivateCase.caseName = "";
 	        adminsPrivateCase.caseName = "Admin's private RCA case";
@@ -179,6 +182,32 @@ public class Bootstrap extends Job {
 	        admin.save();
 	        tester.addRCACase(adminsPublicCase);
 	        tester.save();
+
+
+	        Classification classification1 = new Classification(adminsPublicCase,"Management",admin,ClassificationDimension.SECOND_DIMENSION_ID,
+	                                                            "MA", "MA");
+	        Classification classification2 = new Classification(adminsPublicCase,"Software Testing",admin,ClassificationDimension.SECOND_DIMENSION_ID,
+	                                                            "ST", "ST");
+	        Classification classification3 = new Classification(adminsPublicCase,"Implementation Work",admin,ClassificationDimension.SECOND_DIMENSION_ID,
+	                                                            "IM", "IM");
+	        Classification classification4 = new Classification(adminsPublicCase,"Work Practices",admin,ClassificationDimension.FIRST_DIMENSION_ID,
+	                                                            "WP", "WP");
+	        Classification classification5 = new Classification(adminsPublicCase,"Methods",admin,ClassificationDimension.FIRST_DIMENSION_ID,
+	                                                            "ME", "ME");
+	        Classification classification6 = new Classification(adminsPublicCase,"Task Priority",admin,ClassificationDimension.FIRST_DIMENSION_ID,
+	                                                            "TP", "TP");
+	        Classification classification7 = new Classification(adminsPublicCase,"Monitoring",admin,ClassificationDimension.FIRST_DIMENSION_ID,
+	                                                            "MO", "MO");
+	        Classification classification8 = new Classification(adminsPublicCase,"Co-operation",admin,ClassificationDimension.FIRST_DIMENSION_ID,
+	                                                            "CO", "CO");
+	        classification1.save();
+	        classification2.save();
+	        classification3.save();
+	        classification4.save();
+	        classification5.save();
+	        classification6.save();
+	        classification7.save();
+	        classification8.save();
 	    }
     }
 }
