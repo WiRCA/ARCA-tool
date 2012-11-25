@@ -22,14 +22,14 @@ public class ClassificationTest extends GenericRCAUnitTest {
 
 		abbreviation = "pla";
 		explanation = "In planning phase.";
-		classificationDimension = ClassificationDimension.valueOf(ClassificationDimension.SECOND_DIMENSION_ID);
+		classificationDimension = ClassificationDimension.valueOf(ClassificationDimension.WHERE_DIMENSION_ID);
 	}
 
 	@Test
 	public void createClassificationTest() {
 		super.setUp();
 		Classification classification = new Classification(testCase, name, user,
-		                                                   ClassificationDimension.SECOND_DIMENSION_ID,
+		                                                   ClassificationDimension.WHERE_DIMENSION_ID,
 		                                                   explanation, abbreviation);
 		assertTrue(classification.name.equals(name));
 		assertTrue(classification.creatorId.equals(user.getId()));

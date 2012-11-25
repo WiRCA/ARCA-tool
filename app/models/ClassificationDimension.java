@@ -36,8 +36,8 @@ public class ClassificationDimension extends IdComparableModel {
 	/**
 	 * Consts for dimension IDs
 	 */
-	public static final int FIRST_DIMENSION_ID = 1;
-	public static final int SECOND_DIMENSION_ID = 2;
+	public static final int WHAT_DIMENSION_ID = 1;
+	public static final int WHERE_DIMENSION_ID = 2;
 
 	/**
 	 * the name of the dimension

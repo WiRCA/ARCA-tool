@@ -25,9 +25,7 @@
 package models;
 
 import models.enums.CompanySize;
-import models.ClassificationDimension;
 import models.enums.RCACaseType;
-import models.ClassificationTable;
 import models.events.CauseStream;
 import models.events.Event;
 import org.hibernate.annotations.Sort;
@@ -41,8 +39,6 @@ import utils.IdComparableModel;
 
 import javax.persistence.*;
 import java.util.*;
-
-import static models.ClassificationTable.*;
 
 /**
  * This class represents an RCA case in the application.
@@ -337,8 +333,8 @@ public class RCACase extends IdComparableModel {
 	 * @see ClassificationTable
 	 */
 	public ClassificationTable getClassificationTable() {
-		List<Classification> parentDimension = this.getClassifications(ClassificationDimension.SECOND_DIMENSION_ID);
-		List<Classification> childDimension = this.getClassifications(ClassificationDimension.FIRST_DIMENSION_ID);
+		List<Classification> parentDimension = this.getClassifications(ClassificationDimension.WHERE_DIMENSION_ID);
+		List<Classification> childDimension = this.getClassifications(ClassificationDimension.WHAT_DIMENSION_ID);
 
 		if (parentDimension.size() == 0 || childDimension.size() == 0) {
 			return null;
