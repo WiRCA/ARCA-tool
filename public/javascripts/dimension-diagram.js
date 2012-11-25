@@ -222,7 +222,7 @@ function showSimpleGraph(minNodeRelevance, minEdgeRelevance, keepNodes) {
                 "data": {
                     "$type": "line",
                     "$dim": 15,
-                    "$color": "#ff00ff",
+                    "$color": "#23A4FF",
                     "weight": 2,
                     "$lineWidth": 1 + (Math.log(relationData.strength) / Math.log(2))
                 }
