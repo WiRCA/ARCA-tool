@@ -622,7 +622,8 @@ function removeTagArea(id) {
         $('#tagAreaRight').addClass('disabled');
     }
 
-    // Remove the current tag area, show the tag area adding button
+    // Remove the current tag area, show the tag area adding button, remove the TagsInput from the are
+    $('#childTags-' + id).removeTagsInput();
     $('#tagArea-' + id).remove();
     $('#addTagArea-' + id).show();
 
@@ -1155,7 +1156,7 @@ function init() {
 
         Edge: {
             overridable: true,
-            type: 'line',
+            type: 'arrow',
             dim: 15,
             color: '#23A4FF',
             lineWidth: 2

@@ -6198,23 +6198,11 @@ var EdgeHelper = {
       (end code)
       */
       'render': function(from, to, canvas){
-          var vect = new Complex(from.x - to.x, from.y - to.y);
-          vect.$scale(15 / vect.norm());
-          var intermediatePoint = new Complex(from.x - vect.x, from.y - vect.y),
-              normal = new Complex(-vect.y / 2, vect.x / 2),
-              v1 = intermediatePoint.add(normal),
-              v2 = intermediatePoint.$add(normal.$scale(-1));
           var ctx = canvas.getCtx();
           ctx.beginPath();
-          ctx.moveTo(to.x, to.y);
-          ctx.lineTo(from.x, from.y);
+          ctx.moveTo(from.x, from.y);
+          ctx.lineTo(to.x, to.y);
           ctx.stroke();
-          ctx.beginPath();
-          ctx.moveTo(v1.x, v1.y);
-          ctx.lineTo(v2.x, v2.y);
-          ctx.lineTo(from.x, from.y);
-          ctx.closePath();
-          ctx.fill();
       },
       /*
       Method: contains
@@ -8692,8 +8680,8 @@ $jit.ForceDirected.$extend = true;
                 direction = adj.data.$direction,
                 inv = true;
 
-            from = this.edgeHelper.arrow.calculateArrowPosition(from, to, adj, inv);
-            this.edgeHelper.arrow.render(from, to, dim, inv, canvas);
+            //from = this.edgeHelper.arrow.calculateArrowPosition(from, to, adj, inv);
+            this.edgeHelper.line.render(from, to, canvas);
         },
       'contains': function(adj, pos) {
         var from = adj.nodeFrom.pos.getc(true),

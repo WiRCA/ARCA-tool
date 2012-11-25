@@ -138,8 +138,8 @@ RCACaseType.hr=Henkilöstöön liittyvä ongelma
 RCACaseType.other=Muu
 
 user.welcomeTitle=Tervetuloa %s!
-user.createRCACase=Luo uusi RCA analyysi
-user.noRCACases=Ei RCA analyysejä
+user.createRCACase=Luo uusi RCA-analyysi
+user.noRCACases=Ei RCA-analyysejä
 user.noPrivateCases=Ei yksityisiä analyysejä
 user.noPublicCases=Kanssasi ei ole jaettu mitään julkista analyysiä
 user.created=Analyysi luotu
@@ -243,6 +243,10 @@ addCorrectiveAction.submit=Luo idea
 addCorrectiveAction.success=Korjaava idea lisätty
 addCorrectiveAction.ideaHeader=Korjaavat ideat
 classification.none=(ei mitään)
+
+dimensionDiagram.link=Luokitteludiagrammiin
+dimensionDiagram.help=Katsot analyysin luokittelupuuta -
+dimensionDiagram.back=takaisin normaalinäkymään
 
 contactPage.feedbackFormTitle=Ota meihin yhteyttä tai lähetä palautetta
 

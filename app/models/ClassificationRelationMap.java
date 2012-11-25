@@ -61,11 +61,6 @@ public class ClassificationRelationMap {
 	 * @param relation the relation of the pairs
 	 */
 	public void addRelation(ClassificationPair first, ClassificationPair second, ClassificationRelation relation) {
-		// Check that we're not given equal classification pairs (a pair cannot have a relation with itself)
-		if (first.equals(second)) {
-			//throw new IllegalArgumentException("The two pairs should not be equal");
-		}
-
 		// Order the pairs correctly - relations are always two-way, so we canonize the relation by having
 		// the one with the lower ID as the "first" one, technically the HashMap's key
 		if (first.compareTo(second) > 0) {
@@ -103,6 +98,25 @@ public class ClassificationRelationMap {
 
 
 	/**
+	 * Returns the relevance (ie. relation counts) of each classification in the relation map.
+	 * @return a map in the form [Classification ID -> relevance]
+	 */
+	public HashMap<Long, Integer> getClassificationRelevances() {
+		HashMap<Long, Integer> out = new HashMap<Long, Integer>();
+
+		for (Classification classification : this.simpleRelations.keySet()) {
+			if (out.containsKey(classification.id)) {
+				out.put(classification.id, out.get(classification.id) + 1);
+			} else {
+				out.put(classification.id, 1);
+			}
+		}
+
+		return out;
+	}
+
+
+	/**
 	 * Creates a relation map for a complete RCA case
 	 * @param rcaCase the RCA case
 	 * @return ClassificationRelationMap
@@ -119,7 +133,7 @@ public class ClassificationRelationMap {
 		// probably negligible.)
 		SortedSet<Cause> causes = rcaCase.causes;
 		for (Cause causeFrom : causes) {
-			for (Relation relation : causeFrom.causeRelations) {
+			for (Relation relation : causeFrom.effectRelations) {
 				causeTo = relation.causeTo;
 
 				// Add relations to all of the combinations between the classification pairs of the related

@@ -36,6 +36,9 @@ GET     /case/{rcaCaseId}/update/{lastReceived}                     RCACaseContr
 # Extract RCA case
 GET     /case/extract/csv/{rcaCaseId}                               RCACaseController.extractCSV
 
+# Show dimension diagram for case
+GET     /case/{rcaCaseId}/dimensions                                DimensionDiagramController.show
+
 # Ignore favicon requests
 GET     /favicon.ico                                                404
 

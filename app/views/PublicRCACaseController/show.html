@@ -128,7 +128,7 @@
                 </li>
 
                 <li class="item radmenu-button" id="radmenu-event-tagCause">
-                    <a href="#" rel='twipsy' data-placement="right" title='&{'editor.tagCause'}'>
+                    <a href="#" rel='twipsy' data-placement="right" title='&{'tagCause.title'}'>
                         <img src="@{'/public/images/tag.png'}" height="24" width="24" />
                     </a>
                 </li>
@@ -421,7 +421,13 @@
 
         <div id="tableButton">
             <a href="@{ClassificationTableController.index(rcaCase.id)}">
-                <img height="50" width="43" id="tableButtonImage" src="@{'/public/images/icons/classification_table_link.png'}" />
+                <img height="50" width="43" id="tableButtonImage" src="@{'/public/images/icons/classification_table_link.png'}" alt="&{'classificationTable.link'}" />
+            </a>
+        </div>
+
+        <div id="dimensionButton">
+            <a href="@{DimensionDiagramController.show(rcaCase.id)}">
+                <img src="@{'/public/images/dimension_link.png'}" alt="&{'dimensionDiagram.link'}" />
             </a>
         </div>
 
@@ -509,15 +515,14 @@ window.arca = {
     classifications: {
     #{list rcaCase.getClassifications(), as:'classification'}
         ${classification.id}: {
-            id: ${classification.id}, *{for easier usage with the tag editor}*
+            id: ${classification.id},
             title: "${classification.name.escapeJavaScript().raw()}",
             dimension: ${classification.classificationDimension},
             abbreviation: "${classification.abbreviation.escapeJavaScript().raw()}",
             explanation: "${classification.explanation.escapeJavaScript().raw()}"
         }${classification_isLast ? '' : ','}
     #{/list}
-    },
-    classificationMap: ${models.ClassificationRelationMap.fromCase(rcaCase).toJson().raw()}
+    }
 };
         </script>
     </body>

@@ -244,6 +244,10 @@ addCorrectiveAction.success=Corrective action added
 addCorrectiveAction.ideaHeader=Corrective actions
 classification.none=(none)
 
+dimensionDiagram.link=Classification diagram
+dimensionDiagram.help=You are looking at a case's classification diagram &ndash;
+dimensionDiagram.back=go back
+
 contactPage.feedbackFormTitle=Contact us or send feedback
 
 dimensions.one=What
