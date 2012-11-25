@@ -328,7 +328,13 @@
         });
 
         return this;
+    };
 
+    $.fn.removeTagsInput = function() {
+        var id = $(this).attr('id');
+        if (delimiter.hasOwnProperty(id)) {
+            delete delimiter[id];
+        }
     };
 
     $.fn.tagsInput.updateTagsField = function(obj, tagKeyList) {

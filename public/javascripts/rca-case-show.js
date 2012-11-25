@@ -527,6 +527,7 @@ function initTagEditor() {
 function populateTagEditor() {
     // Reset the editor to its default state
     $('div[id^=addTagArea-]').show();
+    $('input[id^=childTags-]').each(function() { $(this).removeTagsInput(); });
     $('#tagAreaMiddle > div').remove();
 
     var tags = selectedNode.data.classifications;
