@@ -62,7 +62,7 @@
                         $('<th>#</th>').appendTo(tr);
                     }
                     else if (r == -1) {
-                        $('<th colspan=' + buttonsChecked + '" >' + tableView.classificationTable[0].colNames[c].name + '</br>C% P% E%</th>').appendTo(tr);
+                        $('<th colspan=' + buttonsChecked + '" >' + tableView.classificationTable[0].colNames[c].name + '</th>').appendTo(tr);
                         //c = c + 2;
                     }
                     else {
@@ -75,19 +75,19 @@
                     var percentOfProposedCauses = tableView.classificationTable[0].table[r].column[c].percentOfProposedCauses;
                     if (document.getElementById('all').checked) {
                         if (percentOfCauses == 0)
-                            $('<td> - </td>').appendTo(tr);
+                            $('<td></td>').appendTo(tr);
                         else
                             $('<td title="Percent of all causes">' + percentOfCauses + ' %</td>').appendTo(tr);
                     }
                     if (document.getElementById('liked').checked) {
                         if (percentOfProposedCauses == 0)
-                            $('<td> - </td>').appendTo(tr);
+                            $('<td></td>').appendTo(tr);
                         else
                             $('<td title="Percent of proposed causes from all causes">' + percentOfProposedCauses + ' %</td>').appendTo(tr);
                     }
                     if (document.getElementById('corrections').checked) {
                         if (percentOfCorrectionCauses == 0)
-                            $('<td> - </td>').appendTo(tr);
+                            $('<td></td>').appendTo(tr);
                         else
                             $('<td title="Percent of processed causes from all causes">' + percentOfCorrectionCauses + ' %</td>').appendTo(tr);
                     }

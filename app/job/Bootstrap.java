@@ -44,13 +44,12 @@ package job;/*
  * THE SOFTWARE.
  */
 
-import models.Cause;
-import models.ClassificationDimension;
-import models.Classification;
-import models.RCACase;
-import models.User;
+import models.*;
 import play.jobs.Job;
 import play.jobs.OnApplicationStart;
+
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * @author Risto Virtanen
@@ -129,6 +128,45 @@ public class Bootstrap extends Job {
 	        testNode8.addCause(testNode6);
 	        testNode10.addCause(testNode6);
 
+
+	        Classification testClassification1 = new Classification(firstRCACase,"Management",admin,ClassificationDimension.WHERE_DIMENSION_ID,
+	                                                            "MA", "MA");
+	        Classification testClassification2 = new Classification(firstRCACase,"Software Testing",admin,ClassificationDimension.WHERE_DIMENSION_ID,
+	                                                            "ST", "ST");
+	        Classification testClassification3 = new Classification(firstRCACase,"Implementation Work",admin,ClassificationDimension.WHERE_DIMENSION_ID,
+	                                                            "IM", "IM");
+	        Classification testClassification4 = new Classification(firstRCACase,"Work Practices",admin,ClassificationDimension.WHAT_DIMENSION_ID,
+	                                                            "WP", "WP");
+	        Classification testClassification5 = new Classification(firstRCACase,"Methods",admin,ClassificationDimension.WHAT_DIMENSION_ID,
+	                                                            "ME", "ME");
+	        Classification testClassification6 = new Classification(firstRCACase,"Task Priority",admin,ClassificationDimension.WHAT_DIMENSION_ID,
+	                                                            "TP", "TP");
+	        Classification testClassification7 = new Classification(firstRCACase,"Monitoring",admin,ClassificationDimension.WHAT_DIMENSION_ID,
+	                                                            "MO", "MO");
+	        Classification testClassification8 = new Classification(firstRCACase,"Co-operation",admin,ClassificationDimension.WHAT_DIMENSION_ID,
+	                                                            "CO", "CO");
+	        testClassification1.save();
+	        testClassification2.save();
+	        testClassification3.save();
+	        testClassification4.save();
+	        testClassification5.save();
+	        testClassification6.save();
+	        testClassification7.save();
+	        testClassification8.save();
+
+	        ClassificationPair pair = new ClassificationPair(testClassification1, testClassification4);
+	        pair.save();
+	        SortedSet<ClassificationPair> set1 = new TreeSet<ClassificationPair>();
+	        set1.add(pair);
+	        testNode1.setClassifications(set1);
+	        testNode1.save();
+
+	        ClassificationPair pair2 = new ClassificationPair(testClassification1, testClassification4);
+	        pair2.save();
+	        SortedSet<ClassificationPair> set2 = new TreeSet<ClassificationPair>();
+	        set2.add(pair2);
+	        testNode2.setClassifications(set2);
+	        testNode2.save();
 
 
 	        RCACase adminsPrivateCase = new RCACase(admin);
