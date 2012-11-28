@@ -95,7 +95,7 @@ public class RCACaseFunctionalTest extends FunctionalTest {
 		Http.Request request = newRequest();
 		request.url = Router.reverse("PublicRCACaseController.show").url;
 		request.method = "GET";
-		request.params.put("id", privateRcaCase.id.toString());
+		request.params.put("URLHash", privateRcaCase.URLHash);
 		Http.Response response = GET(request, request.url);
 		assertStatus(Http.StatusCode.FOUND, response);
 
@@ -108,7 +108,7 @@ public class RCACaseFunctionalTest extends FunctionalTest {
 		request = newRequest();
 		request.url = Router.reverse("PublicRCACaseController.show").url;
 		request.method = "GET";
-		request.params.put("id", privateRcaCase.id.toString());
+		request.params.put("URLHash", privateRcaCase.URLHash);
 		response = GET(request, request.url);
 		assertStatus(Http.StatusCode.FORBIDDEN, response);
 
@@ -119,7 +119,7 @@ public class RCACaseFunctionalTest extends FunctionalTest {
 		request = newRequest();
 		request.url = Router.reverse("PublicRCACaseController.show").url;
 		request.method = "GET";
-		request.params.put("id", privateRcaCase.id.toString());
+		request.params.put("URLHash", privateRcaCase.URLHash);
 		response = GET(request, request.url);
 		assertStatus(Http.StatusCode.OK, response);
 
@@ -138,7 +138,7 @@ public class RCACaseFunctionalTest extends FunctionalTest {
 		request = newRequest();
 		request.url = Router.reverse("PublicRCACaseController.show").url;
 		request.method = "GET";
-		request.params.put("id", privateRcaCase.id.toString());
+		request.params.put("URLHash", privateRcaCase.URLHash);
 		response = GET(request, request.url);
 		assertStatus(Http.StatusCode.FORBIDDEN, response);
 
@@ -148,7 +148,7 @@ public class RCACaseFunctionalTest extends FunctionalTest {
 		request = newRequest();
 		request.url = Router.reverse("PublicRCACaseController.show").url;
 		request.method = "GET";
-		request.params.put("id", privateRcaCase.id.toString());
+		request.params.put("URLHash", privateRcaCase.URLHash);
 		response = GET(request, request.url);
 		assertStatus(Http.StatusCode.FORBIDDEN, response);
 
@@ -158,7 +158,7 @@ public class RCACaseFunctionalTest extends FunctionalTest {
 		request = newRequest();
 		request.url = Router.reverse("PublicRCACaseController.show").url;
 		request.method = "GET";
-		request.params.put("id", privateRcaCase.id.toString());
+		request.params.put("URLHash", privateRcaCase.URLHash.toString());
 		response = GET(request, request.url);
 		assertStatus(Http.StatusCode.OK, response);
 	}

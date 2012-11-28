@@ -59,11 +59,13 @@
     // Check that problem has a correct name.
     verifyTextPresent('Testikeissin probleema')
 
+    storeLocation('url')
+
     open('/logout')
 
     // open created RCA case with user that is not logged in
-    clickAndWait('link=Testikeissi')
-    verifyTextPresent('Testikeissin probleema')
+    open('$[url]')
+    waitForTextPresent('Testikeissin probleema')
     clickAt('//*[text()="Testikeissin probleema"]')
     assertElementPresent('//div[@id='radmenu-event-addCause']')
 
@@ -110,9 +112,25 @@
 
     open('/logout')
 
-    // Try to open a non-existent RCA case
-    // open('${url}')
-    // waitForTextPresent('Access denied')
+    // Creates a new user for testing
+    clickAndWait('id=register-link')
+    type('id=nameFieldRegister','testikäyttäjä')
+    type('id=emailFieldRegister','roope@roope.roope')
+    type('id=passwordFieldRegister','xxx')
+    type('id=password2FieldRegister','xxx')
+    clickAndWait('id=registerButton')
+    waitForTextPresent('testikäyttäjä')
+    clickAndWait('id=logout-link')
+
+    // log in user
+    assertElementPresent('id=signin')
+    type('id=username','roope@roope.roope')
+    type('id=password','xxx')
+    clickAndWait('id=signin')
+
+    // Try to open a non-public RCA case when not authorized
+    open('$[url]')
+    waitForTextPresent('Access denied')
 
 
 #{/selenium}

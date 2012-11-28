@@ -71,6 +71,8 @@
     click('//div[@id='radmenu-event-removeCause']')
     waitForTextNotPresent('bar')
 
+    storeLocation(url)
+
     // logout
     open('/logout')
 
@@ -84,7 +86,7 @@
     clickAndWait('id=registerButton')
 
     // open RCA case created above
-    clickAndWait('link=testgraph')
+    open('$[url]')
 
     // check that delete button is not visible for root node
     verifyTextPresent('testgraph')

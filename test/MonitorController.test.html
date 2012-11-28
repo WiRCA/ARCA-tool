@@ -28,15 +28,6 @@
     open('/logout')
     open('/?language=en')
 
-    clickAndWait('link=Monitoring')
-    waitForTextPresent('No matching cases')
-    click('//input[@name='casesRadio' and @value='publicCases']')
-    waitForTextNotPresent('No matching cases')
-    click('//input[@name='casesRadio' and @value='publicCases']')
-    click('//input[@name='whatToShow' and @value='corrections']')
-    waitForTextPresent('No matching cases')
-    clickAndWait('link=Index page')
-
     //new test user
     clickAndWait('id=register-link')
     type('id=nameFieldRegister','tauno')
@@ -66,11 +57,6 @@
     waitForTextPresent('Tutorial RCA case')
 	click('//input[@name='casesRadio' and @value='myCases']')
     waitForTextNotPresent('Tutorial RCA case')
-    waitForTextPresent('No matching cases')
-    click('//input[@name='casesRadio' and @value='sharedCases']')
-    waitForTextPresent('No matching cases')
-    click('//input[@name='casesRadio' and @value='sharedCases']')
-    click('//input[@name='casesRadio' and @value='publicCases']')
     waitForTextPresent('No matching cases')
     clickAndWait('link=Index page')
 
@@ -243,32 +229,14 @@
     verifyTextPresent('PUBLIC CASE')
     clickAndWait('id=logout-link')
 
-    //verifying that public case is really public and that there is not any cases shared with user Tauno.
+    //verifying that there is not any cases shared with user Tauno.
     type('id=username','tauno@tauno.tauno')
     type('id=password','tauno')
     clickAndWait('id=signin')
-    verifyTextPresent('PUBLIC CASE ')
     clickAndWait('link=Monitoring')
     click('//input[@name='casesRadio' and @value='myCases']')
-    click('//input[@name='casesRadio' and @value='publicCases']')
     waitForTextPresent('No matching cases')
-    click('//input[@name='casesRadio' and @value='publicCases']')
-    waitForTextPresent('PUBLIC CASE')
     clickAndWait('id=logout-link')
-
-    // testing user that not logged in
-    clickAndWait('link=Monitoring')
-    waitForTextPresent('PUBLIC CASE')
-	click('//input[@name='casesRadio' and @value='publicCases']')
-	waitForTextNotPresent('PUBLIC CASE')
-	click('//input[@name='casesRadio' and @value='publicCases']')
-	waitForTextPresent('PUBLIC CASE')
-    click('//input[@name='whatToShow' and @value='corrections']')
-    clickAt('//*[text()="PUBLIC CASE"]')
-	waitForTextPresent('public cause')
-    click('link=1')
-    waitForTextPresent('correction to this public cause')
-    verifyTextPresent('description for correction to this public cause')
 
   open('/logout')
 #{/selenium}
