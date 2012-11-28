@@ -423,7 +423,7 @@ public class RCACase extends IdComparableModel {
 	}
 
 	/**
-	 * Calculates percentages for numberOfCauses, numberOfProposedCauses and numberOfCorrectionCauses
+	 * Calculates percentages and total percentages for numberOfCauses, numberOfProposedCauses and numberOfCorrectionCauses
 	 * that are used in the Classification Table
 	 * @param table ClassificationTable where percentages should be calculated
 	 */

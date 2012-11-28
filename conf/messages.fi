@@ -59,6 +59,8 @@ helpPage.title=Apua
 helpPage.content=ARCA-työkalun kaikki ominaisuudet kattava käyttöohje löytyy englanniksi .pdf-muodossa GitHubista:
 
 classificationTablePage.title=Luokittelutaulukko
+classificationTablePage.help=Katsot analyysin luokittelutaulukkoa -
+classificationTablePage.back=takaisin normaalinäkymään
 
 contactPage.title=Ota yhteyttä
 

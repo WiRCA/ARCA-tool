@@ -50,6 +50,8 @@ helpPage.title=Help
 helpPage.content= You can find the .pdf user manual covering all the aspects of the ARCA tool in Git Hub:
 
 classificationTablePage.title=Classification Table
+classificationTablePage.help=You are looking at a case's classification table &ndash;
+classificationTablePage.back=go back
 
 aboutPage.title=About
 aboutPage.content1=ARCA tool has been implemented in co-operation with researchers and students from Aalto University. The tool is licensed under the MIT open source license. You can use, download, and modify the software without practical limitations. However, the names of contributors have to be listed. You can download the project from GitHub you can find from this forum.

@@ -370,7 +370,7 @@ div.tagsinput div {
     color: #90111A !important;
 }
 
-#dimensionHelp {
+#dimensionHelp, #classificationTableHelp {
     position: absolute;
     left: 0px;
     top: 40px;
@@ -379,4 +379,12 @@ div.tagsinput div {
     color: black;
     font-weight: bold;
     z-index: 5;
+}
+
+#classificationTableView {
+    position: absolute;
+    left: 8%;
+    right: 8%;
+    top: 70px;
+    padding: 1em;
 }
