@@ -58,10 +58,6 @@ public class MonitoringController extends Controller {
 	public static void rcaCaseSelecting(@As(",") List<String> showCases) {
 		Set<RCACase> cases = new HashSet<RCACase>();
 		User user = SecurityController.getCurrentUser();
-		if (showCases.contains("publicCases")) {
-			List<RCACase> publicCases = RCACase.find("isCasePublic", true).fetch();
-			cases.addAll(publicCases);
-		}
 		if (showCases.contains("sharedCases")) {
 			if (user != null) {
 				List<RCACase> sharedCases = new ArrayList<RCACase>();

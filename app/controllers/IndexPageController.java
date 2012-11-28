@@ -51,8 +51,7 @@ public class IndexPageController extends Controller {
 	 * Open index page.
 	 */
 	public static void index() {
-		List<RCACase> allPublicCases = RCACase.find("byIsCasePublic", true).fetch();
-		render(allPublicCases);
+		render();
 	}
 
 

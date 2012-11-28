@@ -30,14 +30,6 @@
     <h1>&{'applicationName'}</h1>
     <p>&{'applicationDescription'}</p>
 
-    <h2>&{'user.allPublicCases'}</h2>
-    <ul>
-    #{list items:allPublicCases, as:'rcaCase'}
-    <li>#{a @PublicRCACaseController.show(rcaCase.id)} ${rcaCase.caseName} #{/a}</li>
-    #{/list}
-    #{else}<li>&{'user.noAnyPublicCases'}</li>#{/else}
-    </ul>
-
     <hr>
 
     <!-- logos by Paul Irish http://paulirish.com/2010/high-res-browser-icons/ -->

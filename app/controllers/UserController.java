@@ -52,7 +52,6 @@ public class UserController extends Controller {
 		}
 
 		Set<RCACase> cases = user.getRCACases();
-		List<RCACase> allPublicCases = RCACase.find("byIsCasePublic", true).fetch();
 		Set<RCACase> ownCases = new HashSet<RCACase>();
 		Set<RCACase> privateCases = new HashSet<RCACase>();
 		Set<RCACase> publicCases = new HashSet<RCACase>();
@@ -69,7 +68,7 @@ public class UserController extends Controller {
 			}
 
 		}
-		render(user, ownCases, privateCases, publicCases, allPublicCases);
+		render(user, ownCases, privateCases, publicCases);
 	}
 
 }
