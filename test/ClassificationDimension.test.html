@@ -1,0 +1,55 @@
+#{fixture delete:'all', load:'data.yml' /}
+#{selenium}
+
+// Test init
+open('/logout')
+open('/?language=en')
+
+// Set timeout to 5 seconds, used in waitFor-accessors
+setTimeout('5000')
+
+// login
+type('id=username','admin@local')
+type('id=password','admin')
+clickAndWait('id=signin')
+
+// create new case
+clickAndWait('id=createRCACase-link')
+type('id=caseName','testi')
+clickAndWait('id=create')
+
+// create one classification
+waitForTextPresent('testi')
+clickAt('//*[text()="testi"]')
+waitForElementPresent('//div[@id='radmenu-event-tagCause']')
+click('//div[@id='radmenu-event-tagCause']')
+waitForTextPresent('Where')
+waitForTextPresent('What')
+
+open('/logout')
+open('/?language=fi')
+
+// Set timeout to 5 seconds, used in waitFor-accessors
+setTimeout('5000')
+
+// login
+type('id=username','admin@local')
+type('id=password','admin')
+clickAndWait('id=signin')
+
+// create new case
+clickAndWait('id=createRCACase-link')
+type('id=caseName','testi')
+clickAndWait('id=create')
+
+// create one classification
+waitForTextPresent('testi')
+clickAt('//*[text()="testi"]')
+waitForElementPresent('//div[@id='radmenu-event-tagCause']')
+click('//div[@id='radmenu-event-tagCause']')
+waitForTextPresent('Missä')
+waitForTextPresent('Mitä')
+
+clickAndWait('id=logout-link')
+
+#{/selenium}
