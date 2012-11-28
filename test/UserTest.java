@@ -51,6 +51,7 @@ public class UserTest extends UnitTest {
 	@Test
 	public void removeRcaCaseTest() {
 		User user = new User ("test@test.fi", "password");
+		user.save();
 				RCACase anotherRCACase = new RCACase("new unique rca case", RCACaseType.HR.value, "Kaapelissa ei vikaa",
 				            "Kaapelissa vikaa", true, "test company", CompanySize.FIFTY.value, "Kaikenlaista romua",
 				            true, user).save();
