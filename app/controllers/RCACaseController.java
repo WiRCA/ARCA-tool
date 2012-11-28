@@ -188,10 +188,12 @@ public class RCACaseController extends Controller {
 
 	/**
 	 * Exports the RCA case to csv format, that the user can download.
-	 * @param rcaCaseId ID of the RCA case
+	 * @param URLHash URL hash of the RCA case
 	 */
-	public static void extractCSV(Long rcaCaseId) {
-		RCACase rcaCase = PublicRCACaseController.checkIfCurrentUserHasRightsForRCACase(rcaCaseId);
+	public static void extractCSV(String URLHash) {
+		RCACase rcaCase = RCACase.getRCACase(URLHash);
+		notFoundIfNull(rcaCase);
+		rcaCase = PublicRCACaseController.checkIfCurrentUserHasRightsForRCACase(rcaCase.id);
 		response.setHeader("Content-Disposition", "attachment;filename=" +
 		                                          rcaCase.caseName.replace(" ", "-") + ".csv");
 		request.format = "text/csv";

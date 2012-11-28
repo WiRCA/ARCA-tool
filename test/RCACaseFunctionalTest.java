@@ -58,7 +58,7 @@ public class RCACaseFunctionalTest extends FunctionalTest {
 		request.url = Router.reverse("PublicRCACaseController.show").url;
 		request.method = "GET";
 
-		request.params.put("id", "9999");
+		request.params.put("URLHash", "9999");
 		Http.Response response = GET(request, request.url);
 		assertStatus(Http.StatusCode.NOT_FOUND, response);
 	}
@@ -78,11 +78,11 @@ public class RCACaseFunctionalTest extends FunctionalTest {
 		request.url = Router.reverse("RCACaseController.extractCSV").url;
 		request.method = "GET";
 
-		request.params.put("rcaCaseId", "9999");
+		request.params.put("URLHash", "9999");
 		Http.Response response = GET(request, request.url);
 		assertStatus(Http.StatusCode.NOT_FOUND, response);
 
-		request.params.put("rcaCaseId", rcaCase.id.toString());
+		request.params.put("URLHash", rcaCase.URLHash);
 		response = GET(request, request.url);
 		assertStatus(Http.StatusCode.OK, response);
 	}

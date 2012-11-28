@@ -31,10 +31,10 @@ GET     /contact                                                    ContactContr
 
 # Show RCA case
 GET     /{URLHash}                                                  PublicRCACaseController.show
-GET     /case/{rcaCaseId}/update/{lastReceived}                     RCACaseController.waitMessages
+GET     /{URLHash}/update/{lastReceived}                            RCACaseController.waitMessages
 
 # Extract RCA case
-GET     /case/extract/csv/{rcaCaseId}                               RCACaseController.extractCSV
+GET     /{URLHash}/csv                                              RCACaseController.extractCSV
 
 # Show classification table for case
 GET     /{URLHash}/table                                            ClassificationTableController.index

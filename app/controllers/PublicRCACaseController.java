@@ -58,11 +58,13 @@ public class PublicRCACaseController extends Controller {
 
 	/**
 	 * Publishes new events to clients that are viewing the case.
-	 * @param rcaCaseId ID of the RCA case
+	 * @param URLHash URL hash of the RCA case
 	 * @param lastReceived Last sent event for the client.
 	 */
-	public static void waitMessages(Long rcaCaseId, Long lastReceived) {
-		RCACase rcaCase = checkIfCurrentUserHasRightsForRCACase(rcaCaseId);
+	public static void waitMessages(String URLHash, Long lastReceived) {
+		RCACase rcaCase = RCACase.getRCACase(URLHash);
+		notFoundIfNull(rcaCase);
+		rcaCase = checkIfCurrentUserHasRightsForRCACase(rcaCase.id);
 		notFoundIfNull(lastReceived);
 		List<F.IndexedEvent<Event>> messages = await(rcaCase.nextMessages(lastReceived));
 		rcaCase.getCauseStream().lastEvent = messages.get(messages.size() - 1).id;

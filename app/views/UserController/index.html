@@ -179,7 +179,7 @@
         &{'rcacase.lastmodified'} ${rcaCase.updated.since(true)}
         &{'user.created'} ${rcaCase.created.since(true)}
         <a id="rcacase-share-${rcaCase.id}" href="javascript:;" class="btn small primary">&{'rcacase.share'}</a>
-        #{a @RCACaseController.extractCSV(rcaCase.id), class:'btn small'}&{'rcaCase.csv.exportCSV'}#{/a}
+        #{a @RCACaseController.extractCSV(rcaCase.URLHash), class:'btn small'}&{'rcaCase.csv.exportCSV'}#{/a}
     </li>
     #{/list}
     #{else}

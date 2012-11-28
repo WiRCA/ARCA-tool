@@ -450,7 +450,7 @@ window.arca = {
         likeCause: #{jsAction @CauseController.like(':causeId') /},
         dislikeCause: #{jsAction @CauseController.dislike(':causeId') /},
         addCorrectiveIdea: #{jsAction @CauseController.addCorrection(':toId', ':name', ':description') /},
-        waitMessage: #{jsAction @waitMessages(rcaCase.id,':lastReceived') /},
+        waitMessage: #{jsAction @waitMessages(rcaCase.URLHash,':lastReceived') /},
         deleteCause: #{jsAction @CauseController.deleteCause(':causeId') /},
         addRelation: #{jsAction @CauseController.addRelation(':fromId', ':toID') /},
         moveNode: #{jsAction @CauseController.nodeMoved(':causeId', ':x', ':y') /},
