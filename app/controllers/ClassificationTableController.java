@@ -41,8 +41,10 @@ public class ClassificationTableController extends Controller {
 	/**
 	 * Open index page.
 	 */
-	public static void index(Long id) {
-		RCACase rcaCase = checkIfCurrentUserHasRightsForRCACase(id);
+	public static void index(String URLHash) {
+		RCACase rcaCase = RCACase.getRCACase(URLHash);
+		notFoundIfNull(rcaCase);
+		rcaCase = checkIfCurrentUserHasRightsForRCACase(rcaCase.id);
 		render(rcaCase);
 	}
 

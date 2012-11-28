@@ -42,12 +42,14 @@ import java.util.List;
 public class PublicRCACaseController extends Controller {
 	
 	/**
-	 * Shows the RCA case with the given id.
+	 * Shows the RCA case with the given URLHash.
 	 * User has to have rights to view the case.
-	 * @param id ID of the RCA case
+	 * @param URLHash URLHash string of the RCA case
 	 */
-	public static void show(Long id) {
-		RCACase rcaCase = checkIfCurrentUserHasRightsForRCACase(id);
+	public static void show(String URLHash) {
+		RCACase rcaCase = RCACase.getRCACase(URLHash);
+		notFoundIfNull(rcaCase);
+		rcaCase = checkIfCurrentUserHasRightsForRCACase(rcaCase.id);
 		Long lastMessage = rcaCase.getCauseStream().lastEvent;
 		User currentUser = SecurityController.getCurrentUser();
 		render(rcaCase, lastMessage, currentUser);

@@ -91,7 +91,7 @@ public class RCACaseController extends Controller {
 		}
 		user.addRCACase(rcaCase, problemName);
 		Logger.info("User %s created new RCA case with name %s", user, rcaCase.caseName);
-		PublicRCACaseController.show(rcaCase.id);
+		PublicRCACaseController.show(rcaCase.URLHash);
 	}
 
 

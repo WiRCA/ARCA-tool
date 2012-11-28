@@ -26,6 +26,7 @@ package controllers;
 
 import job.TutorialRCACaseJob;
 import models.Invitation;
+import models.RCACase;
 import models.User;
 import play.Logger;
 import play.data.validation.Required;
@@ -213,7 +214,8 @@ public class RegisterController extends Controller {
 
 	private static void showCaseIfInvited(Long rcaCaseId, User user) {
 		if (rcaCaseId != null && user.caseIds.contains(rcaCaseId)) {
-			PublicRCACaseController.show(rcaCaseId);
+			RCACase rcaCase = RCACase.findById(rcaCaseId);
+			PublicRCACaseController.show(rcaCase.URLHash);
 		}
 	}
 }

@@ -65,6 +65,7 @@ public class RCACase extends IdComparableModel {
 	/**
 	 * Hash string for URL
 	 */
+	@Basic
 	public String URLHash;
 
     /**
@@ -348,6 +349,23 @@ public class RCACase extends IdComparableModel {
             this.id, classificationDimension
         ).fetch();
     }
+
+	/**
+	 * Returns the RCA case that matches the given URL hash
+	 * @param URLHash the URL hash string to the RCA case
+	 * @return the RCA case in a list
+	 */
+	public static RCACase getRCACase(String URLHash) {
+		List<RCACase> rcaCases = RCACase.find(
+				"SELECT c FROM rcacase AS c WHERE URLHash=?",
+				URLHash).fetch();
+
+		if (rcaCases != null && rcaCases.size() != 0) {
+			return rcaCases.get(0);
+		} else {
+			return null;
+		}
+	}
 
 	/**
 	 * Returns and calculates ClassificationTable. Initially it creates ClassificationTable and initializes

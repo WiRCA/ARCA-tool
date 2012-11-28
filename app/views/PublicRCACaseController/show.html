@@ -420,13 +420,13 @@
         </div>
 
         <div id="tableButton">
-            <a href="@{ClassificationTableController.index(rcaCase.id)}">
+            <a href="@{ClassificationTableController.index(rcaCase.URLHash)}">
                 <img height="50" width="43" id="tableButtonImage" src="@{'/public/images/icons/classification_table_link.png'}" alt="&{'classificationTable.link'}" />
             </a>
         </div>
 
         <div id="dimensionButton">
-            <a href="@{DimensionDiagramController.show(rcaCase.id)}">
+            <a href="@{DimensionDiagramController.show(rcaCase.URLHash)}">
                 <img src="@{'/public/images/dimension_link.png'}" alt="&{'dimensionDiagram.link'}" />
             </a>
         </div>

@@ -30,8 +30,10 @@ import play.mvc.Controller;
 import java.util.HashMap;
 
 public class DimensionDiagramController extends Controller {
-	public static void show(Long rcaCaseId) {
-		RCACase rcaCase = PublicRCACaseController.checkIfCurrentUserHasRightsForRCACase(rcaCaseId);
+	public static void show(String URLHash) {
+		RCACase rcaCase = RCACase.getRCACase(URLHash);
+		notFoundIfNull(rcaCase);
+		rcaCase = PublicRCACaseController.checkIfCurrentUserHasRightsForRCACase(rcaCase.id);
 		ClassificationRelationMap relations = ClassificationRelationMap.fromCase(rcaCase);
 		HashMap<Long, Integer> classificationRelevance = relations.getClassificationRelevances();
 		render(rcaCase, relations, classificationRelevance);

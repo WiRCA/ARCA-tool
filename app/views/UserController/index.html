@@ -167,8 +167,6 @@
 <ul class="tabs" data-tabs="tabs">
     <li class="active"><a href="#mycases">&{'user.myCases'}</a></li>
     <li><a href="#privatecases">&{'user.sharedCases'}</a></li>
-    <li><a href="#publiccases">&{'user.publicCasesTab'}</a></li>
-    </li>
 </ul>
 
 <div id="my-tab-content" class="tab-content">
@@ -176,7 +174,7 @@
 <h2>&{'user.myCases'}</h2>
 <ul>
     #{list items:ownCases, as:'rcaCase'}
-    <li>#{a @PublicRCACaseController.show(rcaCase.id), class:'ellipsis caseTitle', id:'show-rcacase-'+rcaCase.id+'-link', rel:'popover',
+    <li>#{a @PublicRCACaseController.show(rcaCase.URLHash), class:'ellipsis caseTitle', id:'show-rcacase-'+rcaCase.id+'-link', rel:'popover',
         title:"${rcaCase.caseName.escape().escape().raw()}", 'data-content':"${rcaCase.description.escape().escape().raw()}"}${rcaCase.caseName.escape().raw()}#{/a}
         &{'rcacase.lastmodified'} ${rcaCase.updated.since(true)}
         &{'user.created'} ${rcaCase.created.since(true)}
@@ -193,7 +191,7 @@
 <h2>&{'user.sharedPrivateCases'}</h2>
         <ul>
         #{list items:privateCases, as:'rcaCase'}
-        <li>#{a @PublicRCACaseController.show(rcaCase.id), class:'ellipsis caseTitle', id:'show-rcacase-'+rcaCase.id+'-link', rel:'popover',
+        <li>#{a @PublicRCACaseController.show(rcaCase.URLHash), class:'ellipsis caseTitle', id:'show-rcacase-'+rcaCase.id+'-link', rel:'popover',
             title:"${rcaCase.caseName.escape().escape().raw()}", 'data-content':"${rcaCase.description.escape().escape().raw()}"}${rcaCase.caseName.escape().raw()}#{/a}
             &{'rcacase.sharedBy'} <b>${rcaCase.owner.name.escape().raw()}</b>
             &{'rcacase.lastmodified'} ${rcaCase.updated.since(true)}
@@ -207,7 +205,7 @@
             <h2>&{'user.publicCases'}</h2>
             <ul>
             #{list items:publicCases, as:'rcaCase'}
-                <li>#{a @PublicRCACaseController.show(rcaCase.id), class:'ellipsis caseTitle', id:'show-rcacase-'+rcaCase.id+'-link', rel:'popover',
+                <li>#{a @PublicRCACaseController.show(rcaCase.URLHash), class:'ellipsis caseTitle', id:'show-rcacase-'+rcaCase.id+'-link', rel:'popover',
                 title:"${rcaCase.caseName.escape().escape().raw()}", 'data-content':"${rcaCase.description.escape().escape().raw()}"}${rcaCase.caseName.escape().raw()}#{/a}
                 &{'rcacase.sharedBy'} <b>${rcaCase.owner.name.escape().raw()}</b>
                 &{'rcacase.lastmodified'} ${rcaCase.updated.since(true)}
@@ -220,21 +218,7 @@
             </ul>
 
     </div>
-    <div class="tab-pane" id="publiccases">
 
-
-<h2>&{'user.allPublicCases'}</h2>
-<ul>
-    #{list items:allPublicCases, as:'rcaCase'}
-    <li>#{a @PublicRCACaseController.show(rcaCase.id), class:'ellipsis caseTitle', id:'show-rcacase-'+rcaCase.id+'-link', rel:'popover',
-    title:"${rcaCase.caseName.escape().escape().raw()}", 'data-content':"${rcaCase.description.escape().escape().raw()}"}${rcaCase.caseName.escape().raw()}#{/a}
-        &{'rcacase.sharedBy'} ${rcaCase.owner.name.escape().raw()}</li>
-    #{/list}
-    #{else}
-    <li>&{'user.noAnyPublicCases'}</li>
-    #{/else}
-</ul>
-    </div>
 </div>
 
 
