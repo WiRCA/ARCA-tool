@@ -44,6 +44,7 @@
         #{press.script src:'jquery.tagsinput.js', compress:false /}
         #{press.script 'smalljit.js' /}
         #{press.script 'dimension-diagram.js' /}
+        #{press.script 'jQuery.radmenu.js' /}
         #{press.compressed-script /}
 
         <script type="text/javascript">
@@ -68,6 +69,33 @@
         </div>
 
         <div id="graph"></div>
+
+        <div id="radial_menu" style="position: absolute; display: none; width: 0; height: 0;">
+            <ul class="list">
+                <li class="item radmenu-button" id="radmenu-event-openEdge">
+                    <a href="#" rel='twipsy' data-placement="left" title='&{'editor.openEdge'}'>
+                        <img src="@{'/public/images/icons/zoom.png'}" height="36" width="36"
+                             style="margin-left: -8px; margin-top: -8px" />
+                    </a>
+                </li>
+                           <!--  Use this when naming the edge
+                <li class="item radmenu-button" id="radmenu-event-nameEdge">
+                    <a href="#" rel='twipsy' data-placement="bottom" title='&{'editor.nameEdge'}'>
+                        <img src="@{'/public/images/icons/edit.png'}" height="36" width="36"
+                             style="margin-left: -8px; margin-top: -8px" />
+                    </a>
+                </li>
+                            -->
+            </ul>
+        </div>
+
+        <div id="zoomSlider">
+            <img id="zoomin" src="@{'/public/images/zoom-in.png'}" onclick="incZoomSlider()" />
+            <div id="slider-vertical"></div>
+            <img id="zoomout" src="@{'/public/images/zoom-out.png'}" onclick="decZoomSlider()" />
+        </div>
+
+
 
         <script type="text/javascript">
 window.arca = {

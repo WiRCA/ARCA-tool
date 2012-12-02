@@ -1,11 +1,46 @@
-var fd = null;
+/*
+ * Copyright (C) 2012 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
+ * Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus,
+ * Timo Lehtinen, Jaakko Harjuhahto
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+
+// Current zoom level
+var zoomLevel = 1;
+// Minimum zoom level
+var zoomMin = 1 / 32;
+// Maximum zoom level
+var zoomMax = 2;
+// Steps in zoom slider
+var zoomSteps = 64;
+// Placeholder for the #radial_menu jQuery object
+var $radial_menu;
+// Placeholder for the ForceDirected object
+var fd;
 
 // Add the function $.disableSelection() to jQuery
 (function ($) {
     $.fn.disableSelection = function () {
         return this.each(function () {
             $(this)
-                .attr('unselectable', 'on')
+                .attr('unselectable',   'on')
                 .css({'-moz-user-select': 'none',
                       '-o-user-select': 'none',
                       '-khtml-user-select': 'none',
@@ -27,6 +62,57 @@ var fd = null;
  * Initializes the graph for the canvas
  */
 function initGraph() {
+
+    $radial_menu = $("#radial_menu");
+
+    jQuery("#radial_menu").radmenu({
+
+        // The list class inside which to look for menu items
+        listClass: 'list',
+        // The items - NOTE: the HTML inside the item is copied into the menu item
+        itemClass: 'item',
+        // The menu radius in pixels
+        radius: 25,
+        // The animation speed in milliseconds
+        animSpeed: 2000,
+        // The X axis offset of the center
+        centerX: -20,
+        // The Y axis offset of the center
+        centerY: -40,
+        // The name of the selection event
+        selectEvent: "click",
+
+       // The actual functionality for the menu
+
+       onSelect: function ($selected) {
+           $('.twipsy').remove();
+
+           // Opening of the edge
+           if ($selected[0].id == "radmenu-event-openEdge") {
+               alert("not implemented yet");
+               jQuery("#radial_menu").radmenu("hide");
+           }
+
+           // naming the edge
+           else if ($selected[0].id == "radmenu-event-nameEdge") {
+               alert("not implemented yet");
+               jQuery("#radial_menu").radmenu("hide");
+           }
+       },
+
+       // The base angle offset in degrees
+       angleOffset: 90
+   });
+
+    $("#graph").css("width", window.innerWidth + 1000);
+    $("#graph").css("height", window.innerHeight + 1000);
+
+    var resizeTimer;
+    $(window).resize(function () {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(doResize, 100);
+    });
+
     fd = new $jit.ForceDirected({
         // ID of the visualization container
         injectInto: 'graph',
@@ -57,6 +143,7 @@ function initGraph() {
             dim: 75,
             color: '#23A4FF',
             lineWidth: 2
+
         },
 
         // Native canvas text styling
@@ -73,6 +160,8 @@ function initGraph() {
 
         // Add node events
         Events: {
+
+            enableForEdges: true,
             enable: true,
 
             // Change cursor style when the mouse cursor is on a non-root node
@@ -109,6 +198,15 @@ function initGraph() {
             onTouchMove: function (node, eventInfo, e) {
                 $jit.util.event.stop(e); // Stop the default touchmove event
                 this.onDragMove(node, eventInfo, e);
+            },
+            onClick: function(node, eventInfo, e) {
+                if(eventInfo.getEdge()) {
+                    show_edge_radial_menu(eventInfo);
+                    fd.plot();
+                } else {
+                    jQuery("#radial_menu").radmenu("hide");
+                    fd.plot();
+                }
             }
         },
 
@@ -141,8 +239,31 @@ function initGraph() {
             $(domElement).html(node.name);
         }
     });
-}
 
+    // Add slider functionality to the element
+    $("#slider-vertical").slider({
+         orientation: "vertical",
+         range: "min",
+         min: 0,
+         max: zoomSteps,
+         value: zoomSteps / 2,
+         slide: function(event, ui) {
+             applyZoom(((zoomMax - zoomMin) / zoomSteps * ui.value + zoomMin) / zoomLevel, false);
+         }
+     });
+
+    // Initialize Twipsy
+    $("a[rel=twipsy]").twipsy({live: true});
+    $('a[rel=twipsy]').twipsy('show');
+
+    $('#graph').live("mousedown", function(event) {
+        jQuery("#radial_menu").radmenu("hide");
+        $('.popover').remove();
+    });
+
+    fd.plot();
+
+}
 
 /**
  * Returns a new dummy node (makes showSimpleGraph() easier)
@@ -167,6 +288,51 @@ function newNode(data) {
     };
 }
 
+function radmenu_fadeIn (selectedEdge) {
+    jQuery("#radial_menu").radmenu(
+        "show",
+        function (items) {
+            items.fadeIn(400);
+        });
+}
+
+function radmenu_fadeOut () {
+    jQuery("#radial_menu").radmenu(
+        "hide",
+        function (items) {
+            items.fadeOut(4000);
+        }
+    );
+}
+
+function show_edge_radial_menu(eventInfo) {
+
+    var pos = eventInfo.getPos();
+
+    console.log(pos.x+" "+pos.y);
+    pos.x +=  (fd.canvas.getSize().width/2);
+    pos.y +=  (fd.canvas.getSize().height/2);
+    console.log(pos.x+" "+pos.y);
+
+    selectedEdge = eventInfo.getEdge();
+
+    //$("#" + given_node.id).addClass("nodeBoxSelected");
+
+    // Get the position of the placeholder element
+
+    jQuery("#radial_menu").radmenu("opts").radius = 30;
+
+    // show the menu directly over the placeholder
+
+    $("#radial_menu").css({
+                              "left": pos.x   + "px",
+                              "top": pos.y  + "px"
+                          }).show();
+
+     // jQuery("#radial_menu").radmenu("show");
+    radmenu_fadeIn(selectedEdge);
+    $("#radial_menu").disableSelection();
+}
 
 /**
  * Shows the graph, filtering nodes and edges by their relevance
@@ -259,7 +425,68 @@ function showSimpleGraph(minNodeRelevance, minEdgeRelevance, keepNodes) {
         onComplete: function() { fd.animate({'duration': 1000}); }
     });
 }
+// Zoom functions //
 
+/**
+ * Increments zoom by one step
+ */
+function incZoomSlider() {
+    var sliderValue = $("#slider-vertical").slider("value");
+    applyZoom(((zoomMax - zoomMin) / zoomSteps * (sliderValue + 1) + zoomMin) / zoomLevel, true);
+}
+
+
+/**
+ * Decrements zoom by one step
+ */
+function decZoomSlider() {
+    var sliderValue = $("#slider-vertical").slider("value");
+    applyZoom(((zoomMax - zoomMin) / zoomSteps * (sliderValue - 1) + zoomMin) / zoomLevel, true);
+}
+
+
+/**
+ * Applies the given zoom level to the canvas
+ * @param newLevel the new zoom level
+ * @param updateSlider whether to update the slider or not
+ */
+function applyZoom(newLevel, updateSlider) {
+    // Hides a radial menu when zoomed as the scaling does not quite work
+    jQuery("#radial_menu").radmenu("hide");
+    $('.popover').remove();
+
+    // Reset the zoom of the canvas if the canvas has been moved or resized
+    if (fd.canvas.scaleOffsetX != zoomLevel) {
+        newLevel = zoomLevel / fd.canvas.scaleOffsetX;
+    }
+
+    // Enforce zoom limits
+    else if (zoomLevel * newLevel < zoomMax && zoomLevel * newLevel > zoomMin) {
+        zoomLevel = zoomLevel * newLevel;
+    } else if (zoomLevel * newLevel > zoomMin) {
+        newLevel = zoomMax / zoomLevel;
+        zoomLevel = zoomMax;
+    } else {
+        newLevel = zoomMin / zoomLevel;
+        zoomLevel = zoomMin;
+    }
+
+    // Zoom the nodes with CSS3's transform
+    $("#infovis-label div.node")
+        .css("-webkit-transform", "scale(" + zoomLevel + ")")
+        .css("-moz-transform",    "scale(" + zoomLevel + ")")
+        .css("-ms-transform",     "scale(" + zoomLevel + ")")
+        .css("-o-transform",      "scale(" + zoomLevel + ")")
+        .css("transform",         "scale(" + zoomLevel + ")");
+
+    // Apply ForceDirected's zoom
+    fd.canvas.scale(newLevel, newLevel);
+
+    // Update the slider if necessary
+    if (updateSlider) {
+        $("#slider-vertical").slider("value", (zoomLevel - zoomMin) * zoomSteps / (zoomMax - zoomMin));
+    }
+}
 
 $(document).ready(function() {
     initGraph();

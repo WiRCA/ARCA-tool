@@ -127,6 +127,9 @@ editor.addRelationInfo2=Click another node to create relation or press ESC to ca
 editor.singlePoint=point
 editor.multiplePoints=points
 
+editor.openEdge=Open the edge
+editor.nameEdge=Edit a name for the edge
+
 RCACaseType.softwareProject=Software project
 RCACaseType.hr=Human resources related problem
 RCACaseType.other=Other
