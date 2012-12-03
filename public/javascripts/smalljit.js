@@ -8679,8 +8679,6 @@ $jit.ForceDirected.$extend = true;
                 dim = adj.getData('dim'),
                 direction = adj.data.$direction,
                 inv = true;
-
-            //from = this.edgeHelper.arrow.calculateArrowPosition(from, to, adj, inv);
             this.edgeHelper.line.render(from, to, canvas);
         },
       'contains': function(adj, pos) {

@@ -197,7 +197,6 @@ public class RCACase extends IdComparableModel {
         this.ownerId = owner.id;
         this.causes = new TreeSet<Cause>();
 	    this.URLHash = generateURLHash();
-        System.out.println("RCACase constructor called");
     }
 
 	/**

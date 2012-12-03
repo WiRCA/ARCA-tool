@@ -479,6 +479,12 @@ function insertClassificationHandler(data) {
 function removeClassificationHandler(data) {
     delete arca.classifications[data.id];
     $('select.classificationList option[value="' + data.id + '"]').remove();
+    if (data.dimension == 1) {
+        $('#addTagArea-' + data.id).remove();
+        $('#tagArea-' + data.id).remove();
+    } else {
+        $('#addTag-' + data.id).remove();
+    }
 }
 
 
@@ -487,11 +493,18 @@ function removeClassificationHandler(data) {
  * @param data JSON data as returned from the event stream
  */
 function editClassificationHandler(data) {
-    arca.classifications[data.id].name = data.name;
-    arca.classifications[data.id].dimension = data.dimension;
-    arca.classifications[data.id].abbreviation = data.abbreviation;
-    arca.classifications[data.id].explanation = data.explanation;
-    $('select.classificationList option[value="' + data.id + '"]').text(data.name);
+    if (arca.classifications[data.id].dimension != data.dimension) {
+        // If the dimension is changed, simply remove the old entry and readd it under the correct
+        // dimension, otherwise we'd have to repeat insertClassificationHandler() a lot here
+        removeClassificationHandler(data);
+        insertClassificationHandler(data);
+    } else {
+        arca.classifications[data.id].name = data.name;
+        arca.classifications[data.id].dimension = data.dimension;
+        arca.classifications[data.id].abbreviation = data.abbreviation;
+        arca.classifications[data.id].explanation = data.explanation;
+        $('select.classificationList option[value="' + data.id + '"]').text(data.name);
+    }
 }
 
 
@@ -889,7 +902,7 @@ function updateChildrenVectors (node) {
             updateChildrenVectors(adj.nodeTo);
         }
     });
-};
+}
 
 
 function radmenu_updateLikeButtons (selectedNode) {
@@ -1156,7 +1169,7 @@ function init() {
 
         Edge: {
             overridable: true,
-            type: 'arrow',
+            type: 'relationArrow',
             dim: 15,
             color: '#23A4FF',
             lineWidth: 2
@@ -1320,6 +1333,8 @@ function init() {
             node.data.$width = w;
         }
     });
+
+    implementEdgeTypes(fd);
 
 
     // Add slider functionality to the element

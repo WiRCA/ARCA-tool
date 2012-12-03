@@ -139,11 +139,10 @@ function initGraph() {
 
         Edge: {
             overridable: true,
-            type: 'line',
+            type: 'relationLine',
             dim: 75,
             color: '#23A4FF',
             lineWidth: 2
-
         },
 
         // Native canvas text styling
@@ -160,17 +159,17 @@ function initGraph() {
 
         // Add node events
         Events: {
-
             enableForEdges: true,
             enable: true,
 
             // Change cursor style when the mouse cursor is on a non-root node
-            onMouseEnter: function (node) {
+            onMouseEnter: function (node, eventInfo, e) {
+                console.log("pim pom");
                 fd.canvas.getElement().style.cursor = 'move';
             },
 
             // Restore mouse cursor when moving outside a node
-            onMouseLeave: function () {
+            onMouseLeave: function (node, eventInfo, e) {
                 fd.canvas.getElement().style.cursor = '';
             },
 
@@ -199,8 +198,9 @@ function initGraph() {
                 $jit.util.event.stop(e); // Stop the default touchmove event
                 this.onDragMove(node, eventInfo, e);
             },
+
             onClick: function(node, eventInfo, e) {
-                if(eventInfo.getEdge()) {
+                if (eventInfo.getEdge()) {
                     show_edge_radial_menu(eventInfo);
                     fd.plot();
                 } else {
@@ -214,7 +214,7 @@ function initGraph() {
         iterations: 30,
 
         // Edge length
-        levelDistance: 150,
+        levelDistance: 300,
 
         // Change node styles when DOM labels are placed or moved.
         onPlaceLabel: function (domElement, node) {
@@ -239,6 +239,7 @@ function initGraph() {
             $(domElement).html(node.name);
         }
     });
+    implementEdgeTypes();
 
     // Add slider functionality to the element
     $("#slider-vertical").slider({
@@ -278,7 +279,6 @@ function newNode(data) {
         adjacencies: [{
             nodeTo: 0,
             "data": {
-                "$type": "line",
                 "$dim": 15,
                 "$color": "#0000aa",
                 "weight": 3,
@@ -325,9 +325,9 @@ function show_edge_radial_menu(eventInfo) {
     // show the menu directly over the placeholder
 
     $("#radial_menu").css({
-                              "left": pos.x   + "px",
-                              "top": pos.y  + "px"
-                          }).show();
+        "left": pos.x   + "px",
+        "top": pos.y  + "px"
+    }).show();
 
      // jQuery("#radial_menu").radmenu("show");
     radmenu_fadeIn(selectedEdge);
@@ -386,7 +386,6 @@ function showSimpleGraph(minNodeRelevance, minEdgeRelevance, keepNodes) {
             graphData[created[first]].adjacencies.push({
                 nodeTo: second,
                 "data": {
-                    "$type": "line",
                     "$dim": 15,
                     "$color": "#23A4FF",
                     "weight": 2,

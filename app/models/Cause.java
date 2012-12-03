@@ -237,19 +237,19 @@ public class Cause extends LikableIdComparableModel {
 
 	/**
 	 * Adds a cause for a cause. If another already cause exists, it should be added with this method.
-	 *
-	 * @param cause cause to add.
-	 *
+	 * @param cause cause to add
 	 * @return returns the added cause
 	 */
 	public Cause addCause(Cause cause) {
 		Relation newRelation = new Relation(cause, this);
 		this.causeRelations.add(newRelation);
 		cause.effectRelations.add(newRelation);
+		newRelation.save();
 		cause.save();
 		this.save();
 		return cause;
 	}
+
 
 	/**
 	 * Deletes the cause from the relations of other causes.
@@ -263,9 +263,9 @@ public class Cause extends LikableIdComparableModel {
 		}
 	}
 
+
 	/**
 	 * Gets the creator of the cause
-	 *
 	 * @return the creator of the cause
 	 */
 	public User getCreator() {

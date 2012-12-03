@@ -216,6 +216,8 @@ public class ClassificationRelationMap {
 		}
 
 		// Construct the pair relation map
+		// In pair relation maps, the keys are in the form parent:child, as JavaScript and thus JSON only allows
+		// strings as
 		JsonObject pairRelations = new JsonObject();
 		for (ClassificationPair key : this.pairRelations.keySet()) {
 			child = new JsonObject();
@@ -233,5 +235,15 @@ public class ClassificationRelationMap {
 		out.add("simpleRelations", simpleRelations);
 		out.add("pairRelations", pairRelations);
 		return out.toString();
+	}
+
+
+	public HashMap<Classification, HashMap<Classification, ClassificationRelation>> getSimpleRelations() {
+		return simpleRelations;
+	}
+
+
+	public HashMap<ClassificationPair, HashMap<ClassificationPair, ClassificationRelation>> getPairRelations() {
+		return pairRelations;
 	}
 }

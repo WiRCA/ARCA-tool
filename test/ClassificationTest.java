@@ -19,7 +19,6 @@ public class ClassificationTest extends GenericRCAUnitTest {
 	@Before
 	public void setUp() {
 		name = "Planning";
-
 		abbreviation = "pla";
 		explanation = "In planning phase.";
 		classificationDimension = ClassificationDimension.valueOf(ClassificationDimension.WHERE_DIMENSION_ID);
