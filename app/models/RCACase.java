@@ -33,6 +33,7 @@ import org.hibernate.annotations.SortType;
 import play.cache.Cache;
 import play.data.validation.MaxSize;
 import play.data.validation.Required;
+import play.libs.Codec;
 import play.libs.F.IndexedEvent;
 import play.libs.F.Promise;
 import utils.IdComparableModel;
@@ -161,7 +162,7 @@ public class RCACase extends IdComparableModel {
      */
     public RCACase(User owner) {
         this.ownerId = owner.id;
-	    this.URLHash = generateURLHash();
+	    this.URLHash = Codec.UUID();
         this.causes = new TreeSet<Cause>();
     }
 
@@ -196,25 +197,9 @@ public class RCACase extends IdComparableModel {
         this.isCasePublic = isCasePublic;
         this.ownerId = owner.id;
         this.causes = new TreeSet<Cause>();
-	    this.URLHash = generateURLHash();
+	    this.URLHash = Codec.UUID();
         System.out.println("RCACase constructor called");
     }
-
-	/**
-	 * Generates unique URL hash code for the RCA case by using current time and owner id
-	 * @return URL Hash String
-	 */
-	public String generateURLHash() {
-		byte[] currentTime = ByteBuffer.allocate(8).putLong(System.currentTimeMillis()).array();
-		byte[] ownerEmail = (getOwner().email).getBytes();
-		byte[] combined = new byte[currentTime.length + ownerEmail.length];
-
-		System.arraycopy(currentTime, 0, combined, 0, currentTime.length);
-		System.arraycopy(ownerEmail, 0, combined, currentTime.length, ownerEmail.length);
-
-		UUID uuid = UUID.nameUUIDFromBytes(combined);
-		return (uuid.toString());
-	}
 
     /**
      * Returns the owner of the case.
