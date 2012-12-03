@@ -239,6 +239,7 @@
     padding: .4em;
     border-radius: 5px;
     font-weight: bold;
+    cursor: pointer;
 }
 
 #tagAreaMiddle {
@@ -297,6 +298,10 @@
     padding: .4em;
     border-radius: 5px;
     font-weight: bold;
+}
+
+#tagAreaRight:not(.disabled) > div {
+    cursor: pointer;
 }
 
 #tagAreaRight.disabled > div {
