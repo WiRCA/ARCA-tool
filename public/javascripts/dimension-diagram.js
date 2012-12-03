@@ -164,7 +164,6 @@ function initGraph() {
 
             // Change cursor style when the mouse cursor is on a non-root node
             onMouseEnter: function (node, eventInfo, e) {
-                console.log("pim pom");
                 fd.canvas.getElement().style.cursor = 'move';
             },
 
