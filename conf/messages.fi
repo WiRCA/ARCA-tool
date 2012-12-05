@@ -113,7 +113,7 @@ createRCA.description=Ongelman lyhyt kuvaus
 createRCA.companyName=Yrityksen nimi
 createRCA.companySize=Työntekijöiden määrä yrityksessänne?
 createRCA.companyProducts=Mitkä ovat yrityksenne päätuotteet tai tuotetyypit?
-createRCA.public=Onko tämä julkinen analyysi?
+createRCA.public=Pääsy kaikille, joilla on analyysin URL?
 createRCA.create=Luo analyysi!
 createRCA.isMultinational=Monikansallinen yritys?
 
@@ -252,6 +252,8 @@ classification.none=(ei mitään)
 dimensionDiagram.link=Luokitteludiagrammiin
 dimensionDiagram.help=Katsot analyysin luokittelupuuta -
 dimensionDiagram.back=takaisin normaalinäkymään
+
+dimensionDiagramConfiguration.link=Konfiguraatio
 
 contactPage.feedbackFormTitle=Ota meihin yhteyttä tai lähetä palautetta
 

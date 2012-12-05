@@ -105,7 +105,7 @@ createRCA.description=Short description of the problem
 createRCA.companyName=Company name
 createRCA.companySize=What is the amount of personnel in your company?
 createRCA.companyProducts=What are the main products or product types of the company?
-createRCA.public=Is this a public case?
+createRCA.public=Anyone with the case URL can access?
 createRCA.create=Create the case!
 createRCA.isMultinational=Multinational company?
 
@@ -252,6 +252,8 @@ classification.none=(none)
 dimensionDiagram.link=Classification diagram
 dimensionDiagram.help=You are looking at a case's classification diagram &ndash;
 dimensionDiagram.back=go back
+
+dimensionDiagramConfiguration.link=Configuration
 
 contactPage.feedbackFormTitle=Contact us or send feedback
 
