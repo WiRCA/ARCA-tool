@@ -304,6 +304,10 @@ function radmenu_fadeOut () {
     );
 }
 
+function configurationView() {
+    $('#configurationArea').slideToggle();
+}
+
 function show_edge_radial_menu(eventInfo) {
 
     var pos = eventInfo.getPos();
@@ -381,6 +385,14 @@ function showSimpleGraph(minNodeRelevance, minEdgeRelevance, keepNodes) {
                 created[second] = graphData.length - 1;
             }
 
+            var lineWidth;
+            // Check if relation lines should be weighted
+            if ($('input:radio[name=groupCauses]:checked').val() == "1") {
+                lineWidth = 1 + (Math.log(relationData.strength) / Math.log(2));
+            } else {
+                lineWidth = 1;
+            }
+
             // Add the adjacency
             graphData[created[first]].adjacencies.push({
                 nodeTo: second,
@@ -388,7 +400,7 @@ function showSimpleGraph(minNodeRelevance, minEdgeRelevance, keepNodes) {
                     "$dim": 15,
                     "$color": "#23A4FF",
                     "weight": 2,
-                    "$lineWidth": 1 + (Math.log(relationData.strength) / Math.log(2))
+                    "$lineWidth": lineWidth
                 }
             });
         }

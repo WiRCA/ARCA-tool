@@ -114,6 +114,7 @@
     <div class="clearfix${errors.forKey('rcaCase.isMultinational') ? ' error' : ''}" id="isMultinational-field">
         <label for="isMultinational">&{'createRCA.isMultinational'}</label>
         <div class="input">
+        <br>
         <input type="checkbox" name="rcaCase.isMultinational" id="isMultinational" value="true"
         ${flash['rcaCase.isMultinational'] ? 'checked="true"' : ''}/>
         #{ifError 'rcaCase.isMultinational'}<span class="help-inline">#{error 'rcaCase.isMultinational' /}</span>#{/ifError}
@@ -123,6 +124,7 @@
     <div class="clearfix${errors.forKey('rcaCase.isCasePublic') ? ' error' : ''}" id="public-field">
         <label for="isCasePublic">&{'createRCA.public'}</label>
         <div class="input">
+        <br>
         <input type="checkbox" name="rcaCase.isCasePublic" id="isCasePublic" value="true"
         ${flash['rcaCase.isCasePublic'] ? 'checked="true"' :''} />
         #{ifError 'rcaCase.isCasePublic'}<span class="help-inline">#{error 'rcaCase.isCasePublic' /}</span>#{/ifError}

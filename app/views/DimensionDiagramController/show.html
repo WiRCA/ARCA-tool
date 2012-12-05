@@ -96,7 +96,29 @@
             <img id="zoomout" src="@{'/public/images/zoom-out.png'}" onclick="decZoomSlider()" />
         </div>
 
+        <div id="configurationButton">
+            <img id="configurationImage" height="25" width="25" onclick="configurationView()" src="@{'/public/images/icons/cog.png'}" alt="&{'dimensionDiagramConfiguration.link'}" />
+        </div>
 
+        <div align="left" id="configurationArea" hidden=true>
+            <i>Number of Causes</i><br>
+            <b>
+                <input type="radio" name="groupCauses" value="1" onclick="showSimpleGraph(0, 0, [])" checked> Weighting<br>
+                <input type="radio" name="groupCauses" value="0" onclick="showSimpleGraph(0, 0, [])"> Off<br>
+            </b>
+            <br>
+            <i>Portion of Proposed Causes</i><br>
+            <b>
+                <input type="radio" name="groupProposed" value="1" checked> Color<br>
+                <input type="radio" name="groupProposed" value="0"> Off<br>
+            </b>
+            <br>
+            <i>Correction Ideas</i><br>
+            <b>
+                <input type="radio" name="groupCorrections" value="1" checked> Glow<br>
+                <input type="radio" name="groupCorrections" value="0"> Off<br>
+            </b>
+        </div>
 
         <script type="text/javascript">
 window.arca = {
