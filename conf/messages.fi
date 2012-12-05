@@ -113,7 +113,9 @@ createRCA.description=Ongelman lyhyt kuvaus
 createRCA.companyName=Yrityksen nimi
 createRCA.companySize=Työntekijöiden määrä yrityksessänne?
 createRCA.companyProducts=Mitkä ovat yrityksenne päätuotteet tai tuotetyypit?
-createRCA.public=Pääsy kaikille, joilla on analyysin URL?
+createRCA.public=Jakamisasetukset
+createRCA.publicYes=Jokaisella linkin saaneella on käyttöoikeus. Ei edellytä kirjautumista.
+createRCA.publicNo=Käyttöoikeus on vain nimenomaisesti käyttöoikeuden saaneilla. Edellyttää kirjautumista.
 createRCA.create=Luo analyysi!
 createRCA.isMultinational=Monikansallinen yritys?
 

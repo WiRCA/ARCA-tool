@@ -123,10 +123,9 @@
 
     <div class="clearfix${errors.forKey('rcaCase.isCasePublic') ? ' error' : ''}" id="public-field">
         <label for="isCasePublic">&{'createRCA.public'}</label>
-        <div class="input">
-        <br>
-        <input type="checkbox" name="rcaCase.isCasePublic" id="isCasePublic" value="true"
-        ${flash['rcaCase.isCasePublic'] ? 'checked="true"' :''} />
+        <div class="input" id="isCasePublic">
+        <input type="radio" id="isCasePublicYes" name="rcaCase.isCasePublic" value="true" ${flash['rcaCase.isCasePublic'] ? 'checked' :''}> &{'createRCA.publicYes'}<br>
+        <input type="radio" id="IsCasePublicNo" name="rcaCase.isCasePublic" value="false" ${flash['rcaCase.isCasePublic'] ? '' :'checked'}> &{'createRCA.publicNo'}<br>
         #{ifError 'rcaCase.isCasePublic'}<span class="help-inline">#{error 'rcaCase.isCasePublic' /}</span>#{/ifError}
         </div>
     </div>

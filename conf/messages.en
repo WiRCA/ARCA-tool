@@ -105,7 +105,9 @@ createRCA.description=Short description of the problem
 createRCA.companyName=Company name
 createRCA.companySize=What is the amount of personnel in your company?
 createRCA.companyProducts=What are the main products or product types of the company?
-createRCA.public=Anyone with the case URL can access?
+createRCA.public=Sharing Settings
+createRCA.publicYes=Anyone who has the link can access. No sign-in required.
+createRCA.publicNo=Only people explicitly granted permission can access. Sign-in required.
 createRCA.create=Create the case!
 createRCA.isMultinational=Multinational company?
 
