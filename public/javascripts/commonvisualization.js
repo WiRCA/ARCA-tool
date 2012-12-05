@@ -64,6 +64,7 @@ function implementEdgeTypes() {
                 ctx.lineTo(v2.x, v2.y);
                 ctx.lineTo(to.x, to.y);
                 ctx.closePath();
+
                 ctx.fill();
 
                 ctx.beginPath();
@@ -80,6 +81,7 @@ function implementEdgeTypes() {
                     mid = new $jit.Complex(from.x + (to.x - from.x) / 2, from.y + (to.y - from.y) / 2),
                     dim = adj.getData('dim');
                 var ctx = canvas.getCtx();
+                setGlow(ctx, "black", 0, 0, adj.getData('glow'));
                 ctx.beginPath();
                 ctx.moveTo(from.x, from.y);
                 ctx.lineTo(to.x, to.y);
@@ -88,6 +90,7 @@ function implementEdgeTypes() {
                 ctx.arc(mid.x, mid.y, 6, 0, 2 * Math.PI, true);
                 ctx.closePath();
                 ctx.fill();
+                setGlow(ctx, "black", 0, 0, 0);
             },
 
             'contains': function(adj, pos) {
@@ -101,4 +104,12 @@ function implementEdgeTypes() {
             }
         }
     });
+}
+
+// Set shadow to create a glow effect
+function setGlow(ctx, color, ox, oy, blur) {
+    ctx.shadowColor = color;
+    ctx.shadowOffsetX = ox;
+    ctx.shadowOffsetY = oy;
+    ctx.shadowBlur = blur;
 }
