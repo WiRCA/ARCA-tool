@@ -147,12 +147,14 @@
             var id = $(this).attr('id');
             $('#' + id + '_tag_' + key).remove();
             var keys = $(this).val().split(delimiter[id]);
-            keys.splice(keys.indexOf(key), 1);
-            $.fn.tagsInput.updateTagsField(this, keys);
+            if (keys.indexOf(key) != -1) {
+                keys.splice(keys.indexOf(key), 1);
+                $.fn.tagsInput.updateTagsField(this, keys);
 
-            if (tags_callbacks[id] && tags_callbacks[id]['onRemoveTag']) {
-                var f = tags_callbacks[id]['onRemoveTag'];
-                f.call(this, key);
+                if (tags_callbacks[id] && tags_callbacks[id]['onRemoveTag']) {
+                    var f = tags_callbacks[id]['onRemoveTag'];
+                    f.call(this, key);
+                }
             }
         });
 

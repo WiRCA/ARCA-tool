@@ -304,6 +304,10 @@ function radmenu_fadeOut () {
     );
 }
 
+function configurationView() {
+    $('#configurationArea').slideToggle();
+}
+
 function show_edge_radial_menu(eventInfo) {
 
     var pos = eventInfo.getPos();
@@ -381,14 +385,73 @@ function showSimpleGraph(minNodeRelevance, minEdgeRelevance, keepNodes) {
                 created[second] = graphData.length - 1;
             }
 
+            var lineWidth;
+            // Check if relation lines should be weighted
+            if ($('input:radio[name=groupCauses]:checked').val() == "1") {
+                lineWidth = 1 + (Math.log(relationData.strength) / Math.log(2));
+            } else {
+                lineWidth = 1;
+            }
+
+            var color;
+            // Check if relation should be colored because they are liked
+            if ($('input:radio[name=groupProposed]:checked').val() == "1") {
+                if (relationData.likes == 0) {
+                    color = "#000099";
+                }
+                if (relationData.likes > 0) {
+                    color = "#6666FF";
+                }
+                if (relationData.likes > 2) {
+                    color = "#CCCCFF";
+                }
+                if (relationData.likes > 5) {
+                    color = "#FF66FF";
+                }
+                if (relationData.likes > 9) {
+                    color = "#FF3399";
+                }
+                if (relationData.likes > 15) {
+                    color = "#FF0000";
+                }
+            } else {
+                color = "#0000aa";
+            }
+
+            var glow;
+            // Check if relation should be glowed because there are corrections
+            if ($('input:radio[name=groupCorrections]:checked').val() == "1") {
+                if (relationData.likes == 0) {
+                    glow = 0;
+                }
+                if (relationData.likes > 0) {
+                    glow = 5;
+                }
+                if (relationData.likes > 2) {
+                    glow = 10;
+                }
+                if (relationData.likes > 5) {
+                    glow = 15;
+                }
+                if (relationData.likes > 9) {
+                    glow = 20;
+                }
+                if (relationData.likes > 15) {
+                    glow = 25;
+                }
+            } else {
+                glow = 0;
+            }
+
             // Add the adjacency
             graphData[created[first]].adjacencies.push({
                 nodeTo: second,
                 "data": {
                     "$dim": 15,
-                    "$color": "#23A4FF",
+                    "$color": color,
                     "weight": 2,
-                    "$lineWidth": 1 + (Math.log(relationData.strength) / Math.log(2))
+                    "$lineWidth": lineWidth,
+                    "$glow": glow
                 }
             });
         }

@@ -182,6 +182,21 @@
     left: 3px;
 }
 
+#configurationButton {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+}
+
+#configurationArea {
+    position: absolute;
+    top: 80px;
+    right: 45px;
+    border-color: lightgray;
+    border-style: solid;
+    padding: 5px;
+}
+
 #dimensionButton {
     position: absolute;
     top: 43px;
@@ -239,6 +254,7 @@
     padding: .4em;
     border-radius: 5px;
     font-weight: bold;
+    cursor: pointer;
 }
 
 #tagAreaMiddle {
@@ -297,6 +313,10 @@
     padding: .4em;
     border-radius: 5px;
     font-weight: bold;
+}
+
+#tagAreaRight:not(.disabled) > div {
+    cursor: pointer;
 }
 
 #tagAreaRight.disabled > div {

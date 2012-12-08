@@ -282,35 +282,42 @@ public class CauseController extends Controller {
 		// Parse the raw string. The string should be a semicolon-delimited list of parent:child pairs delimited
 		// by a colon. If an invalid item is found, an error page is returned and the method terminated before any
 		// changes are done to the cause (ie. this method tries to be as atomic as possible).
-		String[] pairs = rawClassifications.split(";");
 		TreeSet<ClassificationPair> classificationPairs = new TreeSet<ClassificationPair>();
-		String[] pair;
-		Classification parent, child;
-		for (String rawPair : pairs) {
-			// Ensure that the length is correct
-			pair = rawPair.split(":");
-			if (pair.length != 2) {
-				error();
-				return;
-			}
+		if (rawClassifications.length() > 0) {
+			String[] pairs = rawClassifications.split(";");
+			String[] pair;
+			Classification parent, child;
+			for (String rawPair : pairs) {
+				// Ensure that the length is correct
+				pair = rawPair.split(":");
+				if (pair.length != 2) {
+					error();
+					return;
+				}
 
-			// Ensure that the parent ID is valid
-			parent = Classification.findById(Long.parseLong(pair[0]));
-			if (parent == null) {
-				error();
-				return;
-			}
+				// Ensure that the parent ID is valid
+				parent = Classification.findById(Long.parseLong(pair[0]));
+				if (parent == null) {
+					error();
+					return;
+				}
 
-			// Ensure that the child ID is valid
-			child = Classification.findById(Long.parseLong(pair[1]));
-			if (child == null) {
-				error();
-				return;
-			}
+				// Ensure that the child ID is valid
+				child = Classification.findById(Long.parseLong(pair[1]));
+				if (child == null) {
+					error();
+					return;
+				}
 
-			// Construct the pair and add to list
-			ClassificationPair finalPair = ClassificationPair.createFromClassifications(parent, child);
-			classificationPairs.add(finalPair);
+				// Construct the pair and add to list
+				ClassificationPair finalPair = ClassificationPair.createFromClassifications(parent, child);
+				classificationPairs.add(finalPair);
+			}
+		}
+
+		// If we get an empty rawClassifications, just remove all of the classifications
+		else {
+			classificationPairs = new TreeSet<ClassificationPair>();
 		}
 
 		cause.setClassifications(classificationPairs);

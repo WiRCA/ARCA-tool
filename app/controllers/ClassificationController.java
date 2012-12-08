@@ -78,7 +78,7 @@ public class ClassificationController extends Controller {
 		}
 
 		Classification classification = new Classification(rcaCase, name, SecurityController.getCurrentUser(),
-		                                                   type, abbreviation, explanation);
+		                                                   type, explanation, abbreviation);
 		classification.save();
 
 		AddClassificationEvent event = new AddClassificationEvent(classification.id, name, type,
@@ -139,7 +139,7 @@ public class ClassificationController extends Controller {
 		classification.save();
 
 		EditClassificationEvent event = new EditClassificationEvent(classification.id, name, type,
-		                                                          abbreviation, explanation);
+		                                                            abbreviation, explanation);
 		CauseStream causeEvents = rcaCase.getCauseStream();
 		causeEvents.getStream().publish(event);
 		Logger.debug("Classification %s (%s) edited for case %s", name, ClassificationDimension.valueOf(type),

@@ -145,7 +145,7 @@ function addCorrectiveIdea() {
         arca.ajax.addCorrectiveIdea(
             {toId: selectedNode.id, name: name, description: description}
         ),
-        function (data) {
+        function () {
             radmenu_fadeOut();
             $("#addcorrection-modal").modal('hide');
             $("#correction-help-message").show();
@@ -241,7 +241,7 @@ function tagCause() {
     $.getJSON(
         arca.ajax.tagCause({causeId: causeId,
                             classifications: constructTagString()})
-    ).success(function (data) {
+    ).success(function () {
         $('#tagcause-modal').modal('hide');
     });
 }
@@ -319,7 +319,10 @@ function readEventStream() {
     $.ajax({
         url: arca.ajax.waitMessage({lastReceived: arca.lastReceived}),
         success: function (events) {
+
             $(events).each(function () {
+                var oldNode, xPos, yPos;
+
                 if (this.data.type === 'deletecauseevent') {
                     fd.graph.removeNode(this.data.causeId);
                     fd.plot();
@@ -363,7 +366,7 @@ function readEventStream() {
                     };
                     arca.graphJson.push(newNode);
 
-                    var oldNode = fd.graph.getNode(this.data.causeFrom);
+                    oldNode = fd.graph.getNode(this.data.causeFrom);
                     var newNodesXCoordinate = 100;
                     var newNodesYCoordinate = 100;
                     fd.graph.addAdjacence(oldNode, newNode);
@@ -385,7 +388,7 @@ function readEventStream() {
                 }
 
                 else if (this.data.type === 'causeRenameEvent') {
-                    var oldNode = fd.graph.getNode(this.data.causeId);
+                    oldNode = fd.graph.getNode(this.data.causeId);
                     oldNode.name = this.data.newName;
                     $("#" + this.data.causeId).html(this.data.newName);
                 }
@@ -402,11 +405,11 @@ function readEventStream() {
                     nodeToMove.data.xCoordinate = intX;
                     nodeToMove.data.yCoordinate = intY;
                     if (nodeParent != undefined) {
-                        var xPos = nodeParent.getPos('end').x + intX;
-                        var yPos = nodeParent.getPos('end').y + intY;
+                        xPos = nodeParent.getPos('end').x + intX;
+                        yPos = nodeParent.getPos('end').y + intY;
                     } else {
-                        var xPos = intX;
-                        var yPos = intY;
+                        xPos = intX;
+                        yPos = intY;
                     }
 
                     var nodePos = new $jit.Complex(xPos, yPos);
@@ -447,16 +450,20 @@ function readEventStream() {
 
 
 /**
- * Inserts a classification to all relevant <select> elements, used as a stream event handler
+ * Inserts a classification to the frontend, used as a stream event handler
  * @param data JSON data as returned from the event stream
  */
 function insertClassificationHandler(data) {
+    // Add to the actual data
     arca.classifications[data.id] = {
-        name: data.name,
+        id: data.id,
+        title: data.name,
         dimension: data.dimension,
         abbreviation: data.abbreviation,
         explanation: data.explanation
     };
+
+    // Add to select elements
     var select = $('.classificationList.classificationType-' + data.dimension);
     select.each(function (i, e) {
         e = $(e);
@@ -464,26 +471,36 @@ function insertClassificationHandler(data) {
         e.append('<option value="' + data.id + '">' + data.name + '</option>');
     });
 
-    if (data.dimension == 1) {
-        $('#tagAreaLeft').append('<div id="addTagArea-' + data.id + '">' + data.name + '</div>').click(addTagArea);
+    if (data.dimension == 2) {
+        $('#tagAreaLeft').append('<div id="addTagArea-' + data.id + '">' + data.name + '</div>');
+        $('#addTagArea-' + data.id).click(addTagArea);
     } else {
-        $('#tagAreaRight').append('<div id="addTag-' + data.id + '">' + data.name + '</div>').click(addTag);
+        $('#tagAreaRight').append('<div id="addTag-' + data.id + '">' + data.name + '</div>')
+        $('#addTag-' + data.id).click(addTag);
     }
 }
 
 
 /**
- * Removes a classification from all <select> elements, used as a stream event handler
+ * Removes a classification from the frontend, used as a stream event handler
  * @param data JSON data as returned from the event stream
  */
 function removeClassificationHandler(data) {
+    // Remove from the actual data
     delete arca.classifications[data.id];
+
+    // Remove option elements
     $('select.classificationList option[value="' + data.id + '"]').remove();
+
+    // Remove from tag editor
     if (data.dimension == 1) {
-        $('#addTagArea-' + data.id).remove();
+        removeTagArea(data.id);
         $('#tagArea-' + data.id).remove();
     } else {
         $('#addTag-' + data.id).remove();
+        $('div[id^=childTags-]').each(function (i, e) {
+            $(e).removeTag(data.id);
+        });
     }
 }
 
@@ -494,16 +511,25 @@ function removeClassificationHandler(data) {
  */
 function editClassificationHandler(data) {
     if (arca.classifications[data.id].dimension != data.dimension) {
-        // If the dimension is changed, simply remove the old entry and readd it under the correct
+        // If the dimension is changed, simply remove the old entry and read it under the correct
         // dimension, otherwise we'd have to repeat insertClassificationHandler() a lot here
         removeClassificationHandler(data);
         insertClassificationHandler(data);
     } else {
-        arca.classifications[data.id].name = data.name;
+        // Edit the data
+        arca.classifications[data.id].title = data.name;
         arca.classifications[data.id].dimension = data.dimension;
         arca.classifications[data.id].abbreviation = data.abbreviation;
         arca.classifications[data.id].explanation = data.explanation;
+
+        // Rename select elements
         $('select.classificationList option[value="' + data.id + '"]').text(data.name);
+
+        // Rename tag editor's right side elements
+        $('#addTag-' + data.id).text(data.name);
+
+        // Rename tag editor's active tags
+        $('span[id$=_tag_' + data.id + '] span').text(data.name);
     }
 }
 
@@ -576,6 +602,7 @@ function populateTagEditor() {
 
     // Finally unselect all tag areas and update the right-side menu
     $('div[id^=tagArea-].selected').removeClass('selected');
+    $('#tagAreaRight').addClass('disabled');
     updateTagMenu();
 }
 
@@ -630,6 +657,8 @@ function addTagArea(e, batch) {
  * @param id numeric tag area ID
  */
 function removeTagArea(id) {
+    if ($('#childTags-' + id).length == 0) { return; }
+
     // If the tag area to be removed was selected, disable the right-side menu
     if ($('#tagArea-' + id).hasClass("selected")) {
         $('#tagAreaRight').addClass('disabled');
@@ -713,6 +742,7 @@ function updateTagMenu() {
     // No area selected, just add classifications in the correct dimension
     else {
         for (i in classifications) {
+            if (!classifications.hasOwnProperty(i)) { continue; }
             if (classifications[i].dimension == 1) {
                 filtered.push(classifications[i]);
             }
@@ -743,6 +773,7 @@ function addTag(evt) {
     } else {
         id = evt;
     }
+    console.log(id);
     $('#[id^=tagArea-].selected .childTags').addTag(id, arca.classifications[id].title);
     $(evt.delegateTarget).hide();
 }
@@ -754,7 +785,7 @@ function addTag(evt) {
  */
 function constructTagString() {
     var out = [];
-    var tags, id, i;
+    var tags, id;
 
     // Loop through each childTags input field, which have the actual tag data
     $('input[id^=childTags-]').each(function (i, e) {
@@ -901,7 +932,7 @@ function updateChildrenVectors (node) {
             adj.nodeTo.setPos(new $jit.Complex(xAdjPos, yAdjPos), 'end');
             updateChildrenVectors(adj.nodeTo);
         }
-    });
+    }, null, null);
 }
 
 
@@ -1045,7 +1076,6 @@ function init() {
     });
 
     $radial_menu = $("#radial_menu");
-    var menupos, menuwidth, relationFromNode;
 
     jQuery("#radial_menu").radmenu({
         // The list class inside which to look for menu items
@@ -1217,7 +1247,7 @@ function init() {
                 }
             },
 
-            onDragEnd: function (node, eventInfo, e) {
+            onDragEnd: function (node) {
                 var nodeParent = fd.graph.getNode(node.data.parent);
                 var xPos, yPos;
                 if (nodeParent != undefined) {
@@ -1249,6 +1279,7 @@ function init() {
 
             // Add the click handler for opening a radial menu for nodes
             onClick: function (node) {
+                var relationFromNode;
                 $("#help-message").hide();
                 if (node) {
                     if (relationFromNode) {
@@ -1265,7 +1296,7 @@ function init() {
                                 lineWidth: '5',
                                 color: '#4CC417'
                             });
-                        });
+                        }, null, null);
                         fd.plot();
                     }
                 } else {
@@ -1334,8 +1365,7 @@ function init() {
         }
     });
 
-    implementEdgeTypes(fd);
-
+    implementEdgeTypes();
 
     // Add slider functionality to the element
     $("#slider-vertical").slider({
@@ -1352,7 +1382,7 @@ function init() {
     // Initialize Twipsy
     $("a[rel=twipsy]").twipsy({live: true});
 
-    $('#infovis').live("mousedown", function(event) {
+    $('#infovis').live("mousedown", function() {
         jQuery("#radial_menu").radmenu("hide");
         $('.popover').remove();
         jQuery("#corrections_link").hide();
@@ -1362,7 +1392,6 @@ function init() {
         offset: 10,
         html: true
     }).click(function(e) {
-        isVisible = true; // TODO: $('div').visible() oslt?
         e.preventDefault();
     });
 
@@ -1393,7 +1422,7 @@ function init() {
             node.setPos(new $jit.Complex(0, -300 + nodeLevel * 80), 'current');
             node.setPos(new $jit.Complex(0, -300 + nodeLevel * 80), 'end');
         }
-    });
+    }, null, null);
 
     // Draw the arrows for each node
     var rootNode;
