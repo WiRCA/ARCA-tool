@@ -128,7 +128,7 @@ public class Bootstrap extends Job {
 	        testNode8.addCause(testNode6);
 	        testNode10.addCause(testNode6);
 
-
+	        // Some classifications for "firstRCACase"
 	        Classification testClassification1 = new Classification(firstRCACase,"Management",admin,ClassificationDimension.WHERE_DIMENSION_ID,
 	                                                            "MA", "MA");
 	        Classification testClassification2 = new Classification(firstRCACase,"Software Testing",admin,ClassificationDimension.WHERE_DIMENSION_ID,
