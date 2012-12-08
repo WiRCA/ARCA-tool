@@ -373,12 +373,12 @@ public class RCACase extends IdComparableModel {
 		for (Classification c : parentDimension) {
 			table.rowNames.add(c.name);
 		}
-		table.rowNames.add("Total:");
+		table.rowNames.add(play.i18n.Messages.get("classificationTablePage.total"));
 
 		for (Classification c : childDimension) {
 			table.colNames.add(c.name);
 		}
-		table.colNames.add("Total:");
+		table.colNames.add(play.i18n.Messages.get("classificationTablePage.total"));
 
 		int numberOfClassificationPairs = 0;
 
