@@ -52,6 +52,19 @@ helpPage.content= You can find the .pdf user manual covering all the aspects of 
 classificationTablePage.title=Classification Table
 classificationTablePage.help=You are looking at a case's classification table &ndash;
 classificationTablePage.back=go back
+classificationTablePage.causes=Percent of all causes
+classificationTablePage.liked=Percent of recommended causes
+classificationTablePage.corrections=Percent of causes with corrections
+classificationTablePage.mouseovertable=Percent of all classifications
+classificationTablePage.total=Total
+
+classificationTablePage.piechartforprocessareacauses=Percentages of causes by process area
+classificationTablePage.piechartforcauseclasscauses=Percentages of causes by cause class
+classificationTablePage.piechartforprocessarealiked=Percentages of recommended causes by process area
+classificationTablePage.piechartforcauseclassliked=Percentages of recommended causes by cause class
+classificationTablePage.piechartforprocessareacorrections=Percentages of causes with corrections by process area
+classificationTablePage.piechartforcauseclasscorrections=Percentages of causes with corrections by cause class
+
 
 aboutPage.title=About
 aboutPage.content1=ARCA tool has been implemented in co-operation with researchers and students from Aalto University. The tool is licensed under the MIT open source license. You can use, download, and modify the software without practical limitations. However, the names of contributors have to be listed. You can download the project from GitHub you can find from this forum.
