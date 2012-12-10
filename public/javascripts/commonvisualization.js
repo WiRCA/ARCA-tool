@@ -31,7 +31,7 @@ function implementEdgeTypes() {
                     to = adj.nodeTo.pos.clone().getc(true),
                     dim = adj.getData('dim'),
                     direction = adj.data.$direction,
-                    inv = (direction && direction.length>1 && direction[0] != adj.nodeFrom.id);
+                    inv = !(direction && direction.length>1 && direction[0] != adj.nodeFrom.id);
 
                 if (inv) {
                     from = this.edgeHelper.arrow.calculateArrowPosition(from, to, adj, inv);
