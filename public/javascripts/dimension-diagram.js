@@ -334,22 +334,22 @@ function show_edge_radial_menu(eventInfo) {
  * @return color string
  */
 function getColor(likes) {
-    if (likes == 0) {
-        return "#000099";
-    }
-    if (likes > 0) {
-        return "#6666FF";
-    }
-    if (likes > 2) {
-        return "#CCCCFF";
-    }
-    if (likes > 5) {
-        return "#FF66FF";
+    if (likes > 15) {
+        return "#FF0000";
     }
     if (likes > 9) {
         return "#FF3399";
     }
-    return "#FF0000";
+    if (likes > 5) {
+        return "#FF66FF";
+    }
+    if (likes > 2) {
+        return "#CCCCFF";
+    }
+    if (likes > 0) {
+        return "#6666FF";
+    }
+    return "#000099";
 }
 
 
@@ -359,22 +359,22 @@ function getColor(likes) {
  * @return a suitable glow strength number
  */
 function getGlow(corrections) {
-    if (corrections == 0) {
-        return 0;
-    }
-    if (corrections > 0) {
-        return 5;
-    }
-    if (corrections > 2) {
-        return 10;
-    }
-    if (corrections > 5) {
-        return 15;
+    if (corrections > 15) {
+        return 25;
     }
     if (corrections > 9) {
         return 20;
     }
-    return 25;
+    if (corrections > 5) {
+        return 15;
+    }
+    if (corrections > 2) {
+        return 10;
+    }
+    if (corrections > 0) {
+        return 5;
+    }
+    return 0;
 }
 
 
