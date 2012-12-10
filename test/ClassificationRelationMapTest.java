@@ -73,7 +73,7 @@ public class ClassificationRelationMapTest extends GenericRCAUnitTest {
 		causes.get(1).setClassifications(pairs);
 
 		ClassificationRelationMap map = ClassificationRelationMap.fromCase(testCase);
-		HashMap<Classification, HashMap<Classification, ClassificationRelationMap.ClassificationRelation>> relations =
+		Map<Classification, Map<Classification, ClassificationRelationMap.ClassificationRelation>> relations =
 				map.getSimpleRelations();
 
 		assertTrue(relations.containsKey(classification2));

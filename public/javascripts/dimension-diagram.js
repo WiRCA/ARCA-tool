@@ -275,15 +275,7 @@ function newNode(data) {
         id: data.id,
         name: data.title,
         data: data,
-        adjacencies: [{
-            nodeTo: 0,
-            "data": {
-                "$dim": 15,
-                "$color": "#0000aa",
-                "weight": 3,
-                "$lineWidth": 3
-            }
-        }]
+        adjacencies: []
     };
 }
 
@@ -312,10 +304,8 @@ function show_edge_radial_menu(eventInfo) {
 
     var pos = eventInfo.getPos();
 
-    console.log(pos.x+" "+pos.y);
     pos.x +=  (fd.canvas.getSize().width/2);
     pos.y +=  (fd.canvas.getSize().height/2);
-    console.log(pos.x+" "+pos.y);
 
     selectedEdge = eventInfo.getEdge();
 
@@ -337,6 +327,67 @@ function show_edge_radial_menu(eventInfo) {
     $("#radial_menu").disableSelection();
 }
 
+
+/**
+ * Returns a suitable color for an edge with the given amount of total node likes.
+ * @param likes the amount of likes the causes of a relation have
+ * @return color string
+ */
+function getColor(likes) {
+    if (likes == 0) {
+        return "#000099";
+    }
+    if (likes > 0) {
+        return "#6666FF";
+    }
+    if (likes > 2) {
+        return "#CCCCFF";
+    }
+    if (likes > 5) {
+        return "#FF66FF";
+    }
+    if (likes > 9) {
+        return "#FF3399";
+    }
+    return "#FF0000";
+}
+
+
+/**
+ * Returns a suitable glow amount for an edge with the given amount of corrections.
+ * @param corrections the amount of corrections the causes of a relation have
+ * @return a suitable glow strength number
+ */
+function getGlow(corrections) {
+    if (corrections == 0) {
+        return 0;
+    }
+    if (corrections > 0) {
+        return 5;
+    }
+    if (corrections > 2) {
+        return 10;
+    }
+    if (corrections > 5) {
+        return 15;
+    }
+    if (corrections > 9) {
+        return 20;
+    }
+    return 25;
+}
+
+
+/**
+ * Returns a suitable line width for a relation with the given strength
+ * @param strength the strength of a relation
+ * @return a suitable line width in pixels
+ */
+function getWeight(strength) {
+    return 1 + (Math.log(strength) / Math.log(2));
+}
+
+
 /**
  * Shows the graph, filtering nodes and edges by their relevance
  * @param minNodeRelevance minimum visible node relevance
@@ -347,24 +398,48 @@ function showSimpleGraph(minNodeRelevance, minEdgeRelevance, keepNodes) {
     var data = window.arca.relationMap.simpleRelations;
     var graphData = [window.arca.rootNode];
 
+    // Settings
+    var colorRelations = ($('input:radio[name=groupProposed]:checked').val() == "1");
+    var glowRelations = ($('input:radio[name=groupCorrections]:checked').val() == "1");
+    var weighRelations = ($('input:radio[name=groupCauses]:checked').val() == "1");
+
     // This stores the index of the classification node in graphData, keyed by the classification ID
     var created = [];
 
     // Placeholders
-    var firstNodeData, secondNodeData, relationData;
+    var firstNodeData, secondNodeData, relationData, color, glow;
 
     // Filter the relation data to the actual graph data
     for (var first in data) {
         if (!data.hasOwnProperty(first)) { continue; }
 
         // Filter irrelevant nodes
-        firstNodeData = window.arca.classifications[first];
+        firstNodeData = arca.classifications[first];
         if (firstNodeData.relevance < minNodeRelevance) { continue; }
 
         // Create the node if necessary
         if (!created.hasOwnProperty(first)) {
             graphData.push(newNode(firstNodeData));
             created[first] = graphData.length - 1;
+        }
+
+        // Add the root node connection if necessary
+        if (first in arca.relationMap.rootRelations) {
+            relationData = arca.relationMap.rootRelations[first];
+            color = weighRelations ? getColor(relationData.likes) : '#0000aa';
+            glow = glowRelations ? getGlow(relationData.corrections) : 0;
+            lineWidth = weighRelations ? getWeight(relationData.strength) : 1;
+
+            graphData[created[first]].adjacencies.push({
+                nodeTo: 0,
+                "data": {
+                    "$dim": 15,
+                    "$color": color,
+                    "$lineWidth": lineWidth,
+                    "$glow": glow,
+                    "weight": 2
+                }
+            });
         }
 
         for (var second in data[first]) {
@@ -387,58 +462,22 @@ function showSimpleGraph(minNodeRelevance, minEdgeRelevance, keepNodes) {
 
             var lineWidth;
             // Check if relation lines should be weighted
-            if ($('input:radio[name=groupCauses]:checked').val() == "1") {
-                lineWidth = 1 + (Math.log(relationData.strength) / Math.log(2));
+            if (weighRelations) {
+                lineWidth = getWeight(relationData.strength);
             } else {
                 lineWidth = 1;
             }
 
-            var color;
             // Check if relation should be colored because they are liked
-            if ($('input:radio[name=groupProposed]:checked').val() == "1") {
-                if (relationData.likes == 0) {
-                    color = "#000099";
-                }
-                if (relationData.likes > 0) {
-                    color = "#6666FF";
-                }
-                if (relationData.likes > 2) {
-                    color = "#CCCCFF";
-                }
-                if (relationData.likes > 5) {
-                    color = "#FF66FF";
-                }
-                if (relationData.likes > 9) {
-                    color = "#FF3399";
-                }
-                if (relationData.likes > 15) {
-                    color = "#FF0000";
-                }
+            if (colorRelations) {
+                color = getColor(relationData.likes);
             } else {
                 color = "#0000aa";
             }
 
-            var glow;
             // Check if relation should be glowed because there are corrections
-            if ($('input:radio[name=groupCorrections]:checked').val() == "1") {
-                if (relationData.likes == 0) {
-                    glow = 0;
-                }
-                if (relationData.likes > 0) {
-                    glow = 5;
-                }
-                if (relationData.likes > 2) {
-                    glow = 10;
-                }
-                if (relationData.likes > 5) {
-                    glow = 15;
-                }
-                if (relationData.likes > 9) {
-                    glow = 20;
-                }
-                if (relationData.likes > 15) {
-                    glow = 25;
-                }
+            if (glowRelations) {
+                glow = getGlow(relationData.corrections);
             } else {
                 glow = 0;
             }

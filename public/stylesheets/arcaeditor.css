@@ -390,6 +390,13 @@ div.tagsinput div {
     color: #90111A !important;
 }
 
+.classificationCharts {
+    float: left;
+    /*left: -80px;*/
+    width: 500px;
+    height: 250px;
+}
+
 #dimensionHelp, #classificationTableHelp {
     position: absolute;
     left: 0px;

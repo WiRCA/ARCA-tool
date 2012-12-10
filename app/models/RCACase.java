@@ -373,15 +373,18 @@ public class RCACase extends IdComparableModel {
 		for (Classification c : parentDimension) {
 			table.rowNames.add(c.name);
 		}
-		table.rowNames.add("Total:");
+		table.rowNames.add(play.i18n.Messages.get("classificationTablePage.total"));
 
 		for (Classification c : childDimension) {
 			table.colNames.add(c.name);
 		}
-		table.colNames.add("Total:");
+		table.colNames.add(play.i18n.Messages.get("classificationTablePage.total"));
+
+		int numberOfClassificationPairs = 0;
 
 		for (Cause cause : this.causes) {
 			SortedSet<ClassificationPair> pairs = cause.getClassifications();
+			numberOfClassificationPairs += pairs.size();
 			// Loop through all classification pairs for each cause
 			for (ClassificationPair pair : pairs) {
 				int i = parentDimension.indexOf(pair.parent);
@@ -402,7 +405,7 @@ public class RCACase extends IdComparableModel {
 				}
 			}
 		}
-		calculateClassificationTablePercentages(table);
+		calculateClassificationTablePercentages(table, numberOfClassificationPairs);
 
 		return table;
 	}
@@ -412,16 +415,16 @@ public class RCACase extends IdComparableModel {
 	 * that are used in the Classification Table
 	 * @param table ClassificationTable where percentages should be calculated
 	 */
-	private void calculateClassificationTablePercentages(ClassificationTable table) {
+	private void calculateClassificationTablePercentages(ClassificationTable table, int numberOfClassificationPairs) {
 		for (int i = 0; i < table.tableCells.length - 1; i++) {
 			ClassificationTable.TableCellObject totalColumnObject = table.tableCells[i][table.tableCells[i].length - 1];
 			for (int j = 0; j < table.tableCells[i].length - 1; j++) {
 				ClassificationTable.TableCellObject totalRowObject = table.tableCells[table.tableCells.length - 1][j];
 				ClassificationTable.TableCellObject currentCell = table.tableCells[i][j];
 
-				currentCell.percentOfCauses = (double)currentCell.numberOfCauses / this.causes.size() * 100.0;
-				currentCell.percentOfProposedCauses = (double)currentCell.numberOfProposedCauses / this.causes.size() * 100.0;
-				currentCell.percentOfCorrectionCauses = (double)currentCell.numberOfCorrectionCauses / this.causes.size() * 100.0;
+				currentCell.percentOfCauses = (double)currentCell.numberOfCauses / numberOfClassificationPairs * 100.0;
+				currentCell.percentOfProposedCauses = (double)currentCell.numberOfProposedCauses / numberOfClassificationPairs * 100.0;
+				currentCell.percentOfCorrectionCauses = (double)currentCell.numberOfCorrectionCauses / numberOfClassificationPairs * 100.0;
 				totalColumnObject.percentOfCauses += currentCell.percentOfCauses;
 				totalColumnObject.percentOfProposedCauses += currentCell.percentOfProposedCauses;
 				totalColumnObject.percentOfCorrectionCauses += currentCell.percentOfCorrectionCauses;

@@ -1,10 +1,116 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-        "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-  <title></title>
-</head>
-<body>
+//Test for Classification table page
 
-</body>
-</html>
+#{fixture delete:'all' /}
+#{selenium}
+
+//Log in as admin user
+
+open('/?language=en')
+assertElementPresent('id=signin')
+type('id=username','admin@local')
+type('id=password','admin')
+clickAndWait('id=signin')
+verifyTextPresent('Admin user')
+
+//create a new test case
+waitForTextPresent('Create new RCA case')
+clickAndWait('id=createRCACase-link'')
+type('id=caseName','testgraph')
+waitForTextPresent('Create the case!')
+clickAndWait('id=create!')
+waitTextPresent('testgraph')
+clickAndWait(('//*[text()="testgraph"]')
+
+//make three new causes
+waitForElementPresent('//div[@id='radmenu-event-addCause']')
+clickAndWait('//div[@id='radmenu-event-addCause']')
+type('id=causeName','node1')
+clickAt(('//*[text()="addcause-submit"]')
+waitTextPresent('node1')
+clickAndWait('node1')
+waitForElementPresent('//div[@id='radmenu-event-addCause']')
+clickAndWait('//div[@id='radmenu-event-addCause']')
+type('id=causeName','node2')
+clickAt(('//*[text()="addcause-submit"]')
+waitTextPresent('node2')
+clickAndWait('node1')
+waitForElementPresent('//div[@id='radmenu-event-addCause']')
+clickAndWait('//div[@id='radmenu-event-addCause']')
+type('id=causeName','node3'
+clickAt(('//*[text()="addcause-submit"]'))
+waitTextPresent('node3')
+
+//like first cause
+verifyTextNotPresent('points')
+verifyTextNotPresent('point')
+clickAt('//*[text()="node1"]')
+waitForElementPresent('css=div.radial_div > #radmenu-event-likeCause')
+click('css=div.radial_div > #radmenu-event-likeCause > a > img')
+waitForTextPresent('1 &{'editor.singlePoint'}')
+click('css=div.radial_div > #radmenu-event-likeCause > a > img')
+verifyTextPresent('points')
+
+//like third cause
+clickAt('//*[text()="node3"]')
+waitForElementPresent('css=div.radial_div > #radmenu-event-likeCause')
+click('css=div.radial_div > #radmenu-event-likeCause > a > img')
+waitForTextPresent('1 &{'editor.singlePoint'}')
+
+//add a 'what' classification
+clickAndWait('//div[@id='addTag']')
+waitForTextPresent('Add a classification')
+type('id=edit-classificationTitle','what1')
+clickAndWait('id=editClassification-edit')
+
+/add a 'where' classification
+waitForElementPresent('//div[@id='addTag']')
+clickAndWait('//div[@id='addTag']')
+waitForTextPresent('Add a classification')
+clickAndWait('//*[text()="What"]')
+waitForTextPresent('Where')
+clickAndWait('//*[text()="Where"]')
+type('id=edit-classificationTitle','where1')
+clickAndWait('id=editClassification-edit')
+
+//classify first cause
+clickAt('//*[text()="node1"]')
+waitForElementPresent('css=div.radial_div > #radmenu-event-tagCause')
+clickAndWait('css=div.radial_div > #radmenu-event-tagCause')
+waitForTextPresent('what1')
+waitForTextPresent('where1')
+clickAndWait('//*[text()="what1"]')
+clickAndWait('//*[text()="where1"]')
+clickAndWait('id=tagCauseButton')
+
+//classify second cause
+waitForTextPresent('node2')
+clickAndWait('//*[text()="node2"]')
+waitForElementPresent('css=div.radial_div > #radmenu-event-tagCause')
+clickAndWait('css=div.radial_div > #radmenu-event-tagCause')
+waitForTextPresent('Classify Cause")
+clickAndWait('id=tagCauseButton')
+waitForTextPresent('where1')
+clickAndWait('//*[text()="where1"]')
+
+//give a correction to second cause
+waitForTextPresent('node2')
+clickAndWait('//*[text()="node2"]')
+clickAndWait('css=div.radial_div > #radmenu-event-addCorrection')
+clickAndWait(id=ideaName)
+type('id=ideaName','korjausidea')
+clickAndWait('id=ideaDescription')
+type('id=ideaDescription','korjausideakuvaus')
+clickAt('id=submitCorrectiveActionButton')
+verifyTextPresent('testgraph')
+
+//check the table
+clickAndWait('id=tableButton')
+
+verifyTextPresent('Classification Table')
+verifyTextPresent('Percent of all causes')
+verifyTextPresent('Percent of liked causes')
+verifyTextPresent('Percent of causes with corrections')
+
+
+
+#{/selenium}

@@ -24,9 +24,7 @@
 
 package job;
 
-import models.Cause;
-import models.RCACase;
-import models.User;
+import models.*;
 import models.enums.CompanySize;
 import models.enums.RCACaseType;
 import play.Logger;
@@ -60,6 +58,32 @@ public class TutorialRCACaseJob extends Job {
         tutorialRCACase.save();
 		user.addRCACase(tutorialRCACase);
         user.save();
+
+		// Some classifications for "tutorialRCACase"
+		Classification testClassification1 = new Classification(tutorialRCACase,"Management",user, ClassificationDimension.WHERE_DIMENSION_ID,
+				                                         "Problems in Management", "MA");
+		Classification testClassification2 = new Classification(tutorialRCACase,"Software Testing",user,ClassificationDimension.WHERE_DIMENSION_ID,
+		                                                        "Problems in Testing", "ST");
+		Classification testClassification3 = new Classification(tutorialRCACase,"Implementation Work",user,ClassificationDimension.WHERE_DIMENSION_ID,
+		                                                        "Problems in Implementation", "IM");
+		Classification testClassification4 = new Classification(tutorialRCACase,"Work Practices",user,ClassificationDimension.WHAT_DIMENSION_ID,
+		                                                        "Problems in Work Practices", "WP");
+		Classification testClassification5 = new Classification(tutorialRCACase,"Methods",user,ClassificationDimension.WHAT_DIMENSION_ID,
+		                                                        "Problems in Methods", "ME");
+		Classification testClassification6 = new Classification(tutorialRCACase,"Task Priority",user,ClassificationDimension.WHAT_DIMENSION_ID,
+		                                                        "Problems in Task Prioritising", "TP");
+		Classification testClassification7 = new Classification(tutorialRCACase,"Monitoring",user,ClassificationDimension.WHAT_DIMENSION_ID,
+		                                                        "Problems in Monitoring", "MO");
+		Classification testClassification8 = new Classification(tutorialRCACase,"Co-operation",user,ClassificationDimension.WHAT_DIMENSION_ID,
+		                                                        "Problems in Co-operation", "CO");
+		testClassification1.save();
+		testClassification2.save();
+		testClassification3.save();
+		testClassification4.save();
+		testClassification5.save();
+		testClassification6.save();
+		testClassification7.save();
+		testClassification8.save();
 
         Cause activityNode = tutorialRCACase.problem
 	            .addCause("The activity menu can be accessed by clicking on a node (like this one)", user);
