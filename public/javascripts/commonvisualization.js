@@ -106,7 +106,15 @@ function implementEdgeTypes() {
     });
 }
 
-// Set shadow to create a glow effect
+/**
+ * Set shadow to create a glow effect. Please notice that the context element is left with the glow effect.
+ * Therefore setGlow should be called again with blur value 0 when glow isn't needed anymore.
+ * @param ctx Canvas context
+ * @param color Glow color
+ * @param ox Offset in x axis
+ * @param oy Offset in y axis
+ * @param blur Blur level
+ */
 function setGlow(ctx, color, ox, oy, blur) {
     ctx.shadowColor = color;
     ctx.shadowOffsetX = ox;
