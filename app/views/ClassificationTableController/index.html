@@ -154,7 +154,7 @@
                             if (percentOfCauses == 0) {
                                 $('<td> - </td>').appendTo(tr);
                             } else {
-                                $('<td title="&{'classificationTablePage.causes'}">' + percentOfCauses + ' %</td>').appendTo(tr);
+                                $('<td id="causes' + (r + 1) + '_' + (c + 1) + '" title="&{'classificationTablePage.causes'}">' + percentOfCauses + ' %</td>').appendTo(tr);
                                 if (c == cols - 1) {
                                     pieSlice.push(percentOfCauses);
                                     percentOfCausesRowDataArray.push(pieSlice.slice());
