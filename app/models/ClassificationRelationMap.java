@@ -24,32 +24,36 @@
 
 package models;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import play.Logger;
+import com.google.gson.JsonPrimitive;
 
-import java.util.HashMap;
-import java.util.SortedSet;
+import java.util.*;
 
 public class ClassificationRelationMap {
 	/**
 	 * Simple relations from a WHERE classification to another
 	 */
-	private HashMap<Classification, HashMap<Classification, ClassificationRelation>> simpleRelations;
+	private Map<Classification, Map<Classification, ClassificationRelation>> simpleRelations;
 
 	/**
 	 * Relations from a WHERE-WHAT classification pair to another
 	 */
-	private HashMap<ClassificationPair, HashMap<ClassificationPair, ClassificationRelation>> pairRelations;
+	private Map<ClassificationPair, Map<ClassificationPair, ClassificationRelation>> pairRelations;
+
+	/**
+	 * WHERE classifications connected to the root
+	 */
+	private Map<Classification, ClassificationRelation> rootRelations;
 
 
 	/**
 	 * Constructor, creates an empty map
 	 */
 	public ClassificationRelationMap() {
-		this.simpleRelations = new HashMap<Classification, HashMap<Classification, ClassificationRelation>>();
-		this.pairRelations = new HashMap<ClassificationPair, HashMap<ClassificationPair, ClassificationRelation>>();
+		this.simpleRelations = new HashMap<Classification, Map<Classification, ClassificationRelation>>();
+		this.pairRelations = new HashMap<ClassificationPair, Map<ClassificationPair, ClassificationRelation>>();
+		this.rootRelations = new HashMap<Classification, ClassificationRelation>();
 	}
 
 
@@ -76,7 +80,7 @@ public class ClassificationRelationMap {
 
 		// Create the simple relation with zero relation strength and likes if it does not exist
 		if (!this.simpleRelations.get(first.parent).containsKey(second.parent)) {
-			this.simpleRelations.get(first.parent).put(second.parent, new ClassificationRelation(0, 0));
+			this.simpleRelations.get(first.parent).put(second.parent, new ClassificationRelation(0, 0, 0));
 		}
 
 		// Add the simple relation
@@ -89,11 +93,25 @@ public class ClassificationRelationMap {
 
 		// Create the pair relation with zero strength and likes if it does not exist
 		if (!this.pairRelations.get(first).containsKey(second)) {
-			this.pairRelations.get(first).put(second, new ClassificationRelation(0, 0));
+			this.pairRelations.get(first).put(second, new ClassificationRelation(0, 0, 0));
 		}
 
 		// Add the pair relation
 		this.pairRelations.get(first).get(second).add(relation);
+	}
+
+
+	/**
+	 * Adds a new root relation to the map or updates an existing one if present.
+	 * @param classification a (WHERE) classification connected to the root
+	 * @param relationData the strength and likes of a relation
+	 */
+	public void addRootRelation(Classification classification, ClassificationRelation relationData) {
+		if (this.rootRelations.containsKey(classification)) {
+			this.rootRelations.get(classification).add(relationData);
+		} else {
+			this.rootRelations.put(classification, relationData);
+		}
 	}
 
 
@@ -125,16 +143,29 @@ public class ClassificationRelationMap {
 		ClassificationRelationMap map = new ClassificationRelationMap();
 
 		// Temporary variables
-		Cause causeTo;
+		Cause causeFrom;
 		ClassificationRelation relationData;
 
 		// Loop through the causes and their relations, only considering "to" relations so we don't get duplicates
 		// (This is a slight performance loss as all causes have both ways of relations known, but it is most
 		// probably negligible.)
+		// As "from" and "to" are rather ambiguous terms within this project, in this case "to" is always the direction
+		// where the arrow points (...at the moment :o), which is towards the root node.
 		SortedSet<Cause> causes = rcaCase.causes;
-		for (Cause causeFrom : causes) {
-			for (Relation relation : causeFrom.effectRelations) {
-				causeTo = relation.causeTo;
+		for (Cause causeTo : causes) {
+			for (Relation relation : causeTo.causeRelations) {
+				causeFrom = relation.causeFrom;
+
+				// Add the root relations to the map if the to cause is the root node
+				if (causeTo == rcaCase.problem) {
+					for (ClassificationPair fromPair : causeFrom.classifications) {
+						relationData = new ClassificationRelation(
+							1, causeFrom.likes.size() + causeTo.likes.size(),
+						    causeFrom.corrections.size() + causeTo.corrections.size()
+						);
+						map.addRootRelation(fromPair.parent, relationData);
+					}
+				}
 
 				// Add relations to all of the combinations between the classification pairs of the related
 				// causes. Funky.
@@ -143,7 +174,10 @@ public class ClassificationRelationMap {
 						// The relation strength for these two is one, as we're only handling one pair of
 						// classification pairs here, and the amount of likes is the amount of likes for the two
 						// causes combined.
-						relationData = new ClassificationRelation(1, causeFrom.likes.size() + causeTo.likes.size());
+						relationData = new ClassificationRelation(
+							1, causeFrom.likes.size() + causeTo.likes.size(),
+						    causeFrom.corrections.size() + causeTo.corrections.size()
+						);
 						map.addRelation(fromPair, toPair, relationData);
 					}
 				}
@@ -168,15 +202,22 @@ public class ClassificationRelationMap {
 		 */
 		public int likes;
 
+		/**
+		 * The amount of corrections of the causes classified by the classifications of the relation
+		 */
+		public int corrections;
+
 
 		/**
 		 * Constructor of the class
 		 * @param strength the strength of the relation (ie. the amount of relations)
 		 * @param likes the amount of likes of the causes with the relevant classifications
+		 * @param corrections the amount of corrections of the causes
 		 */
-		public ClassificationRelation(int strength, int likes) {
+		public ClassificationRelation(int strength, int likes, int corrections) {
 			this.strength = strength;
 			this.likes = likes;
+			this.corrections = corrections;
 		}
 
 
@@ -187,6 +228,7 @@ public class ClassificationRelationMap {
 		public void add(ClassificationRelation other) {
 			this.strength += other.strength;
 			this.likes += other.likes;
+			this.corrections += other.corrections;
 		}
 	}
 
@@ -210,6 +252,7 @@ public class ClassificationRelationMap {
 				grandChild = new JsonObject();
 				grandChild.addProperty("strength", relation.strength);
 				grandChild.addProperty("likes", relation.likes);
+				grandChild.addProperty("corrections", relation.corrections);
 				child.add(subKey.id.toString(), grandChild);
 			}
 			simpleRelations.add(key.id.toString(), child);
@@ -226,24 +269,39 @@ public class ClassificationRelationMap {
 				grandChild = new JsonObject();
 				grandChild.addProperty("strength", relation.strength);
 				grandChild.addProperty("likes", relation.likes);
+				grandChild.addProperty("corrections", relation.corrections);
 				child.add(subKey.parent.id + ":" + subKey.child.id, grandChild);
 			}
 			pairRelations.add(key.parent.id + ":" + key.child.id, child);
 		}
 
+		// Construct the root relation object
+		JsonObject rootRelations = new JsonObject();
+		for (Classification classification : this.rootRelations.keySet()) {
+			child = new JsonObject();
+			relation = this.rootRelations.get(classification);
+			child.addProperty("strength", relation.strength);
+			child.addProperty("likes", relation.likes);
+			child.addProperty("corrections", relation.corrections);
+
+			// The node IDs are encoded as strings, so coerce to string here
+			rootRelations.add(classification.id.toString(), child);
+		}
+
 		// Return
 		out.add("simpleRelations", simpleRelations);
 		out.add("pairRelations", pairRelations);
+		out.add("rootRelations", rootRelations);
 		return out.toString();
 	}
 
 
-	public HashMap<Classification, HashMap<Classification, ClassificationRelation>> getSimpleRelations() {
+	public Map<Classification, Map<Classification, ClassificationRelation>> getSimpleRelations() {
 		return simpleRelations;
 	}
 
 
-	public HashMap<ClassificationPair, HashMap<ClassificationPair, ClassificationRelation>> getPairRelations() {
+	public Map<ClassificationPair, Map<ClassificationPair, ClassificationRelation>> getPairRelations() {
 		return pairRelations;
 	}
 }

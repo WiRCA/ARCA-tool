@@ -235,6 +235,7 @@ public class Cause extends LikableIdComparableModel {
 		return newCause;
 	}
 
+
 	/**
 	 * Adds a cause for a cause. If another already cause exists, it should be added with this method.
 	 * @param cause cause to add
@@ -272,6 +273,7 @@ public class Cause extends LikableIdComparableModel {
 		return creatorId != null ? (User) User.findById(creatorId) : null;
 	}
 
+
 	/**
 	 * Returns the children of this cause.
 	 *
@@ -302,8 +304,9 @@ public class Cause extends LikableIdComparableModel {
 		return relations;
 	}
 
+
 	/**
-	 * returns the parent of this cause.
+	 * Returns the parent of this cause.
 	 *
 	 * @return the parent of this cause
 	 */
@@ -317,6 +320,7 @@ public class Cause extends LikableIdComparableModel {
 		}
 	}
 
+
 	/**
 	 * Checks if the cause is the parent of this cause.
 	 *
@@ -329,6 +333,7 @@ public class Cause extends LikableIdComparableModel {
 		return parent != null && parent.equals(cause);
 	}
 
+
 	/**
 	 * Returns the status of the cause
 	 *
@@ -337,6 +342,7 @@ public class Cause extends LikableIdComparableModel {
 	public StatusOfCause getStatus() {
 		return StatusOfCause.valueOf(statusValue);
 	}
+
 
 	/**
 	 * Set the status of the cause
@@ -347,6 +353,7 @@ public class Cause extends LikableIdComparableModel {
 		this.statusValue = status.value;
 	}
 
+
 	/**
 	* Basic toString method
 	* @return the name, id and the rca case of the case
@@ -355,5 +362,4 @@ public class Cause extends LikableIdComparableModel {
 	public String toString() {
 		return name + " (id: " + id + ", rca case: " + rcaCase + ")";
 	}
-
 }
