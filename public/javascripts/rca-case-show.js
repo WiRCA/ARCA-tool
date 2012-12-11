@@ -525,10 +525,13 @@ function editClassificationHandler(data) {
         // Rename select elements
         $('select.classificationList option[value="' + data.id + '"]').text(data.name);
 
-        // Rename tag editor's right side elements
+        // Rename tag editor's left side element
+        $('#addTagArea-' + data.id).text(data.name);
+
+        // Rename tag editor's right side element
         $('#addTag-' + data.id).text(data.name);
 
-        // Rename tag editor's active tags
+        // Rename tag editor's active tag
         $('span[id$=_tag_' + data.id + '] span').text(data.name);
     }
 }
