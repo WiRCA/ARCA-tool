@@ -39,6 +39,8 @@ var $radial_menu;
 var fd;
 // Selected node data
 var selectedNode;
+// The current "from" node for adding relations
+var relationFromNode = null;
 
 // AJAX functions //
 
@@ -334,8 +336,8 @@ function readEventStream() {
                         fd.graph.getNode(this.data.causeFrom),
                         fd.graph.getNode(this.data.causeTo),
                         {
-                            "$type": "arrow",
-                            "$direction": [this.data.causeFrom, this.data.causeTo],
+                            "$type": "relationArrow",
+                            "$direction": [this.data.causeTo, this.data.causeFrom],
                             "$dim": 15,
                             "$color": "#23A4FF",
                             "weight": 1
@@ -1227,11 +1229,11 @@ function init() {
         Events: {
             enable: true,
 
-            // Change cursor style when the mouse cursor is on a non-root node
+            // Change cursor style when the mouse cursor is on a non-root node and we're not in relation mode
             onMouseEnter: function (node) {
-                if (node.data.isRootNode) {
+                if (node.data.isRootNode || relationFromNode) {
                     fd.canvas.getElement().style.cursor = 'pointer';
-                } else {
+                } else if (!relationFromNode) {
                     fd.canvas.getElement().style.cursor = 'move';
                 }
             },
@@ -1285,7 +1287,6 @@ function init() {
 
             // Add the click handler for opening a radial menu for nodes
             onClick: function (node) {
-                var relationFromNode;
                 $("#help-message").hide();
                 if (node) {
                     if (relationFromNode) {
@@ -1523,12 +1524,6 @@ $(document).ready(function () {
         keyboard: true,
         backdrop: true,
         show: false
-    }).bind('shown', function() {
-        var index = findCause(selectedNode.id);
-        if (index === null) { return; }
-        var data = arca.graphJson[index].data;
-        $('#tag-causeClassification-1').val(data.classification1);
-        $('#tag-causeClassification-2').val(data.classification2);
     });
 
     initTagEditor();
