@@ -43,6 +43,8 @@ var selectedEdge;
 var fd;
 // Selected node data
 var selectedNode;
+// The current "from" node for adding relations
+var relationFromNode = null;
 
 // AJAX functions //
 
