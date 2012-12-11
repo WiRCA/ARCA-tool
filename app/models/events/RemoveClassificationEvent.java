@@ -31,8 +31,14 @@ public class RemoveClassificationEvent extends Event {
 	 */
 	public Long id;
 
-	public RemoveClassificationEvent(Long id) {
+	/**
+	 * the classification dimension
+	 */
+	public int dimension;
+
+	public RemoveClassificationEvent(Long id, int dimension) {
 		super("removeclassificationevent");
 		this.id = id;
+		this.dimension = dimension;
 	}
 }

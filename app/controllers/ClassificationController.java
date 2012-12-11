@@ -176,7 +176,8 @@ public class ClassificationController extends Controller {
 		}
 		classification.delete();
 
-		RemoveClassificationEvent event = new RemoveClassificationEvent(classification.id);
+		RemoveClassificationEvent event = new RemoveClassificationEvent(classification.id,
+		                                                                classification.classificationDimension);
 		CauseStream causeEvents = rcaCase.getCauseStream();
 		causeEvents.getStream().publish(event);
 		Logger.debug("Classification #%d removed from case %s", classificationId, rcaCase.caseName);

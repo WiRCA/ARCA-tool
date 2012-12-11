@@ -498,9 +498,9 @@ function removeClassificationHandler(data) {
     $('select.classificationList option[value="' + data.id + '"]').remove();
 
     // Remove from tag editor
-    if (data.dimension == 1) {
+    if (data.dimension == 2) {
         removeTagArea(data.id);
-        $('#tagArea-' + data.id).remove();
+        $('#addTagArea-' + data.id).remove();
     } else {
         $('#addTag-' + data.id).remove();
         $('div[id^=childTags-]').each(function (i, e) {
