@@ -345,8 +345,8 @@ function readEventStream() {
                         fd.graph.getNode(this.data.causeFrom),
                         fd.graph.getNode(this.data.causeTo),
                         {
-                            "$type": "arrow",
-                            "$direction": [this.data.causeFrom, this.data.causeTo],
+                            "$type": "relationArrow",
+                            "$direction": [this.data.causeTo, this.data.causeFrom],
                             "$dim": 15,
                             "$color": "#23A4FF",
                             "weight": 1
@@ -483,8 +483,11 @@ function insertClassificationHandler(data) {
     });
 
     if (data.dimension == 2) {
-        $('#tagAreaLeft').append('<div id="addTagArea-' + data.id + '">' + data.name + '</div>');
-        $('#addTagArea-' + data.id).click(addTagArea);
+        // Add the tag area if it doesn't exist already
+        if ($('#addTagArea-' + data.id).length == 0) {
+            $('#tagAreaLeft').append('<div id="addTagArea-' + data.id + '">' + data.name + '</div>');
+            $('#addTagArea-' + data.id).click(addTagArea);
+        }
     } else {
         $('#tagAreaRight').append('<div id="addTag-' + data.id + '">' + data.name + '</div>')
         $('#addTag-' + data.id).click(addTag);
@@ -504,9 +507,9 @@ function removeClassificationHandler(data) {
     $('select.classificationList option[value="' + data.id + '"]').remove();
 
     // Remove from tag editor
-    if (data.dimension == 1) {
+    if (data.dimension == 2) {
         removeTagArea(data.id);
-        $('#tagArea-' + data.id).remove();
+        $('#addTagArea-' + data.id).remove();
     } else {
         $('#addTag-' + data.id).remove();
         $('div[id^=childTags-]').each(function (i, e) {
@@ -855,7 +858,7 @@ function countParentNodes(node) {
  * @param count the new amount of likes
  */
 function updateLikes(id, count) {
-    var likeBox = $("#" + id + " div.label");
+    var likeBox = $("#likeBox-" + id);
     if (count > 0) {
         if (count > 1) {
             likeBox.text(count + arca.multiplePoints);
@@ -1322,11 +1325,11 @@ function init() {
         Events: {
             enable: true,
 
-            // Change cursor style when the mouse cursor is on a non-root node
+            // Change cursor style when the mouse cursor is on a non-root node and we're not in relation mode
             onMouseEnter: function (node) {
-                if (node.data.isRootNode) {
+                if (node.data.isRootNode || relationFromNode) {
                     fd.canvas.getElement().style.cursor = 'pointer';
-                } else {
+                } else if (!relationFromNode) {
                     fd.canvas.getElement().style.cursor = 'move';
                 }
             },
@@ -1382,7 +1385,6 @@ function init() {
             // Add the click handler for opening a radial menu for nodes
             onClick: function (node, eventInfo, e) {
 
-                var relationFromNode;
                 $("#help-message").hide();
                 if (node) {
                     if (relationFromNode) {
@@ -1450,8 +1452,8 @@ function init() {
 
             // Add the like box to the node if there are any
             $(domElement).append(
-                "<div id='likeBoxWrapper'>" +
-                    "<div id='likeBox' class='label success'>" +
+                "<div id='likeBoxWrapper-" + node.id + "' class='likeBoxWrapper'>" +
+                    "<div id='likeBox-" + node.id + "' class='likeBox label success'>" +
                         node.data.likeCount + " " + pointString +
                     "</div>" +
                 "</div>");
@@ -1628,12 +1630,6 @@ $(document).ready(function () {
         keyboard: true,
         backdrop: true,
         show: false
-    }).bind('shown', function() {
-        var index = findCause(selectedNode.id);
-        if (index === null) { return; }
-        var data = arca.graphJson[index].data;
-        $('#tag-causeClassification-1').val(data.classification1);
-        $('#tag-causeClassification-2').val(data.classification2);
     });
 
     initTagEditor();
