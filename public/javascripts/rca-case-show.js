@@ -849,7 +849,7 @@ function countParentNodes(node) {
  * @param count the new amount of likes
  */
 function updateLikes(id, count) {
-    var likeBox = $("#" + id + " div.label");
+    var likeBox = $("#likeBox-" + id);
     if (count > 0) {
         if (count > 1) {
             likeBox.text(count + arca.multiplePoints);
@@ -1347,8 +1347,8 @@ function init() {
 
             // Add the like box to the node if there are any
             $(domElement).append(
-                "<div id='likeBoxWrapper'>" +
-                    "<div id='likeBox' class='label success'>" +
+                "<div id='likeBoxWrapper-" + node.id + "' class='likeBoxWrapper'>" +
+                    "<div id='likeBox-" + node.id + "' class='likeBox label success'>" +
                         node.data.likeCount + " " + pointString +
                     "</div>" +
                 "</div>");
