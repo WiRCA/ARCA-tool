@@ -35,12 +35,14 @@ var zoomMax = 2;
 var zoomSteps = 64;
 // Placeholder for the #radial_menu jQuery object
 var $radial_menu;
+// Placeholder for the #radial_menu_relation jQuery object
+var $radial_menu_relation;
+// Placeholder for the ForceDirected object
+var selectedEdge;
 // Placeholder for the ForceDirected object
 var fd;
 // Selected node data
 var selectedNode;
-// The current "from" node for adding relations
-var relationFromNode = null;
 
 // AJAX functions //
 
@@ -276,6 +278,7 @@ function decZoomSlider() {
 function applyZoom(newLevel, updateSlider) {
     // Hides a radial menu when zoomed as the scaling does not quite work
     jQuery("#radial_menu").radmenu("hide");
+    jQuery("#radial_menu_relation").radmenu("hide");
     $('.popover').remove();
 
     // Reset the zoom of the canvas if the canvas has been moved or resized
@@ -331,13 +334,19 @@ function readEventStream() {
                     $("div.node#" + this.data.causeId).remove();
                 }
 
+                else if (this.data.type === 'deleterelationevent') {
+                    console.log(this.data.causeId + ", " + this.data.toId);
+                    fd.graph.removeAdjacence(this.data.causeId, this.data.toId);
+                    fd.plot();
+                }
+
                 else if (this.data.type === 'addrelationevent') {
                     fd.graph.addAdjacence(
                         fd.graph.getNode(this.data.causeFrom),
                         fd.graph.getNode(this.data.causeTo),
                         {
-                            "$type": "relationArrow",
-                            "$direction": [this.data.causeTo, this.data.causeFrom],
+                            "$type": "arrow",
+                            "$direction": [this.data.causeFrom, this.data.causeTo],
                             "$dim": 15,
                             "$color": "#23A4FF",
                             "weight": 1
@@ -474,11 +483,8 @@ function insertClassificationHandler(data) {
     });
 
     if (data.dimension == 2) {
-        // Add the tag area if it doesn't exist already
-        if ($('#addTagArea-' + data.id).length == 0) {
-            $('#tagAreaLeft').append('<div id="addTagArea-' + data.id + '">' + data.name + '</div>');
-            $('#addTagArea-' + data.id).click(addTagArea);
-        }
+        $('#tagAreaLeft').append('<div id="addTagArea-' + data.id + '">' + data.name + '</div>');
+        $('#addTagArea-' + data.id).click(addTagArea);
     } else {
         $('#tagAreaRight').append('<div id="addTag-' + data.id + '">' + data.name + '</div>')
         $('#addTag-' + data.id).click(addTag);
@@ -498,9 +504,9 @@ function removeClassificationHandler(data) {
     $('select.classificationList option[value="' + data.id + '"]').remove();
 
     // Remove from tag editor
-    if (data.dimension == 2) {
+    if (data.dimension == 1) {
         removeTagArea(data.id);
-        $('#addTagArea-' + data.id).remove();
+        $('#tagArea-' + data.id).remove();
     } else {
         $('#addTag-' + data.id).remove();
         $('div[id^=childTags-]').each(function (i, e) {
@@ -849,7 +855,7 @@ function countParentNodes(node) {
  * @param count the new amount of likes
  */
 function updateLikes(id, count) {
-    var likeBox = $("#likeBox-" + id);
+    var likeBox = $("#" + id + " div.label");
     if (count > 0) {
         if (count > 1) {
             likeBox.text(count + arca.multiplePoints);
@@ -978,6 +984,23 @@ function radmenu_fadeOut () {
     );
 }
 
+function radmenu_relation_fadeOut () {
+    jQuery("#radial_menu_relation").radmenu(
+        "hide",
+        function (items) {
+            items.fadeOut(4000);
+        }
+    );
+}
+
+function radmenu_relation_fadeIn () {
+    jQuery("#radial_menu_relation").radmenu(
+        "show",
+        function (items) {
+            items.fadeIn(400);
+        }
+    );
+}
 
 function radmenu_fadeIn (selectedNode) {
     jQuery("#radial_menu").radmenu(
@@ -1010,6 +1033,43 @@ function radmenu_fadeIn (selectedNode) {
             }
         }
     );
+}
+
+function show_edge_radial_menu(eventInfo) {
+
+    selectedEdge = eventInfo.getEdge();
+    var nodeFrom = eventInfo.getEdge().nodeFrom;
+    var nodeTo = eventInfo.getEdge().nodeTo;
+
+    var fromPos = $("#" + nodeFrom.id).offset();
+    var toPos = $("#" + nodeTo.id).offset();
+
+    var widthMid = Math.abs((fromPos.left - toPos.left)/2);
+    if (fromPos.left < toPos.left) {
+        widthMid = fromPos.left + widthMid;
+    }
+    else {
+        widthMid = toPos.left + widthMid;
+    }
+
+    var heightMid = Math.abs((fromPos.top - toPos.top)/2);
+    if (fromPos.top < toPos.top) {
+        heightMid = fromPos.top + heightMid;
+    }
+    else {
+        heightMid = toPos.top + heightMid;
+    }
+
+    jQuery("#radial_menu_relation").radmenu("opts").radius = 30;
+
+    // show the menu directly over the placeholder
+    $radial_menu_relation.css({
+                         "left": widthMid + "px",
+                         "top": heightMid + "px"
+                     }).show();
+
+    radmenu_relation_fadeIn();
+    $("#radial_menu_relation").disableSelection();
 }
 
 
@@ -1172,6 +1232,39 @@ function init() {
     $("#infovis").css("width", window.innerWidth + 1000);
     $("#infovis").css("height", window.innerHeight + 1000);
 
+    $radial_menu_relation = $("#radial_menu_relation");
+
+    jQuery("#radial_menu_relation").radmenu({
+       // The list class inside which to look for menu items
+       listClass: 'list',
+       // The items - NOTE: the HTML inside the item is copied into the menu item
+       itemClass: 'item',
+       // The menu radius in pixels
+       radius: 0,
+       // The animation speed in milliseconds
+       animSpeed: 2000,
+       // The X axis offset of the center
+       centerX: 0,
+       // The Y axis offset of the center
+       centerY: 0,
+       // The name of the selection event
+       selectEvent: "click",
+
+       // The actual functionality for the menu
+       onSelect: function ($selected) {
+           $('.twipsy').remove();
+
+           // Removal of a relation
+           if ($selected[0].id == "radmenu-event-removeRelation") {
+               $.post(arca.ajax.deleteRelation({causeId: selectedEdge.nodeFrom.id, toId: selectedEdge.nodeTo.id}));
+               jQuery("#radial_menu_relation").radmenu("hide");
+           }
+       },
+
+       // The base angle offset in degrees
+       angleOffset: 0
+   });
+
     var resizeTimer;
     $(window).resize(function () {
         clearTimeout(resizeTimer);
@@ -1229,11 +1322,11 @@ function init() {
         Events: {
             enable: true,
 
-            // Change cursor style when the mouse cursor is on a non-root node and we're not in relation mode
+            // Change cursor style when the mouse cursor is on a non-root node
             onMouseEnter: function (node) {
-                if (node.data.isRootNode || relationFromNode) {
+                if (node.data.isRootNode) {
                     fd.canvas.getElement().style.cursor = 'pointer';
-                } else if (!relationFromNode) {
+                } else {
                     fd.canvas.getElement().style.cursor = 'move';
                 }
             },
@@ -1247,6 +1340,7 @@ function init() {
             // TODO: Add a notification like "You cannot move the root node"
             onDragMove: function (node, eventInfo, e) {
                 jQuery("#radial_menu").radmenu("hide");
+                jQuery("#radial_menu_relation").radmenu("hide");
                 if (!node.data.isRootNode) {
                     var pos = eventInfo.getPos();
                     node.pos.setc(pos.x, pos.y);
@@ -1286,7 +1380,9 @@ function init() {
             },
 
             // Add the click handler for opening a radial menu for nodes
-            onClick: function (node) {
+            onClick: function (node, eventInfo, e) {
+
+                var relationFromNode;
                 $("#help-message").hide();
                 if (node) {
                     if (relationFromNode) {
@@ -1311,6 +1407,13 @@ function init() {
                     jQuery("#radial_menu").radmenu("hide");
                     jQuery("#corrections_link").fadeOut(400);
                     $("#addCorrectiveForm").popover('hide');
+                    fd.plot();
+                }
+                if (eventInfo.getEdge()) {
+                    show_edge_radial_menu(eventInfo);
+                    fd.plot();
+                } else {
+                    jQuery("#radial_menu_relation").radmenu("hide");
                     fd.plot();
                 }
             }
@@ -1347,8 +1450,8 @@ function init() {
 
             // Add the like box to the node if there are any
             $(domElement).append(
-                "<div id='likeBoxWrapper-" + node.id + "' class='likeBoxWrapper'>" +
-                    "<div id='likeBox-" + node.id + "' class='likeBox label success'>" +
+                "<div id='likeBoxWrapper'>" +
+                    "<div id='likeBox' class='label success'>" +
                         node.data.likeCount + " " + pointString +
                     "</div>" +
                 "</div>");
@@ -1391,6 +1494,7 @@ function init() {
 
     $('#infovis').live("mousedown", function() {
         jQuery("#radial_menu").radmenu("hide");
+        jQuery("#radial_menu_relation").radmenu("hide");
         $('.popover').remove();
         jQuery("#corrections_link").hide();
     });
@@ -1524,6 +1628,12 @@ $(document).ready(function () {
         keyboard: true,
         backdrop: true,
         show: false
+    }).bind('shown', function() {
+        var index = findCause(selectedNode.id);
+        if (index === null) { return; }
+        var data = arca.graphJson[index].data;
+        $('#tag-causeClassification-1').val(data.classification1);
+        $('#tag-causeClassification-2').val(data.classification2);
     });
 
     initTagEditor();

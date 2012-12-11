@@ -66,11 +66,21 @@ function implementEdgeTypes() {
                 ctx.closePath();
 
                 ctx.fill();
-
                 ctx.beginPath();
                 ctx.arc(mid.x, mid.y, 6, 0, 2 * Math.PI, false);
                 ctx.closePath();
                 ctx.fill();
+            },
+            'contains': function(adj, pos) {
+                var fromNode = adj.nodeFrom.pos.getc(true),
+                    toNode = adj.nodeTo.pos.getc(true),
+                    epsilon = this.edge.epsilon;
+
+                toNode = this.edgeHelper.arrow.calculateArrowPosition(fromNode, toNode, adj, false);
+
+                var midPoint = new $jit.Complex(fromNode.x + (toNode.x - fromNode.x) / 1.8, fromNode.y + (toNode.y - fromNode.y) / 1.8);
+                var dist = Math.sqrt(Math.pow(pos.x - midPoint.x, 2) + Math.pow(pos.y - midPoint.y, 2));
+                return Math.abs(dist - 6) <= epsilon;
             }
         },
 

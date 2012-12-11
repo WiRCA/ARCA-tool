@@ -136,6 +136,17 @@
             </ul>
         </div>
 
+        <div id="radial_menu_relation" style="position: absolute; display: none; width: 0; height: 0;">
+            <ul class="list">
+                <li class="item radmenu-button" id="radmenu-event-removeRelation">
+                    <a href="#" rel='twipsy' data-placement="left" title='&{'editor.delete'}'>
+                        <img src="@{'/public/images/icons/trash.png'}" height="36" width="36"
+                             style="margin-left: -8px; margin-top: -8px" />
+                    </a>
+                </li>
+            </ul>
+        </div>
+
         <div id="addcorrection-modal" class="modal hide" style="overflow:auto;max-height:580px;">
             <div class="modal-header">
                 <a href="#" class="close">&times;</a>
@@ -454,6 +465,7 @@ window.arca = {
         waitMessage: #{jsAction @waitMessages(rcaCase.URLHash,':lastReceived') /},
         deleteCause: #{jsAction @CauseController.deleteCause(':causeId') /},
         addRelation: #{jsAction @CauseController.addRelation(':fromId', ':toID') /},
+        deleteRelation: #{jsAction @CauseController.deleteRelation(':causeId', ':toId') /},
         moveNode: #{jsAction @CauseController.nodeMoved(':causeId', ':x', ':y') /},
         getCorrections: #{jsAction @CauseController.getCorrections(':causeId') /},
         addClassification: #{jsAction @ClassificationController.createClassification(rcaCase.id, ':type', ':name',
