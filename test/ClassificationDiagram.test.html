@@ -1,0 +1,55 @@
+#{fixture delete:'all', load:'data.yml' /}
+#{selenium}
+
+// Test init
+open('/logout')
+open('/?language=en')
+
+// Set timeout to 5 seconds, used in waitFor-accessors
+setTimeout('5000')
+
+// login
+type('id=username','admin@local')
+type('id=password','admin')
+clickAndWait('id=signin')
+
+// create new case
+clickAndWait('id=createRCACase-link')
+type('id=caseName','testi')
+clickAndWait('id=create')
+
+// go to the classification diagram and test if configuration view works
+waitForTextPresent('testi')
+clickAndWait('id=dimensionButtonImage')
+waitForTextPresent('testi')
+clickAt('id=configurationButton')
+waitForTextPresent('Number of Causes')
+waitForTextPresent('Portion of Proposed Causes')
+waitForTextPresent('Correction Ideas')
+
+// same test with finnish language
+open('/logout')
+open('/?language=fi')
+
+// login
+type('id=username','admin@local')
+type('id=password','admin')
+clickAndWait('id=signin')
+
+// create new case
+clickAndWait('id=createRCACase-link')
+type('id=caseName','testi')
+clickAndWait('id=create')
+
+// go to the classification diagram and test if configuration view works
+waitForTextPresent('testi')
+clickAndWait('id=dimensionButtonImage')
+waitForTextPresent('testi')
+clickAt('id=configurationButton')
+waitForTextPresent('Syiden määrä')
+waitForTextPresent('Ehdotetut (tykätyt) syyt')
+waitForTextPresent('Korjausehdotukset')
+
+clickAndWait('id=logout-link')
+
+#{/selenium}
