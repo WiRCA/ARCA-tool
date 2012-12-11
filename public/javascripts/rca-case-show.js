@@ -472,8 +472,11 @@ function insertClassificationHandler(data) {
     });
 
     if (data.dimension == 2) {
-        $('#tagAreaLeft').append('<div id="addTagArea-' + data.id + '">' + data.name + '</div>');
-        $('#addTagArea-' + data.id).click(addTagArea);
+        // Add the tag area if it doesn't exist already
+        if ($('#addTagArea-' + data.id).length == 0) {
+            $('#tagAreaLeft').append('<div id="addTagArea-' + data.id + '">' + data.name + '</div>');
+            $('#addTagArea-' + data.id).click(addTagArea);
+        }
     } else {
         $('#tagAreaRight').append('<div id="addTag-' + data.id + '">' + data.name + '</div>')
         $('#addTag-' + data.id).click(addTag);
