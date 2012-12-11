@@ -401,7 +401,7 @@ function showSimpleGraph(minNodeRelevance, minEdgeRelevance, keepNodes) {
     // Settings
     var colorRelations = ($('input:radio[name=groupProposed]:checked').val() == "1");
     var glowRelations = ($('input:radio[name=groupCorrections]:checked').val() == "1");
-    var weighRelations = ($('input:radio[name=groupCauses]:checked').val() == "1");
+    var weightRelations = ($('input:radio[name=groupCauses]:checked').val() == "1");
 
     // This stores the index of the classification node in graphData, keyed by the classification ID
     var created = [];
@@ -426,9 +426,9 @@ function showSimpleGraph(minNodeRelevance, minEdgeRelevance, keepNodes) {
         // Add the root node connection if necessary
         if (first in arca.relationMap.rootRelations) {
             relationData = arca.relationMap.rootRelations[first];
-            color = weighRelations ? getColor(relationData.likes) : '#0000aa';
+            color = colorRelations ? getColor(relationData.likes) : '#0000aa';
             glow = glowRelations ? getGlow(relationData.corrections) : 0;
-            lineWidth = weighRelations ? getWeight(relationData.strength) : 1;
+            lineWidth = weightRelations ? getWeight(relationData.strength) : 1;
 
             graphData[created[first]].adjacencies.push({
                 nodeTo: 0,
@@ -462,7 +462,7 @@ function showSimpleGraph(minNodeRelevance, minEdgeRelevance, keepNodes) {
 
             var lineWidth;
             // Check if relation lines should be weighted
-            if (weighRelations) {
+            if (weightRelations) {
                 lineWidth = getWeight(relationData.strength);
             } else {
                 lineWidth = 1;
