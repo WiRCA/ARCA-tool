@@ -256,6 +256,21 @@ dimensionDiagram.help=You are looking at a case's classification diagram &ndash;
 dimensionDiagram.back=go back
 
 dimensionDiagramConfiguration.link=Configuration
+dimensionDiagramConfiguration.weight=Number of Causes
+dimensionDiagramConfiguration.weightOn=Weighting
+dimensionDiagramConfiguration.weightOff=Off
+dimensionDiagramConfiguration.color=Portion of Proposed Causes
+dimensionDiagramConfiguration.colorOn=Color
+dimensionDiagramConfiguration.colorOff=Off
+dimensionDiagramConfiguration.glow=Correction Ideas
+dimensionDiagramConfiguration.glowOn=Glow
+dimensionDiagramConfiguration.glowOff=Off
+dimensionDiagramConfiguration.weightOnLegend=Show the relation line thickness according to the number of related causes
+dimensionDiagramConfiguration.weightOffLegend=Show the relation lines equally thick
+dimensionDiagramConfiguration.colorOnLegend=Color the relation lines from blue to red according to the number of related proposed (liked) causes
+dimensionDiagramConfiguration.colorOffLegend=Show all the relation lines with the same color
+dimensionDiagramConfiguration.glowOnLegend=Add a glow to the relation lines according to the number of related causes with correction ideas
+dimensionDiagramConfiguration.glowOffLegend=Remove glow from the relation lines
 
 contactPage.feedbackFormTitle=Contact us or send feedback
 

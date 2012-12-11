@@ -268,6 +268,21 @@ dimensionDiagram.help=Katsot analyysin luokittelupuuta -
 dimensionDiagram.back=takaisin normaalinäkymään
 
 dimensionDiagramConfiguration.link=Konfiguraatio
+dimensionDiagramConfiguration.weight=Syiden määrä
+dimensionDiagramConfiguration.weightOn=Painotus
+dimensionDiagramConfiguration.weightOff=Pois päältä
+dimensionDiagramConfiguration.color=Ehdotetut (tykätyt) syyt
+dimensionDiagramConfiguration.colorOn=Väritys
+dimensionDiagramConfiguration.colorOff=Pois päältä
+dimensionDiagramConfiguration.glow=Korjausehdotukset
+dimensionDiagramConfiguration.glowOn=Hohto
+dimensionDiagramConfiguration.glowOff=Pois päältä
+dimensionDiagramConfiguration.weightOnLegend=Piirrä relaatioiden paksuus sen mukaan, paljonko luokitteluihin liittyy syitä
+dimensionDiagramConfiguration.weightOffLegend=Piirrä relaatiot yhtä ohuina
+dimensionDiagramConfiguration.colorOnLegend=Väritä relaatiot sinisestä punaiseen sen mukaan, paljonko niitä on ehdotettu (tykätty)
+dimensionDiagramConfiguration.colorOffLegend=Väritä relaatiot samalla värillä
+dimensionDiagramConfiguration.glowOnLegend=Lisää hohtoa relaatioihin sen mukaan, paljonko luokitteluihin on lisätty korjausehdotuksia
+dimensionDiagramConfiguration.glowOffLegend=Poista hohtoefekti
 
 contactPage.feedbackFormTitle=Ota meihin yhteyttä tai lähetä palautetta
 
