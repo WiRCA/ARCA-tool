@@ -1,115 +1,131 @@
-//Test for Classification table page
-
 #{fixture delete:'all', load:'data.yml' /}
 #{selenium}
 
-//Log in as admin user
+// Test init
 open('/logout')
 open('/?language=en')
-assertElementPresent('id=signin')
+
+// Set timeout to 5 seconds, used in waitFor-accessors
+setTimeout('5000')
+
+// login
 type('id=username','admin@local')
 type('id=password','admin')
 clickAndWait('id=signin')
-verifyTextPresent('Admin user')
 
-//create a new test case
-waitForTextPresent('Create new RCA case')
+// Create new case
 clickAndWait('id=createRCACase-link')
-type('id=caseName','testgraph')
+type('id=caseName', 'Ropleema')
 clickAndWait('id=create')
-waitForTextPresent('testgraph')
-clickAndWait(('//*[text()="testgraph"]')
 
-//make three new causes
+// Create classifications
+waitForTextPresent('Ropleema')
+clickAt('id=tagIcon')
+waitForVisible('id=addTag')
+
+clickAt('id=addTag')
+type('id=classificationName', 'Mikä I')
+type('id=classificationAbbreviation', 'MK1')
+click('id=addClassification-submit')
+waitForNotVisible('id=addClassification-modal')
+
+clickAt('id=addTag')
+type('id=classificationName', 'Mikä II')
+type('id=classificationAbbreviation', 'MK2')
+click('id=addClassification-submit')
+waitForNotVisible('id=addClassification-modal')
+
+clickAt('id=addTag')
+select('id=classificationType', 'value=2')
+type('id=classificationName', 'Missä I')
+type('id=classificationAbbreviation', 'MS1')
+click('id=addClassification-submit')
+waitForNotVisible('id=addClassification-modal')
+
+clickAt('id=addTag')
+select('id=classificationType', 'value=2')
+type('id=classificationName', 'Missä II')
+type('id=classificationAbbreviation', 'MS2')
+click('id=addClassification-submit')
+waitForNotVisible('id=addClassification-modal')
+
+// Create new cause
+clickAt('css=div.rootNodeBox')
 waitForElementPresent('//div[@id='radmenu-event-addCause']')
-clickAndWait('//div[@id='radmenu-event-addCause']')
-type('id=causeName','node1')
-clickAt(('//*[text()="addcause-submit"]')
-waitTextPresent('node1')
-clickAndWait('node1')
+clickAt('//div[@id='radmenu-event-addCause']')
+waitForElementPresent('css=#addcause-modal > div.modal-header > h3')
+type('id=causeName','Kahvi on loppu')
+clickAt('//input[@id='addcause-submit']')
+waitForTextPresent('Kahvi on loppu')
+
+// Create subcause
+clickAt('//*[text()="Kahvi on loppu"]')
 waitForElementPresent('//div[@id='radmenu-event-addCause']')
-clickAndWait('//div[@id='radmenu-event-addCause']')
-type('id=causeName','node2')
-clickAt(('//*[text()="addcause-submit"]')
-waitTextPresent('node2')
-clickAndWait('node1')
-waitForElementPresent('//div[@id='radmenu-event-addCause']')
-clickAndWait('//div[@id='radmenu-event-addCause']')
-type('id=causeName','node3'
-clickAt(('//*[text()="addcause-submit"]'))
-waitTextPresent('node3')
+clickAt('//div[@id='radmenu-event-addCause']')
+waitForElementPresent('css=#addcause-modal > div.modal-header > h3')
+type('id=causeName','Joku joi kaiken kahvin')
+clickAt('//input[@id='addcause-submit']')
+waitForTextPresent('Joku joi kaiken kahvin')
 
-//like first cause
-verifyTextNotPresent('points')
-verifyTextNotPresent('point')
-clickAt('//*[text()="node1"]')
-waitForElementPresent('css=div.radial_div > #radmenu-event-likeCause')
-click('css=div.radial_div > #radmenu-event-likeCause > a > img')
-waitForTextPresent('1 &{'editor.singlePoint'}')
-click('css=div.radial_div > #radmenu-event-likeCause > a > img')
-verifyTextPresent('points')
+// Tag the cause
+clickAt('//*[text()="Kahvi on loppu"]')
+waitForElementPresent('//div[@id='radmenu-event-tagCause']')
+clickAt('//div[@id='radmenu-event-tagCause']')
+waitForVisible('id=tagcause-modal')
+clickAt('//div[text()="Missä I"]')
+clickAt('//div[text()="Mikä I"]')
+waitForElementPresent('//div[@id='tagAreaMiddle']//span[text()="Missä I"]')
+waitForElementPresent('//div[@id='tagAreaMiddle']//span[text()="Mikä I"]')
+clickAt('id=tagCauseButton')
+waitForNotVisible('id=tagcause-modal')
 
-//like third cause
-clickAt('//*[text()="node3"]')
-waitForElementPresent('css=div.radial_div > #radmenu-event-likeCause')
-click('css=div.radial_div > #radmenu-event-likeCause > a > img')
-waitForTextPresent('1 &{'editor.singlePoint'}')
+clickAt('//*[text()="Joku joi kaiken kahvin"]')
+waitForElementPresent('//div[@id='radmenu-event-tagCause']')
+clickAt('//div[@id='radmenu-event-tagCause']')
+waitForVisible('id=tagcause-modal')
+clickAt('//div[text()="Missä II"]')
+clickAt('//div[text()="Mikä II"]')
+waitForElementPresent('//div[@id='tagAreaMiddle']//span[text()="Missä II"]')
+waitForElementPresent('//div[@id='tagAreaMiddle']//span[text()="Mikä II"]')
+clickAt('id=tagCauseButton')
+waitForNotVisible('id=tagcause-modal')
 
-//add a 'what' classification
-clickAndWait('//div[@id='addTag']')
-waitForTextPresent('Add a classification')
-type('id=edit-classificationTitle','what1')
-clickAndWait('id=editClassification-edit')
+// Go to the classification table.
+clickAndWait('id=tableButtonImage')
 
-/add a 'where' classification
-waitForElementPresent('//div[@id='addTag']')
-clickAndWait('//div[@id='addTag']')
-waitForTextPresent('Add a classification')
-clickAndWait('//*[text()="What"]')
-waitForTextPresent('Where')
-clickAndWait('//*[text()="Where"]')
-type('id=edit-classificationTitle','where1')
-clickAndWait('id=editClassification-edit')
+waitForTextPresent('Classification Table')
+waitForElementPresent('//div[@id='classificationTableView']')
+waitForElementPresent('//div[@id='classificationCheckbox']')
+waitForElementPresent('//p[@id='chart_div_percentOfCauses']')
+waitForElementPresent('//p[@id='chart_div_percentOfProposedCauses']')
+waitForElementPresent('//p[@id='chart_div_percentOfCorrectionCauses']')
 
-//classify first cause
-clickAt('//*[text()="node1"]')
-waitForElementPresent('css=div.radial_div > #radmenu-event-tagCause')
-clickAndWait('css=div.radial_div > #radmenu-event-tagCause')
-waitForTextPresent('what1')
-waitForTextPresent('where1')
-clickAndWait('//*[text()="what1"]')
-clickAndWait('//*[text()="where1"]')
-clickAndWait('id=tagCauseButton')
+// Test in Finnish
+open('/logout')
+open('/?language=fi')
 
-//classify second cause
-waitForTextPresent('node2')
-clickAndWait('//*[text()="node2"]')
-waitForElementPresent('css=div.radial_div > #radmenu-event-tagCause')
-clickAndWait('css=div.radial_div > #radmenu-event-tagCause')
-waitForTextPresent('Classify Cause")
-clickAndWait('id=tagCauseButton')
-waitForTextPresent('where1')
-clickAndWait('//*[text()="where1"]')
+// Login
+type('id=username','admin@local')
+type('id=password','admin')
+clickAndWait('id=signin')
 
-//give a correction to second cause
-waitForTextPresent('node2')
-clickAndWait('//*[text()="node2"]')
-clickAndWait('css=div.radial_div > #radmenu-event-addCorrection')
-clickAndWait(id=ideaName)
-type('id=ideaName','korjausidea')
-clickAndWait('id=ideaDescription')
-type('id=ideaDescription','korjausideakuvaus')
-clickAt('id=submitCorrectiveActionButton')
-verifyTextPresent('testgraph')
+// Create new case
+clickAndWait('id=createRCACase-link')
+type('id=caseName','testi')
+clickAndWait('id=create')
 
-//check the table
-clickAndWait('id=tableButton')
+// Go to the classification diagram and test if configuration view works
+waitForTextPresent('testi')
+clickAndWait('id=tableButtonImage')
 
-verifyTextPresent('Classification Table')
-verifyTextPresent('Percent of all causes')
-verifyTextPresent('Percent of liked causes')
-verifyTextPresent('Percent of causes with corrections')
+// Check that everything is in place
+waitForTextPresent('Luokittelutaulukko')
+waitForElementPresent('//div[@id='classificationTableView']')
+waitForElementPresent('//div[@id='classificationCheckbox']')
+waitForElementPresent('//p[@id='chart_div_percentOfCauses']')
+waitForElementPresent('//p[@id='chart_div_percentOfProposedCauses']')
+waitForElementPresent('//p[@id='chart_div_percentOfCorrectionCauses']')
 
-
+clickAndWait('id=logout-link')
 
 #{/selenium}
