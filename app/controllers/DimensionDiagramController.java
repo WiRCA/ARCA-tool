@@ -27,8 +27,11 @@ package controllers;
 import models.ClassificationRelationMap;
 import models.RCACase;
 import play.mvc.Controller;
+import play.mvc.With;
+
 import java.util.HashMap;
 
+@With(LanguageController.class)
 public class DimensionDiagramController extends Controller {
 	public static void show(String URLHash) {
 		RCACase rcaCase = RCACase.getRCACase(URLHash);
