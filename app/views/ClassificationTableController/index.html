@@ -151,7 +151,7 @@
                         var percentOfCorrectionCauses = Math.round(tableView.classificationTable[0].table[r].column[c].percentOfCorrectionCauses*10)/10;
                         var percentOfProposedCauses = Math.round(tableView.classificationTable[0].table[r].column[c].percentOfProposedCauses*10)/10;
                         if (document.getElementById('all').checked) {
-                            if (percentOfCauses == 0) {
+                            if (percentOfCauses == 0 || isNaN(percentOfCauses)) {
                                 $('<td> - </td>').appendTo(tr);
                             } else {
                                 $('<td id="causes' + (r + 1) + '_' + (c + 1) + '" title="&{'classificationTablePage.causes'}">' + percentOfCauses + ' %</td>').appendTo(tr);
@@ -169,7 +169,7 @@
                             }
                         }
                         if (document.getElementById('liked').checked) {
-                            if (percentOfProposedCauses == 0) {
+                            if (percentOfProposedCauses == 0 || isNaN(percentOfProposedCauses)) {
                                 $('<td> - </td>').appendTo(tr);
                             } else {
                                 $('<td title="&{'classificationTablePage.liked'}">' + percentOfProposedCauses +
@@ -188,7 +188,7 @@
                             }
                         }
                         if (document.getElementById('corrections').checked) {
-                            if (percentOfCorrectionCauses == 0) {
+                            if (percentOfCorrectionCauses == 0 || isNaN(percentOfCorrectionCauses)) {
                                 $('<td> - </td>').appendTo(tr);
                             } else {
                                 $('<td title="&{'classificationTablePage.corrections'}">' + percentOfCorrectionCauses +
