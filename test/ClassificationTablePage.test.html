@@ -100,6 +100,29 @@ waitForElementPresent('//p[@id='chart_div_percentOfCauses']')
 waitForElementPresent('//p[@id='chart_div_percentOfProposedCauses']')
 waitForElementPresent('//p[@id='chart_div_percentOfCorrectionCauses']')
 
+clickAt('id=all')
+clickAt('id=liked')
+clickAt('id=corrections')
+
+//waitForNotVisible('//td[@id='causes1_1']')
+//waitForNotVisible('//td[@id='causes1_1']')
+
+clickAt('id=all')
+clickAt('id=liked')
+clickAt('id=corrections')
+
+// Check that everything is still in place
+waitForTextPresent('Classification Table')
+waitForElementPresent('//div[@id='classificationTableView']')
+waitForElementPresent('//div[@id='classificationCheckbox']')
+waitForElementPresent('//p[@id='chart_div_percentOfCauses']')
+waitForElementPresent('//p[@id='chart_div_percentOfProposedCauses']')
+waitForElementPresent('//td[@id='causes1_1']')
+waitForElementPresent('//td[@id='causes2_2']')
+verifyText('id=causes1_1', '50 %')
+verifyText('id=causes2_2', '50 %')
+
+
 // Test in Finnish
 open('/logout')
 open('/?language=fi')
