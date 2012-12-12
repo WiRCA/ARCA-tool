@@ -24,9 +24,11 @@
 
 package models;
 
+import play.db.jpa.JPABase;
 import utils.IdComparableModel;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * Relation between two causes in an RCA tree.
@@ -59,5 +61,24 @@ public class Relation extends IdComparableModel {
 	public Relation(Cause causeFrom, Cause causeTo) {
 		this.causeFrom = causeFrom;
 		this.causeTo = causeTo;
+	}
+
+	public <T extends JPABase> T delete() {
+		this.causeFrom.causeRelations.remove(this);
+		this.causeTo.causeRelations.remove(this);
+		super.delete();
+		return (T) this;
+	}
+
+	public static Relation findByCauses(Cause from, Cause to) {
+		List<Relation> relationList = Relation.find(
+				"SELECT r FROM relation AS r WHERE causeFrom=? AND causeTo=?",
+				from, to
+		                                                                          ).fetch();
+		if (relationList != null) {
+			return relationList.get(0);
+		} else {
+			return null;
+		}
 	}
 }

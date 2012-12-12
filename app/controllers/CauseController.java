@@ -156,6 +156,24 @@ public class CauseController extends Controller {
 		Logger.debug("Cause %s deleted", cause);
 	}
 
+	public static void deleteRelation(Long causeId, Long toId) {
+		System.out.println("wtf");
+		Cause fromCause = Cause.findById(causeId);
+		Cause toCause = Cause.findById(toId);
+		System.out.println(fromCause + " -> " + toCause);
+
+		RCACase rcaCase = fromCause.rcaCase;
+
+		Relation relation = Relation.findByCauses(fromCause, toCause);
+		relation.delete();
+
+
+		DeleteRelationEvent deleteEvent = new DeleteRelationEvent(fromCause, toCause);
+		CauseStream causeEvents = rcaCase.getCauseStream();
+		causeEvents.getStream().publish(deleteEvent);
+		Logger.debug("Relation from %s to %s deleted", fromCause.name, toCause.name);
+	}
+
 	private static boolean userIsAllowedToDeleteAndRename(Cause cause, RCACase rcaCase) {
 		User current = SecurityController.getCurrentUser();
 		return current != null && !cause.equals(rcaCase.problem) &&
