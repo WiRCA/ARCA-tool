@@ -293,10 +293,6 @@ public class CauseController extends Controller {
 		Cause cause = Cause.findById(causeId);
 		RCACase rcaCase = cause.rcaCase;
 
-		if (!CauseController.userAllowedToClassify(cause)) {
-			forbidden();
-		}
-
 		// Parse the raw string. The string should be a semicolon-delimited list of parent:child pairs delimited
 		// by a colon. If an invalid item is found, an error page is returned and the method terminated before any
 		// changes are done to the cause (ie. this method tries to be as atomic as possible).
@@ -347,14 +343,6 @@ public class CauseController extends Controller {
 		causeEvents.getStream().publish(event);
 		Logger.debug("Case %s reclassified with %d pair(s)", cause.name, classificationPairs.size());
 	}
-
-
-	private static boolean userAllowedToClassify(Cause cause) {
-		// TODO: Who is actually allowed to (re)classify causes?
-		User current = SecurityController.getCurrentUser();
-		return current != null;
-	}
-
 
 	private static boolean userAllowedToLike(User user, RCACase rcaCase, Cause cause) {
 		return user != null && (rcaCase.getOwner().equals(user) || !cause.hasUserLiked(user));		
