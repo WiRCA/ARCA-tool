@@ -44,37 +44,8 @@ public class ClassificationTableController extends Controller {
 	public static void index(String URLHash) {
 		RCACase rcaCase = RCACase.getRCACase(URLHash);
 		notFoundIfNull(rcaCase);
-		rcaCase = checkIfCurrentUserHasRightsForRCACase(rcaCase.id);
+		rcaCase = PublicRCACaseController.checkIfCurrentUserHasRightsForRCACase(rcaCase.id);
 		render(rcaCase);
 	}
-
-	/**
-	 * Check if the current user has rights for a specific RCA case
-	 * @todo refactor (return value)
-	 * @param rcaCaseId The ID of the RCA case to be checked
-	 * @return the RCA case that the user has access to
-	 */
-	public static RCACase checkIfCurrentUserHasRightsForRCACase(Long rcaCaseId) {
-		RCACase rcaCase = RCACase.findById(rcaCaseId);
-		notFoundIfNull(rcaCase);
-
-		User user = SecurityController.getCurrentUser();
-		if (!rcaCase.isCasePublic && (user == null || !user.caseIds.contains(rcaCase.id))) {
-			if (user == null) {
-				flash.put("url", request.url);
-				try {
-					Secure.login();
-				} catch (Throwable throwable) {
-					Logger.error("Login failed.");
-				}
-				return null;
-			} else if (!user.caseIds.contains(rcaCase.id)) {
-				forbidden();
-				return null;
-			}
-		}
-		return rcaCase;
-	}
-
 
 }
