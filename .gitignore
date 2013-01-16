@@ -1,15 +1,20 @@
+# Intellij IDEA files
 ARCA-tool.iml
-logs
-test-result
-tmp
-modules
+ARCA-tool.ipr
+ARCA-tool.iws
 .idea
 !.idea/copyright
 !.idea/runConfigurations
 !.idea/codeStyleSettings.xml
 !.idea/projectCodeStyle.xml
-out/
+
+# Play files
+logs
+test-result
+tmp
+modules
+out
 taq
-precompiled/
+precompiled
 *-*-*-*-*
 cobertura.ser
