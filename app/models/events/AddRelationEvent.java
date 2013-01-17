@@ -25,7 +25,7 @@
 package models.events;
 
 /**
-* Add realtion from cause to cause event
+* Add relation from cause to cause event
 */
 public class AddRelationEvent extends Event {
 

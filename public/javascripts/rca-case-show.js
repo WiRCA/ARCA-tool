@@ -37,7 +37,7 @@ var zoomSteps = 64;
 var $radial_menu;
 // Placeholder for the #radial_menu_relation jQuery object
 var $radial_menu_relation;
-// Placeholder for the ForceDirected object
+// Selected edge data
 var selectedEdge;
 // Placeholder for the ForceDirected object
 var fd;
@@ -53,8 +53,6 @@ var relationFromNode = null;
  */
 function addNewCause() {
     var name = $.trim($("#causeName").val());
-    var classification1 = $("#add-causeClassification-1").val();
-    var classification2 = $("#add-causeClassification-2").val();
     if (name == undefined || name == "") {
         $("#causeName").parents(".clearfix").addClass("error");
         return;
@@ -65,9 +63,7 @@ function addNewCause() {
     radmenu_fadeOut();
     $("#addcause-modal").modal('hide');
     $.post(arca.ajax.addNewCause({causeId: selectedNode.id,
-                                  name: encodeURIComponent(name),
-                                  classification1: classification1,
-                                  classification2: classification2}));
+                                  name: encodeURIComponent(name)}));
 }
 
 
@@ -323,6 +319,7 @@ function applyZoom(newLevel, updateSlider) {
  * Reads an event from the AJAX event stream and processes it.
  */
 function readEventStream() {
+    var i;
     $.ajax({
         url: arca.ajax.waitMessage({lastReceived: arca.lastReceived}),
         success: function (events) {
@@ -337,7 +334,6 @@ function readEventStream() {
                 }
 
                 else if (this.data.type === 'deleterelationevent') {
-                    console.log(this.data.causeId + ", " + this.data.toId);
                     fd.graph.removeAdjacence(this.data.causeId, this.data.toId);
                     fd.plot();
                 }
@@ -372,10 +368,9 @@ function readEventStream() {
                             "parent": this.data.causeFrom,
                             "creatorId": '' + this.data.creatorId,
                             "likeCount": 0,
-                            "hasUserLiked": false,
-                            "classification1": this.data.classificationId1,
-                            "classification2": this.data.classificationId2
-                        }
+                            "hasUserLiked": false
+                        },
+                        "adjacencies": []
                     };
                     arca.graphJson.push(newNode);
 
@@ -491,7 +486,7 @@ function insertClassificationHandler(data) {
             $('#addTagArea-' + data.id).click(addTagArea);
         }
     } else {
-        $('#tagAreaRight').append('<div id="addTag-' + data.id + '">' + data.name + '</div>')
+        $('#tagAreaRight').append('<div id="addTag-' + data.id + '">' + data.name + '</div>');
         $('#addTag-' + data.id).click(addTag);
     }
 }
@@ -547,7 +542,7 @@ function editClassificationHandler(data) {
         // Rename tag editor's right side element
         $('#addTag-' + data.id).text(data.name);
 
-        // Rename tag editor's active tag
+        // Rename tag editor's active tags
         $('span[id$=_tag_' + data.id + '] span').text(data.name);
     }
 }
@@ -562,7 +557,7 @@ function causeClassificationHandler(data) {
     arca.graphJson[index].data.classifications = data.classifications;
 
     // Update the selected node data if it was the modified one
-    if (selectedNode.id == data.causeId) {
+    if (selectedNode && selectedNode.id == data.causeId) {
         selectedNode.data.classifications = data.classifications;
     }
 }
@@ -792,7 +787,7 @@ function addTag(evt) {
     } else {
         id = evt;
     }
-    console.log(id);
+
     $('#[id^=tagArea-].selected .childTags').addTag(id, arca.classifications[id].title);
     $(evt.delegateTarget).hide();
 }
@@ -958,24 +953,23 @@ function updateChildrenVectors (node) {
 function radmenu_updateLikeButtons (selectedNode) {
     if (arca.currentUser != 'null') {
         // hide like buttons if user is not logged in
-        jQuery("#radial_menu").radmenu("items")[5].style.visibility = "hidden";
+        $('#radmenu-event-likeCause').hide();
         // dislike
-        jQuery("#radial_menu").radmenu("items")[6].style.visibility = "hidden";
+        $('#radmenu-event-dislikeCause').hide();
     } else if (!selectedNode.data.hasUserLiked) {
         // show like button if user has not liked
-        jQuery("#radial_menu").radmenu("items")[5].style.visibility = "visible";
+        $('#radmenu-event-likeCause').show();
         // hide dislike button if user has not liked
-        jQuery("#radial_menu").radmenu("items")[6].style.visibility = "hidden";
+        $('#radmenu-event-dislikeCause').hide();
     } else if (selectedNode.data.hasUserLiked && arca.currentUser != arca.ownerId) {
         // hide like button if user has liked and is not the owner of the rca case
-        jQuery("#radial_menu").radmenu("items")[5].style.visibility = "hidden";
+        $('#radmenu-event-likeCause').hide();
         // show dislike button if user has liked
-        jQuery("#radial_menu").radmenu("items")[6].style.visibility = "visible";
+        $('#radmenu-event-dislikeCause').show();
     } else {
         // show like button if user has liked and is the owner
-        jQuery("#radial_menu").radmenu("items")[5].style.visibility = "visible";
         // show dislike button if user has liked and is the owner
-        jQuery("#radial_menu").radmenu("items")[6].style.visibility = "visible";
+        $('#radmenu-event-likeCause, #radmenu-event-dislikeCause').show();
     }
 }
 
@@ -1041,7 +1035,6 @@ function radmenu_fadeIn (selectedNode) {
 }
 
 function show_edge_radial_menu(eventInfo) {
-
     selectedEdge = eventInfo.getEdge();
     var nodeFrom = eventInfo.getEdge().nodeFrom;
     var nodeTo = eventInfo.getEdge().nodeTo;
@@ -1386,7 +1379,6 @@ function init() {
 
             // Add the click handler for opening a radial menu for nodes
             onClick: function (node, eventInfo, e) {
-
                 $("#help-message").hide();
                 if (node) {
                     if (relationFromNode) {
@@ -1542,7 +1534,7 @@ function init() {
     // Draw the arrows for each node
     var rootNode;
     for (rootNode in rootNodes) {
-        //noinspection JSUnfilteredForInLoop
+        if (!rootNodes.hasOwnProperty(rootNode)) { continue; }
         updateChildrenVectors(rootNodes[rootNode]);
     }
 

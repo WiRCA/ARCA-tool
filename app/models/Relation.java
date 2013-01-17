@@ -70,12 +70,21 @@ public class Relation extends IdComparableModel {
 		return (T) this;
 	}
 
-	public static Relation findByCauses(Cause from, Cause to) {
+
+	/**
+	 * Finds a relation that is between the given two causes, regardless of the relation's direction.
+	 *
+	 * @param cause1 the first cause
+	 * @param cause2 the second cause
+	 * @return a Relation or null
+	 */
+	public static Relation findByCauses(Cause cause1, Cause cause2) {
 		List<Relation> relationList = Relation.find(
-				"SELECT r FROM relation AS r WHERE causeFrom=? AND causeTo=?",
-				from, to
-		                                                                          ).fetch();
-		if (relationList != null) {
+				"SELECT r FROM relation AS r WHERE (causeFrom=? AND causeTo=?) OR (causeTo=? AND causeFrom=?)",
+				cause1, cause2, cause1, cause2
+		).fetch();
+
+		if (relationList.size() > 0) {
 			return relationList.get(0);
 		} else {
 			return null;

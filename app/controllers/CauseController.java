@@ -76,7 +76,7 @@ public class CauseController extends Controller {
 		AddCauseEvent event = new AddCauseEvent(newCause, causeId);
 		CauseStream causeEvents = rcaCase.getCauseStream();
 		causeEvents.getStream().publish(event);
-		Logger.debug("Cause %s added to cause %s", name, cause);
+		Logger.info("Cause %s added to cause %s", name, cause);
 	}
 
 	/**
@@ -87,8 +87,15 @@ public class CauseController extends Controller {
 	 */
 	public static void addRelation(Long causeId, Long toId) {
 		Cause causeFrom = Cause.findById(causeId);
-		RCACase rcaCase = causeFrom.rcaCase;
 
+		// Adding a relation from a cause to itself not only is illogical, but causes
+		// rather significant bugs as well.
+		if (causeId.equals(toId)) {
+			Logger.warn("Tried to add a relation from " + causeFrom.name + " to itself");
+			forbidden("No self-relations");
+		}
+
+		RCACase rcaCase = causeFrom.rcaCase;
 		Cause causeTo = Cause.findById(toId);
 
 		causeTo.addCause(causeFrom);
@@ -96,7 +103,7 @@ public class CauseController extends Controller {
 		AddRelationEvent event = new AddRelationEvent(causeId, toId);
 		CauseStream causeEvents = rcaCase.getCauseStream();
 		causeEvents.getStream().publish(event);
-		Logger.debug("Relation added between %s and %s", causeFrom, causeTo);
+		Logger.info("Relation added between %s and %s", causeFrom, causeTo);
 	}
 	
 	/**
@@ -108,7 +115,6 @@ public class CauseController extends Controller {
 		Cause cause = Cause.findById(causeId);
 		Set<Correction> listOfCorrections = cause.corrections;
 		User user = SecurityController.getCurrentUser();
-
 		render(listOfCorrections, user);
 	}
 
@@ -129,7 +135,7 @@ public class CauseController extends Controller {
 		AddCorrectionEvent event = new AddCorrectionEvent(causeTo, name, description);
 		CauseStream causeEvents = rcaCase.getCauseStream();
 		causeEvents.getStream().publish(event);
-		Logger.debug("Correction added to cause %s with description %s", causeTo.name, description);
+		Logger.info("Correction added to cause %s: %s", causeTo.name, description);
 	}
 
 	/**
@@ -145,6 +151,7 @@ public class CauseController extends Controller {
 		RCACase rcaCase = cause.rcaCase;
 
 		if (!CauseController.userIsAllowedToDeleteAndRename(cause, rcaCase)) {
+			Logger.info("User %s tried to delete cause %s", SecurityController.getCurrentUser().name, cause.name);
 			forbidden();
 		}
 
@@ -157,21 +164,25 @@ public class CauseController extends Controller {
 	}
 
 	public static void deleteRelation(Long causeId, Long toId) {
-		System.out.println("wtf");
 		Cause fromCause = Cause.findById(causeId);
 		Cause toCause = Cause.findById(toId);
-		System.out.println(fromCause + " -> " + toCause);
 
 		RCACase rcaCase = fromCause.rcaCase;
-
 		Relation relation = Relation.findByCauses(fromCause, toCause);
+		if (relation == null) {
+			Logger.warn(
+				"Attempting to remove a nonexistent relation from %s to %s",
+			    fromCause.name, toCause.name
+			);
+			forbidden("Nonexistent relation");
+			return;
+		}
 		relation.delete();
-
 
 		DeleteRelationEvent deleteEvent = new DeleteRelationEvent(fromCause, toCause);
 		CauseStream causeEvents = rcaCase.getCauseStream();
 		causeEvents.getStream().publish(deleteEvent);
-		Logger.debug("Relation from %s to %s deleted", fromCause.name, toCause.name);
+		Logger.info("Relation from %s to %s deleted", fromCause.name, toCause.name);
 	}
 
 	private static boolean userIsAllowedToDeleteAndRename(Cause cause, RCACase rcaCase) {
@@ -213,6 +224,7 @@ public class CauseController extends Controller {
 		User user = SecurityController.getCurrentUser();
 		
 		if (!userAllowedToLike(user, rcaCase, cause)) {
+			Logger.info("User %s tried to like cause %s", user.name, cause.name);
 			forbidden();
 		}
 
@@ -222,8 +234,7 @@ public class CauseController extends Controller {
 		CauseStream causeEvents = rcaCase.getCauseStream();
 		causeEvents.getStream().publish(event);
 
-		Logger.debug("Cause %s liked by %s", cause, user);
-
+		Logger.info("Cause %s liked by %s", cause, user);
 		String likeData = String.format("{\"count\":%d,\"hasliked\":%b,\"isowner\":%b}", cause.countLikes(),
             cause.hasUserLiked(user), user.equals(rcaCase.getOwner()));
 		renderJSON(likeData);
@@ -239,6 +250,7 @@ public class CauseController extends Controller {
 		User user = SecurityController.getCurrentUser();
 
 		if (!userAllowedToDislike(user, rcaCase, cause)) {
+			Logger.info("User %s tried to dislike %s", user.name, cause.name);
 			forbidden();
 		}
 		cause.dislike(user);
@@ -247,7 +259,7 @@ public class CauseController extends Controller {
 		CauseStream causeEvents = rcaCase.getCauseStream();
 		causeEvents.getStream().publish(event);
 
-		Logger.debug("Cause %s disliked by %s", cause, user);
+		Logger.info("Cause %s disliked by %s", cause, user);
 
 		String likeData = String.format("{\"count\":%d,\"hasliked\":%b,\"isowner\":%b}", cause.countLikes(),
             cause.hasUserLiked(user), user.equals(rcaCase.getOwner()));
@@ -265,6 +277,7 @@ public class CauseController extends Controller {
 		RCACase rcaCase = cause.rcaCase;
 
         if (!CauseController.userIsAllowedToDeleteAndRename(cause, rcaCase)) {
+	        Logger.info("User %s tried to rename cause %s", SecurityController.getCurrentUser().name, cause.name);
             forbidden();
         }
 		String oldName = cause.name;
@@ -280,7 +293,7 @@ public class CauseController extends Controller {
 		CauseRenameEvent event = new CauseRenameEvent(causeId, name);
 		CauseStream causeEvents = rcaCase.getCauseStream();
 		causeEvents.getStream().publish(event);
-		Logger.debug("Cause %s renamed to cause %s", oldName, name);
+		Logger.info("Cause %s renamed to cause %s", oldName, name);
 	}
 
 
@@ -294,6 +307,7 @@ public class CauseController extends Controller {
 		RCACase rcaCase = cause.rcaCase;
 
 		if (!CauseController.userAllowedToClassify(cause)) {
+			Logger.info("User %s tried to classify cause %s", SecurityController.getCurrentUser().name, cause.name);
 			forbidden();
 		}
 
@@ -345,7 +359,7 @@ public class CauseController extends Controller {
 		CauseStream causeEvents = rcaCase.getCauseStream();
 		CauseClassificationEvent event = new CauseClassificationEvent(causeId, classificationPairs);
 		causeEvents.getStream().publish(event);
-		Logger.debug("Case %s reclassified with %d pair(s)", cause.name, classificationPairs.size());
+		Logger.info("Case %s reclassified with %d pair(s)", cause.name, classificationPairs.size());
 	}
 
 
