@@ -164,8 +164,10 @@ public class CauseController extends Controller {
 	}
 
 	public static void deleteRelation(Long causeId, Long toId) {
+		System.out.println("wtf");
 		Cause fromCause = Cause.findById(causeId);
 		Cause toCause = Cause.findById(toId);
+		System.out.println(fromCause + " -> " + toCause);
 
 		RCACase rcaCase = fromCause.rcaCase;
 		Relation relation = Relation.findByCauses(fromCause, toCause);
