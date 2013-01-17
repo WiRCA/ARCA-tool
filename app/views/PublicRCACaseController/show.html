@@ -484,6 +484,7 @@ window.arca = {
             "name": "${cause.name}",
             "data": {
                 "hasCorrections": ${!cause.corrections.isEmpty()},
+                "isClassified": ${!cause.classifications.isEmpty()},
                 "isRootNode": #{if cause.equals(rcaCase.problem)}true#{/if}#{else}false#{/else},
                 "$type": "circle",
                 "$dim": 1,

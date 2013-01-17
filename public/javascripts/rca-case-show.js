@@ -240,6 +240,8 @@ function removeClassification() {
  */
 function tagCause() {
     var causeId = selectedNode.id;
+    $("#" + causeId).addClass("classified");
+
     $.getJSON(
         arca.ajax.tagCause({causeId: causeId,
                             classifications: constructTagString()})
@@ -355,7 +357,7 @@ function readEventStream() {
                 }
 
                 else if (this.data.type === 'addcorrectionevent') {
-                    $("#" + this.data.correctionTo).addClass('nodeBoxCorrection');
+                    $("#" + this.data.correctionTo).addClass('corrected');
                     fd.plot();
                 }
 
@@ -1433,8 +1435,15 @@ function init() {
             // Nodes that have corrections have their own style
             $(domElement).html(node.name);
             if (node.data.hasCorrections) {
-                $(domElement).addClass('nodeBoxCorrection');
+                $(domElement).addClass('corrected');
             }
+
+            // Nodes that have been classified have their own style
+            $(domElement).html(node.name);
+            if (node.data.isClassified) {
+                $(domElement).addClass('classified');
+            }
+
 
             // Choose the singular or plural "point" / "points"
             var pointString;
