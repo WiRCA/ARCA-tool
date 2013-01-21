@@ -1,0 +1,17 @@
+#{fixture delete:'all', load:'data.yml' /}
+#{selenium}
+//Log in
+open('/?language=en')
+assertElementPresent('id=signin')
+type('id=username','admin@local')
+type('id=password','admin')
+clickAndWait('id=signin')
+
+//See if the text is there
+verifyTextPresent('Admin user')
+
+//logout
+assertElementPresent('id=logout-link')
+clickAndWait('id=logout-link')
+
+#{/selenium}

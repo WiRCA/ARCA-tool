@@ -12,7 +12,13 @@
             <div class="pull-right">
                 #{login /}
             </div>
-			<div class="pull-right">
+            #{if session.username}
+                <div class ="pull-right usernameindication">
+                        ${session.userrealname}
+                </div>
+            #{/if}
+
+                <div class="pull-right">
 	            #{languages /}
 	        </div>
         </div>
