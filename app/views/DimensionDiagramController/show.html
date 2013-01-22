@@ -38,6 +38,7 @@
         <script src="${'/public/javascripts/excanvas.compiled.js'}" type="text/javascript"></script>
         <![endif]-->
         #{press.script src:'jquery-1.7.1.min.js', compress:false /}
+        #{press.script 'bootstrap-modal.js' /}
         #{press.script 'bootstrap-twipsy.js' /}
         #{press.script 'bootstrap-popover.js' /}
         #{press.script src:'jquery-ui-1.8.16.custom.min.js', compress:false /}
@@ -85,7 +86,25 @@
                              style="margin-left: -8px; margin-top: -8px" />
                     </a>
                 </li>
+                <li class="item radmenu-button" id="radmenu-event-showRelatedCauseNames">
+                    <a href="#" rel='twipsy' data-placement="bottom" title='&{'editor.showRelatedCauseNames'}'>
+                        <img src="@{'/public/images/icons/cause_list.png'}" height="36" width="36"
+                             style="margin-left: -8px; margin-top: -8px" />
+                    </a>
+                </li>
             </ul>
+        </div>
+
+        <div id="showCauses-modal" class="modal hide">
+            <div class="modal-header">
+                <a href="#" class="close">&times;</a>
+                <h3>&{'relatedCauses'}</h3>
+            </div>
+            <ol class="causeNameList" id="causeNameList">
+            </ol>
+            <div class="modal-footer">
+                <a href="#" class="btn secondary" id="btn_secondary" onclick="$('#showCauses-modal').modal('hide')">&{'dialog.ok'}</a>
+            </div>
         </div>
 
         <div id="zoomSlider">
@@ -133,7 +152,13 @@ window.arca = {
             dimension: ${classification.classificationDimension},
             abbreviation: "${classification.abbreviation.escapeJavaScript().raw()}",
             explanation: "${classification.explanation.escapeJavaScript().raw()}",
-            relevance: ${classificationRelevance.get(classification.id) ?: 0}
+            relevance: ${classificationRelevance.get(classification.id) ?: 0},
+            causeNames: {#{list rcaCase.getCauseNamesForClassification(classification.id), as:'cause'}
+                ${cause.id}: {
+                    name: "${cause.name}"
+                }${cause_isLast ? '' : ','}
+                #{/list}
+            }
         }${classification_isLast ? '' : ','}
     #{/list}
     },

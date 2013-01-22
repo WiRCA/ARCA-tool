@@ -24,6 +24,7 @@
 
 null=
 
+dialog.ok=Ok
 dialog.cancel=Peruuta
 submit=Lähetä
 
@@ -145,8 +146,11 @@ editor.addRelationInfo2=Klikkaa toista solmua lisätäksesi relaatio tai paina E
 editor.singlePoint=piste
 editor.multiplePoints=pistettä
 
-ditor.openEdge=Avaa relaatio
+editor.openEdge=Avaa relaatio
 editor.nameEdge=Nimeä relaatio
+editor.showRelatedCauseNames=Näytä relaatioon liittyvät syyt
+
+relatedCauses=Relaatioon liittyvät syyt
 
 showRCACase.title=RCA analyysi %s
 showRCACase.owner=Omistaja

@@ -83,6 +83,11 @@ table .cause .toggleCorrections {
     height: 11px;
 }
 
+.causeNameList {
+    text-align: left;
+    font-weight: bold;
+    list-style-position: inside;
+}
 
 div#rcacase-share-dialog form {
     margin-bottom: 20px;

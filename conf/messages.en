@@ -24,6 +24,7 @@
 
 null=
 
+dialog.ok=Ok
 dialog.cancel=Cancel
 submit=Submit
 
@@ -143,6 +144,9 @@ editor.multiplePoints=points
 
 editor.openEdge=Open the edge
 editor.nameEdge=Edit a name for the edge
+editor.showRelatedCauseNames=Show related causes
+
+relatedCauses=Related causes
 
 RCACaseType.softwareProject=Software project
 RCACaseType.hr=Human resources related problem

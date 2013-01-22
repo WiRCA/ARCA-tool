@@ -322,6 +322,23 @@ public class RCACase extends IdComparableModel {
         ).fetch();
     }
 
+	/**
+	 * Returns all causes that are classified by the given classification Id
+	 * @param classificationID the id of the classification to be checked
+	 * @return list of causes that have the given classification
+	 */
+	public List<Cause> getCauseNamesForClassification(long classificationID) {
+		List<Cause> causeList = new ArrayList<Cause>();
+		for (Cause cause: this.causes) {
+			for (ClassificationPair classificationPair: cause.getClassifications()) {
+				if (classificationPair.parent.id == classificationID) {
+					causeList.add(cause);
+				}
+			}
+		}
+		return causeList;
+	}
+
 
     /**
      * Returns classifications of the case that are of the given dimension

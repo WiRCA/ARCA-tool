@@ -34,6 +34,8 @@ var zoomSteps = 64;
 var $radial_menu;
 // Placeholder for the ForceDirected object
 var fd;
+// Selected edge data
+var selectedEdge;
 
 // Add the function $.disableSelection() to jQuery
 (function ($) {
@@ -57,6 +59,37 @@ var fd;
         });
     };
 })(jQuery);
+
+/**
+ * Populates the related cause modal window with the names of the related causes
+ */
+function populateRelatedCauses() {
+    // Empty the list
+    var container = document.getElementById('causeNameList');
+    container.innerHTML = '';
+
+    var causeNames = selectedEdge.nodeFrom.data.causeNames;
+    var toCauseNames = selectedEdge.nodeTo.data.causeNames;
+
+    var causeId;
+    var nameArray = new Array();
+    // Add cause names from 'first node' to array
+    for (causeId in causeNames) {
+        nameArray.push(causeNames[causeId].name);
+    }
+    for (causeId in toCauseNames) {
+        // Add cause name to array only if it doesn't exist already
+        if ($.inArray(toCauseNames[causeId].name, nameArray) == -1) {
+            nameArray.push(toCauseNames[causeId].name);
+        }
+    }
+    var name;
+    for (name in nameArray) {
+        var new_element = document.createElement('li');
+        new_element.innerHTML = nameArray[name];
+        container.insertBefore(new_element, container.firstChild);
+    }
+}
 
 /**
  * Initializes the graph for the canvas
@@ -96,6 +129,13 @@ function initGraph() {
            // naming the edge
            else if ($selected[0].id == "radmenu-event-nameEdge") {
                alert("not implemented yet");
+               jQuery("#radial_menu").radmenu("hide");
+           }
+
+           // show related causes
+           else if ($selected[0].id == "radmenu-event-showRelatedCauseNames") {
+               $('#showCauses-modal').modal('show');
+               populateRelatedCauses();
                jQuery("#radial_menu").radmenu("hide");
            }
        },
@@ -303,6 +343,7 @@ function configurationView() {
 function show_edge_radial_menu(eventInfo) {
 
     var pos = eventInfo.getPos();
+    selectedEdge = eventInfo.getEdge();
 
     pos.x +=  (fd.canvas.getSize().width/2);
     pos.y +=  (fd.canvas.getSize().height/2);
@@ -591,4 +632,13 @@ function applyZoom(newLevel, updateSlider) {
 $(document).ready(function() {
     initGraph();
     showSimpleGraph(0, 0, []);
+
+    $('#showCauses-modal').modal({
+                                     keyboard: true,
+                                     backdrop: true,
+                                     show: false
+                                 }).bind('shown', function () {
+                                             $('#btn_secondary').focus();
+                                         });
+
 });
