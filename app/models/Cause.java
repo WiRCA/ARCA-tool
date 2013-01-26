@@ -290,6 +290,18 @@ public class Cause extends LikableIdComparableModel {
 	}
 
 	/**
+	 * Returns the children and the parent of this cause.
+	 *
+	 * @return all the related causes of this cause.
+	 */
+	public Set<Cause> getAllRelatedCauses() {
+		Set<Cause> allCauses = this.getCauses();
+		allCauses.add(this.getParent());
+		allCauses.add(this.rcaCase.problem);
+		return allCauses;
+	}
+
+	/**
 	 * Returns the effect causes, none of which are the parent of this cause.
 	 *
 	 * @return the causes

@@ -155,7 +155,13 @@ window.arca = {
             relevance: ${classificationRelevance.get(classification.id) ?: 0},
             causeNames: {#{list rcaCase.getCauseNamesForClassification(classification.id), as:'cause'}
                 ${cause.id}: {
-                    name: "${cause.name}"
+                    name: "${cause.name}",
+                    neighbourCauseIds: {#{list cause.getAllRelatedCauses(), as:'neighbourCause'}
+                    ${neighbourCause.id}: {
+                        name: "${neighbourCause.name}"
+                        }${neighbourCause_isLast ? '' : ','}
+                    #{/list}
+                    }
                 }${cause_isLast ? '' : ','}
                 #{/list}
             }

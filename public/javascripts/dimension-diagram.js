@@ -61,26 +61,56 @@ var selectedEdge;
 })(jQuery);
 
 /**
+ * Returns the cause name list if the relation is connected to "rootcause"
+ * @param causeArray array of causes that are related to chosen classification
+ * @return {Array} the cause names that are related to chosen relation
+ */
+function causeNamesForRootRelation(causeArray) {
+    var nameArray = new Array();
+    var rcaCaseName = window.arca.rootNode.name;
+    for (var causeId in causeArray) {
+        for (var neighbourId in causeArray[causeId].neighbourCauseIds) {
+            if (causeArray[causeId].neighbourCauseIds[neighbourId].name === rcaCaseName) {
+                nameArray.push(causeArray[causeId].name);
+            }
+        }
+    }
+    return nameArray;
+}
+
+/**
  * Populates the related cause modal window with the names of the related causes
  */
 function populateRelatedCauses() {
     // Empty the list
     var container = document.getElementById('causeNameList');
     container.innerHTML = '';
+    var nameArray = new Array();
 
     var causeNames = selectedEdge.nodeFrom.data.causeNames;
     var toCauseNames = selectedEdge.nodeTo.data.causeNames;
+    // If the relation is connected to rootnode
+    if (causeNames === undefined) {
+        nameArray = causeNamesForRootRelation(toCauseNames);
+    // If the relation is connected to rootnode
+    } else if (toCauseNames === undefined) {
+        nameArray = causeNamesForRootRelation(causeNames);
+    } else {
+        var causeId, toCauseId, neighbourId;
 
-    var causeId;
-    var nameArray = new Array();
-    // Add cause names from 'first node' to array
-    for (causeId in causeNames) {
-        nameArray.push(causeNames[causeId].name);
-    }
-    for (causeId in toCauseNames) {
-        // Add cause name to array only if it doesn't exist already
-        if ($.inArray(toCauseNames[causeId].name, nameArray) == -1) {
-            nameArray.push(toCauseNames[causeId].name);
+        for (causeId in causeNames) {
+            for (neighbourId in causeNames[causeId].neighbourCauseIds) {
+                for (toCauseId in toCauseNames) {
+                    if (toCauseId === neighbourId) {
+                        if ($.inArray(causeNames[causeId].name, nameArray) == -1) {
+                            nameArray.push(causeNames[causeId].name);
+                        }
+                        if ($.inArray(toCauseNames[toCauseId].name, nameArray) == -1) {
+                            nameArray.push(toCauseNames[toCauseId].name);
+                        }
+                    }
+                }
+            }
         }
     }
     var name;
