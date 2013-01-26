@@ -69,6 +69,11 @@ public class RCACase extends IdComparableModel {
 	@Basic
 	public String URLHash;
 
+	/**
+	 * From what case to import classifications?
+	 */
+	public Long importId;
+
     /**
     * the tpy of the rca case
     */
@@ -321,6 +326,7 @@ public class RCACase extends IdComparableModel {
             this.id
         ).fetch();
     }
+
 
 	/**
 	 * Returns all causes that are classified by the given classification Id

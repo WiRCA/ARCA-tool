@@ -131,6 +131,9 @@ createRCA.publicYes=Jokaisella linkin saaneella on käyttöoikeus. Ei edellytä 
 createRCA.publicNo=Käyttöoikeus on vain nimenomaisesti käyttöoikeuden saaneilla. Edellyttää kirjautumista.
 createRCA.create=Luo analyysi!
 createRCA.isMultinational=Monikansallinen yritys?
+createRCA.import=Tuo luokittelut
+
+importClassifications.title=Valitse analyysi, josta haluat tuoda luokittelut
 
 editor.help1=Uusi käyttäjä?
 editor.help2=Aloita klikkaamalla solmua.

@@ -39,7 +39,9 @@ import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.With;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Methods related to RCA cases.
@@ -70,7 +72,17 @@ public class RCACaseController extends Controller {
 		RCACase rcaCase = new RCACase(SecurityController.getCurrentUser());
 		RCACaseType[] types = RCACaseType.values();
 		CompanySize[] companySizes = CompanySize.values();
-		render(rcaCase, types, companySizes);
+
+		User user = SecurityController.getCurrentUser();
+		if (user == null) {
+			session.remove("username");
+			redirect("/");
+			return;
+		}
+
+		Set<RCACase> cases = user.getRCACases();
+
+		render(rcaCase, types, companySizes, cases);
 	}
 
 

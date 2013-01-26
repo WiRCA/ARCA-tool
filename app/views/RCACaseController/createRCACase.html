@@ -24,6 +24,9 @@
 #{extends 'main.html' /}
 #{set 'title'}&{'createRCA.title'}#{/set}
 
+#{press.script 'bootstrap-modal.js' /}
+#{press.compressed-script /}
+
 <div id="createRCACase">
 
     <h1>&{'createRCA.title'}</h1>
@@ -37,6 +40,8 @@
     <input type="hidden" name="rcaCase.ownerId" value="${rcaCase.ownerId}">
 
     <input type="hidden" name="rcaCase.URLHash" value="${rcaCase.URLHash}">
+
+    <input type="hidden" name="rcaCase.importId" id="importId" value="${flash['rcaCase.importId']}">
 
     <div class="clearfix${errors.forKey('rcaCase.caseName') ? ' error' : ''}" id="caseName-field" >
         <label for="caseName">&{'createRCA.caseName'}</label>
@@ -130,10 +135,54 @@
         </div>
     </div>
 
+    <div id="importClassifications-modal" class="modal hide">
+        <div class="modal-header">
+            <a href="#" class="close">&times;</a>
+            <h3>&{'importClassifications.title'}</h3>
+        </div>
+
+        <div class="modal-body">
+            <div class="clearfix${errors.forKey('importIdSelection') ? ' error' : ''}" id="import-id-selection">
+                <select name="importIdSelection" id="importIdSelection" size="2" style="height:100%;width:100%">
+                    #{list items:cases, as:'rcaCase'}
+                        <option value="${rcaCase.id}">${rcaCase.caseName.escape().escape().raw()}</option>
+                    #{/list}
+                </select>
+                #{ifError 'importIdSelection'}<span class="help-inline">#{error 'rcaCase.importId' /}</span>#{/ifError}
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <a href="#" class="btn cancel" id="btn_secondary" onclick="hideImportClassifications()">&{'dialog.ok'}</a>
+        </div>
+    </div>
+
     <div class="actions" id="create-field">
         <input class="btn success" type="submit" id="create" value="&{'createRCA.create'}"/>
+        <a class="btn success" href="#" onclick="showImportClassifications()">&{'createRCA.import'}</a>
 		<a class="btn cancel" href="@{IndexPageController.index()}">&{'dialog.cancel'}</a>
     </div>
 
     #{/form}
+
 </div>
+
+<script type="text/javascript">
+    /**
+     * Show import classifications modal and select the correct case. This selection needs to be done in case of
+     * errors in the input form. Then all the form inputs are flashed back and thus the flashed case id needs to be
+     * forwarded to the modal as well.
+     */
+    function showImportClassifications() {
+        $("#importIdSelection").val($("#importId").val());
+        $('#importClassifications-modal').modal('show');
+    }
+
+    /**
+     * Hide import classifications modal and save selected case id to the hidden input in the form
+     */
+    function hideImportClassifications() {
+        $("#importId").val($("#importIdSelection").val());
+        $('#importClassifications-modal').modal('hide');
+    }
+</script>
