@@ -1125,6 +1125,17 @@ function show_radial_menu(given_node) {
 }
 
 
+/**
+ * Resizes the ForceDirected canvas according to the window size
+ */
+function doResize() {
+    fd.canvas.resize(window.innerWidth, window.innerHeight);
+    $("#infovis").css("width", window.innerWidth);
+    $("#infovis").css("height", window.innerHeight);
+    applyZoom(1, false);
+}
+
+
 function init() {
     // Bind the Escape key to exit the relation mode
     $(document).bind('keydown', function (e) {

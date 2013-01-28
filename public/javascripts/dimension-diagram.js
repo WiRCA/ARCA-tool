@@ -83,22 +83,21 @@ function causeNamesForRootRelation(causeArray) {
  */
 function populateRelatedCauses() {
     // Empty the list
-    var container = document.getElementById('causeNameList');
-    container.innerHTML = '';
+    var container = $('#causeNameList');
+    container.empty();
     var nameArray = new Array();
 
     var causeNames = selectedEdge.nodeFrom.data.causeNames;
     var toCauseNames = selectedEdge.nodeTo.data.causeNames;
-    // If the relation is connected to rootnode
+
     if (causeNames === undefined) {
         nameArray = causeNamesForRootRelation(toCauseNames);
-    // If the relation is connected to rootnode
     } else if (toCauseNames === undefined) {
         nameArray = causeNamesForRootRelation(causeNames);
     } else {
         var causeId, toCauseId, neighbourId;
-
         for (causeId in causeNames) {
+            if (!causeNames.hasOwnProperty(causeId)) { continue; }
             for (neighbourId in causeNames[causeId].neighbourCauseIds) {
                 for (toCauseId in toCauseNames) {
                     if (toCauseId === neighbourId) {
@@ -113,6 +112,7 @@ function populateRelatedCauses() {
             }
         }
     }
+
     var name;
     for (name in nameArray) {
         var new_element = document.createElement('li');
@@ -268,13 +268,14 @@ function initGraph(graph_id, radial_menu_id, width, height, respondToResize) {
 
             // Implement zooming for nodes
             onMouseWheel: function (delta, e) {
+                $jit.util.event.stop(e);
                 var zoom = (50 / 1000 * delta) + 1;
                 applyZoom(zoom, true);
             },
 
             onClick: function(node, eventInfo, e) {
                 if (eventInfo.getEdge()) {
-                    show_edge_radial_menu(eventInfo);
+                    show_edge_radial_menu(eventInfo, e);
                     fd.plot();
                 } else {
                     $radial_menu.radmenu("hide");
@@ -284,10 +285,10 @@ function initGraph(graph_id, radial_menu_id, width, height, respondToResize) {
         },
 
         // Number of iterations for the FD algorithm
-        iterations: 30,
+        iterations: 400,
 
         // Edge length
-        levelDistance: 300,
+        levelDistance: 200,
 
         // Change node styles when DOM labels are placed or moved.
         onPlaceLabel: function (domElement, node) {
@@ -328,6 +329,17 @@ function initGraph(graph_id, radial_menu_id, width, height, respondToResize) {
 
 
 /**
+ * Resizes the ForceDirected canvas according to the window size
+ */
+function doResize() {
+    fd.canvas.resize(window.innerWidth, window.innerHeight);
+    $("#infovis").css("width", window.innerWidth);
+    $("#infovis").css("height", window.innerHeight);
+    applyZoom(1, false);
+}
+
+
+/**
  * Returns a new dummy node (makes showSimpleGraph() easier)
  * @param data the classification data from window.arca.classifications
  * @return object
@@ -362,21 +374,15 @@ function configurationView() {
     $('#configurationArea').slideToggle();
 }
 
-function show_edge_radial_menu(eventInfo) {
-    var pos = eventInfo.getPos();
-    selectedEdge = eventInfo.getEdge();
-
-    pos.x +=  (fd.canvas.getSize().width/2);
-    pos.y +=  (fd.canvas.getSize().height/2);
-
+function show_edge_radial_menu(eventInfo, mouseEvent) {
     selectedEdge = eventInfo.getEdge();
     // Get the position of the placeholder element
     jQuery("#radial_menu").radmenu("opts").radius = 30;
 
     // show the menu directly over the placeholder
     $("#radial_menu").css({
-        "left": eventInfo.pos.x + "px",
-        "top": eventInfo.pos.y + "px"
+        "left": mouseEvent.pageX + "px",
+        "top": mouseEvent.pageY + "px"
     }).show();
 
     radmenu_fadeIn(selectedEdge);
@@ -586,14 +592,14 @@ function showSimpleGraph(minNodeRelevance, minEdgeRelevance, keepNodes) {
 
     // Let the force algorithm find nice minima for the nodes and display them
     fd.computeIncremental({
-        iter: 20,
+        iter: 400,
         property: 'end',
         onComplete: function() { fd.animate({'duration': 1000}); }
     });
 }
 
-// Zoom functions //
 
+// Zoom functions //
 /**
  * Increments zoom by one step
  */

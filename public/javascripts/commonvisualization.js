@@ -132,14 +132,3 @@ function setGlow(ctx, color, ox, oy, blur) {
     ctx.shadowOffsetY = oy;
     ctx.shadowBlur = blur;
 }
-
-
-/**
- * Resizes the ForceDirected canvas accordingly
- */
-function doResize() {
-    fd.canvas.resize(window.innerWidth + 1000, window.innerHeight + 1000);
-    $("#infovis").css("width", window.innerWidth + 1000);
-    $("#infovis").css("height", window.innerHeight + 1000);
-    applyZoom(1, false);
-}

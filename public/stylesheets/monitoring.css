@@ -32,11 +32,10 @@
 }
 
 #graph {
-    position: relative;
-    left: 0;
-    top: 0;
     display: none;
     border: 1px solid silver;
     width: 940px;
     height: 705px;
 }
+
+#radial_menu { z-index: 200; }
