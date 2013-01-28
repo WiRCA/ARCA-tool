@@ -1125,14 +1125,6 @@ function show_radial_menu(given_node) {
 }
 
 
-function doResize() {
-    fd.canvas.resize(window.innerWidth + 1000, window.innerHeight + 1000);
-    $("#infovis").css("width", window.innerWidth + 1000);
-    $("#infovis").css("height", window.innerHeight + 1000);
-    applyZoom(1, false);
-}
-
-
 function init() {
     // Bind the Escape key to exit the relation mode
     $(document).bind('keydown', function (e) {
@@ -1270,7 +1262,6 @@ function init() {
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(doResize, 100);
     });
-
 
     // Initialize the ForceDirected for the canvas
     fd = new $jit.ForceDirected({

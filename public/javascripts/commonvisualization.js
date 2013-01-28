@@ -116,6 +116,7 @@ function implementEdgeTypes() {
     });
 }
 
+
 /**
  * Set shadow to create a glow effect. Please notice that the context element is left with the glow effect.
  * Therefore setGlow should be called again with blur value 0 when glow isn't needed anymore.
@@ -130,4 +131,15 @@ function setGlow(ctx, color, ox, oy, blur) {
     ctx.shadowOffsetX = ox;
     ctx.shadowOffsetY = oy;
     ctx.shadowBlur = blur;
+}
+
+
+/**
+ * Resizes the ForceDirected canvas accordingly
+ */
+function doResize() {
+    fd.canvas.resize(window.innerWidth + 1000, window.innerHeight + 1000);
+    $("#infovis").css("width", window.innerWidth + 1000);
+    $("#infovis").css("height", window.innerHeight + 1000);
+    applyZoom(1, false);
 }

@@ -437,6 +437,7 @@ public class RCACase extends IdComparableModel {
 	 * Calculates percentages and total percentages for numberOfCauses, numberOfProposedCauses and numberOfCorrectionCauses
 	 * that are used in the Classification Table
 	 * @param table ClassificationTable where percentages should be calculated
+	 * @todo refactor to ClassificationTable.calculatePercentages
 	 */
 	private void calculateClassificationTablePercentages(ClassificationTable table, int numberOfClassificationPairs) {
 		for (int i = 0; i < table.tableCells.length - 1; i++) {

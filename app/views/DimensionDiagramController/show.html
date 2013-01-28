@@ -145,7 +145,7 @@ window.arca = {
         name: "${rcaCase.problem.name}"
     },
     classifications: {
-    #{list rcaCase.getClassifications(), as:'classification'}
+        #{list rcaCase.getClassifications(), as:'classification'}
         ${classification.id}: {
             id: ${classification.id},
             title: "${classification.name.escapeJavaScript().raw()}",
@@ -168,8 +168,22 @@ window.arca = {
         }${classification_isLast ? '' : ','}
     #{/list}
     },
-    relationMap: ${relations.toJson().raw()}
+    relationMap: (${relations.toJson().raw()}).map
 };
+
+$(document).ready(function() {
+    init();
+    initGraph('graph', 'radial_menu', window.innerWidth, window.innerHeight, true);
+    showSimpleGraph(0, 0, []);
+
+    $('#showCauses-modal').modal({
+        keyboard: true,
+        backdrop: true,
+        show: false
+    }).bind('shown', function () {
+        $('#btn_secondary').focus();
+    });
+});
         </script>
     </body>
 </html>

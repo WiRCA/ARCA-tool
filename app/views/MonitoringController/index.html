@@ -27,12 +27,19 @@
 #{set 'pageHeaderSmall'}#{/set}
 #{set 'activePage'}monitoring#{/set}
 #{set 'moreStyles'}
-<link rel="stylesheet" media="screen" href="@{'/public/stylesheets/monitoring.css'}">
+#{press.stylesheet 'arcaeditor.css' /}
+#{press.stylesheet 'monitoring.css' /}
+#{press.compressed-stylesheet /}
 #{/set}
 #{set 'moreScripts'}
+#{press.script 'bootstrap-twipsy.js' /}
 #{press.script 'jquery.tablesorter.min.js' /}
 #{press.script 'jquery.alterclass.js' /}
 #{press.script 'jquery.jeditable.js' /}
+#{press.script 'jQuery.radmenu.js' /}
+#{press.script 'smalljit.js' /}
+#{press.script 'commonvisualization.js' /}
+#{press.script 'dimension-diagram.js' /}
 #{press.compressed-script /}
 #{/set}
 
@@ -89,14 +96,20 @@
             <ul class="inputs-list">
                 <li>
                     <label>
-                        <input type="checkbox" value="myCases" name="casesRadio" checked=checked>
-                        <span>&{'monitoring.myCasesRadio'}</span>
+                        <input type="checkbox" value="myCases" name="casesRadio" checked="checked" />
+                        &{'monitoring.myCasesRadio'}
                     </label>
                 </li>
                 <li>
                     <label>
-                        <input type="checkbox" value="sharedCases" name="casesRadio" checked=checked>
-                        <span>&{'monitoring.casesSharedWithMeRadio'}</span>
+                        <input type="checkbox" value="sharedCases" name="casesRadio" checked="checked" />
+                        &{'monitoring.casesSharedWithMeRadio'}
+                    </label>
+                </li>
+                <li>
+                    <label>
+                        <input type="checkbox" value="dimensionDiagram" name="dimensionDiagram" checked="checked" />
+                        &{'monitoring.dimensionDiagram'}
                     </label>
                 </li>
             </ul>
@@ -106,9 +119,34 @@
 
 <div id="rcaCaseSelect"></div>
 <div id="causesAndCorrections"></div>
+<div id="graph">
+    <div id="radial_menu" style="position: absolute; display: none; width: 0; height: 0;">
+        <ul class="list">
+            <li class="item radmenu-button" id="radmenu-event-openEdge">
+                <a href="#" rel='twipsy' data-placement="left" title='&{'editor.openEdge'}'>
+                    <img src="@{'/public/images/icons/opening.png'}" height="36" width="36"
+                         style="margin-left: -8px; margin-top: -8px" />
+                </a>
+            </li>
+            <li class="item radmenu-button" id="radmenu-event-nameEdge">
+                <a href="#" rel='twipsy' data-placement="bottom" title='&{'editor.nameEdge'}'>
+                    <img src="@{'/public/images/icons/naming.png'}" height="36" width="36"
+                         style="margin-left: -8px; margin-top: -8px" />
+                </a>
+            </li>
+            <li class="item radmenu-button" id="radmenu-event-showRelatedCauseNames">
+                <a href="#" rel='twipsy' data-placement="bottom" title='&{'editor.showRelatedCauseNames'}'>
+                    <img src="@{'/public/images/icons/cause_list.png'}" height="36" width="36"
+                         style="margin-left: -8px; margin-top: -8px" />
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
 
 <script type="text/javascript">
 	var ajaxRequest;
+    var caseRequest;
 	var caseSelections;
     var whatToShow;
     var selectedCauseStatuses;
@@ -145,7 +183,7 @@
 	    });
 		if (caseSelections != "") {
 	        $("#rcaCaseSelect").html("<img src=\"@{'/public/images/wait-spinner.gif'}\">");
-	        var rcaCaseSelectingAction = #{jsAction @MonitoringController.rcaCaseSelecting(':showCases') /}
+	        var rcaCaseSelectingAction = #{jsAction @MonitoringController.rcaCaseSelecting(':showCases') /};
 			if (ajaxRequest != undefined) {
 				ajaxRequest.abort();
 			}
@@ -180,7 +218,7 @@
     }
 
     $(function() {
-        $('.well .head').live("click", function(event) {
+        $('.well .head').on("click", function(event) {
 			if (event.target.name == 'selectAllCases') {
 				$("input[name='selectedCases']").attr("checked", "checked");
 				$("input[name='selectedCases']").eq(0).change();
@@ -195,14 +233,14 @@
 
     });
 
-    $("input[name='causeStatuses']").live("change", function() {
+    $("input[name='causeStatuses']").on("change", function() {
         if ($("input[name='causeStatuses']:checked").length > 0) {
             $("input[name='whatToShow'][value='causes']").attr("checked", "checked");
             $("#correctionStatusesUl").hide();
         }
     });
 
-    $("input[name='whatToShow'][value='causes']").live("change", function() {
+    $("input[name='whatToShow'][value='causes']").on("change", function() {
         if ($("input[name='whatToShow'][value='causes']:checked").length != 1) {
             $("input[name='causeStatuses']").removeAttr("checked");
             $("#correctionStatusesUl").show();
@@ -211,26 +249,27 @@
         }
     });
 
-    $("input[name='correctionStatuses']").live("change", function() {
+    $("input[name='correctionStatuses']").on("change", function() {
         if ($("input[name='correctionStatuses']:checked").length > 0) {
             $("input[name='whatToShow'][value='corrections']").attr("checked", "checked");
         }
     });
 
-    $("input[name='whatToShow'][value='corrections']").live("change", function() {
+    $("input[name='whatToShow'][value='corrections']").on("change", function() {
         if ($("input[name='whatToShow'][value='corrections']:checked").length != 1) {
             $("input[name='correctionStatuses']").removeAttr("checked");
         }
     });
 
-    $("input[name='casesRadio']").live("change", function(event) {
+    $("input[name='casesRadio']").on("change", function(event) {
 		caseSelections = "";
         $("input[name='casesRadio']:checked").each(function() {
             caseSelections += $(this).attr("value") + ",";
         });
+
         if (caseSelections != "") {
             $("#rcaCaseSelect").html("<img src=\"@{'/public/images/wait-spinner.gif'}\">");
-            var rcaCaseSelectingAction = #{jsAction @MonitoringController.rcaCaseSelecting(':showCases') /}
+            var rcaCaseSelectingAction = #{jsAction @MonitoringController.rcaCaseSelecting(':showCases') /};
 			if (ajaxRequest != undefined) {
 				ajaxRequest.abort();
 			}
@@ -245,16 +284,22 @@
     });
 
     $("input[name='whatToShow'],input[name='causeStatuses'],input[name='correctionStatuses'],input[name='selectedCases']," +
-      "input[name='casesRadio'][value='allCases']").live("change", function(event) {
+      "input[name='casesRadio'][value='allCases']").on("change", function(event) {
         collectSelectionsWhatToShow();
 
         if ((allCases || selectedCases != "") && whatToShow != "") {
             $("#causesAndCorrections").html("<img src=\"@{'/public/images/wait-spinner.gif'}\">");
+            $('#dimensionDiagram').html("<img src=\"@{'/public/images/wait-spinner.gif'}\">");
+
             var causesAndCorrectionsAction = #{jsAction @MonitoringController.causesAndCorrections(':whatToShow',
-                ':selectedCases', ':allCases', ':selectedCauseStatuses', ':selectedCorrectionStatuses', ':csvExport') /}
-			if (ajaxRequest != undefined) {
+                ':selectedCases', ':allCases', ':selectedCauseStatuses', ':selectedCorrectionStatuses', ':csvExport') /};
+
+            if (ajaxRequest != undefined) {
 				ajaxRequest.abort();
 			}
+            if (caseRequest != undefined) {
+                caseRequest.abort();
+            }
 
 			ajaxRequest = $.get(causesAndCorrectionsAction({whatToShow: whatToShow, selectedCases: selectedCases,
 								allCases: allCases, selectedCauseStatuses: selectedCauseStatuses,
@@ -263,23 +308,28 @@
 						$("#causesAndCorrections").html(html);
 					}
 			);
+
+            caseRequest = $.get(
+                #{jsAction @MonitoringController.dimensionDiagram(':selectedCases') /}({selectedCases: selectedCases}),
+                showDimensionDiagram
+            );
         } else {
             $("#causesAndCorrections").html("");
         }
     });
 
-    $('#export-csv-link').live("click", function() {
+    $('#export-csv-link').on("click", function() {
         collectSelectionsWhatToShow();
         if ((allCases || selectedCases != "") && whatToShow != "") {
             var causesAndCorrectionsAction = #{jsAction @MonitoringController.causesAndCorrections(':whatToShow',
-                ':selectedCases', ':allCases', ':selectedCauseStatuses', ':selectedCorrectionStatuses', ':csvExport') /}
+                ':selectedCases', ':allCases', ':selectedCauseStatuses', ':selectedCorrectionStatuses', ':csvExport') /};
             location = causesAndCorrectionsAction({whatToShow: whatToShow, selectedCases: selectedCases,
                                   allCases: allCases, selectedCauseStatuses: selectedCauseStatuses,
                                   selectedCorrectionStatuses: selectedCorrectionStatuses, csvExport: 'true'});
         }
     });
 
-    $(".pagination li a").live("click", function(event) {
+    $(".pagination li a").on("click", function(event) {
         var clickedPage = $(this);
         var pagination = $(this).parents(".pagination");
         var paginationId =  $(pagination).attr("id").replace("pagination-", "");
@@ -313,4 +363,16 @@
         $(nextSelected).addClass("active");
         $("." + paginationId + "-page-" + $(clickedPage).html()).show();
     });
+
+function showDimensionDiagram(data, status, xhr) {
+    window.arca = {
+        rootNode: {"id": 0, "name": "Relations"},
+        relationMap: data.map,
+        classifications: data.classifications
+    };
+    if (fd !== undefined) { fd.graph.empty(); $('#graph').empty(); }
+    $('#graph').show();
+    initGraph('graph', 'radial_menu', 940, 705, false);
+    showSimpleGraph(0, 0, []);
+}
 </script>

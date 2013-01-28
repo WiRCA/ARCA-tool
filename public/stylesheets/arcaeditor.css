@@ -23,7 +23,7 @@
  */
 
 .nodeBox, .rootNodeBox {
-    font-family:Helvetica;
+    font-family: Helvetica;
     text-align: center;
     border: solid;
     border-radius: 10px;
@@ -126,6 +126,7 @@
 	width:20px;
 	height:20px;
 	-webkit-border-radius:30px;
+    z-index: 101;
 }
 
 .alert-message {
