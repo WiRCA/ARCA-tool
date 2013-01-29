@@ -26,6 +26,7 @@ package controllers;
 
 import models.Invitation;
 import models.RCACase;
+import models.Classification;
 import models.User;
 import models.enums.CompanySize;
 import models.enums.RCACaseType;
@@ -96,8 +97,25 @@ public class RCACaseController extends Controller {
 			validation.keep(); // keep the errors for the next request
 			createRCACase();
 		}
-		rcaCase.save();
+
 		User user = SecurityController.getCurrentUser();
+
+		// Import classifications from the selected case (rcaCase.importId)
+		if (rcaCase.importId != null) {
+			RCACase importCase = RCACase.findById(rcaCase.importId);
+			if (importCase != null) {
+				List<Classification> classifications = importCase.getClassifications();
+				for (Classification importClassification: classifications) {
+					Classification classification = new Classification(rcaCase, importClassification.name, user,
+					                                                   importClassification.classificationDimension,
+					                                                   importClassification.explanation,
+					                                                   importClassification.abbreviation);
+					classification.save();
+				}
+			}
+		}
+		rcaCase.save();
+
 		if (problemName.trim().length() == 0) {
 			problemName = rcaCase.caseName;
 		}
