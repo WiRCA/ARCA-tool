@@ -144,6 +144,7 @@
         <div class="modal-body">
             <div class="clearfix${errors.forKey('importIdSelection') ? ' error' : ''}" id="import-id-selection">
                 <select name="importIdSelection" id="importIdSelection" size="2" style="height:100%;width:100%">
+                    <option value=""></option>
                     #{list items:cases, as:'rcaCase'}
                         <option value="${rcaCase.id}">${rcaCase.caseName.escape().escape().raw()}</option>
                     #{/list}
