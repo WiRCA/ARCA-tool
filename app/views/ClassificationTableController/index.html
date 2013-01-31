@@ -248,7 +248,21 @@
 #{navigation /}
 
 <div id="classificationTableHelp">
-&{'classificationTablePage.help'} <a href="javascript: history.go(-1)">&{'classificationTablePage.back'}</a>
+ <div id="RCAgraphButton">
+    <a href="@{PublicRCACaseController.show(rcaCase.URLHash)}">
+        <img height="50" width="43" id="RCAgraphButtonImage" src="@{'/public/images/causetreebutton.png'}" />
+    </a>
+</div>
+
+    <div id="dimensionButton">
+        <a href="@{DimensionDiagramController.show(rcaCase.URLHash)}">
+            <img height="50" width="43" id="dimensionButtonImage" src="@{'/public/images/dimensiondiagrambutton.png'}" alt="&{'dimensionDiagram.link'}" />
+        </a>
+    </div>
+
+    <div id="tableButton">
+            <img height="50" width="43" id="tableButtonImage" src="@{'/public/images/icons/classification_table_link.png'}" alt="&{'classificationTable.link'}" />
+    </div>
 </div>
 
 <div id="classificationTableView">

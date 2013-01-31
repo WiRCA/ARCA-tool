@@ -64,11 +64,6 @@
 
     <body>
         #{navigation /}
-
-        <div id="dimensionHelp">
-            &{'dimensionDiagram.help'} <a href="@{PublicRCACaseController.show(rcaCase.URLHash)}">&{'dimensionDiagram.back'}</a>
-        </div>
-
         <div id="graph"></div>
 
         <div id="radial_menu" style="position: absolute; display: none; width: 0; height: 0;">
@@ -96,6 +91,22 @@
 
         <div id="configurationButton">
             <img id="configurationImage" height="25" width="25" onclick="configurationView()" src="@{'/public/images/icons/cog.png'}" alt="&{'dimensionDiagramConfiguration.link'}" />
+        </div>
+
+        <div id="RCAgraphButton">
+            <a href="@{PublicRCACaseController.show(rcaCase.URLHash)}">
+                <img height="50" width="43" id="RCAgraphButtonImage" src="@{'/public/images/causetreebutton.png'}" />
+            </a>
+        </div>
+
+        <div id="dimensionButton">
+            <img id="dimensionButtonImage" height="50" width="43" src="@{'/public/images/dimensiondiagrambutton.png'}" alt="&{'dimensionDiagram.link'}" />
+        </div>
+
+        <div id="tableButton">
+            <a href="@{ClassificationTableController.index(rcaCase.URLHash)}">
+                <img height="50" width="43" id="tableButtonImage" src="@{'/public/images/icons/classification_table_link.png'}" alt="&{'classificationTable.link'}" />
+            </a>
         </div>
 
         <div align="left" id="configurationArea" hidden=true>

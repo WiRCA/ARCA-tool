@@ -176,10 +176,23 @@
     margin-top: 10px;
 }
 
-#tableButton {
+#RCAgraphButton {
     position: absolute;
     top: 43px;
     left: 3px;
+}
+
+#dimensionButton {
+    position: absolute;
+    top: 43px;
+    left: 56px;
+    background-color: white;
+}
+
+#tableButton {
+    position: absolute;
+    top: 43px;
+    left: 109px;
 }
 
 #configurationButton {
@@ -195,13 +208,6 @@
     border-color: lightgray;
     border-style: solid;
     padding: 5px;
-}
-
-#dimensionButton {
-    position: absolute;
-    top: 43px;
-    left: 56px;
-    background-color: white;
 }
 
 #tagArea {
@@ -400,12 +406,12 @@ div.tagsinput div {
 #dimensionHelp, #classificationTableHelp {
     position: absolute;
     left: 0px;
-    top: 40px;
-    padding: 1em;
+    top: 0px;
+    /*padding: 1em;
     background-color: rgba(200, 220, 255, 0.75);
     color: black;
     font-weight: bold;
-    z-index: 5;
+    z-index: 5;      */
 }
 
 #classificationTableView {
