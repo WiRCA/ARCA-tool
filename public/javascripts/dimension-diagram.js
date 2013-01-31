@@ -83,8 +83,9 @@ function causeNamesForRootRelation(causeArray) {
  */
 function populateRelatedCauses() {
     // Empty the list
-    var container = $('#causeNameList');
-    container.empty();
+    //var container = $('#causeNameList');  //This doesn't work
+    var container = document.getElementById('causeNameList');
+    container.innerHTML = '';
     var nameArray = new Array();
 
     var causeNames = selectedEdge.nodeFrom.data.causeNames;
