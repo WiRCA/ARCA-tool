@@ -24,6 +24,7 @@
 
 null=
 
+dialog.ok=Ok
 dialog.cancel=Cancel
 submit=Submit
 
@@ -122,6 +123,9 @@ createRCA.publicYes=Anyone who has the link can access. No sign-in required.
 createRCA.publicNo=Only people explicitly granted permission can access. Sign-in required.
 createRCA.create=Create the case!
 createRCA.isMultinational=Multinational company?
+createRCA.import=Import classifications
+
+importClassifications.title=Select the case for classifications import
 
 showRCACase.title=RCA Case %s
 showRCACase.owner=RCA case owner
@@ -143,6 +147,9 @@ editor.multiplePoints=points
 
 editor.openEdge=Open the edge
 editor.nameEdge=Edit a name for the edge
+editor.showRelatedCauseNames=Show related causes
+
+relatedCauses=Related causes
 
 RCACaseType.softwareProject=Software project
 RCACaseType.hr=Human resources related problem

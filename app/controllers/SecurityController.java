@@ -51,6 +51,7 @@ public class SecurityController extends Secure.Security {
 	 */
 	static void onAuthenticated() {
 		User current = getCurrentUser();
+		session.put("userrealname", current.name);
 		Logger.info("User %s logged in", current);
 		UserController.index();
 	}

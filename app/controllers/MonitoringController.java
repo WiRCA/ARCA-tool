@@ -24,10 +24,7 @@
 
 package controllers;
 
-import models.Cause;
-import models.Correction;
-import models.RCACase;
-import models.User;
+import models.*;
 import models.enums.StatusOfCause;
 import models.enums.StatusOfCorrection;
 import play.data.binding.As;
@@ -76,6 +73,14 @@ public class MonitoringController extends Controller {
 			}
 		}
 		render(cases);
+	}
+
+	public static void dimensionDiagram(@As(",") List<Long> selectedCases) {
+		ClassificationRelationMap map = new ClassificationRelationMap();
+		for (Long id : selectedCases) {
+			map.loadCase((RCACase) RCACase.findById(id));
+		}
+		renderJSON(map.toJson());
 	}
 
 	/**

@@ -116,6 +116,7 @@ function implementEdgeTypes() {
     });
 }
 
+
 /**
  * Set shadow to create a glow effect. Please notice that the context element is left with the glow effect.
  * Therefore setGlow should be called again with blur value 0 when glow isn't needed anymore.

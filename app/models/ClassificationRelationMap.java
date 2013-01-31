@@ -27,6 +27,7 @@ package models;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import play.Logger;
 
 import java.util.*;
 
@@ -46,6 +47,11 @@ public class ClassificationRelationMap {
 	 */
 	private Map<Classification, ClassificationRelation> rootRelations;
 
+	/**
+	 * For merging multiple cases' classifications, a map of classification name => Classification instance
+	 */
+	private Map<String, Classification> nameToClassification;
+
 
 	/**
 	 * Constructor, creates an empty map
@@ -54,6 +60,7 @@ public class ClassificationRelationMap {
 		this.simpleRelations = new HashMap<Classification, Map<Classification, ClassificationRelation>>();
 		this.pairRelations = new HashMap<ClassificationPair, Map<ClassificationPair, ClassificationRelation>>();
 		this.rootRelations = new HashMap<Classification, ClassificationRelation>();
+		this.nameToClassification = new HashMap<String, Classification>();
 	}
 
 
@@ -102,11 +109,43 @@ public class ClassificationRelationMap {
 
 
 	/**
+	 * Normalizes a classification, which is a simple process:
+	 * 1) If the classification's name is found in the nameToClassification map,
+	 *    return the Classification instance corresponding to the name
+	 * 2) Otherwise add this name=>Classification pair to the map and return
+	 *    this classification
+	 * @return normalized classification
+	 */
+	private Classification normalizeClassification(Classification c) {
+		if (this.nameToClassification.containsKey(c.name)) {
+			return this.nameToClassification.get(c.name);
+		} else {
+			this.nameToClassification.put(c.name, c);
+			return c;
+		}
+	}
+
+
+	/**
+	 * A convenience function for normalizing ClassificationPairs
+	 * @param pair the ClassificationPair to normalize
+	 * @return normalized ClassificationPair
+	 */
+	private ClassificationPair normalizePair(ClassificationPair pair) {
+		return new ClassificationPair(
+			this.normalizeClassification(pair.parent),
+			this.normalizeClassification(pair.child)
+		);
+	}
+
+
+	/**
 	 * Adds a new root relation to the map or updates an existing one if present.
 	 * @param classification a (WHERE) classification connected to the root
 	 * @param relationData the strength and likes of a relation
 	 */
 	public void addRootRelation(Classification classification, ClassificationRelation relationData) {
+		classification = this.normalizeClassification(classification);
 		if (this.rootRelations.containsKey(classification)) {
 			this.rootRelations.get(classification).add(relationData);
 		} else {
@@ -135,16 +174,30 @@ public class ClassificationRelationMap {
 
 
 	/**
-	 * Creates a relation map for a complete RCA case
-	 * @param rcaCase the RCA case
-	 * @return ClassificationRelationMap
+	 * Loads data from a RCA case into the relation map. All classifications are normalized, so multiple cases can
+	 * be loaded to the map with ease and classifications with the same name are automatically merged into one.
+	 * @param rcaCase the RCA case to use
 	 */
-	public static ClassificationRelationMap fromCase(RCACase rcaCase) {
-		ClassificationRelationMap map = new ClassificationRelationMap();
-
+	public void loadCase(RCACase rcaCase) {
 		// Temporary variables
 		Cause causeFrom;
 		ClassificationRelation relationData;
+
+		// Add root relations for the root node's adjacencies
+		// As in some edge cases we might have nodes with bidirectional adjacencies
+		// to the root node, add the causes that are processed here to a set so we
+		// can skip them later to avoid erroneously double-strength edges.
+		TreeSet<Cause> addedRootCauses = new TreeSet<Cause>();
+		for (Relation relation : rcaCase.problem.causeRelations) {
+			addedRootCauses.add(relation.causeFrom);
+			for (ClassificationPair fromPair : relation.causeFrom.classifications) {
+				relationData = new ClassificationRelation(
+					1, rcaCase.problem.likes.size() + relation.causeFrom.likes.size(),
+					rcaCase.problem.corrections.size() + relation.causeFrom.corrections.size()
+				);
+				this.addRootRelation(this.normalizeClassification(fromPair.parent), relationData);
+			}
+		}
 
 		// Loop through the causes and their relations, only considering "to" relations so we don't get duplicates
 		// (This is a slight performance loss as all causes have both ways of relations known, but it is most
@@ -157,13 +210,13 @@ public class ClassificationRelationMap {
 				causeFrom = relation.causeFrom;
 
 				// Add the root relations to the map if the to cause is the root node
-				if (causeTo == rcaCase.problem) {
+				if (causeTo == rcaCase.problem && !addedRootCauses.contains(causeFrom)) {
 					for (ClassificationPair fromPair : causeFrom.classifications) {
 						relationData = new ClassificationRelation(
-							1, causeFrom.likes.size() + causeTo.likes.size(),
-						    causeFrom.corrections.size() + causeTo.corrections.size()
+								1, causeFrom.likes.size() + causeTo.likes.size(),
+								causeFrom.corrections.size() + causeTo.corrections.size()
 						);
-						map.addRootRelation(fromPair.parent, relationData);
+						this.addRootRelation(this.normalizeClassification(fromPair.parent), relationData);
 					}
 				}
 
@@ -175,15 +228,25 @@ public class ClassificationRelationMap {
 						// classification pairs here, and the amount of likes is the amount of likes for the two
 						// causes combined.
 						relationData = new ClassificationRelation(
-							1, causeFrom.likes.size() + causeTo.likes.size(),
-						    causeFrom.corrections.size() + causeTo.corrections.size()
+								1, causeFrom.likes.size() + causeTo.likes.size(),
+								causeFrom.corrections.size() + causeTo.corrections.size()
 						);
-						map.addRelation(fromPair, toPair, relationData);
+						this.addRelation(this.normalizePair(fromPair), this.normalizePair(toPair), relationData);
 					}
 				}
 			}
 		}
+	}
 
+
+	/**
+	 * Creates a relation map for a RCA case, used as a helper function
+	 * @param rcaCase the RCA case
+	 * @return ClassificationRelationMap
+	 */
+	public static ClassificationRelationMap fromCase(RCACase rcaCase) {
+		ClassificationRelationMap map = new ClassificationRelationMap();
+		map.loadCase(rcaCase);
 		return map;
 	}
 
@@ -260,7 +323,7 @@ public class ClassificationRelationMap {
 
 		// Construct the pair relation map
 		// In pair relation maps, the keys are in the form parent:child, as JavaScript and thus JSON only allows
-		// strings as
+		// strings as object property names
 		JsonObject pairRelations = new JsonObject();
 		for (ClassificationPair key : this.pairRelations.keySet()) {
 			child = new JsonObject();
@@ -288,10 +351,49 @@ public class ClassificationRelationMap {
 			rootRelations.add(classification.id.toString(), child);
 		}
 
-		// Return
-		out.add("simpleRelations", simpleRelations);
-		out.add("pairRelations", pairRelations);
-		out.add("rootRelations", rootRelations);
+		// Construct the map property of the return value
+		JsonObject map = new JsonObject();
+		map.add("simpleRelations", simpleRelations);
+		map.add("pairRelations", pairRelations);
+		map.add("rootRelations", rootRelations);
+
+		// Construct the temporary set of all classifications in the map
+		// This is done by looping all pair relations, because there cannot be a simple relation that does not have
+		// at least one corresponding pair relation, as all "where" classifications must have at least one "what"
+		// classification paired with it.
+		Set<Classification> allClassifications = new TreeSet<Classification>();
+		ClassificationPair keyPair;
+		for (Map.Entry<ClassificationPair, Map<ClassificationPair, ClassificationRelation>> entry :
+					this.pairRelations.entrySet()) {
+			// Add the parent pair to the set
+			keyPair = this.normalizePair(entry.getKey());
+			allClassifications.add(keyPair.parent);
+			allClassifications.add(keyPair.child);
+
+			// Add the child pairs to the set
+			for (ClassificationPair valuePair : entry.getValue().keySet()) {
+				valuePair = this.normalizePair(valuePair);
+				allClassifications.add(valuePair.parent);
+				allClassifications.add(valuePair.child);
+			}
+		}
+
+		// Then construct the JSON object for it
+		JsonObject classifications = new JsonObject();
+		HashMap<Long, Integer> classificationRelevances = this.getClassificationRelevances();
+		for (Classification classification : allClassifications) {
+			child = new JsonObject();
+			child.addProperty("id", classification.id);
+			child.addProperty("title", classification.name);
+			child.addProperty("dimension", classification.classificationDimension);
+			child.addProperty("abbreviation", classification.abbreviation);
+			child.addProperty("relevance", classificationRelevances.get(classification.id));
+			child.addProperty("causeNames", (Number) null);
+			classifications.add(classification.id.toString(), child);
+		}
+
+		out.add("map", map);
+		out.add("classifications", classifications);
 		return out.toString();
 	}
 

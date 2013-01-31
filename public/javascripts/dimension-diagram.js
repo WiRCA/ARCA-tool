@@ -34,6 +34,8 @@ var zoomSteps = 64;
 var $radial_menu;
 // Placeholder for the ForceDirected object
 var fd;
+// Selected edge data
+var selectedEdge;
 
 // Add the function $.disableSelection() to jQuery
 (function ($) {
@@ -59,14 +61,72 @@ var fd;
 })(jQuery);
 
 /**
+ * Returns the cause name list if the relation is connected to "rootcause"
+ * @param causeArray array of causes that are related to chosen classification
+ * @return {Array} the cause names that are related to chosen relation
+ */
+function causeNamesForRootRelation(causeArray) {
+    var nameArray = new Array();
+    var rcaCaseName = window.arca.rootNode.name;
+    for (var causeId in causeArray) {
+        for (var neighbourId in causeArray[causeId].neighbourCauseIds) {
+            if (causeArray[causeId].neighbourCauseIds[neighbourId].name === rcaCaseName) {
+                nameArray.push(causeArray[causeId].name);
+            }
+        }
+    }
+    return nameArray;
+}
+
+/**
+ * Populates the related cause modal window with the names of the related causes
+ */
+function populateRelatedCauses() {
+    // Empty the list
+    var container = $('#causeNameList');
+    container.empty();
+    var nameArray = new Array();
+
+    var causeNames = selectedEdge.nodeFrom.data.causeNames;
+    var toCauseNames = selectedEdge.nodeTo.data.causeNames;
+
+    if (causeNames === undefined) {
+        nameArray = causeNamesForRootRelation(toCauseNames);
+    } else if (toCauseNames === undefined) {
+        nameArray = causeNamesForRootRelation(causeNames);
+    } else {
+        var causeId, toCauseId, neighbourId;
+        for (causeId in causeNames) {
+            if (!causeNames.hasOwnProperty(causeId)) { continue; }
+            for (neighbourId in causeNames[causeId].neighbourCauseIds) {
+                for (toCauseId in toCauseNames) {
+                    if (toCauseId === neighbourId) {
+                        if ($.inArray(causeNames[causeId].name, nameArray) == -1) {
+                            nameArray.push(causeNames[causeId].name);
+                        }
+                        if ($.inArray(toCauseNames[toCauseId].name, nameArray) == -1) {
+                            nameArray.push(toCauseNames[toCauseId].name);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    var name;
+    for (name in nameArray) {
+        var new_element = document.createElement('li');
+        new_element.innerHTML = nameArray[name];
+        container.insertBefore(new_element, container.firstChild);
+    }
+}
+
+/**
  * Initializes the graph for the canvas
  */
-function initGraph() {
-
-    $radial_menu = $("#radial_menu");
-
-    jQuery("#radial_menu").radmenu({
-
+function initGraph(graph_id, radial_menu_id, width, height, respondToResize) {
+    $radial_menu = $("#" + radial_menu_id);
+    $radial_menu.radmenu({
         // The list class inside which to look for menu items
         listClass: 'list',
         // The items - NOTE: the HTML inside the item is copied into the menu item
@@ -83,20 +143,26 @@ function initGraph() {
         selectEvent: "click",
 
        // The actual functionality for the menu
-
        onSelect: function ($selected) {
            $('.twipsy').remove();
 
            // Opening of the edge
            if ($selected[0].id == "radmenu-event-openEdge") {
                alert("not implemented yet");
-               jQuery("#radial_menu").radmenu("hide");
+               $radial_menu.radmenu("hide");
            }
 
            // naming the edge
            else if ($selected[0].id == "radmenu-event-nameEdge") {
                alert("not implemented yet");
-               jQuery("#radial_menu").radmenu("hide");
+               $radial_menu.radmenu("hide");
+           }
+
+           // show related causes
+           else if ($selected[0].id == "radmenu-event-showRelatedCauseNames") {
+               $('#showCauses-modal').modal('show');
+               populateRelatedCauses();
+               $radial_menu.radmenu("hide");
            }
        },
 
@@ -104,28 +170,30 @@ function initGraph() {
        angleOffset: 90
    });
 
-    $("#graph").css("width", window.innerWidth + 1000);
-    $("#graph").css("height", window.innerHeight + 1000);
+    $("#" + graph_id).css("width", width);
+    $("#" + graph_id).css("height", height);
 
-    var resizeTimer;
-    $(window).resize(function () {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(doResize, 100);
-    });
+    if (respondToResize) {
+        var resizeTimer;
+        $(window).resize(function () {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(doResize, 100);
+        });
+    }
 
     fd = new $jit.ForceDirected({
         // ID of the visualization container
-        injectInto: 'graph',
+        injectInto: graph_id,
 
         // Dimensions
-        width: window.innerWidth,
-        height: window.innerHeight,
+        width: width,
+        height: height,
 
         // Enable zooming and panning by scrolling and drag/drop
         Navigation: {
             enable: true,
             panning: 'avoid nodes',
-            zooming: 30
+            zooming: 0
         },
 
         // Change node and edge styles.
@@ -198,22 +266,29 @@ function initGraph() {
                 this.onDragMove(node, eventInfo, e);
             },
 
+            // Implement zooming for nodes
+            onMouseWheel: function (delta, e) {
+                $jit.util.event.stop(e);
+                var zoom = (50 / 1000 * delta) + 1;
+                applyZoom(zoom, true);
+            },
+
             onClick: function(node, eventInfo, e) {
                 if (eventInfo.getEdge()) {
-                    show_edge_radial_menu(eventInfo);
+                    show_edge_radial_menu(eventInfo, e);
                     fd.plot();
                 } else {
-                    jQuery("#radial_menu").radmenu("hide");
+                    $radial_menu.radmenu("hide");
                     fd.plot();
                 }
             }
         },
 
         // Number of iterations for the FD algorithm
-        iterations: 30,
+        iterations: 400,
 
         // Edge length
-        levelDistance: 300,
+        levelDistance: 200,
 
         // Change node styles when DOM labels are placed or moved.
         onPlaceLabel: function (domElement, node) {
@@ -240,30 +315,29 @@ function initGraph() {
     });
     implementEdgeTypes();
 
-    // Add slider functionality to the element
-    $("#slider-vertical").slider({
-         orientation: "vertical",
-         range: "min",
-         min: 0,
-         max: zoomSteps,
-         value: zoomSteps / 2,
-         slide: function(event, ui) {
-             applyZoom(((zoomMax - zoomMin) / zoomSteps * ui.value + zoomMin) / zoomLevel, false);
-         }
-     });
-
     // Initialize Twipsy
     $("a[rel=twipsy]").twipsy({live: true});
     $('a[rel=twipsy]').twipsy('show');
 
-    $('#graph').live("mousedown", function(event) {
-        jQuery("#radial_menu").radmenu("hide");
+    $('#' + graph_id).live("mousedown", function(event) {
+        $radial_menu.radmenu("hide");
         $('.popover').remove();
     });
 
     fd.plot();
-
 }
+
+
+/**
+ * Resizes the ForceDirected canvas according to the window size
+ */
+function doResize() {
+    fd.canvas.resize(window.innerWidth, window.innerHeight);
+    $("#infovis").css("width", window.innerWidth);
+    $("#infovis").css("height", window.innerHeight);
+    applyZoom(1, false);
+}
+
 
 /**
  * Returns a new dummy node (makes showSimpleGraph() easier)
@@ -279,7 +353,7 @@ function newNode(data) {
     };
 }
 
-function radmenu_fadeIn (selectedEdge) {
+function radmenu_fadeIn(selectedEdge) {
     jQuery("#radial_menu").radmenu(
         "show",
         function (items) {
@@ -300,29 +374,17 @@ function configurationView() {
     $('#configurationArea').slideToggle();
 }
 
-function show_edge_radial_menu(eventInfo) {
-
-    var pos = eventInfo.getPos();
-
-    pos.x +=  (fd.canvas.getSize().width/2);
-    pos.y +=  (fd.canvas.getSize().height/2);
-
+function show_edge_radial_menu(eventInfo, mouseEvent) {
     selectedEdge = eventInfo.getEdge();
-
-    //$("#" + given_node.id).addClass("nodeBoxSelected");
-
     // Get the position of the placeholder element
-
     jQuery("#radial_menu").radmenu("opts").radius = 30;
 
     // show the menu directly over the placeholder
-
     $("#radial_menu").css({
-        "left": pos.x   + "px",
-        "top": pos.y  + "px"
+        "left": mouseEvent.pageX + "px",
+        "top": mouseEvent.pageY + "px"
     }).show();
 
-     // jQuery("#radial_menu").radmenu("show");
     radmenu_fadeIn(selectedEdge);
     $("#radial_menu").disableSelection();
 }
@@ -415,31 +477,12 @@ function showSimpleGraph(minNodeRelevance, minEdgeRelevance, keepNodes) {
 
         // Filter irrelevant nodes
         firstNodeData = arca.classifications[first];
-        if (firstNodeData.relevance < minNodeRelevance) { continue; }
+        if (firstNodeData.relevance < minNodeRelevance && keepNodes.indexOf(first) == -1) { continue; }
 
         // Create the node if necessary
         if (!created.hasOwnProperty(first)) {
             graphData.push(newNode(firstNodeData));
             created[first] = graphData.length - 1;
-        }
-
-        // Add the root node connection if necessary
-        if (first in arca.relationMap.rootRelations) {
-            relationData = arca.relationMap.rootRelations[first];
-            color = colorRelations ? getColor(relationData.likes) : '#0000aa';
-            glow = glowRelations ? getGlow(relationData.corrections) : 0;
-            lineWidth = weightRelations ? getWeight(relationData.strength) : 1;
-
-            graphData[created[first]].adjacencies.push({
-                nodeTo: 0,
-                "data": {
-                    "$dim": 15,
-                    "$color": color,
-                    "$lineWidth": lineWidth,
-                    "$glow": glow,
-                    "weight": 2
-                }
-            });
         }
 
         for (var second in data[first]) {
@@ -496,6 +539,35 @@ function showSimpleGraph(minNodeRelevance, minEdgeRelevance, keepNodes) {
         }
     }
 
+    // Add the root node connections
+    for (first in arca.relationMap.rootRelations) {
+        if (!arca.relationMap.rootRelations.hasOwnProperty(first)) { continue; }
+        relationData = arca.relationMap.rootRelations[first];
+        color = colorRelations ? getColor(relationData.likes) : '#0000aa';
+        glow = glowRelations ? getGlow(relationData.corrections) : 0;
+        lineWidth = weightRelations ? getWeight(relationData.strength) : 1;
+
+        // Create the node if necessary
+        if (!created.hasOwnProperty(first)) {
+            firstNodeData = arca.classifications[first];
+            if (firstNodeData.relevance < minNodeRelevance && keepNodes.indexOf(first) == -1) { continue; }
+            graphData.push(newNode(firstNodeData));
+            created[first] = graphData.length - 1;
+        }
+
+        // Add the adjacency
+        graphData[created[first]].adjacencies.push({
+            nodeTo: 0,
+            "data": {
+                "$dim": 15,
+                "$color": color,
+                "$lineWidth": lineWidth,
+                "$glow": glow,
+                "weight": 2
+            }
+        });
+    }
+
     // If there are no nodes, stop here and go grab a drink or something
     if (graphData.length == 0) { return; }
 
@@ -520,13 +592,14 @@ function showSimpleGraph(minNodeRelevance, minEdgeRelevance, keepNodes) {
 
     // Let the force algorithm find nice minima for the nodes and display them
     fd.computeIncremental({
-        iter: 20,
+        iter: 400,
         property: 'end',
         onComplete: function() { fd.animate({'duration': 1000}); }
     });
 }
-// Zoom functions //
 
+
+// Zoom functions //
 /**
  * Increments zoom by one step
  */
@@ -588,7 +661,17 @@ function applyZoom(newLevel, updateSlider) {
     }
 }
 
-$(document).ready(function() {
-    initGraph();
-    showSimpleGraph(0, 0, []);
-});
+
+function init() {
+    // Add slider functionality to the element
+    $("#slider-vertical").slider({
+        orientation: "vertical",
+        range: "min",
+        min: 0,
+        max: zoomSteps,
+        value: zoomSteps / 2,
+        slide: function(event, ui) {
+            applyZoom(((zoomMax - zoomMin) / zoomSteps * ui.value + zoomMin) / zoomLevel, false);
+        }
+    });
+}

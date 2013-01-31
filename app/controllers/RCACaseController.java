@@ -26,6 +26,7 @@ package controllers;
 
 import models.Invitation;
 import models.RCACase;
+import models.Classification;
 import models.User;
 import models.enums.CompanySize;
 import models.enums.RCACaseType;
@@ -39,7 +40,9 @@ import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.With;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Methods related to RCA cases.
@@ -70,7 +73,17 @@ public class RCACaseController extends Controller {
 		RCACase rcaCase = new RCACase(SecurityController.getCurrentUser());
 		RCACaseType[] types = RCACaseType.values();
 		CompanySize[] companySizes = CompanySize.values();
-		render(rcaCase, types, companySizes);
+
+		User user = SecurityController.getCurrentUser();
+		if (user == null) {
+			session.remove("username");
+			redirect("/");
+			return;
+		}
+
+		Set<RCACase> cases = user.getRCACases();
+
+		render(rcaCase, types, companySizes, cases);
 	}
 
 
@@ -84,8 +97,25 @@ public class RCACaseController extends Controller {
 			validation.keep(); // keep the errors for the next request
 			createRCACase();
 		}
-		rcaCase.save();
+
 		User user = SecurityController.getCurrentUser();
+
+		// Import classifications from the selected case (rcaCase.importId)
+		if (rcaCase.importId != null) {
+			RCACase importCase = RCACase.findById(rcaCase.importId);
+			if (importCase != null) {
+				List<Classification> classifications = importCase.getClassifications();
+				for (Classification importClassification: classifications) {
+					Classification classification = new Classification(rcaCase, importClassification.name, user,
+					                                                   importClassification.classificationDimension,
+					                                                   importClassification.explanation,
+					                                                   importClassification.abbreviation);
+					classification.save();
+				}
+			}
+		}
+		rcaCase.save();
+
 		if (problemName.trim().length() == 0) {
 			problemName = rcaCase.caseName;
 		}
