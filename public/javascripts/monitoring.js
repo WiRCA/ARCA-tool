@@ -81,7 +81,7 @@ function showDimensionDiagram(data, status, xhr) {
     if (fd !== undefined) { fd.graph.empty(); }
     $('#graph').empty().show();
     initGraph('graph', 'radial_menu', 940, 705, false);
-    showSimpleGraph(0, 0, []);
+    showSimpleGraph(0, 0, [], true, true, true);
 }
 
 // Event handlers

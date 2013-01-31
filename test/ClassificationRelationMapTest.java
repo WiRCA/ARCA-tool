@@ -25,6 +25,7 @@
 import models.*;
 import org.junit.Before;
 import org.junit.Test;
+import play.Logger;
 
 import java.util.*;
 
@@ -36,11 +37,12 @@ public class ClassificationRelationMapTest extends GenericRCAUnitTest {
 	@Before
 	public void setUp() {
 		super.setUp();
+
 		this.causes = new ArrayList<Cause>();
-		Cause cause;
+		Cause cause = null;
 		for (int i = 0; i < 5; i++) {
 			cause = new Cause(testCase, "Cause " + String.valueOf(i), user);
-			testCase.setProblem(cause);
+			cause.save();
 			this.causes.add(cause);
 		}
 
@@ -54,8 +56,10 @@ public class ClassificationRelationMapTest extends GenericRCAUnitTest {
 		for (int i = 0; i < 10; i++) {
 			whatClassifications.add(new Classification(testCase, "What " + String.valueOf(i), user,
 			                                           ClassificationDimension.WHAT_DIMENSION_ID, "", ""));
+			whatClassifications.get(i).save();
 			whereClassifications.add(new Classification(testCase, "Where " + String.valueOf(i), user,
 			                                            ClassificationDimension.WHERE_DIMENSION_ID, "", ""));
+			whereClassifications.get(i).save();
 		}
 	}
 
@@ -66,10 +70,12 @@ public class ClassificationRelationMapTest extends GenericRCAUnitTest {
 
 		SortedSet<ClassificationPair> pairs = new TreeSet<ClassificationPair>();
 		pairs.add(new ClassificationPair(classification1, whatClassifications.get(0)));
+		testCase.causes.add(causes.get(0));
 		causes.get(0).setClassifications(pairs);
 
 		pairs = new TreeSet<ClassificationPair>();
 		pairs.add(new ClassificationPair(classification2, whatClassifications.get(0)));
+		testCase.causes.add(causes.get(1));
 		causes.get(1).setClassifications(pairs);
 
 		ClassificationRelationMap map = ClassificationRelationMap.fromCase(testCase);
@@ -96,5 +102,57 @@ public class ClassificationRelationMapTest extends GenericRCAUnitTest {
 		pairs = new TreeSet<ClassificationPair>();
 		pairs.add(new ClassificationPair(where2, what2));
 		causes.get(1).setClassifications(pairs);
+	}
+
+
+	@Test
+	public void multipleCaseTest() {
+		ClassificationRelationMap map = new ClassificationRelationMap();
+
+		// First case
+		Cause cause1 = this.causes.get(0);
+		Cause cause2 = this.causes.get(1);
+		Cause cause3 = this.causes.get(2);
+
+		testCase.causes.add(cause1);
+		testCase.causes.add(cause2);
+		testCase.causes.add(cause3);
+
+		testCase.problem.addCause(cause1);
+		cause1.addCause(cause2);
+		testCase.problem.addCause(cause3);
+		cause2.addCause(cause3);
+		cause3.addCause(cause1);
+		cause1.classifications.add(new ClassificationPair(whereClassifications.get(0), whatClassifications.get(0)));
+		cause2.classifications.add(new ClassificationPair(whereClassifications.get(1), whatClassifications.get(1)));
+		cause3.classifications.add(new ClassificationPair(whereClassifications.get(2), whatClassifications.get(2)));
+		map.loadCase(testCase);
+
+		// Second case
+		cause1.classifications = new TreeSet<ClassificationPair>();
+		cause2.classifications = new TreeSet<ClassificationPair>();
+		cause3.classifications = new TreeSet<ClassificationPair>();
+		cause1.classifications.add(new ClassificationPair(whereClassifications.get(2), whatClassifications.get(2)));
+		cause2.classifications.add(new ClassificationPair(whereClassifications.get(3), whatClassifications.get(3)));
+		cause3.classifications.add(new ClassificationPair(whereClassifications.get(4), whatClassifications.get(4)));
+		map.loadCase(testCase);
+
+		// Assertions
+		assertNotNull(map);
+		Map<Classification, Map<Classification, ClassificationRelationMap.ClassificationRelation>> relations =
+				map.getSimpleRelations();
+
+		// Each simple relation key exists
+		for (int i = 0; i < 5; i++) {
+			assertTrue(relations.containsKey(whereClassifications.get(i)));
+		}
+
+		// The correct relations
+		assertTrue(relations.get(whereClassifications.get(3)).containsKey(whereClassifications.get(2)));
+		assertTrue(relations.get(whereClassifications.get(4)).containsKey(whereClassifications.get(3)));
+		assertTrue(relations.get(whereClassifications.get(1)).containsKey(whereClassifications.get(0)));
+		assertTrue(relations.get(whereClassifications.get(2)).containsKey(whereClassifications.get(4)));
+		assertTrue(relations.get(whereClassifications.get(2)).containsKey(whereClassifications.get(1)));
+		assertTrue(relations.get(whereClassifications.get(0)).containsKey(whereClassifications.get(2)));
 	}
 }

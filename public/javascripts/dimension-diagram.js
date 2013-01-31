@@ -456,14 +456,15 @@ function getWeight(strength) {
  * @param minEdgeRelevance minimum visible edge relevance
  * @param keepNodes list of node IDs to keep regardless of relevance
  */
-function showSimpleGraph(minNodeRelevance, minEdgeRelevance, keepNodes) {
+function showSimpleGraph(minNodeRelevance, minEdgeRelevance, keepNodes,
+                         forceColorRelations, forceGlowRelations, forceWeightRelations) {
     var data = window.arca.relationMap.simpleRelations;
     var graphData = [window.arca.rootNode];
 
     // Settings
-    var colorRelations = ($('input:radio[name=groupProposed]:checked').val() == "1");
-    var glowRelations = ($('input:radio[name=groupCorrections]:checked').val() == "1");
-    var weightRelations = ($('input:radio[name=groupCauses]:checked').val() == "1");
+    var colorRelations = forceColorRelations || ($('input:radio[name=groupProposed]:checked').val() == "1");
+    var glowRelations = forceGlowRelations || ($('input:radio[name=groupCorrections]:checked').val() == "1");
+    var weightRelations = forceWeightRelations || ($('input:radio[name=groupCauses]:checked').val() == "1");
 
     // This stores the index of the classification node in graphData, keyed by the classification ID
     var created = [];
