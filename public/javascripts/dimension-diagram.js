@@ -36,6 +36,10 @@ var $radial_menu;
 var fd;
 // Selected edge data
 var selectedEdge;
+// Current weighting value
+var weightingValue = 0;
+// current simplicity value
+var simplicityValue = 0;
 
 // Add the function $.disableSelection() to jQuery
 (function ($) {
@@ -549,6 +553,9 @@ function showSimpleGraph(minNodeRelevance, minEdgeRelevance, keepNodes,
         glow = glowRelations ? getGlow(relationData.corrections) : 0;
         lineWidth = weightRelations ? getWeight(relationData.strength) : 1;
 
+        // Create the relation if necessary
+        if (relationData.strength < minEdgeRelevance) { continue; }
+
         // Create the node if necessary
         if (!created.hasOwnProperty(first)) {
             firstNodeData = arca.classifications[first];
@@ -664,21 +671,27 @@ function applyZoom(newLevel, updateSlider) {
 }
 
 /**
- * Functionality for adjusting the graph's simplicity (nodes)
- * @param simplicityValue, value from the slider element
+ * Functionality for adjusting the graph's weighting (relations)
+ * @param weightingValue, value from the slider element
+ * @param maxNodeRelevance maximum relevance value of nodes
+ * @param maxEdgeRelevance maximum weigth of relations
  */
-function applySimplicity(simplicityValue) {
+function applySimplicity(simplicityValue, maxNodeRelevance, maxEdgeRelevance) {
     var simplicity = document.getElementById('simplicity');
     simplicity.innerHTML = simplicityValue + ' %';
+    showSimpleGraph(simplicityValue / 100 * maxNodeRelevance, weightingValue / 100 * maxEdgeRelevance, []);
 }
 
 /**
  * Functionality for adjusting the graph's weighting (relations)
  * @param weightingValue, value from the slider element
+ * @param maxNodeRelevance maximum relevance value of nodes
+ * @param maxEdgeRelevance maximum weigth of relations
  */
-function applyWeighting(weightingValue) {
+function applyWeighting(weightingValue, maxNodeRelevance, maxEdgeRelevance) {
     var weighting = document.getElementById('weighting');
     weighting.innerHTML = weightingValue + ' %';
+    showSimpleGraph(simplicityValue / 100 * maxNodeRelevance, weightingValue / 100 * maxEdgeRelevance, []);
 }
 
 function init() {
@@ -694,15 +707,40 @@ function init() {
         }
     });
 
+    // Loop through to find out max values for node and edge relevance
+    var maxNodeRelevance = 0;
+    var maxEdgeRelevance = 0;
+    var data = window.arca.relationMap.simpleRelations;
+    for (var first in data) {
+        if (!data.hasOwnProperty(first)) { continue; }
+
+        var firstNodeData = arca.classifications[first];
+        if (firstNodeData.relevance > maxNodeRelevance) {
+            // Add 0.01 so that all nodes disappear
+            maxNodeRelevance = firstNodeData.relevance + 0.01;
+        }
+
+        for (var second in data[first]) {
+            if (!data[first].hasOwnProperty(second)) { continue; }
+
+            var relationData = data[first][second];
+            if (relationData.strength > maxEdgeRelevance) {
+                // Add 0.01 so that all relations disappear
+                maxEdgeRelevance = relationData.strength + 0.01;
+            }
+        }
+    }
+
     // Add slider functionality to the graph configuration section (simplicity)
     $("#slider-simplicity").slider({
         orientation: "horizontal",
         range: "min",
         min: 0,
         max: 100,
-        value: 100,
+        value: 0,
         slide: function(event, ui) {
-            applySimplicity(ui.value);
+            simplicityValue = ui.value;
+            applySimplicity(ui.value, maxNodeRelevance, maxEdgeRelevance);
         }
     });
     // Add slider functionality to the graph configuration section (weighting)
@@ -711,9 +749,10 @@ function init() {
         range: "min",
         min: 0,
         max: 100,
-        value: 100,
+        value: 0,
         slide: function(event, ui) {
-            applyWeighting(ui.value);
+            weightingValue = ui.value;
+            applyWeighting(ui.value, maxNodeRelevance, maxEdgeRelevance);
         }
     });
 }
