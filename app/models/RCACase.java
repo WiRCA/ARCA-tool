@@ -30,6 +30,7 @@ import models.events.CauseStream;
 import models.events.Event;
 import org.hibernate.annotations.Sort;
 import org.hibernate.annotations.SortType;
+import play.Logger;
 import play.cache.Cache;
 import play.data.validation.MaxSize;
 import play.data.validation.Required;
@@ -39,7 +40,6 @@ import play.libs.F.Promise;
 import utils.IdComparableModel;
 
 import javax.persistence.*;
-import java.nio.ByteBuffer;
 import java.util.*;
 
 /**
@@ -203,7 +203,7 @@ public class RCACase extends IdComparableModel {
         this.ownerId = owner.id;
         this.causes = new TreeSet<Cause>();
 	    this.URLHash = Codec.UUID();
-        System.out.println("RCACase constructor called");
+	    Logger.info("Created new RCA Case: " + this.toString());
     }
 
     /**
@@ -412,7 +412,7 @@ public class RCACase extends IdComparableModel {
 			for (ClassificationPair pair : pairs) {
 				int i = parentDimension.indexOf(pair.parent);
 				int j = childDimension.indexOf(pair.child);
-				ClassificationTable.TableCellObject object = table.tableCells[i][j];
+				ClassificationTable.TableCell object = table.tableCells.get(i).get(j);
 
 				// Increase the cause counter for the classification pair
 				object.numberOfCauses++;
@@ -428,36 +428,11 @@ public class RCACase extends IdComparableModel {
 				}
 			}
 		}
-		calculateClassificationTablePercentages(table, numberOfClassificationPairs);
 
+		table.calculatePercentages(numberOfClassificationPairs);
 		return table;
 	}
 
-	/**
-	 * Calculates percentages and total percentages for numberOfCauses, numberOfProposedCauses and numberOfCorrectionCauses
-	 * that are used in the Classification Table
-	 * @param table ClassificationTable where percentages should be calculated
-	 * @todo refactor to ClassificationTable.calculatePercentages
-	 */
-	private void calculateClassificationTablePercentages(ClassificationTable table, int numberOfClassificationPairs) {
-		for (int i = 0; i < table.tableCells.length - 1; i++) {
-			ClassificationTable.TableCellObject totalColumnObject = table.tableCells[i][table.tableCells[i].length - 1];
-			for (int j = 0; j < table.tableCells[i].length - 1; j++) {
-				ClassificationTable.TableCellObject totalRowObject = table.tableCells[table.tableCells.length - 1][j];
-				ClassificationTable.TableCellObject currentCell = table.tableCells[i][j];
-
-				currentCell.percentOfCauses = (double)currentCell.numberOfCauses / numberOfClassificationPairs * 100.0;
-				currentCell.percentOfProposedCauses = (double)currentCell.numberOfProposedCauses / numberOfClassificationPairs * 100.0;
-				currentCell.percentOfCorrectionCauses = (double)currentCell.numberOfCorrectionCauses / numberOfClassificationPairs * 100.0;
-				totalColumnObject.percentOfCauses += currentCell.percentOfCauses;
-				totalColumnObject.percentOfProposedCauses += currentCell.percentOfProposedCauses;
-				totalColumnObject.percentOfCorrectionCauses += currentCell.percentOfCorrectionCauses;
-				totalRowObject.percentOfCauses += currentCell.percentOfCauses;
-				totalRowObject.percentOfProposedCauses += currentCell.percentOfProposedCauses;
-				totalRowObject.percentOfCorrectionCauses += currentCell.percentOfCorrectionCauses;
-			}
-		}
-	}
 
 	/**
 	 * Return dimensions

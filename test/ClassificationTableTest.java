@@ -22,22 +22,16 @@
  * THE SOFTWARE.
  */
 
-import models.Cause;
 import models.ClassificationTable;
-import models.Relation;
 import org.junit.Test;
 
-/**
- * @author Eero Laukkanen
- */
 public class ClassificationTableTest extends GenericRCAUnitTest {
-
 	@Test
 	public void createClassificationTableTest() {
 		ClassificationTable table = new ClassificationTable(10, 12);
-		for (int i = 0; i < table.tableCells.length; i++) {
-			for (int j = 0; j < table.tableCells[0].length; j++) {
-				ClassificationTable.TableCellObject cell = table.tableCells[i][j];
+		for (int i = 0; i < table.tableCells.size(); i++) {
+			for (int j = 0; j < table.tableCells.get(0).size(); j++) {
+				ClassificationTable.TableCell cell = table.tableCells.get(i).get(j);
 				assertTrue(cell.percentOfCorrectionCauses == 0);
 				assertTrue(cell.numberOfProposedCauses == 0);
 				assertTrue(cell.percentOfCauses == 0);
@@ -51,9 +45,9 @@ public class ClassificationTableTest extends GenericRCAUnitTest {
 	@Test
 	public void createAndCheckClassificationTableTest() {
 		ClassificationTable table = new ClassificationTable(10, 12);
-		for (int i = 0; i < table.tableCells.length; i++) {
-			for (int j = 0; j < table.tableCells[0].length; j++) {
-				ClassificationTable.TableCellObject cell = table.tableCells[i][j];
+		for (int i = 0; i < table.tableCells.size(); i++) {
+			for (int j = 0; j < table.tableCells.get(0).size(); j++) {
+				ClassificationTable.TableCell cell = table.tableCells.get(i).get(j);
 				if (i == 5 && j == 1) {
 					cell.numberOfCauses = 5;
 				}
@@ -65,9 +59,9 @@ public class ClassificationTableTest extends GenericRCAUnitTest {
 				}
 			}
 		}
-		for (int i = 0; i < table.tableCells.length; i++) {
-			for (int j = 0; j < table.tableCells[0].length; j++) {
-				ClassificationTable.TableCellObject cell = table.tableCells[i][j];
+		for (int i = 0; i < table.tableCells.size(); i++) {
+			for (int j = 0; j < table.tableCells.get(0).size(); j++) {
+				ClassificationTable.TableCell cell = table.tableCells.get(i).get(j);
 				if (i == 5 && j == 1) {
 					assertTrue(cell.numberOfCauses == 5);
 				}
