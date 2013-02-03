@@ -179,6 +179,13 @@
     cursor: pointer;
 }
 
+.slider-horizontal {
+    height: 8px;
+    margin: 10px;
+    width: 150px;
+    cursor: pointer;
+}
+
 #zoomSlider img {
     cursor: pointer;
 }

@@ -663,6 +663,23 @@ function applyZoom(newLevel, updateSlider) {
     }
 }
 
+/**
+ * Functionality for adjusting the graph's simplicity (nodes)
+ * @param simplicityValue, value from the slider element
+ */
+function applySimplicity(simplicityValue) {
+    var simplicity = document.getElementById('simplicity');
+    simplicity.innerHTML = simplicityValue + ' %';
+}
+
+/**
+ * Functionality for adjusting the graph's weighting (relations)
+ * @param weightingValue, value from the slider element
+ */
+function applyWeighting(weightingValue) {
+    var weighting = document.getElementById('weighting');
+    weighting.innerHTML = weightingValue + ' %';
+}
 
 function init() {
     // Add slider functionality to the element
@@ -674,6 +691,29 @@ function init() {
         value: zoomSteps / 2,
         slide: function(event, ui) {
             applyZoom(((zoomMax - zoomMin) / zoomSteps * ui.value + zoomMin) / zoomLevel, false);
+        }
+    });
+
+    // Add slider functionality to the graph configuration section (simplicity)
+    $("#slider-simplicity").slider({
+        orientation: "horizontal",
+        range: "min",
+        min: 0,
+        max: 100,
+        value: 100,
+        slide: function(event, ui) {
+            applySimplicity(ui.value);
+        }
+    });
+    // Add slider functionality to the graph configuration section (weighting)
+    $("#slider-weighting").slider({
+        orientation: "horizontal",
+        range: "min",
+        min: 0,
+        max: 100,
+        value: 100,
+        slide: function(event, ui) {
+            applyWeighting(ui.value);
         }
     });
 }

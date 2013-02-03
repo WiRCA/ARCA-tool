@@ -290,6 +290,8 @@ dimensionDiagramConfiguration.colorOnLegend=Color the relation lines from blue t
 dimensionDiagramConfiguration.colorOffLegend=Show all the relation lines with the same color
 dimensionDiagramConfiguration.glowOnLegend=Add a glow to the relation lines according to the number of related causes with correction ideas
 dimensionDiagramConfiguration.glowOffLegend=Remove glow from the relation lines
+dimensionDiagramConfiguration.simplicity=Graph simplicity:
+dimensionDiagramConfiguration.weighting=Graph weighting:
 
 contactPage.feedbackFormTitle=Contact us or send feedback
 
