@@ -1,0 +1,83 @@
+#{fixture delete:'all', load:'data.yml' /}
+#{selenium}
+
+// Test init
+open('/logout')
+open('/?language=en')
+
+// Set timeout to 5 seconds, used in waitFor-accessors
+setTimeout('5000')
+
+// login
+type('id=username','admin@local')
+type('id=password','admin')
+clickAndWait('id=signin')
+
+// Create new public case
+clickAndWait('id=createRCACase-link')
+type('id=caseName', 'Ropleema')
+click('id=isCasePublicYes')
+clickAndWait('id=create')
+
+// Create classifications
+waitForTextPresent('Ropleema')
+clickAt('id=tagIcon')
+waitForVisible('id=addTag')
+
+clickAt('id=addTag')
+type('id=classificationName', 'Mikä I')
+type('id=classificationAbbreviation', 'MK1')
+click('id=addClassification-submit')
+waitForNotVisible('id=addClassification-modal')
+
+clickAt('id=addTag')
+type('id=classificationName', 'Mikä II')
+type('id=classificationAbbreviation', 'MK2')
+click('id=addClassification-submit')
+waitForNotVisible('id=addClassification-modal')
+
+clickAt('id=addTag')
+select('id=classificationType', 'value=2')
+type('id=classificationName', 'Missä I')
+type('id=classificationAbbreviation', 'MS1')
+click('id=addClassification-submit')
+waitForNotVisible('id=addClassification-modal')
+
+clickAt('id=addTag')
+select('id=classificationType', 'value=2')
+type('id=classificationName', 'Missä II')
+type('id=classificationAbbreviation', 'MS2')
+click('id=addClassification-submit')
+waitForNotVisible('id=addClassification-modal')
+
+// Create a new case and import classifications from old one
+clickAndWait('link=Index page')
+clickAndWait('id=createRCACase-link')
+type('id=caseName', 'Ropleema 2')
+select('id=importIdSelection','label=Ropleema')
+clickAndWait('id=create')
+
+// Create new cause
+clickAt('css=div.rootNodeBox')
+waitForElementPresent('//div[@id='radmenu-event-addCause']')
+clickAt('//div[@id='radmenu-event-addCause']')
+waitForElementPresent('css=#addcause-modal > div.modal-header > h3')
+type('id=causeName','Syy 1')
+clickAt('//input[@id='addcause-submit']')
+waitForTextPresent('Syy 1')
+
+// Check that classifications were imported
+clickAt('//*[text()="Syy 1"]')
+waitForElementPresent('//div[@id='radmenu-event-tagCause']')
+clickAt('//div[@id='radmenu-event-tagCause']')
+waitForVisible('id=tagcause-modal')
+verifyElementPresent('//div[text()="Missä I"]')
+verifyElementPresent('//div[text()="Missä II"]')
+verifyElementPresent('//div[text()="Mikä I"]')
+verifyElementPresent('//div[text()="Mikä II"]')
+clickAt('id=tagCauseButton')
+waitForNotVisible('id=tagcause-modal')
+
+clickAndWait('id=logout-link')
+
+#{/selenium}
