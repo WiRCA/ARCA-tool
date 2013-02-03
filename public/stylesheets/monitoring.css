@@ -36,6 +36,26 @@
     border: 1px solid silver;
     width: 940px;
     height: 705px;
+    clear: both;
+}
+
+#classificationChartContainer {
+    display: block;
+    clear: both;
+}
+
+.classificationCharts {
+    width: 48%;
+    display: none;
 }
 
 #radial_menu { z-index: 200; }
+
+section {
+    display: none;
+}
+
+section > h1 {
+    border-bottom: 1px solid silver;
+    font-size: 1.25em;
+}

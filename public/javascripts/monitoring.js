@@ -1,11 +1,37 @@
-var ajaxRequest;
-var caseRequest;
-var caseSelections;
-var whatToShow;
-var selectedCauseStatuses;
-var selectedCorrectionStatuses;
-var selectedCases;
-var allCases;
+/*
+ * Copyright (C) 2012 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
+ * Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus,
+ * Timo Lehtinen, Jaakko Harjuhahto
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+
+var ajaxRequest,
+    caseRequest,
+    tableRequest,
+    caseSelections,
+    whatToShow,
+    selectedCauseStatuses,
+    selectedCorrectionStatuses,
+    selectedCases,
+    allCases;
+
 
 function show_help() {
     $('#info_button').attr("disabled", true);
@@ -15,6 +41,7 @@ function show_help() {
         $('#info_button').attr("disabled", false);
     });
 }
+
 
 function initMonitoring(loggedIn) {
     $("#help-block-message-close").click(function () {
@@ -49,6 +76,7 @@ function initMonitoring(loggedIn) {
     }
 }
 
+
 function collectSelectionsWhatToShow() {
     whatToShow = "";
     $("input[name='whatToShow']:checked").each(function () {
@@ -69,20 +97,32 @@ function collectSelectionsWhatToShow() {
     allCases = $("input[name='casesRadio'][value='allCases']:checked").length == 1;
 }
 
+
 $(function () {
     $('.well .head').each(function () {
         $(this).next().parent().css("padding", "10px 19px");
     });
 });
 
+
 function showDimensionDiagram(data, status, xhr) {
     arca.relationMap = data.map;
     arca.classifications = data.classifications;
     if (fd !== undefined) { fd.graph.empty(); }
     $('#graph').empty().show();
+    $('#dimensionDiagramSection').slideDown();
     initGraph('graph', 'radial_menu', 940, 705, false);
     showSimpleGraph(0, 0, [], true, true, true);
 }
+
+
+function showClassificationTable(data, status, xhr) {
+    arca.classificationTable = data;
+    $('#classificationTableSection').slideDown();
+    $('.classificationCharts').show();
+    generateClassificationTable('classificationTable', true, true, true);
+}
+
 
 // Event handlers
 $(function() {
@@ -141,6 +181,7 @@ $(function() {
             });
         } else {
             $("#rcaCaseSelect").empty();
+            $('#causesAndCorrectionsSection').slideUp();
             $("#causesAndCorrections").empty();
         }
     });
@@ -152,12 +193,9 @@ $(function() {
         if ((allCases || selectedCases != "") && whatToShow != "") {
             $("#causesAndCorrections, #graph").html("<img src=\"" + arca.imgs.spinner + "\">");
 
-            if (ajaxRequest != undefined) {
-                ajaxRequest.abort();
-            }
-            if (caseRequest != undefined) {
-                caseRequest.abort();
-            }
+            if (ajaxRequest != undefined) { ajaxRequest.abort(); }
+            if (caseRequest != undefined) { caseRequest.abort(); }
+            if (tableRequest != undefined) { tableRequest.abort(); }
 
             ajaxRequest = $.get(arca.ajax.causesAndCorrections({
                     whatToShow:whatToShow,
@@ -167,12 +205,24 @@ $(function() {
                     selectedCorrectionStatuses:selectedCorrectionStatuses,
                     csvExport:'false'
                 }), function (html) {
+                    $('#causesAndCorrectionsSection').slideDown();
                     $("#causesAndCorrections").html(html).show();
                 }
             );
 
-            caseRequest = $.get(arca.ajax.dimensionDiagram({selectedCases:selectedCases}), showDimensionDiagram);
+            if ($('#showDimensionDiagram:checked').val()) {
+                caseRequest = $.get(arca.ajax.dimensionDiagram({selectedCases:selectedCases}), showDimensionDiagram);
+            } else {
+                $('#dimensionDiagramSection').slideUp();
+            }
+
+            if ($('#showClassificationTable:checked').val()) {
+                tableRequest = $.get(arca.ajax.classificationTable({selectedCases:selectedCases}), showClassificationTable);
+            } else {
+                $('#classificationTableSection').slideUp();
+            }
         } else {
+            $('#causesAndCorrectionsSection').slideUp();
             $("#causesAndCorrections").html("");
         }
     });

@@ -24,6 +24,7 @@
 
 package controllers;
 
+import models.ClassificationTable;
 import models.RCACase;
 import play.mvc.Before;
 import play.mvc.Controller;
@@ -33,11 +34,8 @@ import play.Logger;
 
 import java.util.List;
 
-
 @With(LanguageController.class)
 public class ClassificationTableController extends Controller {
-
-
 	/**
 	 * Open index page.
 	 */
@@ -45,7 +43,10 @@ public class ClassificationTableController extends Controller {
 		RCACase rcaCase = RCACase.getRCACase(URLHash);
 		notFoundIfNull(rcaCase);
 		rcaCase = PublicRCACaseController.checkIfCurrentUserHasRightsForRCACase(rcaCase.id);
-		render(rcaCase);
+
+		ClassificationTable classificationTable = new ClassificationTable();
+		classificationTable.loadCase(rcaCase);
+		render(rcaCase, classificationTable);
 	}
 
 }

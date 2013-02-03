@@ -38,8 +38,10 @@ var fd;
 var selectedEdge;
 // Current weighting value
 var weightingValue = 0;
-// current simplicity value
+// Current simplicity value
 var simplicityValue = 0;
+// Timer for updating the graph after using a slider
+var sliderTimer = null;
 
 // Add the function $.disableSelection() to jQuery
 (function ($) {
@@ -670,6 +672,7 @@ function applyZoom(newLevel, updateSlider) {
     }
 }
 
+
 /**
  * Functionality for adjusting the graph's weighting (relations)
  * @param weightingValue, value from the slider element
@@ -677,10 +680,14 @@ function applyZoom(newLevel, updateSlider) {
  * @param maxEdgeRelevance maximum weigth of relations
  */
 function applySimplicity(simplicityValue, maxNodeRelevance, maxEdgeRelevance) {
-    var simplicity = document.getElementById('simplicity');
-    simplicity.innerHTML = simplicityValue + ' %';
-    showSimpleGraph(simplicityValue / 100 * maxNodeRelevance, weightingValue / 100 * maxEdgeRelevance, []);
+    $('#simplicity').html(simplicityValue + ' %');
+    if (sliderTimer !== null) { clearTimeout(sliderTimer); }
+    sliderTimer = setTimeout(function() {
+        showSimpleGraph(simplicityValue / 100 * maxNodeRelevance, weightingValue / 100 * maxEdgeRelevance, []);
+        sliderTimer = null;
+    }, 200);
 }
+
 
 /**
  * Functionality for adjusting the graph's weighting (relations)
@@ -689,10 +696,14 @@ function applySimplicity(simplicityValue, maxNodeRelevance, maxEdgeRelevance) {
  * @param maxEdgeRelevance maximum weigth of relations
  */
 function applyWeighting(weightingValue, maxNodeRelevance, maxEdgeRelevance) {
-    var weighting = document.getElementById('weighting');
-    weighting.innerHTML = weightingValue + ' %';
-    showSimpleGraph(simplicityValue / 100 * maxNodeRelevance, weightingValue / 100 * maxEdgeRelevance, []);
+    $('#weighting').html(weightingValue + ' %');
+    if (sliderTimer !== null) { clearTimeout(sliderTimer); }
+    sliderTimer = setTimeout(function() {
+        showSimpleGraph(simplicityValue / 100 * maxNodeRelevance, weightingValue / 100 * maxEdgeRelevance, []);
+        sliderTimer = null;
+    }, 200);
 }
+
 
 function init() {
     // Add slider functionality to the element

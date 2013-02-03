@@ -235,6 +235,12 @@ monitoring.csv.causeAndCorrectionName=Syy / Korjaavan toimenpiteen nimi
 monitoring.csv.relatedCaseAndCorrectionDescription=RCA analyysi / Korjaavan toimenpiteen kuvaus
 monitoring.csv.correctionName=Korjaavan toimenpiteen nimi
 monitoring.csv.correctionDescription=Korjaavan toimenpiteen kuvaus
+monitoring.causesAndCorrections=Syyt ja korjausehdotukset
+monitoring.classificationTable=Luokittelutaulukko
+monitoring.showClassificationTable=Näytä luokittelutaulukko
+monitoring.dimensionDiagram=Luokitteludiagrammi
+monitoring.showDimensionDiagram=Näytä luokitteludiagrammi
+monitoring.rootCause=Juurisyyt
 
 monitoring.statusCause.DETECTED=Havaittu
 monitoring.statusCause.ELIMINATION=Korjataan

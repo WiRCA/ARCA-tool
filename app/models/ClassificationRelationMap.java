@@ -48,9 +48,9 @@ public class ClassificationRelationMap {
 	private Map<Classification, ClassificationRelation> rootRelations;
 
 	/**
-	 * For merging multiple cases' classifications, a map of classification name => Classification instance
+	 * A ClassificationNormalizer instance used for loading multiple cases.
 	 */
-	private Map<String, Classification> nameToClassification;
+	private ClassificationNormalizer normalizer;
 
 
 	/**
@@ -60,7 +60,7 @@ public class ClassificationRelationMap {
 		this.simpleRelations = new HashMap<Classification, Map<Classification, ClassificationRelation>>();
 		this.pairRelations = new HashMap<ClassificationPair, Map<ClassificationPair, ClassificationRelation>>();
 		this.rootRelations = new HashMap<Classification, ClassificationRelation>();
-		this.nameToClassification = new HashMap<String, Classification>();
+		this.normalizer = new ClassificationNormalizer();
 	}
 
 
@@ -109,43 +109,12 @@ public class ClassificationRelationMap {
 
 
 	/**
-	 * Normalizes a classification, which is a simple process:
-	 * 1) If the classification's name is found in the nameToClassification map,
-	 *    return the Classification instance corresponding to the name
-	 * 2) Otherwise add this name=>Classification pair to the map and return
-	 *    this classification
-	 * @return normalized classification
-	 */
-	private Classification normalizeClassification(Classification c) {
-		if (this.nameToClassification.containsKey(c.name)) {
-			return this.nameToClassification.get(c.name);
-		} else {
-			this.nameToClassification.put(c.name, c);
-			return c;
-		}
-	}
-
-
-	/**
-	 * A convenience function for normalizing ClassificationPairs
-	 * @param pair the ClassificationPair to normalize
-	 * @return normalized ClassificationPair
-	 */
-	private ClassificationPair normalizePair(ClassificationPair pair) {
-		return new ClassificationPair(
-			this.normalizeClassification(pair.parent),
-			this.normalizeClassification(pair.child)
-		);
-	}
-
-
-	/**
 	 * Adds a new root relation to the map or updates an existing one if present.
 	 * @param classification a (WHERE) classification connected to the root
 	 * @param relationData the strength and likes of a relation
 	 */
 	public void addRootRelation(Classification classification, ClassificationRelation relationData) {
-		classification = this.normalizeClassification(classification);
+		classification = this.normalizer.normalizeClassification(classification);
 		if (this.rootRelations.containsKey(classification)) {
 			this.rootRelations.get(classification).add(relationData);
 		} else {
@@ -195,7 +164,7 @@ public class ClassificationRelationMap {
 					1, rcaCase.problem.likes.size() + relation.causeFrom.likes.size(),
 					rcaCase.problem.corrections.size() + relation.causeFrom.corrections.size()
 				);
-				this.addRootRelation(this.normalizeClassification(fromPair.parent), relationData);
+				this.addRootRelation(this.normalizer.normalizeClassification(fromPair.parent), relationData);
 			}
 		}
 
@@ -216,7 +185,7 @@ public class ClassificationRelationMap {
 								1, causeFrom.likes.size() + causeTo.likes.size(),
 								causeFrom.corrections.size() + causeTo.corrections.size()
 						);
-						this.addRootRelation(this.normalizeClassification(fromPair.parent), relationData);
+						this.addRootRelation(this.normalizer.normalizeClassification(fromPair.parent), relationData);
 					}
 				}
 
@@ -231,7 +200,9 @@ public class ClassificationRelationMap {
 								1, causeFrom.likes.size() + causeTo.likes.size(),
 								causeFrom.corrections.size() + causeTo.corrections.size()
 						);
-						this.addRelation(this.normalizePair(fromPair), this.normalizePair(toPair), relationData);
+						this.addRelation(this.normalizer.normalizePair(fromPair),
+						                 this.normalizer.normalizePair(toPair),
+						                 relationData);
 					}
 				}
 			}
@@ -366,13 +337,13 @@ public class ClassificationRelationMap {
 		for (Map.Entry<ClassificationPair, Map<ClassificationPair, ClassificationRelation>> entry :
 					this.pairRelations.entrySet()) {
 			// Add the parent pair to the set
-			keyPair = this.normalizePair(entry.getKey());
+			keyPair = this.normalizer.normalizePair(entry.getKey());
 			allClassifications.add(keyPair.parent);
 			allClassifications.add(keyPair.child);
 
 			// Add the child pairs to the set
 			for (ClassificationPair valuePair : entry.getValue().keySet()) {
-				valuePair = this.normalizePair(valuePair);
+				valuePair = this.normalizer.normalizePair(valuePair);
 				allClassifications.add(valuePair.parent);
 				allClassifications.add(valuePair.child);
 			}

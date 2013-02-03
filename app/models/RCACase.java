@@ -375,64 +375,6 @@ public class RCACase extends IdComparableModel {
 		}
 	}
 
-	/**
-	 * Returns and calculates ClassificationTable. Initially it creates ClassificationTable and initializes
-	 * row and column names. Then Causes and each ClassificationPair for them are looped through and table
-	 * values are updated accordingly. Finally percentages are calculated and table is returned.
-	 * @return the classification table
-	 * @see ClassificationTable
-	 */
-	public ClassificationTable getClassificationTable() {
-		List<Classification> parentDimension = this.getClassifications(ClassificationDimension.WHERE_DIMENSION_ID);
-		List<Classification> childDimension = this.getClassifications(ClassificationDimension.WHAT_DIMENSION_ID);
-
-		if (parentDimension.size() == 0 || childDimension.size() == 0) {
-			return null;
-		}
-
-		ClassificationTable table = new ClassificationTable(parentDimension.size() + 1, childDimension.size() + 1);
-
-		// Set row and column names as classification names
-		for (Classification c : parentDimension) {
-			table.rowNames.add(c.name);
-		}
-		table.rowNames.add(play.i18n.Messages.get("classificationTablePage.total"));
-
-		for (Classification c : childDimension) {
-			table.colNames.add(c.name);
-		}
-		table.colNames.add(play.i18n.Messages.get("classificationTablePage.total"));
-
-		int numberOfClassificationPairs = 0;
-
-		for (Cause cause : this.causes) {
-			SortedSet<ClassificationPair> pairs = cause.getClassifications();
-			numberOfClassificationPairs += pairs.size();
-			// Loop through all classification pairs for each cause
-			for (ClassificationPair pair : pairs) {
-				int i = parentDimension.indexOf(pair.parent);
-				int j = childDimension.indexOf(pair.child);
-				ClassificationTable.TableCell object = table.tableCells.get(i).get(j);
-
-				// Increase the cause counter for the classification pair
-				object.numberOfCauses++;
-
-				// Increase the proposed counter for the classification pair if cause is liked
-				if (cause.countLikes() > 0) {
-					object.numberOfProposedCauses++;
-				}
-
-				// Increase the correction counter for the classification pair if cause has correction proposal
-				if (cause.corrections.size() > 0) {
-					object.numberOfCorrectionCauses++;
-				}
-			}
-		}
-
-		table.calculatePercentages(numberOfClassificationPairs);
-		return table;
-	}
-
 
 	/**
 	 * Return dimensions

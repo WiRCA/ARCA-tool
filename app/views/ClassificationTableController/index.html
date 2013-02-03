@@ -26,29 +26,28 @@
     <title>&{'classificationTablePage.title'}</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="${_response_encoding}">
-#{press.stylesheet 'main.css' /}
-#{press.stylesheet 'jquery-ui-1.8.16.custom.css' /}
-#{press.stylesheet 'base.css' /}
-#{press.stylesheet src:'bootstrap.min.css', compressed:false /}
-#{press.stylesheet 'arcaeditor.css' /}
-#{press.compressed-stylesheet /}
+    #{press.stylesheet 'main.css' /}
+    #{press.stylesheet 'jquery-ui-1.8.16.custom.css' /}
+    #{press.stylesheet 'base.css' /}
+    #{press.stylesheet src:'bootstrap.min.css', compressed:false /}
+    #{press.stylesheet 'arcaeditor.css' /}
+    #{press.compressed-stylesheet /}
 
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-
     <link rel="shortcut icon" type="image/png" href="@{'/public/images/favicon.png'}">
     <!--[if lt IE 9]>
     <script src="${'/public/javascripts/excanvas.compiled.js'}" type="text/javascript"></script>
     <![endif]-->
 
-#{press.script src:'jquery-1.7.1.min.js', compress:false /}
-#{press.script 'bootstrap-twipsy.js' /}
-#{press.script 'bootstrap-popover.js' /}
-#{press.script src:'jquery-ui-1.8.16.custom.min.js', compress:false /}
-#{press.script src:'jquery.tagsinput.js', compress:false /}
-#{press.script 'smalljit.js' /}
-#{press.script 'dimension-diagram.js' /}
-#{press.script 'classificationTable.js' /}
-#{press.compressed-script /}
+    #{press.script src:'jquery-1.7.1.min.js', compress:false /}
+    #{press.script 'bootstrap-twipsy.js' /}
+    #{press.script 'bootstrap-popover.js' /}
+    #{press.script src:'jquery-ui-1.8.16.custom.min.js', compress:false /}
+    #{press.script src:'jquery.tagsinput.js', compress:false /}
+    #{press.script 'smalljit.js' /}
+    #{press.script 'dimension-diagram.js' /}
+    #{press.script 'classificationTable.js' /}
+    #{press.compressed-script /}
 
     <script type="text/javascript">
         // Google Analytics
@@ -62,188 +61,9 @@
             var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
         })();
     </script>
-
-    <script type="text/javascript">
-        window.tableView = {
-
-            classificationTable: [
-            #{list rcaCase.getClassificationTable(), as:'classificationTable'}
-                {
-                    "rowNames": [
-                        #{list classificationTable.rowNames, as:'rowName'}
-                            {name: "${rowName}"}${rowName_isLast ? '' : ','}
-                        #{/list}
-                    ],
-                    "colNames": [
-                        #{list classificationTable.colNames, as:'colName'}
-                            {name: "${colName}"}${colName_isLast ? '' : ','}
-                        #{/list}
-                    ],
-
-
-                    "table": [
-                        #{list classificationTable.tableCells, as:'tableCellRow'}
-                            {column: [
-                                #{list tableCellRow, as:'tableCellCol'}
-                                    {percentOfCauses: "${tableCellCol.percentOfCauses}",
-                                        percentOfCorrectionCauses: "${tableCellCol.percentOfCorrectionCauses}",
-                                        percentOfProposedCauses: "${tableCellCol.percentOfProposedCauses}"}
-                                ${tableCellCol_isLast ? '' : ','}
-                                #{/list}
-                            ]}
-                        ${tableCellRow_isLast ? '' : ','}
-                        #{/list}
-                    ]
-
-
-                }${classificationTable_isLast ? '' : ','}
-            #{/list}
-            ]
-
-        };
-
-        //Generates the HTML classification table and fills it with corresponding data
-        function generateClassificationTable() {
-            var buttonsChecked = howManyRadioButtonsChecked();
-            if (buttonsChecked == 0) {
-                return;
-            }
-
-            var rows = tableView.classificationTable[0].rowNames.length;
-            var cols = tableView.classificationTable[0].colNames.length;
-            var table = $('<table id="classificationTable" class="condensed-table bordered-table"><tbody>');
-
-            var percentOfCausesRowDataArray = new Array();
-            var percentOfProposedCausesRowDataArray = new Array();
-            var percentOfCorrectionCausesRowDataArray = new Array();
-            var percentOfCausesRowDataArray_2 = new Array();
-            var percentOfProposedCausesRowDataArray_2 = new Array();
-            var percentOfCorrectionCausesRowDataArray_2 = new Array();
-
-            var pieSlice = ['Dimension', 'What'];
-            var pieSlice_2 = ['Dimension', 'Where'];
-
-            percentOfCausesRowDataArray.push(pieSlice);
-            percentOfCorrectionCausesRowDataArray.push(pieSlice);
-            percentOfProposedCausesRowDataArray.push(pieSlice);
-            percentOfCausesRowDataArray_2.push(pieSlice_2);
-            percentOfCorrectionCausesRowDataArray_2.push(pieSlice_2);
-            percentOfProposedCausesRowDataArray_2.push(pieSlice_2);
-
-            for(var r = -1; r < rows; r++) {
-                var tr = $('<tr>');
-                for (var c = -1; c < cols; c++) {
-                    if (r == -1 || c == -1) {
-                        if (r == -1 && c == -1) {
-                            $('<th>#</th>').appendTo(tr);
-                        }
-                        else if (r == -1) {
-                            $('<th colspan=' + buttonsChecked + '" >' + tableView.classificationTable[0].colNames[c].name + '</th>').appendTo(tr);
-                        }
-                        else if (c == -1) {
-                            $('<th>' + tableView.classificationTable[0].rowNames[r].name + '</th>').appendTo(tr);
-                            pieSlice = new Array();
-                            pieSlice.push(tableView.classificationTable[0].rowNames[r].name);
-                        }
-                    }
-                    else {
-                        var percentOfCauses = Math.round(tableView.classificationTable[0].table[r].column[c].percentOfCauses*10)/10;
-                        var percentOfCorrectionCauses = Math.round(tableView.classificationTable[0].table[r].column[c].percentOfCorrectionCauses*10)/10;
-                        var percentOfProposedCauses = Math.round(tableView.classificationTable[0].table[r].column[c].percentOfProposedCauses*10)/10;
-                        if (document.getElementById('all').checked) {
-                            if (percentOfCauses == 0 || isNaN(percentOfCauses)) {
-                                $('<td> - </td>').appendTo(tr);
-                            } else {
-                                $('<td id="causes' + (r + 1) + '_' + (c + 1) + '" title="&{'classificationTablePage.causes'}">' + percentOfCauses + ' %</td>').appendTo(tr);
-                                if (c == cols - 1) {
-                                    pieSlice.push(percentOfCauses);
-                                    percentOfCausesRowDataArray.push(pieSlice.slice());
-                                    pieSlice.pop();
-                                }
-                                if (r == rows - 1) {
-                                    pieSlice_2 = new Array();
-                                    pieSlice_2.push(tableView.classificationTable[0].colNames[c].name);
-                                    pieSlice_2.push(percentOfCauses);
-                                    percentOfCausesRowDataArray_2.push(pieSlice_2.slice());
-                                }
-                            }
-                        }
-                        if (document.getElementById('liked').checked) {
-                            if (percentOfProposedCauses == 0 || isNaN(percentOfProposedCauses)) {
-                                $('<td> - </td>').appendTo(tr);
-                            } else {
-                                $('<td title="&{'classificationTablePage.liked'}">' + percentOfProposedCauses +
-                                  ' %</td>').appendTo(tr);
-                                if (c == cols - 1) {
-                                    pieSlice.push(percentOfProposedCauses);
-                                    percentOfProposedCausesRowDataArray.push(pieSlice.slice());
-                                    pieSlice.pop();
-                                }
-                                if (r == rows - 1) {
-                                    pieSlice_2 = new Array();
-                                    pieSlice_2.push(tableView.classificationTable[0].colNames[c].name);
-                                    pieSlice_2.push(percentOfProposedCauses);
-                                    percentOfProposedCausesRowDataArray_2.push(pieSlice_2.slice());
-                                }
-                            }
-                        }
-                        if (document.getElementById('corrections').checked) {
-                            if (percentOfCorrectionCauses == 0 || isNaN(percentOfCorrectionCauses)) {
-                                $('<td> - </td>').appendTo(tr);
-                            } else {
-                                $('<td title="&{'classificationTablePage.corrections'}">' + percentOfCorrectionCauses +
-                                  ' %</td>').appendTo(tr);
-                                if (c == cols - 1) {
-                                    pieSlice.push(percentOfCorrectionCauses);
-                                    percentOfCorrectionCausesRowDataArray.push(pieSlice.slice());
-                                    pieSlice.pop();
-                                }
-                                if (r == rows - 1) {
-                                    pieSlice_2 = new Array();
-                                    pieSlice_2.push(tableView.classificationTable[0].colNames[c].name);
-                                    pieSlice_2.push(percentOfCorrectionCauses);
-                                    percentOfCorrectionCausesRowDataArray_2.push(pieSlice_2.slice());
-                                }
-                            }
-                        }
-                    }
-                }
-                tr.appendTo(table);
-            }
-            $('</tbody></table>').appendTo(table);
-            $('#classificationTable').replaceWith(table);
-            if (document.getElementById('all').checked) {
-                drawChart(percentOfCausesRowDataArray, 'chart_div_percentOfCauses', '&{'classificationTablePage.piechartforprocessareacauses'}');
-                drawChart(percentOfCausesRowDataArray_2, 'chart_div_percentOfCauses_2', '&{'classificationTablePage.piechartforcauseclasscauses'}');
-            } else {
-                $('#chart_div_percentOfCauses').replaceWith('<p id="chart_div_percentOfCauses" ></p>');
-                $('#chart_div_percentOfCauses_2').replaceWith('<p id="chart_div_percentOfCauses_2" ></p>');
-            }
-
-            if (document.getElementById('corrections').checked) {
-                drawChart(percentOfCorrectionCausesRowDataArray, 'chart_div_percentOfCorrectionCauses',
-                          '&{'classificationTablePage.piechartforprocessareacorrections'}');
-                drawChart(percentOfCorrectionCausesRowDataArray_2, 'chart_div_percentOfCorrectionCauses_2',
-                          '&{'classificationTablePage.piechartforcauseclasscorrections'}');
-            } else {
-                $('#chart_div_percentOfCorrectionCauses').replaceWith('<p id="chart_div_percentOfCorrectionCauses" ></p>');
-                $('#chart_div_percentOfCorrectionCauses_2').replaceWith('<p id="chart_div_percentOfCorrectionCauses_2" ></p>');
-            }
-
-            if (document.getElementById('liked').checked) {
-                drawChart(percentOfProposedCausesRowDataArray, 'chart_div_percentOfProposedCauses', '&{'classificationTablePage.piechartforprocessarealiked'}');
-                drawChart(percentOfProposedCausesRowDataArray_2, 'chart_div_percentOfProposedCauses_2', '&{'classificationTablePage.piechartforcauseclassliked'}');
-            } else {
-                $('#chart_div_percentOfProposedCauses').replaceWith('<p id="chart_div_percentOfProposedCauses" ></p>');
-                $('#chart_div_percentOfProposedCauses_2').replaceWith('<p id="chart_div_percentOfProposedCauses_2" ></p>');
-            }
-
-        }
-
-    </script>
 </head>
 
-<body onload="generateClassificationTable()">
+<body>
 
 #{navigation /}
 
@@ -269,31 +89,62 @@
     <h2 id="classificationTableHeader" >&{'classificationTablePage.title'}</h2>
     <div id="classificationCheckbox">
         <label class="checkbox">
-            <input id="all" onclick="generateClassificationTable()" type="checkbox" checked="true"/>
+            <input id="all" type="checkbox" checked="true"/>
         &{'classificationTablePage.causes'}
         </label>
         <label class="checkbox">
-            <input id="liked" onclick="generateClassificationTable()" type="checkbox" checked="true"/>
+            <input id="liked" type="checkbox" checked="true"/>
         &{'classificationTablePage.liked'}
         </label>
         <label class="checkbox">
-            <input id="corrections" onclick="generateClassificationTable()" type="checkbox" checked="true"/>
+            <input id="corrections" type="checkbox" checked="true"/>
         &{'classificationTablePage.corrections'}
         </label>
     </div>
 
-        <table id="classificationTable"></table>
-    <div>
-        <p class="classificationCharts" id="chart_div_percentOfCauses" ></p>
-        <p class="classificationCharts" id="chart_div_percentOfCauses_2" ></p>
-        <p class="classificationCharts" id="chart_div_percentOfProposedCauses" ></p>
-        <p class="classificationCharts" id="chart_div_percentOfProposedCauses_2" ></p>
-        <p class="classificationCharts" id="chart_div_percentOfCorrectionCauses" ></p>
-        <p class="classificationCharts" id="chart_div_percentOfCorrectionCauses_2" ></p>
+    <table id="classificationTable"></table>
+
+    <div id="classificationChartContainer">
+        <p class="classificationCharts" id="chart_div_percentOfCauses"></p>
+        <p class="classificationCharts" id="chart_div_percentOfCauses_2"></p>
+        <p class="classificationCharts" id="chart_div_percentOfProposedCauses"></p>
+        <p class="classificationCharts" id="chart_div_percentOfProposedCauses_2"></p>
+        <p class="classificationCharts" id="chart_div_percentOfCorrectionCauses"></p>
+        <p class="classificationCharts" id="chart_div_percentOfCorrectionCauses_2"></p>
     </div>
 </div>
 
+<script type="text/javascript">
+if (typeof arca === 'undefined') { arca = {}; }
+
+*{ Generate the JS object for the classification table }*
+arca.classificationTable = ${classificationTable.toJson().raw()};
+
+*{ Store the localization strings for JS }*
+arca.localization = {
+    causes: "&{'classificationTablePage.causes'}",
+    liked: "&{'classificationTablePage.liked'}",
+    corrections: "&{'classificationTablePage.corrections'}",
+    piechartforprocessareacauses: "&{'classificationTablePage.piechartforprocessareacauses'}",
+    piechartforcauseclasscauses: "&{'classificationTablePage.piechartforcauseclasscauses'}",
+    piechartforprocessareacorrections: "&{'classificationTablePage.piechartforprocessareacorrections'}",
+    piechartforcauseclasscorrections: "&{'classificationTablePage.piechartforcauseclasscorrections'}",
+    piechartforprocessarealiked: "&{'classificationTablePage.piechartforprocessarealiked'}",
+    piechartforcauseclassliked: "&{'classificationTablePage.piechartforcauseclassliked'}"
+};
+
+function classificationTableWrapper() {
+    generateClassificationTable(
+        'classificationTable', $('#all:checked').val(), $('#liked:checked').val(), $('#corrections:checked').val()
+    );
+}
+
+*{ Show the classification table when the page has loaded }*
+$(function() {
+    classificationTableWrapper();
+    $('#all, #liked, #corrections').change(classificationTableWrapper);
+});
+</script>
+
 </body>
 </html>
-
-
