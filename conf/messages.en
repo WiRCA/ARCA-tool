@@ -123,9 +123,7 @@ createRCA.publicYes=Anyone who has the link can access. No sign-in required.
 createRCA.publicNo=Only people explicitly granted permission can access. Sign-in required.
 createRCA.create=Create the case!
 createRCA.isMultinational=Multinational company?
-createRCA.import=Import classifications
-
-importClassifications.title=Select the case for classifications import
+createRCA.import=Import classifications from selected case
 
 showRCACase.title=RCA Case %s
 showRCACase.owner=RCA case owner
