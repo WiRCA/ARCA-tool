@@ -498,8 +498,6 @@ function configurationView() {
 
 function show_edge_radial_menu(eventInfo, mouseEvent) {
 
-    console.log(eventInfo.getPos());
-
     var x = parseInt($(window).width()/2+eventInfo.getPos().x);
     var y = parseInt($(window).height()/2+eventInfo.getPos().y);
 
@@ -513,7 +511,6 @@ function show_edge_radial_menu(eventInfo, mouseEvent) {
 
     // show the menu directly over the placeholder
 
-    console.log(" x:" +mouseEvent.pageX+" y: "+mouseEvent.pageY);
     $("#radial_menu").css({
         "left": x + "px",
         "top": y + "px"
