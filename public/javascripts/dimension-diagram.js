@@ -80,7 +80,7 @@ var WHAT_STEP = 22;
  * @return {Array} the cause names that are related to chosen relation
  */
 function causeNamesForRootRelation(causeArray) {
-    var nameArray = new Array();            f
+    var nameArray = new Array();
     var rcaCaseName = window.arca.rootNode.name;
     for (var causeId in causeArray) {
         for (var neighbourId in causeArray[causeId].neighbourCauseIds) {
@@ -140,7 +140,13 @@ function populateRelatedCauses() {
  * Initializes the graph for the canvas
  */
 function initGraph(graph_id, radial_menu_id, width, height, respondToResize) {
-    if(!sessionStorage.getItem("openedEdges")) {
+    if(sessionStorage.getItem("rcaCaseId") && sessionStorage.getItem("rcaCaseId") != window.arca.rcaCaseId) {
+        sessionStorage.clear();
+        sessionStorage.setItem("rcaCaseId", window.arca.rcaCaseId);
+        sessionStorage.setItem("openedEdges", JSON.stringify(new Array()));
+    } else if(!sessionStorage.getItem("rcaCaseId")) {
+        sessionStorage.clear();
+        sessionStorage.setItem("rcaCaseId", window.arca.rcaCaseId);
         sessionStorage.setItem("openedEdges", JSON.stringify(new Array()));
     }
 
