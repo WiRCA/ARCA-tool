@@ -714,6 +714,7 @@ function showSimpleGraph(minNodeRelevance, minEdgeRelevance, keepNodes,
                     found = true;
                     console.log("opening");
                     console.log(openedEdge);
+                    console.log(openedEdge.firstId+" -=- "+openedEdge.secondId);
                     // Open edge found
                     var pairRelations = window.arca.relationMap.pairRelations;
 
