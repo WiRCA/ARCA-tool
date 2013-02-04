@@ -296,8 +296,12 @@ public class Cause extends LikableIdComparableModel {
 	 */
 	public Set<Cause> getAllRelatedCauses() {
 		Set<Cause> allCauses = this.getCauses();
-		allCauses.add(this.getParent());
+		Cause parent = this.getParent();
+		if(parent != null) {
+			allCauses.add(parent);
+		}
 		allCauses.add(this.rcaCase.problem);
+
 		return allCauses;
 	}
 
