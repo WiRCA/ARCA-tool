@@ -457,10 +457,10 @@ function radmenu_fadeOut () {
 }
 
 function getEdgeParentId(ed) {
-    return ed.substring(0,2);
+    return ed.substring(0,ed.indexOf(":"));
 }
 function getEdgeChildId(ed) {
-    return ed.substring(3,5);
+    return ed.substring(ed.indexOf(":")+1);
 }
 
 
