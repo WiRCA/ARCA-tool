@@ -519,12 +519,7 @@ function show_edge_radial_menu(eventInfo, mouseEvent) {
      // jQuery("#radial_menu").radmenu("show");
     radmenu_fadeIn(selectedEdge);
     $("#radial_menu").disableSelection();
-    if (selectedEdge.nodeTo.id == 0 || selectedEdge.nodeFrom.id == 0) {
-        jQuery("#radial_menu").radmenu("items")[0].style.visibility = "hidden";
-        jQuery("#radial_menu").radmenu("items")[1].style.visibility = "hidden";
-        jQuery("#radial_menu").radmenu("items")[2].style.visibility = "hidden";
-        jQuery("#radial_menu").radmenu("items")[3].style.visibility = "hidden";
-    } else if (selectedEdge.nodeTo.data.dimension == WHERE && selectedEdge.nodeFrom.data.dimension == WHERE) {
+    if (selectedEdge.nodeTo.data.dimension == WHERE && selectedEdge.nodeFrom.data.dimension == WHERE) {
         jQuery("#radial_menu").radmenu("items")[0].style.visibility = "visible";
         jQuery("#radial_menu").radmenu("items")[1].style.visibility = "visible";
         jQuery("#radial_menu").radmenu("items")[2].style.visibility = "visible";
@@ -734,7 +729,7 @@ function showSimpleGraph(minNodeRelevance, minEdgeRelevance, keepNodes,
                                     nodeTo: firstChildId,
                                     "data": {
                                         "$dim": 15,
-                                        "$color": "#ff0000",
+                                        "$color": "#ffffff",
                                         "$type": type,
                                         "$weight": 2,
                                         "$lineWidth": 2,
@@ -745,7 +740,7 @@ function showSimpleGraph(minNodeRelevance, minEdgeRelevance, keepNodes,
                                     nodeTo: secondChildId,
                                     "data": {
                                         "$dim": 15,
-                                        "$color": "#ff0000",
+                                        "$color": "#ffffff",
                                         "$type": type,
                                         "$weight": 2,
                                         "$lineWidth": 2,
