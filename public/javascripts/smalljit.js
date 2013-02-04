@@ -1927,10 +1927,12 @@ var MouseEventsManager = new Class({
           var edgeFrom = graph.edges[id];
           hashset[id] = true;
           for(var edgeId in edgeFrom) {
-            if(edgeId in hashset) continue;
+              // this is commented due to relations to ownself in dimension diagram
+           // if(edgeId in hashset) continue;
             var e = edgeFrom[edgeId],
                 geom = e && etypes[e.getData('type')],
                 contains = geom && geom.contains && geom.contains.call(fx, e, this.getPos());
+
             if(contains) {
               this.contains = contains;
               return that.edge = this.edge = e;
@@ -3897,7 +3899,7 @@ $jit.Graph = new Class({
 
   */  
   addNode: function(obj) { 
-   if(!this.nodes[obj.id]) {  
+   if(!this.nodes[obj.id]) {
      var edges = this.edges[obj.id] = {};
      this.nodes[obj.id] = new Graph.Node($.extend({
         'id': obj.id,
@@ -6363,9 +6365,15 @@ var EdgeHelper = {
     }
   },
   /*
-    Object: EdgeHelper.hyperline
+    Object: EdgeHelper.circleline
   */
-  'hyperline': {
+
+
+    /*
+     Object: EdgeHelper.hyperline
+     */
+
+    'hyperline': {
     /*
     Method: render
     
@@ -6384,25 +6392,26 @@ var EdgeHelper = {
     (end code)
     */
     'render': function(from, to, r, canvas){
-      var ctx = canvas.getCtx();  
-      var centerOfCircle = computeArcThroughTwoPoints(from, to);
-      if (centerOfCircle.a > 1000 || centerOfCircle.b > 1000
+        var ctx = canvas.getCtx();
+        var centerOfCircle = computeArcThroughTwoPoints(from, to);
+        if (centerOfCircle.a > 1000 || centerOfCircle.b > 1000
           || centerOfCircle.ratio < 0) {
-        ctx.beginPath();
-        ctx.moveTo(from.x * r, from.y * r);
-        ctx.lineTo(to.x * r, to.y * r);
-        ctx.stroke();
-      } else {
-        var angleBegin = Math.atan2(to.y - centerOfCircle.y, to.x
-            - centerOfCircle.x);
-        var angleEnd = Math.atan2(from.y - centerOfCircle.y, from.x
-            - centerOfCircle.x);
-        var sense = sense(angleBegin, angleEnd);
-        ctx.beginPath();
-        ctx.arc(centerOfCircle.x * r, centerOfCircle.y * r, centerOfCircle.ratio
-            * r, angleBegin, angleEnd, sense);
-        ctx.stroke();
-      }
+            ctx.beginPath();
+            ctx.moveTo(from.x * r, from.y * r);
+            ctx.lineTo(to.x * r, to.y * r);
+            ctx.stroke();
+        } else {
+            var angleBegin = Math.atan2(to.y - centerOfCircle.y, to.x
+             - centerOfCircle.x);
+            var angleEnd = Math.atan2(from.y - centerOfCircle.y, from.x
+             - centerOfCircle.x);
+            var sense = sense(angleBegin, angleEnd);
+            ctx.beginPath();
+            ctx.arc(centerOfCircle.x * r, centerOfCircle.y * r, centerOfCircle.ratio
+             * r, angleBegin, angleEnd, sense);
+            ctx.stroke();
+        }
+
       /*      
         Calculates the arc parameters through two points.
         
@@ -6458,7 +6467,7 @@ var EdgeHelper = {
         Parameters: 
       
            angleBegin - Starting angle for drawing the arc. 
-           angleEnd - The HyperLine will be drawn from angleBegin to angleEnd. 
+           angleEnd - The HyperLine will be drawn from angleBegin to angleEnd.
       
         Returns: 
       
@@ -6534,6 +6543,7 @@ Graph.Plot = {
           'dim': 'number',
           'alpha': 'number',
           'lineWidth': 'number',
+          'typetype': 'number',
           'angularWidth':'number',
           'span':'number',
           'valueArray':'array-number',
@@ -7077,6 +7087,7 @@ Graph.Plot = {
        canvas - (object) A <Canvas> element.
 
     */
+    // JAFFA
     plotNode: function(node, canvas, animating) {
         var f = node.getData('type'), 
             ctxObj = this.node.CanvasStyles;
@@ -8107,12 +8118,18 @@ Layouts.ForceDirected = new Class({
             var vp = v.getPos(p), up = u.getPos(p);
             dpos.x = vp.x - up.x;
             dpos.y = vp.y - up.y;
+              //jaffa     TAMA ON TARKEAA!!!
+
+              // We're in the what node now, look for its where node to connect
+              //console.log(v.name);
+
             var norm = dpos.norm() || 1;
             v.disp[p].$add(dpos
                 .$scale(opt.nodef(norm) / norm));
           });
         }
       });
+
     });
     //calculate attractive forces
     var T = !!graph.getNode(this.root).visited;
@@ -8122,8 +8139,8 @@ Layouts.ForceDirected = new Class({
         if(!!nodeTo.visited === T) {
           $.each(property, function(p) {
             var vp = node.getPos(p), up = nodeTo.getPos(p);
-            dpos.x = vp.x - up.x;
-            dpos.y = vp.y - up.y;
+              dpos.x = vp.x - up.x;
+              dpos.y = vp.y - up.y;
             var norm = dpos.norm() || 1;
             node.disp[p].$add(dpos.$scale(-opt.edgef(norm) / norm));
             nodeTo.disp[p].$add(dpos.$scale(-1));
@@ -8144,6 +8161,26 @@ Layouts.ForceDirected = new Class({
         p.x = min(w2, max(-w2, p.x));
         p.y = min(h2, max(-h2, p.y));
       });
+    });
+
+    graph.eachNode(function(node) {
+       // node.getPos('end').x = Math.random()*600;
+       // node.getPos('end').y = Math.random()*200-100;
+        //console.log("XOX: "+node.name);
+      //if (joo.name.substring(0,4) == 'what') {
+          //console.log(node);
+
+        node.eachAdjacency(function(adj) {
+         var nodeTo = adj.nodeTo;
+         // if (nodeTo.name.substring(0,5) == 'where') {
+
+            $.each(property, function(p) {
+
+            });
+
+        //  }
+        });
+      //}
     });
   }
 });
@@ -8672,6 +8709,7 @@ $jit.ForceDirected.$extend = true;
   */
   ForceDirected.Plot.EdgeTypes = new Class({
     'none': $.empty,
+
     'line': {
         'render': function(adj, canvas) {
             var from = adj.nodeFrom.pos.clone().getc(true),
@@ -8681,7 +8719,7 @@ $jit.ForceDirected.$extend = true;
                 inv = true;
             this.edgeHelper.line.render(from, to, canvas);
         },
-      'contains': function(adj, pos) {
+       'contains': function(adj, pos) {
         var from = adj.nodeFrom.pos.getc(true),
             to = adj.nodeTo.pos.getc(true);
         return this.edgeHelper.line.contains(from, to, pos, this.edge.epsilon);

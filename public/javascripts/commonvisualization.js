@@ -104,10 +104,53 @@ function implementEdgeTypes() {
             },
 
             'contains': function(adj, pos) {
+
                 var from = adj.nodeFrom.pos.getc(true),
                     to = adj.nodeTo.pos.getc(true),
                     epsilon = this.edge.epsilon,
                     mid = new $jit.Complex(from.x + (to.x - from.x) / 2, from.y + (to.y - from.y) / 2);
+
+                var dist = Math.sqrt(Math.pow(pos.x - mid.x, 2) + Math.pow(pos.y - mid.y, 2));
+                return Math.abs(dist - 6) <= epsilon;
+            }
+        },
+        'circleline': {
+            'render': function(adj, canvas) {
+                var from = adj.nodeFrom.pos.clone().getc(true);
+                var to = adj.nodeTo.pos.clone().getc(true);
+                var ctx = canvas.getCtx();
+
+                var dx = Math.abs(from.x - to.x);
+                if (dx == 0) {
+                    dx = 100;
+                }
+                ctx.beginPath();
+                ctx.arc(from.x, from.y-12, (dx/4), 0, 3, true);
+                ctx.stroke();
+                ctx.closePath();
+
+                var mid = {
+                    x: from.x,
+                    y: from.y - (dx/2.7)
+                }
+                ctx.beginPath();
+                ctx.arc(mid.x, mid.y, 6, 0, 2 * Math.PI, true);
+                ctx.closePath();
+                ctx.fill();
+
+            },
+            contains : function (adj, pos) {
+                var from = adj.nodeFrom.pos.getc(true);
+                var to = adj.nodeTo.pos.getc(true);
+                var dx = Math.abs(from.x - to.x);
+                if (dx == 0) {
+                    dx = 100;
+                }
+                var mid = {
+                    x: from.x,
+                    y: from.y - (dx/2.7)
+                }
+                var epsilon = this.edge.epsilon;
 
                 var dist = Math.sqrt(Math.pow(pos.x - mid.x, 2) + Math.pow(pos.y - mid.y, 2));
                 return Math.abs(dist - 6) <= epsilon;

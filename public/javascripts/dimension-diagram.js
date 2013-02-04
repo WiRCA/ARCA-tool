@@ -43,6 +43,14 @@ var simplicityValue = 0;
 // Timer for updating the graph after using a slider
 var sliderTimer = null;
 
+var selectedEdge;
+
+//var openedEdges = new Array();
+
+var WHAT = 1;
+var WHERE = 2;
+var WHAT_STEP = 22;
+
 // Add the function $.disableSelection() to jQuery
 (function ($) {
     $.fn.disableSelection = function () {
@@ -72,7 +80,7 @@ var sliderTimer = null;
  * @return {Array} the cause names that are related to chosen relation
  */
 function causeNamesForRootRelation(causeArray) {
-    var nameArray = new Array();
+    var nameArray = new Array();            f
     var rcaCaseName = window.arca.rootNode.name;
     for (var causeId in causeArray) {
         for (var neighbourId in causeArray[causeId].neighbourCauseIds) {
@@ -132,6 +140,10 @@ function populateRelatedCauses() {
  * Initializes the graph for the canvas
  */
 function initGraph(graph_id, radial_menu_id, width, height, respondToResize) {
+    if(!sessionStorage.getItem("openedEdges")) {
+        sessionStorage.setItem("openedEdges", JSON.stringify(new Array()));
+    }
+
     $radial_menu = $("#" + radial_menu_id);
     $radial_menu.radmenu({
         // The list class inside which to look for menu items
@@ -155,8 +167,8 @@ function initGraph(graph_id, radial_menu_id, width, height, respondToResize) {
 
            // Opening of the edge
            if ($selected[0].id == "radmenu-event-openEdge") {
-               alert("not implemented yet");
-               $radial_menu.radmenu("hide");
+               openEdge($selected);
+               jQuery("#radial_menu").radmenu("hide");
            }
 
            // naming the edge
@@ -164,7 +176,11 @@ function initGraph(graph_id, radial_menu_id, width, height, respondToResize) {
                alert("not implemented yet");
                $radial_menu.radmenu("hide");
            }
-
+           // closing the edge
+           else if ($selected[0].id == "radmenu-event-closeEdge") {
+               closeEdge($selected);
+               jQuery("#radial_menu").radmenu("hide");
+           }
            // show related causes
            else if ($selected[0].id == "radmenu-event-showRelatedCauseNames") {
                $('#showCauses-modal').modal('show');
@@ -249,9 +265,54 @@ function initGraph(graph_id, radial_menu_id, width, height, respondToResize) {
 
             // Update node positions when dragged
             onDragMove: function (node, eventInfo, e) {
+                if (node.data.dimension == WHAT) {
+                    return;
+                }
+
                 var pos = eventInfo.getPos();
+                var dx = node.pos.x - pos.x;
+                var dy = node.pos.y - pos.y;
                 node.pos.setc(pos.x, pos.y);
                 node.setPos(new $jit.Complex(pos.x, pos.y), 'end');
+
+                node.eachAdjacency(function(adj) {
+                    var nodeTo = adj.nodeTo;
+                    if(nodeTo.data.dimension == WHAT) {
+                        var upDown = checkUpDown(nodeTo, node);
+
+                        nodeTo.setPos(new $jit.Complex(nodeTo.pos.x - dx,
+                                                           nodeTo.pos.y - dy), 'current');
+
+                        var upDown = checkUpDown(nodeTo, node);
+                        if (nodeTo.pos.y < node.pos.y && upDown == 1) {
+                            nodeTo.setPos(new $jit.Complex(nodeTo.pos.x, nodeTo.pos.y + 48), 'current');
+                        }
+                        if (nodeTo.pos.y > node.pos.y && upDown == -1) {
+                            nodeTo.setPos(new $jit.Complex(nodeTo.pos.x, nodeTo.pos.y - 48), 'current');
+                        }
+
+
+                        // Dig other side what
+                        nodeTo.eachAdjacency(function(n2) {
+                            var n2to = n2.nodeTo;
+                            if (n2to.data.dimension == WHAT) {
+                                n2to.eachAdjacency(function(n3) {
+                                    var n3to = n3.nodeTo;
+                                    if (n3to.data.dimension == WHERE) {
+                                        var upDown = checkUpDown(n3to, node);
+                                        if (n3to.pos.y > n2to.pos.y && upDown == -1) {
+                                            n2to.setPos(new $jit.Complex(n2to.pos.x, n2to.pos.y + 48), 'current');
+                                        }
+                                        if (n3to.pos.y < n2to.pos.y && upDown == 1) {
+                                            n2to.setPos(new $jit.Complex(n2to.pos.x, n2to.pos.y - 48), 'current');
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+
                 fd.plot();
             },
 
@@ -282,7 +343,7 @@ function initGraph(graph_id, radial_menu_id, width, height, respondToResize) {
 
             onClick: function(node, eventInfo, e) {
                 if (eventInfo.getEdge()) {
-                    show_edge_radial_menu(eventInfo, e);
+                    show_edge_radial_menu(eventInfo, node);
                     fd.plot();
                 } else {
                     $radial_menu.radmenu("hide");
@@ -315,7 +376,11 @@ function initGraph(graph_id, radial_menu_id, width, height, respondToResize) {
             if (node.id == 0) {
                 $(domElement).addClass('rootNodeBox');
             } else {
-                $(domElement).addClass('nodeBox');
+                if (node.data.dimension == WHAT) {
+                    $(domElement).addClass('whatNodeBox');
+                } else {
+                    $(domElement).addClass('nodeBox');
+                }
             }
             $(domElement).html(node.name);
         }
@@ -351,12 +416,26 @@ function doResize() {
  * @param data the classification data from window.arca.classifications
  * @return object
  */
-function newNode(data) {
+function newNode(data, id, type) {
+    var name = data.title;
+    if (data.dimension == WHAT) {
+        name = data.title.substring(0,2);
+    }
     return {
-        id: data.id,
-        name: data.title,
+        id: id,
+        //name: data.id+": "+data.title,
+        name: name,
         data: data,
-        adjacencies: []
+        adjacencies: [{
+            nodeTo: 0,
+            "data": {
+                "$dim": 15,
+                "$color": "#0000aa",
+                "type": type,
+                "weight": 3,
+                "$lineWidth": 3
+            }
+        }]
     };
 }
 
@@ -377,23 +456,85 @@ function radmenu_fadeOut () {
     );
 }
 
+function getEdgeParentId(ed) {
+    return ed.substring(0,2);
+}
+function getEdgeChildId(ed) {
+    return ed.substring(3,5);
+}
+
+
+function closeEdge(selected) {
+    var openedEdges = JSON.parse(sessionStorage.getItem("openedEdges"));
+    for (var i = 0; i < openedEdges.length; i++) {
+        if ((openedEdges[i].firstId == getEdgeParentId(selectedEdge.nodeFrom.id) &&
+             openedEdges[i].secondId == getEdgeParentId(selectedEdge.nodeTo.id)) ||
+            (openedEdges[i].firstId == getEdgeParentId(selectedEdge.nodeTo.id) &&
+             openedEdges[i].secondId == getEdgeParentId(selectedEdge.nodeFrom.id))) {
+            openedEdges.splice(i,1);
+        }
+    }
+    sessionStorage.setItem("openedEdges", JSON.stringify(openedEdges));
+    showSimpleGraph(0, 0, []);
+}
+
+function openEdge(selected) {
+    var openedEdges = JSON.parse(sessionStorage.getItem("openedEdges"));
+
+    openedEdges.push({
+        open: true,
+        firstId: selectedEdge.nodeFrom.id,
+        secondId: selectedEdge.nodeTo.id
+    });
+
+    sessionStorage.setItem("openedEdges", JSON.stringify(openedEdges));
+
+    showSimpleGraph(0, 0, []);
+}
+
 function configurationView() {
     $('#configurationArea').slideToggle();
 }
 
 function show_edge_radial_menu(eventInfo, mouseEvent) {
+
+    console.log(eventInfo.getPos());
+
+    var x = parseInt($(window).width()/2+eventInfo.getPos().x);
+    var y = parseInt($(window).height()/2+eventInfo.getPos().y);
+
     selectedEdge = eventInfo.getEdge();
+
+    //$("#" + given_node.id).addClass("nodeBoxSelected");
+
     // Get the position of the placeholder element
+
     jQuery("#radial_menu").radmenu("opts").radius = 30;
 
     // show the menu directly over the placeholder
+
+    console.log(" x:" +mouseEvent.pageX+" y: "+mouseEvent.pageY);
     $("#radial_menu").css({
-        "left": mouseEvent.pageX + "px",
-        "top": mouseEvent.pageY + "px"
+        "left": x + "px",
+        "top": y + "px"
     }).show();
 
+     // jQuery("#radial_menu").radmenu("show");
     radmenu_fadeIn(selectedEdge);
     $("#radial_menu").disableSelection();
+    if (selectedEdge.nodeTo.data.dimension == WHERE && selectedEdge.nodeFrom.data.dimension == WHERE) {
+        jQuery("#radial_menu").radmenu("items")[0].style.visibility = "visible";
+        jQuery("#radial_menu").radmenu("items")[1].style.visibility = "visible";
+        jQuery("#radial_menu").radmenu("items")[2].style.visibility = "visible";
+        jQuery("#radial_menu").radmenu("items")[3].style.visibility = "hidden";
+
+    } else if (selectedEdge.nodeTo.data.dimension == WHAT && selectedEdge.nodeFrom.data.dimension == WHAT) {
+        jQuery("#radial_menu").radmenu("items")[0].style.visibility = "hidden";
+        jQuery("#radial_menu").radmenu("items")[1].style.visibility = "hidden";
+        jQuery("#radial_menu").radmenu("items")[2].style.visibility = "hidden";
+        jQuery("#radial_menu").radmenu("items")[3].style.visibility = "visible";
+
+    }
 }
 
 
@@ -464,7 +605,9 @@ function getWeight(strength) {
  * @param keepNodes list of node IDs to keep regardless of relevance
  */
 function showSimpleGraph(minNodeRelevance, minEdgeRelevance, keepNodes,
-                         forceColorRelations, forceGlowRelations, forceWeightRelations) {
+    forceColorRelations, forceGlowRelations, forceWeightRelations) {
+
+    var openedEdges = JSON.parse(sessionStorage.getItem("openedEdges"));
     var data = window.arca.relationMap.simpleRelations;
     var graphData = [window.arca.rootNode];
 
@@ -489,7 +632,7 @@ function showSimpleGraph(minNodeRelevance, minEdgeRelevance, keepNodes,
 
         // Create the node if necessary
         if (!created.hasOwnProperty(first)) {
-            graphData.push(newNode(firstNodeData));
+            graphData.push(newNode(firstNodeData, firstNodeData.id));
             created[first] = graphData.length - 1;
         }
 
@@ -507,7 +650,7 @@ function showSimpleGraph(minNodeRelevance, minEdgeRelevance, keepNodes,
 
             // Create the node if necessary
             if (!created.hasOwnProperty(second)) {
-                graphData.push(newNode(secondNodeData));
+                graphData.push(newNode(secondNodeData, secondNodeData.id, type));
                 created[second] = graphData.length - 1;
             }
 
@@ -519,6 +662,7 @@ function showSimpleGraph(minNodeRelevance, minEdgeRelevance, keepNodes,
                 lineWidth = 1;
             }
 
+            var color;
             // Check if relation should be colored because they are liked
             if (colorRelations) {
                 color = getColor(relationData.likes);
@@ -526,57 +670,114 @@ function showSimpleGraph(minNodeRelevance, minEdgeRelevance, keepNodes,
                 color = "#0000aa";
             }
 
+            var glow;
             // Check if relation should be glowed because there are corrections
             if (glowRelations) {
                 glow = getGlow(relationData.corrections);
             } else {
                 glow = 0;
             }
-
-            // Add the adjacency
-            graphData[created[first]].adjacencies.push({
-                nodeTo: second,
-                "data": {
-                    "$dim": 15,
-                    "$color": color,
-                    "weight": 2,
-                    "$lineWidth": lineWidth,
-                    "$glow": glow
-                }
-            });
-        }
-    }
-
-    // Add the root node connections
-    for (first in arca.relationMap.rootRelations) {
-        if (!arca.relationMap.rootRelations.hasOwnProperty(first)) { continue; }
-        relationData = arca.relationMap.rootRelations[first];
-        color = colorRelations ? getColor(relationData.likes) : '#0000aa';
-        glow = glowRelations ? getGlow(relationData.corrections) : 0;
-        lineWidth = weightRelations ? getWeight(relationData.strength) : 1;
-
-        // Create the relation if necessary
-        if (relationData.strength < minEdgeRelevance) { continue; }
-
-        // Create the node if necessary
-        if (!created.hasOwnProperty(first)) {
-            firstNodeData = arca.classifications[first];
-            if (firstNodeData.relevance < minNodeRelevance && keepNodes.indexOf(first) == -1) { continue; }
-            graphData.push(newNode(firstNodeData));
-            created[first] = graphData.length - 1;
-        }
-
-        // Add the adjacency
-        graphData[created[first]].adjacencies.push({
-            nodeTo: 0,
-            "data": {
-                "$dim": 15,
-                "$color": color,
-                "$lineWidth": lineWidth,
-                "$glow": glow,
-                "weight": 2
+            var type = "relationLine";
+            if (first == second) {
+                type = "circleline";
             }
-        });
+            if (openedEdges.length == 0) {
+                graphData[created[first]].adjacencies.push({
+                   nodeTo: second,
+                   "data": {
+                       "$dim": 15,
+                       "$color": color,
+                       "weight": 2,
+                       "type": type,
+                       "$lineWidth": lineWidth,
+                       "$glow": glow
+                   }
+                });
+            }
+            var found = false;
+            for (var i = 0; i < openedEdges.length; i++) {
+                var openedEdge = openedEdges[i];
+
+                // Add the adjacency
+                if ((openedEdge.firstId == first && openedEdge.secondId == second) ||
+                    (openedEdge.firstId == second && openedEdge.secondId == first)) {
+                    found = true;
+                    // Open edge found
+                    var pairRelations = window.arca.relationMap.pairRelations;
+
+                    for(var openFirst in pairRelations) {
+                        var firstParentId = getEdgeParentId(openFirst);
+                        for (var openSecond in pairRelations[openFirst]) {
+                            var secondParentId = getEdgeParentId(openSecond);
+                            if ((openedEdge.firstId == firstParentId && openedEdge.secondId == secondParentId) ||
+                                (openedEdge.firstId == secondParentId && openedEdge.secondId == firstParentId)) {
+
+                                var firstChildId = openFirst;
+                                var secondChildId = openSecond;
+
+                                var nNode = newNode(window.arca.classifications[getEdgeChildId(openFirst)], firstChildId, type);
+                                nNode.adjacencies = [];
+                                graphData.push(nNode);
+                                created[firstChildId] = graphData.length - 1;
+
+                                nNode = newNode(window.arca.classifications[getEdgeChildId(openSecond)], secondChildId, type);
+                                nNode.adjacencies = [];
+                                graphData.push(nNode);
+                                created[secondChildId] = graphData.length - 1;
+
+                                // Between parent and child
+                                graphData[created[firstParentId]].adjacencies.push({
+                                    nodeTo: firstChildId,
+                                    "data": {
+                                        "$dim": 15,
+                                        "$color": "#ff0000",
+                                        "weight": 2,
+                                        "$lineWidth": 2,
+                                        "$glow": glow
+                                    }
+                                });
+                                graphData[created[secondParentId]].adjacencies.push({
+                                    nodeTo: secondChildId,
+                                    "data": {
+                                        "$dim": 15,
+                                        "$color": "#ff0000",
+                                        "weight": 2,
+                                        "$lineWidth": 2,
+                                        "$glow": glow
+                                    }
+                                });
+                                // Between childs
+                                graphData[created[firstChildId]].adjacencies.push({
+                                   nodeTo: secondChildId,
+                                   "data": {
+                                       "$dim": 15,
+                                       "$color": color,
+                                       "weight": 2,
+                                       "type": type,
+                                       "$lineWidth": lineWidth,
+                                       "$glow": glow
+                                   }
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+            // If no opened node is found
+            if(!found) {
+                graphData[created[first]].adjacencies.push({
+                    nodeTo: second,
+                    "data": {
+                       "$dim": 15,
+                       "$color": color,
+                       "weight": 2,
+                       "$type": type,
+                       "$lineWidth": lineWidth,
+                       "$glow": glow
+                    }
+                });
+            }
+        }
     }
 
     // If there are no nodes, stop here and go grab a drink or something
@@ -585,6 +786,7 @@ function showSimpleGraph(minNodeRelevance, minEdgeRelevance, keepNodes,
     // Load the data, disable selections from each node
     fd.loadJSON(graphData);
     $("#graph-label div.node").disableSelection();
+
 
     // Set the initial positions for the nodes, radially around the root node
     var i = 0, x, y;
@@ -599,18 +801,59 @@ function showSimpleGraph(minNodeRelevance, minEdgeRelevance, keepNodes,
         node.setPos(new $jit.Complex(x, y), 'current');
         ++i;
     });
+
+
+    fd.graph.eachNode(function (node) {
+        if(node.data.dimension == WHERE) {
+            var nodeArr = new Array();
+            node.eachAdjacency(function(adj) {
+                if (adj.nodeTo.data.dimension == WHAT) {
+                    nodeArr.push(adj.nodeTo);
+                }
+            });
+
+            if (nodeArr.length > 0) {
+                firstPos = ((nodeArr.length - 1) * (WHAT_STEP / 2));
+                for (i = 0; i < nodeArr.length; i++) {
+                    var x = node.getPos("current").x - firstPos + (i * WHAT_STEP);
+                    var upDown = checkUpDown(nodeArr[i], node);
+                    var y = node.getPos("current").y + (24*upDown);
+                    nodeArr[i].setPos(new $jit.Complex(x, y), "current");
+                }
+            }
+        }
+    });
     fd.plot();
 
+    //fd.animate({'duration': 1000})
     // Let the force algorithm find nice minima for the nodes and display them
-    fd.computeIncremental({
-        iter: 400,
+    /*fd.computeIncremental({
+        iter: 20,
         property: 'end',
         onComplete: function() { fd.animate({'duration': 1000}); }
-    });
+    });  */
 }
 
+function checkUpDown(nodeTo, node) {
+    var upDown = 1;
+    nodeTo.eachAdjacency(function(n2) {
+        if (n2.nodeTo.data.dimension == WHAT) {
+            n2.nodeTo.eachAdjacency(function(n3) {
+                if (n3.nodeTo.data.dimension == WHERE) {
+                    if(n3.nodeTo.getPos("current").y < node.getPos("current").y) {
+                        upDown = -1;
+                    } else {
+                        upDown = 1;
+                    }
+                }
+            });
+        }
+    });
+    return upDown;
+}
 
 // Zoom functions //
+
 /**
  * Increments zoom by one step
  */
@@ -637,6 +880,7 @@ function decZoomSlider() {
 function applyZoom(newLevel, updateSlider) {
     // Hides a radial menu when zoomed as the scaling does not quite work
     jQuery("#radial_menu").radmenu("hide");
+    jQuery("#radial_menu_opened_edge").radmenu("hide");
     $('.popover').remove();
 
     // Reset the zoom of the canvas if the canvas has been moved or resized

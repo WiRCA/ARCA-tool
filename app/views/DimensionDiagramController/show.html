@@ -47,6 +47,8 @@
         #{press.script 'commonvisualization.js' /}
         #{press.script 'dimension-diagram.js' /}
         #{press.script 'jQuery.radmenu.js' /}
+        #{press.script 'sessionstorage.1.4.js' /}
+
         #{press.compressed-script /}
 
         <script type="text/javascript">
@@ -76,7 +78,7 @@
                     </a>
                 </li>
                 <li class="item radmenu-button" id="radmenu-event-nameEdge">
-                    <a href="#" rel='twipsy' data-placement="left" title='&{'editor.nameEdge'}'>
+                    <a href="#" rel='twipsy' data-placement="bottom" title='&{'editor.nameEdge'}'>
                         <img src="@{'/public/images/icons/naming.png'}" height="36" width="36"
                              style="margin-left: -8px; margin-top: -8px" />
                     </a>
@@ -84,6 +86,12 @@
                 <li class="item radmenu-button" id="radmenu-event-showRelatedCauseNames">
                     <a href="#" rel='twipsy' data-placement="right" title='&{'editor.showRelatedCauseNames'}'>
                         <img src="@{'/public/images/icons/cause_list.png'}" height="36" width="36"
+                             style="margin-left: -8px; margin-top: -8px" />
+                    </a>
+                </li>
+                <li class="item radmenu-button" id="radmenu-event-closeEdge">
+                    <a href="#" rel='twipsy' data-placement="left" title='&{'editor.closeEdge'}'>
+                        <img src="@{'/public/images/icons/closing.png'}" height="36" width="36"
                              style="margin-left: -8px; margin-top: -8px" />
                     </a>
                 </li>
