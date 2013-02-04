@@ -230,7 +230,7 @@ function initGraph(graph_id, radial_menu_id, width, height, respondToResize) {
 
         Edge: {
             overridable: true,
-            type: 'relationLine',
+            type: 'line',
             dim: 75,
             color: '#23A4FF',
             lineWidth: 2
@@ -431,8 +431,8 @@ function newNode(data, id, type) {
             "data": {
                 "$dim": 15,
                 "$color": "#0000aa",
-                "type": type,
-                "weight": 3,
+                "$type": "line",
+                "$weight": 3,
                 "$lineWidth": 3
             }
         }]
@@ -519,12 +519,16 @@ function show_edge_radial_menu(eventInfo, mouseEvent) {
      // jQuery("#radial_menu").radmenu("show");
     radmenu_fadeIn(selectedEdge);
     $("#radial_menu").disableSelection();
-    if (selectedEdge.nodeTo.data.dimension == WHERE && selectedEdge.nodeFrom.data.dimension == WHERE) {
+    if (selectedEdge.nodeTo.id == 0 || selectedEdge.nodeFrom.id == 0) {
+        jQuery("#radial_menu").radmenu("items")[0].style.visibility = "hidden";
+        jQuery("#radial_menu").radmenu("items")[1].style.visibility = "hidden";
+        jQuery("#radial_menu").radmenu("items")[2].style.visibility = "hidden";
+        jQuery("#radial_menu").radmenu("items")[3].style.visibility = "hidden";
+    } else if (selectedEdge.nodeTo.data.dimension == WHERE && selectedEdge.nodeFrom.data.dimension == WHERE) {
         jQuery("#radial_menu").radmenu("items")[0].style.visibility = "visible";
         jQuery("#radial_menu").radmenu("items")[1].style.visibility = "visible";
         jQuery("#radial_menu").radmenu("items")[2].style.visibility = "visible";
         jQuery("#radial_menu").radmenu("items")[3].style.visibility = "hidden";
-
     } else if (selectedEdge.nodeTo.data.dimension == WHAT && selectedEdge.nodeFrom.data.dimension == WHAT) {
         jQuery("#radial_menu").radmenu("items")[0].style.visibility = "hidden";
         jQuery("#radial_menu").radmenu("items")[1].style.visibility = "hidden";
@@ -678,14 +682,17 @@ function showSimpleGraph(minNodeRelevance, minEdgeRelevance, keepNodes,
             if (first == second) {
                 type = "circleline";
             }
+            if (first.id == 0 || second.id == 0) {
+               // type = "line";
+            }
             if (openedEdges.length == 0) {
                 graphData[created[first]].adjacencies.push({
                    nodeTo: second,
                    "data": {
                        "$dim": 15,
                        "$color": color,
-                       "weight": 2,
-                       "type": type,
+                       "$weight": 2,
+                       "$type": type,
                        "$lineWidth": lineWidth,
                        "$glow": glow
                    }
@@ -728,7 +735,8 @@ function showSimpleGraph(minNodeRelevance, minEdgeRelevance, keepNodes,
                                     "data": {
                                         "$dim": 15,
                                         "$color": "#ff0000",
-                                        "weight": 2,
+                                        "$type": type,
+                                        "$weight": 2,
                                         "$lineWidth": 2,
                                         "$glow": glow
                                     }
@@ -738,7 +746,8 @@ function showSimpleGraph(minNodeRelevance, minEdgeRelevance, keepNodes,
                                     "data": {
                                         "$dim": 15,
                                         "$color": "#ff0000",
-                                        "weight": 2,
+                                        "$type": type,
+                                        "$weight": 2,
                                         "$lineWidth": 2,
                                         "$glow": glow
                                     }
@@ -749,8 +758,8 @@ function showSimpleGraph(minNodeRelevance, minEdgeRelevance, keepNodes,
                                    "data": {
                                        "$dim": 15,
                                        "$color": color,
-                                       "weight": 2,
-                                       "type": type,
+                                       "$weight": 2,
+                                       "$type": type,
                                        "$lineWidth": lineWidth,
                                        "$glow": glow
                                    }
@@ -761,6 +770,9 @@ function showSimpleGraph(minNodeRelevance, minEdgeRelevance, keepNodes,
                 }
             }
             // If no opened node is found
+            if (first.id == 0 || second.id == 0) {
+                type = "relationLine";
+            }
             if(!found) {
                 graphData[created[first]].adjacencies.push({
                     nodeTo: second,
