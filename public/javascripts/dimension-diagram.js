@@ -636,7 +636,7 @@ function showSimpleGraph(minNodeRelevance, minEdgeRelevance, keepNodes,
 
         // Filter irrelevant nodes
         firstNodeData = arca.classifications[first];
-        if (firstNodeData.relevance < minNodeRelevance && keepNodes.indexOf(first) == -1) { continue; }
+    //    if (firstNodeData.relevance < minNodeRelevance && keepNodes.indexOf(first) == -1) { continue; }
 
         // Create the node if necessary
         if (!created.hasOwnProperty(first)) {
@@ -651,10 +651,10 @@ function showSimpleGraph(minNodeRelevance, minEdgeRelevance, keepNodes,
 
             // Filter irrelevant target nodes
             secondNodeData = window.arca.classifications[second];
-            if (secondNodeData.relevance < minNodeRelevance) { continue; }
+    //        if (secondNodeData.relevance < minNodeRelevance) { continue; }
 
             // Filter irrelevant edges
-            if (relationData.strength < minEdgeRelevance) { continue; }
+    //        if (relationData.strength < minEdgeRelevance) { continue; }
 
             // Create the node if necessary
             if (!created.hasOwnProperty(second)) {
