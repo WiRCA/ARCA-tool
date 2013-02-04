@@ -722,6 +722,7 @@ function showSimpleGraph(minNodeRelevance, minEdgeRelevance, keepNodes,
                         var firstParentId = getEdgeParentId(openFirst);
                         for (var openSecond in pairRelations[openFirst]) {
                             var secondParentId = getEdgeParentId(openSecond);
+                            console.log("rolling: "+openFirst+" | "+openSecond)
                             if ((openedEdge.firstId == firstParentId && openedEdge.secondId == secondParentId) ||
                                 (openedEdge.firstId == secondParentId && openedEdge.secondId == firstParentId)) {
 
