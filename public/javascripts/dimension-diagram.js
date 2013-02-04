@@ -140,6 +140,11 @@ function populateRelatedCauses() {
  * Initializes the graph for the canvas
  */
 function initGraph(graph_id, radial_menu_id, width, height, respondToResize) {
+
+    sessionStorage.clear();
+    sessionStorage.setItem("rcaCaseId", window.arca.rcaCaseId);
+    sessionStorage.setItem("openedEdges", JSON.stringify(new Array()));
+    /*
     if(sessionStorage.getItem("rcaCaseId") && sessionStorage.getItem("rcaCaseId") != window.arca.rcaCaseId) {
         sessionStorage.clear();
         sessionStorage.setItem("rcaCaseId", window.arca.rcaCaseId);
@@ -149,7 +154,7 @@ function initGraph(graph_id, radial_menu_id, width, height, respondToResize) {
         sessionStorage.setItem("rcaCaseId", window.arca.rcaCaseId);
         sessionStorage.setItem("openedEdges", JSON.stringify(new Array()));
     }
-
+    */
     $radial_menu = $("#" + radial_menu_id);
     $radial_menu.radmenu({
         // The list class inside which to look for menu items
@@ -707,6 +712,8 @@ function showSimpleGraph(minNodeRelevance, minEdgeRelevance, keepNodes,
                 if ((openedEdge.firstId == first && openedEdge.secondId == second) ||
                     (openedEdge.firstId == second && openedEdge.secondId == first)) {
                     found = true;
+                    console.log("opening");
+                    console.log(openedEdge);
                     // Open edge found
                     var pairRelations = window.arca.relationMap.pairRelations;
 
@@ -717,8 +724,12 @@ function showSimpleGraph(minNodeRelevance, minEdgeRelevance, keepNodes,
                             if ((openedEdge.firstId == firstParentId && openedEdge.secondId == secondParentId) ||
                                 (openedEdge.firstId == secondParentId && openedEdge.secondId == firstParentId)) {
 
+
                                 var firstChildId = openFirst;
                                 var secondChildId = openSecond;
+
+                                console.log("OPENING 2");
+                                console.log(firstChildId+" = "+secondChildId);
 
                                 var nNode = newNode(window.arca.classifications[getEdgeChildId(openFirst)], firstChildId, type);
                                 nNode.adjacencies = [];
