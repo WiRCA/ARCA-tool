@@ -1129,9 +1129,9 @@ function show_radial_menu(given_node) {
  * Resizes the ForceDirected canvas according to the window size
  */
 function doResize() {
-    fd.canvas.resize(window.innerWidth, window.innerHeight);
-    $("#infovis").css("width", window.innerWidth);
-    $("#infovis").css("height", window.innerHeight);
+    fd.canvas.resize(window.innerWidth + 1000, window.innerHeight + 1000);
+    $("#infovis").css("width", window.innerWidth + 1000);
+    $("#infovis").css("height", window.innerHeight + 1000);
     applyZoom(1, false);
 }
 
