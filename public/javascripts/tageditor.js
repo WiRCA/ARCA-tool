@@ -18,7 +18,10 @@ function populateTagEditor() {
     $('input[id^=childTags-]').each(function() { $(this).removeTagsInput(); });
     $('#tagAreaMiddle > div').remove();
 
-    var tags = selectedNode.data.classifications;
+    if (!arca.graphJson.hasOwnProperty(findCause(selectedNode.id))) {
+        // Error state, TODO
+    }
+    var tags = arca.graphJson[findCause(selectedNode.id)].data.classifications;
     var i, j, curr;
 
     // Group the tags under a where->what object
@@ -85,11 +88,11 @@ function addTagArea(e, batch) {
 
     // Enable tag input on the element
     $('#childTags-' + id).tagsInput({
-                                        interactive: false,
-                                        width: '95%',
-                                        height: '30px',
-                                        onRemoveTag: updateTagMenu
-                                    });
+        interactive: false,
+        width: '95%',
+        height: '30px',
+        onRemoveTag: updateTagMenu
+    });
 
     // Select the given tag area
     if (!batch) {
