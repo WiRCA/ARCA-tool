@@ -83,6 +83,14 @@ public class MonitoringController extends Controller {
 		renderJSON(map.toJson());
 	}
 
+	public static void classificationTable(@As(",") List<Long> selectedCases) {
+		ClassificationTable table = new ClassificationTable();
+		for (Long id : selectedCases) {
+			table.loadCase((RCACase) RCACase.findById(id));
+		}
+		renderJSON(table.toJson());
+	}
+
 	/**
 	* Lists the causes and corrective actions that user wants to see
 	* @param whatToShow "causes", "corrections", or both

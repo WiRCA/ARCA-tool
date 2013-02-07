@@ -22,22 +22,27 @@
   ~ THE SOFTWARE.
   -->
 #{extends 'main.html' /}
+
 #{set 'title'}&{'monitoringPage.title'}#{/set}
 #{set 'pageHeader'}&{'monitoringPage.title'} #{/set}
 #{set 'pageHeaderSmall'}#{/set}
 #{set 'activePage'}monitoring#{/set}
+
 #{set 'moreStyles'}
 #{press.stylesheet 'arcaeditor.css' /}
 #{press.stylesheet 'monitoring.css' /}
 #{press.compressed-stylesheet /}
 #{/set}
+
 #{set 'moreScripts'}
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
 #{press.script 'bootstrap-twipsy.js' /}
 #{press.script 'jquery.tablesorter.min.js' /}
 #{press.script 'jquery.alterclass.js' /}
 #{press.script 'jquery.jeditable.js' /}
 #{press.script 'jQuery.radmenu.js' /}
 #{press.script 'smalljit.js' /}
+#{press.script 'classificationTable.js' /}
 #{press.script 'commonvisualization.js' /}
 #{press.script 'dimension-diagram.js' /}
 #{press.script 'monitoring.js' /}
@@ -111,8 +116,14 @@
                 </li>
                 <li>
                     <label>
-                        <input type="checkbox" value="dimensionDiagram" name="dimensionDiagram" checked="checked" />
-                        &{'monitoring.dimensionDiagram'}
+                        <input type="checkbox" value="dimensionDiagram" id="showDimensionDiagram" name="dimensionDiagram" checked="checked" />
+                        &{'monitoring.showDimensionDiagram'}
+                    </label>
+                </li>
+                <li>
+                    <label>
+                        <input type="checkbox" value="classificationTable" id="showClassificationTable" name="classificationTable" checked="checked" />
+                        &{'monitoring.showClassificationTable'}
                     </label>
                 </li>
             </ul>
@@ -121,22 +132,47 @@
 </div>
 <div id="rcaCaseSelect"></div>
 
-<div id="causesAndCorrections"></div>
-<div id="graph"></div>
-<div id="radial_menu" style="position: absolute; display: none; width: 0; height: 0;">
-    <ul class="list">
-        <li class="item radmenu-button" id="radmenu-event-openEdge">
-            <a href="#" rel='twipsy' data-placement="left" title='&{'editor.openEdge'}'>
-                <img src="@{'/public/images/icons/opening.png'}" height="36" width="36"
-                     style="margin-left: -8px; margin-top: -8px" />
-            </a>
-        </li>
-    </ul>
-</div>
+<section id="causesAndCorrectionsSection">
+    <h1>&{'monitoring.causesAndCorrections'}</h1>
+    <div id="causesAndCorrections"></div>
+</section>
+
+<section id="classificationTableSection">
+    <h1>&{'monitoring.classificationTable'}</h1>
+    <table id="classificationTable"></table>
+
+    <div>
+        <p class="classificationCharts" id="chart_div_percentOfCauses"></p>
+        <p class="classificationCharts" id="chart_div_percentOfCauses_2"></p>
+        <p class="classificationCharts" id="chart_div_percentOfProposedCauses"></p>
+        <p class="classificationCharts" id="chart_div_percentOfProposedCauses_2"></p>
+        <p class="classificationCharts" id="chart_div_percentOfCorrectionCauses"></p>
+        <p class="classificationCharts" id="chart_div_percentOfCorrectionCauses_2"></p>
+    </div>
+</section>
+
+<section id="dimensionDiagramSection">
+    <h1>&{'monitoring.dimensionDiagram'}</h1>
+    <div id="graph"></div>
+    <div id="radial_menu" style="position: absolute; display: none; width: 0; height: 0;">
+        <ul class="list">
+            <li class="item radmenu-button" id="radmenu-event-openEdge">
+                <a href="#" rel='twipsy' data-placement="left" title='&{'editor.openEdge'}'>
+                    <img src="@{'/public/images/icons/opening.png'}" height="36" width="36"
+                         style="margin-left: -8px; margin-top: -8px" />
+                </a>
+            </li>
+        </ul>
+    </div>
+</section>
 
 <script type="text/javascript">
 arca = {};
-arca.rootNode = {"id": 0, "name": "Relations"};
+
+*{ Root node for the dimension diagram }*
+arca.rootNode = {"id": 0, "name": "&{'monitoring.rootNode'}"};
+
+*{ AJAX actions }*
 arca.ajax = {
     caseSelecting: #{jsAction @MonitoringController.rcaCaseSelecting(':showCases') /},
     causesAndCorrections: #{jsAction @MonitoringController.causesAndCorrections(
@@ -146,10 +182,26 @@ arca.ajax = {
                                         ':selectedCauseStatuses',
                                         ':selectedCorrectionStatuses',
                                         ':csvExport') /},
-    dimensionDiagram: #{jsAction @MonitoringController.dimensionDiagram(':selectedCases') /}
+    dimensionDiagram: #{jsAction @MonitoringController.dimensionDiagram(':selectedCases') /},
+    classificationTable: #{jsAction @MonitoringController.classificationTable(':selectedCases') /}
 };
+
+*{ Images }*
 arca.imgs = {
     spinner: "@{'/public/images/wait-spinner.gif'}"
+};
+
+*{ Localization }*
+arca.localization = {
+    causes: "&{'classificationTablePage.causes'}",
+    liked: "&{'classificationTablePage.liked'}",
+    corrections: "&{'classificationTablePage.corrections'}",
+    piechartforprocessareacauses: "&{'classificationTablePage.piechartforprocessareacauses'}",
+    piechartforcauseclasscauses: "&{'classificationTablePage.piechartforcauseclasscauses'}",
+    piechartforprocessareacorrections: "&{'classificationTablePage.piechartforprocessareacorrections'}",
+    piechartforcauseclasscorrections: "&{'classificationTablePage.piechartforcauseclasscorrections'}",
+    piechartforprocessarealiked: "&{'classificationTablePage.piechartforprocessarealiked'}",
+    piechartforcauseclassliked: "&{'classificationTablePage.piechartforcauseclassliked'}"
 };
 
 initMonitoring(${controllers.SecurityController.getCurrentUser() != null});

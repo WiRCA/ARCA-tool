@@ -235,6 +235,12 @@ monitoring.csv.causeAndCorrectionName=Cause / Name of Corrective action
 monitoring.csv.relatedCaseAndCorrectionDescription=RCA case / Description of Corrective action
 monitoring.csv.correctionName=Name of Corrective action
 monitoring.csv.correctionDescription=Description of Corrective action
+monitoring.causesAndCorrections=Causes and corrections
+monitoring.classificationTable=Classification table
+monitoring.showClassificationTable=Show classification table
+monitoring.dimensionDiagram=Classification diagram
+monitoring.showDimensionDiagram=Show classification diagram
+monitoring.rootNode=Root causes
 
 monitoring.statusCause.DETECTED=Detected
 monitoring.statusCause.ELIMINATION=Elimination

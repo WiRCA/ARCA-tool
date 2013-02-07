@@ -76,6 +76,26 @@
   background-color: #FFF700
 }
 
+.whatNodeBox {
+    color:rgb(0,0,0);
+    /*text-shadow: 1px 1px 2px #000;      */
+    font-size: 10pt;
+    padding: 4px;
+
+    background:#ffcc00;
+    background-image: -webkit-linear-gradient(top, #ffcc00, #ffcc00); /* Chrome 10+, Saf5.1+, iOS 5+ */
+    max-width:1em;
+    max-height:1em;
+   /* border-radius: 10px; */
+    border: 1px solid #ff8800;
+
+    /* disabled for performance issues, Chrome has better performance. */
+    /* background-image:    -moz-linear-gradient(top, #528BE0, #2569D0); /* FF3.6 */
+    /* background-image:     -ms-linear-gradient(top, #528BE0, #2569D0); /* IE10 */
+    /* background-image:      -o-linear-gradient(top, #528BE0, #2569D0); /* Opera 11.10+ */
+    /* background-image:         linear-gradient(to bottom, #528BE0, #2569D0); */
+}
+
 .rootNodeBox {
 	color:rgb(255,255,255);
     text-shadow: 1px 1px 2px #000;
