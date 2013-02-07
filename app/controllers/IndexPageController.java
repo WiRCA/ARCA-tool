@@ -24,12 +24,16 @@
 
 package controllers;
 
+
 import models.RCACase;
+import job.Bootstrap;
+import models.User;
 import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.With;
 
-import java.util.List;
+
+import java.util.SortedSet;
 
 /**
  * Methods related to the index page.
@@ -51,7 +55,12 @@ public class IndexPageController extends Controller {
 	 * Open index page.
 	 */
 	public static void index() {
-		render();
+		//User user = User.find("byEmail", SecurityController.connected()).first();
+		User tutorial = Bootstrap.TUT;
+		SortedSet<RCACase> Tutorialcase = tutorial.getRCACases();
+		//String tutorialHash = Tutorialcase.first().URLHash;
+
+		render(Tutorialcase);
 	}
 
 

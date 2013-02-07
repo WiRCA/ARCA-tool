@@ -93,7 +93,7 @@ public class RegisterController extends Controller {
 		user.changePassword(password2);
 		user.save();
 
-		new TutorialRCACaseJob().doJob(user);
+		new TutorialRCACaseJob().doJob(user, false);
 
 		Logger.info("User %s registered", user);
 
@@ -172,7 +172,7 @@ public class RegisterController extends Controller {
 		addCaseAndDeleteInvitationIfInvited(invitation, user);
 
 		user.save();
-		new TutorialRCACaseJob().doJob(user);
+		new TutorialRCACaseJob().doJob(user, false);
 		Logger.info("User %s registered via Google login", user);
 	}
 

@@ -28,9 +28,14 @@
 
 <div class="hero-unit">
     <h1>&{'applicationName'}</h1>
-    <p>&{'applicationDescription'}</p>
+    <p>&{'applicationDescription'}
+    <br>
+    #{list items:Tutorialcase, as:'rcaCase'}
+        #{a @PublicRCACaseController.show(rcaCase.URLHash), class:'ellipsis caseTitle', id:'show-rcacase-'+rcaCase.id+'-link', rel:'popover',
+        title:"${rcaCase.caseName.escape().escape().raw()}", 'data-content':"${rcaCase.description.escape().escape().raw()}"}${rcaCase.caseName.escape().raw()}#{/a}
+    #{/list}
+    </p>
 
-    <hr>
 
     <!-- logos by Paul Irish http://paulirish.com/2010/high-res-browser-icons/ -->
 

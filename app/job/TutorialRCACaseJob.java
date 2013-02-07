@@ -39,7 +39,7 @@ public class TutorialRCACaseJob extends Job {
 	 * Generate a tutorial rca case for a user
 	 * @param user the user whom to generate a tutorial case
 	 */
-	public void doJob(User user) {
+	public void doJob(User user, boolean isPublic) {
 		Logger.debug("Tutorial RCA case job started for user %s", user);
 		// Tutorial RCA case
         RCACase tutorialRCACase = new RCACase(user);
@@ -51,7 +51,7 @@ public class TutorialRCACaseJob extends Job {
 		tutorialRCACase.isMultinational = false;
 		tutorialRCACase.companyName = "WiRCA";
 		tutorialRCACase.companyProducts = "";
-		tutorialRCACase.isCasePublic = false;
+		tutorialRCACase.isCasePublic = isPublic;
 
         // Problem of the tutorial RCA case
         tutorialRCACase.problem = new Cause(tutorialRCACase,  tutorialRCACase.caseName, user).save();

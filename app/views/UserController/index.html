@@ -43,9 +43,9 @@
         })
     </script>
 <script type="text/javascript">
-    var getRCACaseUsers = #{jsAction @RCACaseController.getUsers(':rcaCaseId') /}
-    var inviteUserAction = #{jsAction @RCACaseController.inviteUser(':rcaCaseId', ':invitedEmail') /}
-    var removeUserAction = #{jsAction @RCACaseController.removeUser(':rcaCaseId', ':isInvitedUser', ':email') /}
+    var getRCACaseUsers = #{jsAction @RCACaseController.getUsers(':rcaCaseId') /};
+    var inviteUserAction = #{jsAction @RCACaseController.inviteUser(':rcaCaseId', ':invitedEmail') /};
+    var removeUserAction = #{jsAction @RCACaseController.removeUser(':rcaCaseId', ':isInvitedUser', ':email') /};
 
     $(function() {
 
@@ -174,6 +174,7 @@
 <h2>&{'user.myCases'}</h2>
 <ul>
     #{list items:ownCases, as:'rcaCase'}
+
     <li>#{a @PublicRCACaseController.show(rcaCase.URLHash), class:'ellipsis caseTitle', id:'show-rcacase-'+rcaCase.id+'-link', rel:'popover',
         title:"${rcaCase.caseName.escape().escape().raw()}", 'data-content':"${rcaCase.description.escape().escape().raw()}"}${rcaCase.caseName.escape().raw()}#{/a}
         &{'rcacase.lastmodified'} ${rcaCase.updated.since(true)}
@@ -191,6 +192,7 @@
 <h2>&{'user.sharedPrivateCases'}</h2>
         <ul>
         #{list items:privateCases, as:'rcaCase'}
+
         <li>#{a @PublicRCACaseController.show(rcaCase.URLHash), class:'ellipsis caseTitle', id:'show-rcacase-'+rcaCase.id+'-link', rel:'popover',
             title:"${rcaCase.caseName.escape().escape().raw()}", 'data-content':"${rcaCase.description.escape().escape().raw()}"}${rcaCase.caseName.escape().raw()}#{/a}
             &{'rcacase.sharedBy'} <b>${rcaCase.owner.name.escape().raw()}</b>
@@ -205,6 +207,7 @@
             <h2>&{'user.publicCases'}</h2>
             <ul>
             #{list items:publicCases, as:'rcaCase'}
+
                 <li>#{a @PublicRCACaseController.show(rcaCase.URLHash), class:'ellipsis caseTitle', id:'show-rcacase-'+rcaCase.id+'-link', rel:'popover',
                 title:"${rcaCase.caseName.escape().escape().raw()}", 'data-content':"${rcaCase.description.escape().escape().raw()}"}${rcaCase.caseName.escape().raw()}#{/a}
                 &{'rcacase.sharedBy'} <b>${rcaCase.owner.name.escape().raw()}</b>
