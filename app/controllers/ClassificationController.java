@@ -32,9 +32,13 @@ import models.events.AddClassificationEvent;
 import models.events.CauseStream;
 import models.events.EditClassificationEvent;
 import models.events.RemoveClassificationEvent;
+import org.hibernate.exception.ConstraintViolationException;
 import play.Logger;
+import play.exceptions.JavaExecutionException;
 import play.mvc.Controller;
 import play.mvc.With;
+
+import javax.persistence.PersistenceException;
 
 
 /**
@@ -171,10 +175,16 @@ public class ClassificationController extends Controller {
 
 		Classification classification = Classification.findById(classificationId);
 		if (classification == null) {
-			renderJSON("\"error\": \"Invalid cause ID\"");
+			renderJSON("{\"error\": \"Invalid cause ID\"}");
 			return;
 		}
-		classification.delete();
+
+		try {
+			classification.delete();
+		} catch (PersistenceException e) {
+			renderJSON("{\"error\": \"The classification is in use.\"}");
+			return;
+		}
 
 		RemoveClassificationEvent event = new RemoveClassificationEvent(classification.id,
 		                                                                classification.classificationDimension);

@@ -459,3 +459,8 @@ div.tagsinput div {
     top: 70px;
     padding: 1em;
 }
+
+.error-field {
+    color: red;
+    font-weight: bold;
+}

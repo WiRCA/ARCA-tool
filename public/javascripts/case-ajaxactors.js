@@ -175,14 +175,15 @@ function addClassification() {
 function removeClassification() {
     var id = $('#remove-classificationId').val();
     $.getJSON(
-        arca.ajax.removeClassification({classificationId: id})
-    ).success(function (data) {
-        if ("error" in data) {
-            $('#removeClassification-modal .error-field').text(data.error).show();
-        } else {
-            $('#removeClassification-modal').modal('hide');
+        arca.ajax.removeClassification({classificationId: id}),
+        function (data) {
+            if ("error" in data) {
+                $('#removeClassification-modal .error-field').text("Error: " + data.error).show();
+            } else {
+                $('#removeClassification-modal').modal('hide');
+            }
         }
-    });
+    );
     return false;
 }
 
