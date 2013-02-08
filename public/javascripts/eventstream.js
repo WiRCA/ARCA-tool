@@ -116,8 +116,8 @@ function addCauseHandler(data) {
     arca.graphJson.push(newNode);
 
     var oldNode = fd.graph.getNode(data.causeFrom);
-    var newNodesXCoordinate = parseInt(this.data.x);
-    var newNodesYCoordinate = parseInt(this.data.y);
+    var newNodesXCoordinate = parseInt(data.x);
+    var newNodesYCoordinate = parseInt(data.y);
     fd.graph.addAdjacence(oldNode, newNode);
     newNode = fd.graph.getNode(data.causeTo);
     newNode.data.nodeLevel = oldNode.data.nodeLevel + 1;
