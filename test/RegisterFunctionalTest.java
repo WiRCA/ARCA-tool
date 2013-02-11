@@ -137,6 +137,7 @@ public class RegisterFunctionalTest extends FunctionalTest {
 	@Test
 	public void registerInvitedUser() {
 		Fixtures.deleteAllModels();
+		Fixtures.loadModels("data.yml");
 		new Invitation("invitation@te.st").save();
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("user.name", "test");
