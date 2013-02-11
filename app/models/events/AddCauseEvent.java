@@ -52,14 +52,26 @@ public class AddCauseEvent extends Event {
 	public final String creatorId;
 
 	/**
-	* Basic constructor
-	*/
-	public AddCauseEvent(Cause cause, Long causeFrom) {
+	 * X coordinate of the sub cause
+	 */
+	public final String x;
+
+	/**
+	 * Y coordinate of the sub cause
+	 */
+	public final String y;
+
+	/**
+	 * Basic constructor
+	 */
+	public AddCauseEvent(Cause cause, Long causeFrom, int x, int y) {
 		super("addcauseevent");
 		this.causeTo = Long.toString(cause.id);
 		this.text = cause.name.replaceAll("&", "&amp;").replaceAll(">", "&gt;").replaceAll("<", "&lt;");
 		this.causeFrom = String.valueOf(causeFrom);
 		this.creatorId = cause.creatorId == null ? null : Long.toString(cause.creatorId);
+		this.x = String.valueOf(x);
+		this.y = String.valueOf(y);
 	}
 }
 

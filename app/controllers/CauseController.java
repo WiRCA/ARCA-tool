@@ -73,7 +73,12 @@ public class CauseController extends Controller {
 
 		Cause newCause = cause.addCause(name, SecurityController.getCurrentUser());
 
-		AddCauseEvent event = new AddCauseEvent(newCause, causeId);
+		// Draw children nodes in a circle around the parent node
+		newCause.xCoordinate = (int)Math.round(150.0 * Math.cos(cause.getCauses().size() * Math.PI * 0.25));
+		newCause.yCoordinate = (int)Math.round(150.0 * Math.sin(cause.getCauses().size() * Math.PI * 0.25));
+		newCause.save();
+
+		AddCauseEvent event = new AddCauseEvent(newCause, causeId, newCause.xCoordinate, newCause.yCoordinate);
 		CauseStream causeEvents = rcaCase.getCauseStream();
 		causeEvents.getStream().publish(event);
 		Logger.info("Cause %s added to cause %s", name, cause);

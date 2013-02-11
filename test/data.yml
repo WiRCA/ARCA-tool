@@ -16,6 +16,11 @@ User(test):
     password: d033e22ae348aeb5660fc2140aec35850c4da997
     name: Test user
 
+User(tutorial):
+    email: tutorial@local
+    password: tutorial
+    name: Tutorial user
+
 User(email):
     email: email@local.fi
     password: d033e22ae348aeb5660fc2140aec35850c4da997
