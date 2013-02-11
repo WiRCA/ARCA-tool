@@ -146,9 +146,7 @@ function countParentNodes(node) {
  * @param count the new amount of likes
  */
 function updateLikes(id, count) {
-    console.log("id " + id + " count " + count);
     var likeBox = $("#likeBox-" + id);
-    console.log(likeBox);
     if (count > 0) {
         if (count > 1) {
             likeBox.text(count + arca.multiplePoints);

@@ -69,7 +69,8 @@ function readEventStream() {
         },
 
         error: function (jqXHR, status, error) {
-            // TODO: Show an error message - "please reload"?
+            // In an error state, wait one second before making another connection
+            setTimeout(readEventStream, 1000);
         }
     });
 }
@@ -142,7 +143,6 @@ function addCauseHandler(data) {
  * @param data JSON data as returned from the event stream
  */
 function causeRenameHandler(data) {
-    console.log(data);
     var oldNode = fd.graph.getNode(data.causeId);
     oldNode.title = data.newName;
     var node = $('#' + data.causeId);
