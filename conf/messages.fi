@@ -294,8 +294,8 @@ dimensionDiagramConfiguration.colorOnLegend=Väritä relaatiot sinisestä punais
 dimensionDiagramConfiguration.colorOffLegend=Väritä relaatiot samalla värillä
 dimensionDiagramConfiguration.glowOnLegend=Lisää hohtoa relaatioihin sen mukaan, paljonko luokitteluihin on lisätty korjausehdotuksia
 dimensionDiagramConfiguration.glowOffLegend=Poista hohtoefekti
-dimensionDiagramConfiguration.simplicity=Graafin yksinkertaisuus:
-dimensionDiagramConfiguration.weighting=Graafin painoarvo:
+dimensionDiagramConfiguration.simplicity=Piilota syitä:
+dimensionDiagramConfiguration.weighting=Piilota relaatioita:
 
 contactPage.feedbackFormTitle=Ota meihin yhteyttä tai lähetä palautetta
 
