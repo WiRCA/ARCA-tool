@@ -56,7 +56,8 @@ public class IndexPageController extends Controller {
 	 */
 	public static void index() {
 		//User user = User.find("byEmail", SecurityController.connected()).first();
-		User tutorial = Bootstrap.TUT;
+		User tutorial = User.find("byEmail", "tutorial@local").first();
+
 		SortedSet<RCACase> Tutorialcase = tutorial.getRCACases();
 		//String tutorialHash = Tutorialcase.first().URLHash;
 
