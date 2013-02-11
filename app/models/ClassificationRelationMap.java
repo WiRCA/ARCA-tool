@@ -129,6 +129,10 @@ public class ClassificationRelationMap {
 	 */
 	public HashMap<Long, Integer> getClassificationRelevances() {
 		HashMap<Long, Integer> out = new HashMap<Long, Integer>();
+
+		if (this.rootRelations.size() == 0)
+			return null;
+
 		RCACase rcaCase = this.rootRelations.keySet().iterator().next().rcaCase;
 
 		// Loop through all classifications
