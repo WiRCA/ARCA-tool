@@ -40,9 +40,6 @@ public final class EncodingUtils {
 	public static final String SHA384 = "SHA-384";
 	public static final String SHA512 = "SHA-512";
 
-	private EncodingUtils() {
-	}
-
 	/**
 	* Encode the given text with given algorithm
 	* @param text text to be encoded
