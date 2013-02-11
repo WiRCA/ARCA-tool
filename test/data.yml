@@ -18,7 +18,7 @@ User(test):
 
 User(tutorial):
     email: tutorial@local
-    password: tutorial
+    password: d033e22ae348aeb5660fc2140aec35850c4da997
     name: Tutorial user
 
 User(email):
