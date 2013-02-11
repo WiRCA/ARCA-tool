@@ -34,10 +34,6 @@
     <p class="alert-message error">&{'error.errorsInForm'}</p>
     #{/ifErrors}
 
-    <input type="hidden" name="rcaCase.ownerId" value="${rcaCase.ownerId}">
-
-    <input type="hidden" name="rcaCase.URLHash" value="${rcaCase.URLHash}">
-
     <div class="clearfix${errors.forKey('rcaCase.caseName') ? ' error' : ''}" id="caseName-field" >
         <label for="caseName">&{'createRCA.caseName'}</label>
         <div class="input">
@@ -49,7 +45,7 @@
     <div class="clearfix${errors.forKey('rcaCase.caseTypeValue') ? ' error' : ''}" id="RCACaseType">
         <label for="caseTypeValue">&{'createRCA.rcaCaseType'}</label>
         <div class="input">
-        #{select 'rcaCase.caseTypeValue', value:"${flash['rcaCase.caseTypeValue']}", id:'caseTypeValue'}
+        #{select 'rcaCase.caseTypeValue', id:'caseTypeValue'}
         #{list types, as:'caseTypeValue'}
         #{option caseTypeValue.value}&{caseTypeValue.text}#{/option}
         #{/list}

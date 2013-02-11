@@ -24,10 +24,7 @@
 
 package controllers;
 
-import models.Invitation;
-import models.RCACase;
-import models.Classification;
-import models.User;
+import models.*;
 import models.enums.CompanySize;
 import models.enums.RCACaseType;
 import notifiers.Mails;
@@ -36,6 +33,7 @@ import play.data.validation.Email;
 import play.data.validation.MaxSize;
 import play.data.validation.Required;
 import play.data.validation.Valid;
+import play.libs.Codec;
 import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.With;
@@ -43,6 +41,7 @@ import play.mvc.With;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Methods related to RCA cases.
@@ -70,7 +69,6 @@ public class RCACaseController extends Controller {
 	 * Opens the new RCA case creation form.
 	 */
 	public static void createRCACase() {
-		RCACase rcaCase = new RCACase(SecurityController.getCurrentUser());
 		RCACaseType[] types = RCACaseType.values();
 		CompanySize[] companySizes = CompanySize.values();
 
@@ -83,7 +81,7 @@ public class RCACaseController extends Controller {
 
 		Set<RCACase> cases = user.getRCACases();
 
-		render(rcaCase, types, companySizes, cases);
+		render(types, companySizes, cases);
 	}
 
 
@@ -114,6 +112,9 @@ public class RCACaseController extends Controller {
 				}
 			}
 		}
+		rcaCase.ownerId = user.id;
+		rcaCase.causes = new TreeSet<Cause>();
+		rcaCase.URLHash = Codec.UUID();
 		rcaCase.save();
 
 		if (problemName.trim().length() == 0) {

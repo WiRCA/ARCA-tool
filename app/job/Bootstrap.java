@@ -62,7 +62,7 @@ public class Bootstrap extends Job {
 	public static final String TEST_USER_EMAIL = "tester@local";
 	public static final String TEST_USER_PASSWORD = "tester";
 	public static final String TUTORIAL_USER_EMAIL = "tutorial@local";
-	public static final String TURORIAL_USER_PASSWORD = "tutorial";
+	public static final String TUTORIAL_USER_PASSWORD = "tutorial";
 
 
     public void doJob() {
@@ -87,7 +87,7 @@ public class Bootstrap extends Job {
 		    tester.save();
 
 	        // Tutorial user
-	        User tutorial = new User(TUTORIAL_USER_EMAIL, TURORIAL_USER_PASSWORD);
+	        User tutorial = new User(TUTORIAL_USER_EMAIL, TUTORIAL_USER_PASSWORD);
 	        tutorial.name = "Tutorial user";
 	        tutorial.save();
 
