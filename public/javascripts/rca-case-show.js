@@ -146,7 +146,9 @@ function countParentNodes(node) {
  * @param count the new amount of likes
  */
 function updateLikes(id, count) {
+    console.log("id " + id + " count " + count);
     var likeBox = $("#likeBox-" + id);
+    console.log(likeBox);
     if (count > 0) {
         if (count > 1) {
             likeBox.text(count + arca.multiplePoints);
@@ -292,8 +294,7 @@ function init() {
 
             // Renaming of a cause
             else if ($selected[0].id == "radmenu-event-renameCause") {
-                // TODO: Potentially unsecure, change causes to .escapeJavaScript().raw() like classifications
-                $('#renamedName').val($("<div/>").html(selectedNode.name).text());
+                $('#renamedName').val(selectedNode.title);
                 $('#renameCause-modal').modal('show');
             }
 

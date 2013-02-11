@@ -257,25 +257,6 @@
                                    name="renamedName" type="text" value="" maxlength="255" />
                         </div>
                     </div>
-                    <div>
-                        <label for="modify-CauseClassification-1">Mikä</label>
-                        <select name="classification-1" id="modify-CauseClassification-1" class="classificationList classificationType-1">
-                            <option value="-1">&{'classification.none'}</option>
-                        #{list rcaCase.getClassifications(1), as:'classification'}
-                            <option value="${classification.id}">${classification.name}</option>
-                        #{/list}
-                        </select>
-                    </div>
-
-                    <div>
-                        <label for="modify-CauseClassification-2">Missä</label>
-                        <select name="classification-2" id="modify-CauseClassification-2" class="classificationList classificationType-2">
-                            <option value="-1">&{'classification.none'}</option>
-                        #{list rcaCase.getClassifications(2), as:'classification'}
-                            <option value="${classification.id}">${classification.name}</option>
-                        #{/list}
-                        </select>
-                    </div>
                 </div>
 
                 <div class="modal-footer">
