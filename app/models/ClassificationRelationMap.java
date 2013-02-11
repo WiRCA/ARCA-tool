@@ -124,20 +124,31 @@ public class ClassificationRelationMap {
 
 
 	/**
-	 * Returns the relevance (ie. relation counts) of each classification in the relation map.
+	 * Returns the relevance (ie. relation counts and likes) of each classification in the relation map.
 	 * @return a map in the form [Classification ID -> relevance]
 	 */
 	public HashMap<Long, Integer> getClassificationRelevances() {
 		HashMap<Long, Integer> out = new HashMap<Long, Integer>();
+		RCACase rcaCase = this.rootRelations.keySet().iterator().next().rcaCase;
 
-		for (Classification classification : this.simpleRelations.keySet()) {
-			if (out.containsKey(classification.id)) {
-				out.put(classification.id, out.get(classification.id) + 1);
-			} else {
-				out.put(classification.id, 1);
+		// Loop through all classifications
+		for (Classification classification : rcaCase.getClassifications()) {
+			SortedSet<Cause> causes = rcaCase.causes;
+			// Loop causes in current case
+			for (Cause cause : causes) {
+				// Loop classifications in cause
+				for (ClassificationPair classificationPair : cause.classifications) {
+					// If the cause has the classification, add relevance info
+					if (classificationPair.parent == classification) {
+						if (out.containsKey(classification.id)) {
+							out.put(classification.id, out.get(classification.id) + cause.effectRelations.size() + cause.causeRelations.size() + cause.likes.size());
+						} else {
+							out.put(classification.id, cause.effectRelations.size() + cause.causeRelations.size() + cause.likes.size());
+						}
+					}
+				}
 			}
 		}
-
 		return out;
 	}
 
