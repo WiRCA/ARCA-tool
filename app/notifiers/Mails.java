@@ -56,5 +56,4 @@ public class Mails extends Mailer {
 		Logger.info("User %s sent an invitation mail to %s to share %s", user, invitedUser, rcaCase);
 		send(user, invitedUser, inviteHash, rcaCase);
 	}
-
 }

@@ -292,8 +292,7 @@ function init() {
 
             // Renaming of a cause
             else if ($selected[0].id == "radmenu-event-renameCause") {
-                // TODO: Potentially unsecure, change causes to .escapeJavaScript().raw() like classifications
-                $('#renamedName').val($("<div/>").html(selectedNode.name).text());
+                $('#renamedName').val(selectedNode.title);
                 $('#renameCause-modal').modal('show');
             }
 
