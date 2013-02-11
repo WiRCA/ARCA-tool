@@ -284,4 +284,12 @@ function causeClassificationHandler(data) {
     if (selectedNode && selectedNode.id == data.causeId) {
         selectedNode.data.classifications = data.classifications;
     }
+
+    // Update the node visually
+    var node = $('#' + data.causeId);
+    if (data.classifications.length > 0) {
+        node.addClass('classified');
+    } else {
+        node.removeClass('classified');
+    }
 }

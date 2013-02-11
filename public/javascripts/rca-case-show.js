@@ -771,6 +771,9 @@ $(document).ready(function () {
                 $('#edit-classificationExplanation').val(c.explanation);
             });
         });
-        $('#removeTag').click(function() { $('#removeClassification-modal').modal('show'); });
+        $('#removeTag').click(function() {
+            $('#removeClassification-modal .error-field').hide();
+            $('#removeClassification-modal').modal('show');
+        });
     }
 });
