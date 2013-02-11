@@ -142,9 +142,14 @@ function addCauseHandler(data) {
  * @param data JSON data as returned from the event stream
  */
 function causeRenameHandler(data) {
+    console.log(data);
     var oldNode = fd.graph.getNode(data.causeId);
-    oldNode.name = data.newName;
-    $("#" + data.causeId).html(data.newName);
+    oldNode.title = data.newName;
+    var node = $('#' + data.causeId);
+    var children = node.children();
+    // Here .html is used instead of .text, as CauseRenameEvent escapes HTML
+    node.html(data.newName);
+    node.append(children);
 }
 
 
