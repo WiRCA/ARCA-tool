@@ -55,13 +55,17 @@ public class IndexPageController extends Controller {
 	 * Open index page.
 	 */
 	public static void index() {
-		//User user = User.find("byEmail", SecurityController.connected()).first();
+
+
 		User tutorial = User.find("byEmail", "tutorial@local").first();
 
-		SortedSet<RCACase> Tutorialcase = tutorial.getRCACases();
-		//String tutorialHash = Tutorialcase.first().URLHash;
+		if (tutorial != null) {
+			SortedSet<RCACase> tutorialCase = tutorial.getRCACases();
+			render(tutorialCase);
+		} else {
+			render(null);
 
-		render(Tutorialcase);
+		}
 	}
 
 
