@@ -63,7 +63,7 @@ public class Bootstrap extends Job {
 	public static final String TEST_USER_PASSWORD = "tester";
 	public static final String TUTORIAL_USER_EMAIL = "tutorial@local";
 	public static final String TURORIAL_USER_PASSWORD = "tutorial";
-	public static final User TUT = new User(TUTORIAL_USER_EMAIL, TURORIAL_USER_PASSWORD);
+
 
     public void doJob() {
         // Check if the database is empty
@@ -90,10 +90,6 @@ public class Bootstrap extends Job {
 	        User tutorial = new User(TUTORIAL_USER_EMAIL, TURORIAL_USER_PASSWORD);
 	        tutorial.name = "Tutorial user";
 	        tutorial.save();
-
-	        //
-	        TUT.name = "Tut";
-	        TUT.save();
 
 	        // First RCA case
 	        RCACase firstRCACase = new RCACase(tester);
@@ -261,7 +257,7 @@ public class Bootstrap extends Job {
 
 	        //new TutorialRCACaseJob().doJob(tester, true);
 	        new TutorialRCACaseJob().doJob(tutorial,true);
-	        new TutorialRCACaseJob().doJob(TUT,true);
+
 	    }
     }
 }
