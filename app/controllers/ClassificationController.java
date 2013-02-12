@@ -112,6 +112,10 @@ public class ClassificationController extends Controller {
 	                                      String explanation) {
 
 		// Ensure that the case exists
+		if (rcaCaseId == null) {
+			renderJSON("{\"error\": \"Invalid RCA case\"}");
+			return;
+		}
 		RCACase rcaCase = RCACase.findById(rcaCaseId);
 		if (rcaCase == null) {
 			renderJSON("{\"error\": \"Invalid RCA case\"}");
