@@ -6259,6 +6259,7 @@ var EdgeHelper = {
         // if the adjacency is inverted, then arrowhead is drawn towards adj.nodeFrom, otherwise towards adj.nodeTo
         if (inv) {
             var vect = new Complex(to.x - from.x, to.y - from.y),
+                from = adj.nodeFrom.pos.clone().getc(true),
                 arrow = from,
                 arrowWidth = new Complex(adj.nodeFrom.data.$width >> 1, 0),
                 arrowHeight = new Complex(0, adj.nodeFrom.data.$height >> 1),

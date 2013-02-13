@@ -76,11 +76,18 @@ function implementEdgeTypes() {
                     toNode = adj.nodeTo.pos.getc(true),
                     epsilon = this.edge.epsilon;
 
+                var fromNode2 = toNode;
+                
                 toNode = this.edgeHelper.arrow.calculateArrowPosition(fromNode, toNode, adj, false);
-
                 var midPoint = new $jit.Complex(fromNode.x + (toNode.x - fromNode.x) / 1.8, fromNode.y + (toNode.y - fromNode.y) / 1.8);
                 var dist = Math.sqrt(Math.pow(pos.x - midPoint.x, 2) + Math.pow(pos.y - midPoint.y, 2));
-                return Math.abs(dist - 6) <= epsilon;
+                var isInside = Math.abs(dist - 6) <= epsilon;
+
+                var toNode2 = this.edgeHelper.arrow.calculateArrowPosition(fromNode, toNode, adj, true);
+                var midPoint2 = new $jit.Complex(fromNode2.x + (toNode2.x - fromNode2.x) / 1.8, fromNode2.y + (toNode2.y - fromNode2.y) / 1.8);
+                var dist2 = Math.sqrt(Math.pow(pos.x - midPoint2.x, 2) + Math.pow(pos.y - midPoint2.y, 2));
+                var isInside2 = Math.abs(dist2 - 6) <= epsilon;
+                return (isInside || isInside2);
             }
         },
 
