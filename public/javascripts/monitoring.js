@@ -228,22 +228,23 @@ $(function() {
     });
 
 
-    $('#export-csv-link').on("click", function () {
+    $('#export-csv-link').live("click", function () {
         collectSelectionsWhatToShow();
         if ((allCases || selectedCases != "") && whatToShow != "") {
-            arca.ajax.causesAndCorrections({
-                whatToShow: whatToShow,
-                selectedCases: selectedCases,
-                allCases: allCases,
-                selectedCauseStatuses: selectedCauseStatuses,
-                selectedCorrectionStatuses: selectedCorrectionStatuses,
-                csvExport: 'true'
-            });
+             var csv = arca.ajax.causesAndCorrections({
+                          whatToShow: whatToShow,
+                          selectedCases: selectedCases,
+                          allCases: allCases,
+                          selectedCauseStatuses: selectedCauseStatuses,
+                          selectedCorrectionStatuses: selectedCorrectionStatuses,
+                          csvExport: 'true'
+                        });
+            location = csv;
         }
     });
 
 
-    $(".pagination li a").on("click", function (event) {
+    $(".pagination li a").live("click", function (event) {
         var clickedPage = $(this);
         var pagination = $(this).parents(".pagination");
         var paginationId = $(pagination).attr("id").replace("pagination-", "");
