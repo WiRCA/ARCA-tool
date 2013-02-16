@@ -208,7 +208,7 @@ arca.classifications = {
         dimension: ${classification.classificationDimension},
         abbreviation: "${classification.abbreviation.escapeJavaScript().raw()}",
         explanation: "${classification.explanation.escapeJavaScript().raw()}",
-        relevance: ${classificationRelevance.get(classification.id) ?: 0},
+        relevance: ${classificationRelevance != null && classificationRelevance.get(classification.id) ?: 0},
         causeNames: {#{list rcaCase.getCauseNamesForClassification(classification.id), as:'cause'}
             ${cause.id}: {
                 name: "${cause.name}",
