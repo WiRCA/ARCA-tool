@@ -48,7 +48,6 @@ public class DimensionDiagramController extends Controller {
 		if (classificationRelevance == null) {
 			classificationRelevance = new HashMap<Long, Integer>();
 		}
-
 		render(rcaCase, relations, classificationRelevance);
 	}
 }
