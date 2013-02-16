@@ -60,7 +60,9 @@ public class ClassificationPair extends IdComparableModel {
 		return child;
 	}
 
-
+	public String toString() {
+		return (parent.id+":"+child.id);
+	}
 	/**
 	 * Finds or creates the pair from parent and child IDs.
 	 * @param parentId the ID of the parent classification

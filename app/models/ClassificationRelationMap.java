@@ -72,6 +72,7 @@ public class ClassificationRelationMap {
 	 * @param relation the relation of the pairs
 	 */
 	public void addRelation(ClassificationPair first, ClassificationPair second, ClassificationRelation relation) {
+
 		// Order the pairs correctly - relations are always two-way, so we canonize the relation by having
 		// the one with the lower ID as the "first" one, technically the HashMap's key
 		if (first.compareTo(second) > 0) {
@@ -273,6 +274,10 @@ public class ClassificationRelationMap {
 			this.likes += other.likes;
 			this.corrections += other.corrections;
 		}
+
+		public String toString() {
+			return name;
+		}
 	}
 
 
@@ -305,6 +310,7 @@ public class ClassificationRelationMap {
 		// Construct the pair relation map
 		// In pair relation maps, the keys are in the form parent:child, as JavaScript and thus JSON only allows
 		// strings as object property names
+		int i = 0;
 		JsonObject pairRelations = new JsonObject();
 		for (ClassificationPair key : this.pairRelations.keySet()) {
 			child = new JsonObject();
@@ -317,7 +323,11 @@ public class ClassificationRelationMap {
 				grandChild.addProperty("name", relation.name);
 				child.add(subKey.parent.id + ":" + subKey.child.id, grandChild);
 			}
-			pairRelations.add(key.parent.id + ":" + key.child.id, child);
+			// Have to do this because JsonObject#add only takes unique keys
+			JsonObject cc = new JsonObject();
+			cc.add(key.parent.id + ":" + key.child.id, child);
+			pairRelations.add(""+i, cc);
+			i++;
 		}
 
 		// Construct the root relation object

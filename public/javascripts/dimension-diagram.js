@@ -79,9 +79,7 @@ function causeNamesForRootRelation(causeArray) {
     var nameArray = new Array();
     var rcaCaseName = window.arca.rootNode.name;
     for (var causeId in causeArray) {
-        console.log(causeId);
         for (var neighbourId in causeArray[causeId].neighbourCauseIds) {
-            console.log("  " + neighbourId);
             if (causeArray[causeId].neighbourCauseIds[neighbourId].name === rcaCaseName) {
                 nameArray.push(causeArray[causeId].name);
             }
@@ -94,7 +92,6 @@ function causeNamesForRootRelation(causeArray) {
  * Populates the related cause modal window with the names of the related causes
  */
 function populateRelatedCauses() {
-    console.log("öö");
     // Empty the list
     //var container = $('#causeNameList');  //This doesn't work
     var container = document.getElementById('causeNameList');
@@ -103,8 +100,6 @@ function populateRelatedCauses() {
 
     var causeNames = selectedEdge.nodeFrom.data.causeNames;
     var toCauseNames = selectedEdge.nodeTo.data.causeNames;
-                console.log(causeNames);
-    console.log(toCauseNames);
     if (causeNames === undefined) {
         nameArray = causeNamesForRootRelation(toCauseNames);
     } else if (toCauseNames === undefined) {
@@ -112,14 +107,10 @@ function populateRelatedCauses() {
     } else {
         var causeId, toCauseId, neighbourId;
         for (causeId in causeNames) {
-            console.log(causeNames.hasOwnProperty(causeId));
             if (!causeNames.hasOwnProperty(causeId)) { continue; }
             for (neighbourId in causeNames[causeId].neighbourCauseIds) {
-                console.log(" ne "+neighbourId);
                 for (toCauseId in toCauseNames) {
-                    console.log("  to "+toCauseId);
                     if (toCauseId === neighbourId) {
-                        console.log("   ===´");
                         if ($.inArray(causeNames[causeId].name, nameArray) == -1) {
                             nameArray.push(causeNames[causeId].name);
                         }
@@ -433,11 +424,14 @@ function doResize() {
  * @return object
  */
 function newNode(data, id, type) {
-    var name = data.title;
+    /*
+    var name = id;//data.title;
     if (data.dimension == WHAT) {
         //name = data.title.substring(0,2);
         name = "" + id;
     }
+    */
+    var name = data.title;
     return {
         id: id,
         //name: data.id+": "+data.title,
@@ -485,21 +479,16 @@ function nameEdge(selected) {
 
     $('#edgeName').val('');
     for (var first in simpleRelations) {
-        //console.log(first);
         for (var second in simpleRelations[first]) {
-          //  console.log("   "+second);
-            if ((selectedEdge.nodeFrom.id == first && selectedEdge.nodeTo.id == second) ||
+           if ((selectedEdge.nodeFrom.id == first && selectedEdge.nodeTo.id == second) ||
                 (selectedEdge.nodeFrom.id == second && selectedEdge.nodeTo.id == first)) {
-                console.log(simpleRelations[first][second].name);
                 $('#edgeName').val(simpleRelations[first][second].name);
             }
         }
     }
 
-    //console.log(simpleRelations);
 
     //$('#nameEdge').val($("<div/>").html(selectedEdge).text());
-    console.log("2");
 
     $('#nameEdge-modal').modal('show');
 }
@@ -545,6 +534,7 @@ function closeEdge(selected) {
 }
 
 function openEdge(selected) {
+
     var openedEdges = JSON.parse(sessionStorage.getItem("openedEdges"));
 
     openedEdges.push({
@@ -767,32 +757,25 @@ function showSimpleGraph(minNodeRelevance, minEdgeRelevance, keepNodes,
                 if ((openedEdge.firstId == first && openedEdge.secondId == second) ||
                     (openedEdge.firstId == second && openedEdge.secondId == first)) {
                     found = true;
-                    console.log("opening");
-                    console.log(openedEdge);
-                    console.log(openedEdge.firstId+" -=- "+openedEdge.secondId);
+
                     // Open edge found
                     var pairRelations = window.arca.relationMap.pairRelations;
 
-                    console.log(pairRelations);
-                    for(var openFirst in pairRelations) {
-                        var firstParentId = getEdgeParentId(openFirst);
-                        console.log(openFirst);
-                        for (var openSecond in pairRelations[openFirst]) {
-                            console.log("  "+openSecond);
-                            var secondParentId = getEdgeParentId(openSecond);
+                    for(var index in pairRelations) {
 
-                            //console.log("rolling: "+openFirst+" | "+openSecond)
-                           // console.log("rolling2: "+firstParentId+" | "+secondParentId);
+                        // to get the only key there is. Looks stupid but works
+                        for (key in pairRelations[index]) openFirst = key;
+
+                        var firstParentId = getEdgeParentId(openFirst);
+
+                        for (var openSecond in pairRelations[index][openFirst]) {
+                            var secondParentId = getEdgeParentId(openSecond);
 
                             if ((openedEdge.firstId == firstParentId && openedEdge.secondId == secondParentId) ||
                                 (openedEdge.firstId == secondParentId && openedEdge.secondId == firstParentId)) {
 
-
                                 var firstChildId = openFirst;
                                 var secondChildId = openSecond;
-
-                                console.log("OPENING 2");
-                                console.log(firstChildId+" = "+secondChildId);
 
                                 var nNode = newNode(window.arca.classifications[getEdgeChildId(openFirst)], firstChildId, type);
                                 nNode.adjacencies = [];
