@@ -79,7 +79,9 @@ function causeNamesForRootRelation(causeArray) {
     var nameArray = new Array();
     var rcaCaseName = window.arca.rootNode.name;
     for (var causeId in causeArray) {
+        console.log(causeId);
         for (var neighbourId in causeArray[causeId].neighbourCauseIds) {
+            console.log("  " + neighbourId);
             if (causeArray[causeId].neighbourCauseIds[neighbourId].name === rcaCaseName) {
                 nameArray.push(causeArray[causeId].name);
             }
@@ -92,6 +94,7 @@ function causeNamesForRootRelation(causeArray) {
  * Populates the related cause modal window with the names of the related causes
  */
 function populateRelatedCauses() {
+    console.log("öö");
     // Empty the list
     //var container = $('#causeNameList');  //This doesn't work
     var container = document.getElementById('causeNameList');
@@ -100,7 +103,8 @@ function populateRelatedCauses() {
 
     var causeNames = selectedEdge.nodeFrom.data.causeNames;
     var toCauseNames = selectedEdge.nodeTo.data.causeNames;
-
+                console.log(causeNames);
+    console.log(toCauseNames);
     if (causeNames === undefined) {
         nameArray = causeNamesForRootRelation(toCauseNames);
     } else if (toCauseNames === undefined) {
@@ -108,10 +112,14 @@ function populateRelatedCauses() {
     } else {
         var causeId, toCauseId, neighbourId;
         for (causeId in causeNames) {
+            console.log(causeNames.hasOwnProperty(causeId));
             if (!causeNames.hasOwnProperty(causeId)) { continue; }
             for (neighbourId in causeNames[causeId].neighbourCauseIds) {
+                console.log(" ne "+neighbourId);
                 for (toCauseId in toCauseNames) {
+                    console.log("  to "+toCauseId);
                     if (toCauseId === neighbourId) {
+                        console.log("   ===´");
                         if ($.inArray(causeNames[causeId].name, nameArray) == -1) {
                             nameArray.push(causeNames[causeId].name);
                         }
@@ -180,7 +188,8 @@ function initGraph(graph_id, radial_menu_id, width, height, respondToResize) {
 
            // naming the edge
            else if ($selected[0].id == "radmenu-event-nameEdge") {
-               nameEdge($selected);
+               alert("not yet :). will be implemented before monday, and plz no need to report that this does not exits!");
+               //nameEdge($selected);
                $radial_menu.radmenu("hide");
            }
            // closing the edge
