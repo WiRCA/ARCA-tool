@@ -296,9 +296,11 @@ public class Cause extends LikableIdComparableModel {
 	 */
 	public Set<Cause> getAllRelatedCauses() {
 		Set<Cause> allCauses = this.getCauses();
-		Cause parent = this.getParent();
-		if(parent != null) {
-			allCauses.add(parent);
+		Cause[] parents = this.getParents();
+		if(parents != null) {
+			for (int i = 0; i < parents.length; i++) {
+				allCauses.add(parents[i]);
+			}
 		}
 		allCauses.add(this.rcaCase.problem);
 
@@ -336,6 +338,26 @@ public class Cause extends LikableIdComparableModel {
 		}
 	}
 
+	/**
+	 * Returns the parent of this cause.
+	 *
+	 * @return the parent of this cause
+	 */
+	public Cause[] getParents() {
+		if (this.equals(this.rcaCase.problem)) {
+			return null;
+		} else if (this.effectRelations.size() > 0) {
+			Cause[] causes = new Cause[this.effectRelations.size()];
+			for (int i = 0; i < this.effectRelations.size(); i++) {
+				causes[i] = ((Relation) this.effectRelations.toArray()[i]).causeTo;
+			}
+			//return ((Relation) this.effectRelations.toArray()[0]).causeTo;
+			return causes;
+		} else {
+			return null;
+		}
+	}
+
 
 	/**
 	 * Checks if the cause is the parent of this cause.
@@ -345,8 +367,15 @@ public class Cause extends LikableIdComparableModel {
 	 * @return true if the given cause is the parent of this cause.
 	 */
 	public boolean isChildOf(Cause cause) {
-		Cause parent = this.getParent();
-		return parent != null && parent.equals(cause);
+		Cause[] parents = this.getParents();
+		if (parents != null) {
+			for (int i = 0; i < parents.length; i++) {
+				if (parents[i].equals(cause)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 
