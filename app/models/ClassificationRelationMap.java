@@ -364,6 +364,9 @@ public class ClassificationRelationMap {
 		// Then construct the JSON object for it
 		JsonObject classifications = new JsonObject();
 		HashMap<Long, Integer> classificationRelevances = this.getClassificationRelevances();
+		if (classificationRelevances == null) {
+			classificationRelevances = new HashMap<Long, Integer>();
+		}
 		for (Classification classification : allClassifications) {
 			child = new JsonObject();
 			child.addProperty("id", classification.id);
