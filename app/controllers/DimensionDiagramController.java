@@ -37,8 +37,17 @@ public class DimensionDiagramController extends Controller {
 		RCACase rcaCase = RCACase.getRCACase(URLHash);
 		notFoundIfNull(rcaCase);
 		rcaCase = PublicRCACaseController.checkIfCurrentUserHasRightsForRCACase(rcaCase.id);
+		notFoundIfNull(rcaCase);
 		ClassificationRelationMap relations = ClassificationRelationMap.fromCase(rcaCase);
-		HashMap<Long, Integer> classificationRelevance = relations.getClassificationRelevances();
+		HashMap<Long, Integer> classificationRelevance = new HashMap<Long, Integer>();
+		if (relations == null) {
+			relations = new ClassificationRelationMap();
+		} else {
+			classificationRelevance = relations.getClassificationRelevances();
+		}
+		if (classificationRelevance == null) {
+			classificationRelevance = new HashMap<Long, Integer>();
+		}
 		render(rcaCase, relations, classificationRelevance);
 	}
 }
