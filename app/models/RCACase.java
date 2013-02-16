@@ -336,7 +336,6 @@ public class RCACase extends IdComparableModel {
 	public List<Cause> getCauseNamesForClassification(long classificationID) {
 		List<Cause> causeList = new ArrayList<Cause>();
 		for (Cause cause: this.causes) {
-			System.out.println("  CAUSE: "+cause.name);
 			for (ClassificationPair classificationPair: cause.getClassifications()) {
 				if (classificationPair.parent.id == classificationID) {
 					causeList.add(cause);
