@@ -1,5 +1,6 @@
+
 <!--
-  ~ Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen, Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus
+  ~ Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen, Joona Koistinen, Pekka Rihtniemi, Mika Kek채le, Roope Hovi, Mikko Valjus
   ~
   ~ Permission is hereby granted, free of charge, to any person obtaining a copy
   ~ of this software and associated documentation files (the "Software"), to deal
@@ -110,6 +111,30 @@
             </div>
         </div>
 
+        <div id="nameEdge-modal" class="modal hide">
+            <div class="modal-header">
+                <a href="#" class="close">&times;</a>
+                <h3>&{'nameRelation.title'}</h3>
+            </div>
+
+            <form action="" onsubmit="nameEdgeName(); return false;">
+                <div>
+                    <div>
+                        <label for="edgeName">&{'nameRelation.relationName'}</label>
+                        <input type="text" id="edgeName" name="edgeName" />
+                    </div>
+
+                    <div class="error-field error"></div>
+                </div>
+
+                <div class="modal-footer">
+                    <input type="submit" value="&{'nameRelation.title'}" class="btn success" id="nameRelation-submit" />
+                    <a href="#" class="btn secondary" onclick="$('#nameRelation-modal').modal('hide')">&{'dialog.cancel'}</a>
+                </div>
+            </form>
+        </div>
+
+
         <div id="zoomSlider">
             <img id="zoomin" src="@{'/public/images/zoom-in.png'}" onclick="incZoomSlider()" />
             <div id="slider-vertical"></div>
@@ -201,6 +226,13 @@ arca.classifications = {
 };
 
 arca.relationMap = (${relations.toJson().raw()}).map;
+
+arca.currentUser = ${currentUser == null ? 'null' : currentUser.id}    ;
+arca.ownerId =  ${rcaCase.ownerId}    ;
+
+arca.ajax = {
+    nameEdge: #{jsAction @DimensionDiagramController.nameEdge(':fromId', ':toId', ':name') /}
+}
 
 $(document).ready(function() {
     init();

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2012 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
- * Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus,
+ * Joona Koistinen, Pekka Rihtniemi, Mika Kek채le, Roope Hovi, Mikko Valjus,
  * Timo Lehtinen, Jaakko Harjuhahto
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -87,7 +87,7 @@ public class ClassificationRelationMap {
 
 		// Create the simple relation with zero relation strength and likes if it does not exist
 		if (!this.simpleRelations.get(first.parent).containsKey(second.parent)) {
-			this.simpleRelations.get(first.parent).put(second.parent, new ClassificationRelation(0, 0, 0));
+			this.simpleRelations.get(first.parent).put(second.parent, new ClassificationRelation(0, 0, 0, ""));
 		}
 
 		// Add the simple relation
@@ -100,7 +100,7 @@ public class ClassificationRelationMap {
 
 		// Create the pair relation with zero strength and likes if it does not exist
 		if (!this.pairRelations.get(first).containsKey(second)) {
-			this.pairRelations.get(first).put(second, new ClassificationRelation(0, 0, 0));
+			this.pairRelations.get(first).put(second, new ClassificationRelation(0, 0, 0, ""));
 		}
 
 		// Add the pair relation
@@ -124,35 +124,20 @@ public class ClassificationRelationMap {
 
 
 	/**
-	 * Returns the relevance (ie. relation counts and likes) of each classification in the relation map.
+	 * Returns the relevance (ie. relation counts) of each classification in the relation map.
 	 * @return a map in the form [Classification ID -> relevance]
 	 */
 	public HashMap<Long, Integer> getClassificationRelevances() {
 		HashMap<Long, Integer> out = new HashMap<Long, Integer>();
 
-		if (this.rootRelations.size() == 0)
-			return null;
-
-		RCACase rcaCase = this.rootRelations.keySet().iterator().next().rcaCase;
-
-		// Loop through all classifications
-		for (Classification classification : rcaCase.getClassifications()) {
-			SortedSet<Cause> causes = rcaCase.causes;
-			// Loop causes in current case
-			for (Cause cause : causes) {
-				// Loop classifications in cause
-				for (ClassificationPair classificationPair : cause.classifications) {
-					// If the cause has the classification, add relevance info
-					if (classificationPair.parent == classification) {
-						if (out.containsKey(classification.id)) {
-							out.put(classification.id, out.get(classification.id) + cause.effectRelations.size() + cause.causeRelations.size() + cause.likes.size());
-						} else {
-							out.put(classification.id, cause.effectRelations.size() + cause.causeRelations.size() + cause.likes.size());
-						}
-					}
-				}
+		for (Classification classification : this.simpleRelations.keySet()) {
+			if (out.containsKey(classification.id)) {
+				out.put(classification.id, out.get(classification.id) + 1);
+			} else {
+				out.put(classification.id, 1);
 			}
 		}
+
 		return out;
 	}
 
@@ -176,8 +161,9 @@ public class ClassificationRelationMap {
 			addedRootCauses.add(relation.causeFrom);
 			for (ClassificationPair fromPair : relation.causeFrom.classifications) {
 				relationData = new ClassificationRelation(
-					1, rcaCase.problem.likes.size() + relation.causeFrom.likes.size(),
-					rcaCase.problem.corrections.size() + relation.causeFrom.corrections.size()
+						1, rcaCase.problem.likes.size() + relation.causeFrom.likes.size(),
+						rcaCase.problem.corrections.size() + relation.causeFrom.corrections.size(),
+				        ""
 				);
 				this.addRootRelation(this.normalizer.normalizeClassification(fromPair.parent), relationData);
 			}
@@ -198,7 +184,8 @@ public class ClassificationRelationMap {
 					for (ClassificationPair fromPair : causeFrom.classifications) {
 						relationData = new ClassificationRelation(
 								1, causeFrom.likes.size() + causeTo.likes.size(),
-								causeFrom.corrections.size() + causeTo.corrections.size()
+								causeFrom.corrections.size() + causeTo.corrections.size(),
+						        ""
 						);
 						this.addRootRelation(this.normalizer.normalizeClassification(fromPair.parent), relationData);
 					}
@@ -213,7 +200,8 @@ public class ClassificationRelationMap {
 						// causes combined.
 						relationData = new ClassificationRelation(
 								1, causeFrom.likes.size() + causeTo.likes.size(),
-								causeFrom.corrections.size() + causeTo.corrections.size()
+								causeFrom.corrections.size() + causeTo.corrections.size(),
+						        ""
 						);
 						this.addRelation(this.normalizer.normalizePair(fromPair),
 						                 this.normalizer.normalizePair(toPair),
@@ -256,17 +244,23 @@ public class ClassificationRelationMap {
 		 */
 		public int corrections;
 
+		/**
+		 * The name of the relation
+		 */
+		public String name;
 
 		/**
 		 * Constructor of the class
 		 * @param strength the strength of the relation (ie. the amount of relations)
 		 * @param likes the amount of likes of the causes with the relevant classifications
 		 * @param corrections the amount of corrections of the causes
+		 * @param name name of the relation
 		 */
-		public ClassificationRelation(int strength, int likes, int corrections) {
+		public ClassificationRelation(int strength, int likes, int corrections, String name) {
 			this.strength = strength;
 			this.likes = likes;
 			this.corrections = corrections;
+			this.name = name;
 		}
 
 
@@ -302,6 +296,7 @@ public class ClassificationRelationMap {
 				grandChild.addProperty("strength", relation.strength);
 				grandChild.addProperty("likes", relation.likes);
 				grandChild.addProperty("corrections", relation.corrections);
+				grandChild.addProperty("name", relation.name);
 				child.add(subKey.id.toString(), grandChild);
 			}
 			simpleRelations.add(key.id.toString(), child);
@@ -319,6 +314,7 @@ public class ClassificationRelationMap {
 				grandChild.addProperty("strength", relation.strength);
 				grandChild.addProperty("likes", relation.likes);
 				grandChild.addProperty("corrections", relation.corrections);
+				grandChild.addProperty("name", relation.name);
 				child.add(subKey.parent.id + ":" + subKey.child.id, grandChild);
 			}
 			pairRelations.add(key.parent.id + ":" + key.child.id, child);
@@ -332,6 +328,7 @@ public class ClassificationRelationMap {
 			child.addProperty("strength", relation.strength);
 			child.addProperty("likes", relation.likes);
 			child.addProperty("corrections", relation.corrections);
+			child.addProperty("name", relation.name);
 
 			// The node IDs are encoded as strings, so coerce to string here
 			rootRelations.add(classification.id.toString(), child);
@@ -350,7 +347,7 @@ public class ClassificationRelationMap {
 		Set<Classification> allClassifications = new TreeSet<Classification>();
 		ClassificationPair keyPair;
 		for (Map.Entry<ClassificationPair, Map<ClassificationPair, ClassificationRelation>> entry :
-					this.pairRelations.entrySet()) {
+				this.pairRelations.entrySet()) {
 			// Add the parent pair to the set
 			keyPair = this.normalizer.normalizePair(entry.getKey());
 			allClassifications.add(keyPair.parent);

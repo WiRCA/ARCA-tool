@@ -43,10 +43,6 @@ var simplicityValue = 0;
 // Timer for updating the graph after using a slider
 var sliderTimer = null;
 
-var selectedEdge;
-
-//var openedEdges = new Array();
-
 var WHAT = 1;
 var WHERE = 2;
 var WHAT_STEP = 22;
@@ -184,7 +180,7 @@ function initGraph(graph_id, radial_menu_id, width, height, respondToResize) {
 
            // naming the edge
            else if ($selected[0].id == "radmenu-event-nameEdge") {
-               alert("not implemented yet");
+               nameEdge($selected);
                $radial_menu.radmenu("hide");
            }
            // closing the edge
@@ -475,6 +471,55 @@ function getEdgeChildId(ed) {
     return ed.substring(ed.indexOf(":")+1);
 }
 
+function nameEdge(selected) {
+    var simpleRelations = window.arca.relationMap.simpleRelations;
+
+    $('#edgeName').val('');
+    for (var first in simpleRelations) {
+        //console.log(first);
+        for (var second in simpleRelations[first]) {
+          //  console.log("   "+second);
+            if ((selectedEdge.nodeFrom.id == first && selectedEdge.nodeTo.id == second) ||
+                (selectedEdge.nodeFrom.id == second && selectedEdge.nodeTo.id == first)) {
+                console.log(simpleRelations[first][second].name);
+                $('#edgeName').val(simpleRelations[first][second].name);
+            }
+        }
+    }
+
+    //console.log(simpleRelations);
+
+    //$('#nameEdge').val($("<div/>").html(selectedEdge).text());
+    console.log("2");
+
+    $('#nameEdge-modal').modal('show');
+}
+      /*
+function nameEdgeName() {
+    selectedEdge.data.title = $('#edgeName').val();
+    $('#nameEdge-modal').modal('hide');
+}
+       */
+function nameEdgeName() {
+    var name = $.trim($("#edgeName").val());
+    if (name == undefined || name == "") {
+        $("#nameEdge").parents(".clearfix").addClass("error");
+        return;
+    } else {
+        $("#nameEdge").parents(".clearfix").removeClass("error");
+    }
+    radmenu_fadeOut();
+    $("#nameEdge-modal").modal('hide');
+    fromId = selectedEdge.nodeFrom.id;
+    toId = selectedEdge.nodeTo.id;
+    window.arca.relationMap.simpleRelations[fromId][toId].name = name;  // DOES NOT REFRESH OTHERS
+
+    $.post(arca.ajax.nameEdge({     fromId: fromId,
+                                    toId: toId,
+                                    name: encodeURIComponent(name)}));
+
+
+}
 
 function closeEdge(selected) {
     var openedEdges = JSON.parse(sessionStorage.getItem("openedEdges"));
@@ -651,7 +696,6 @@ function showSimpleGraph(minNodeRelevance, minEdgeRelevance, keepNodes,
 
             // Filter irrelevant target nodes
             secondNodeData = window.arca.classifications[second];
-            var secondNodeDataWithRelevance = data[second];
             if (secondNodeData.relevance < minNodeRelevance) { continue; }
 
             // Filter irrelevant edges
@@ -691,7 +735,7 @@ function showSimpleGraph(minNodeRelevance, minEdgeRelevance, keepNodes,
                 type = "circleline";
             }
             if (first.id == 0 || second.id == 0) {
-                //type = "line";
+               // type = "line";
             }
             if (openedEdges.length == 0) {
                 graphData[created[first]].adjacencies.push({
@@ -720,13 +764,16 @@ function showSimpleGraph(minNodeRelevance, minEdgeRelevance, keepNodes,
                     // Open edge found
                     var pairRelations = window.arca.relationMap.pairRelations;
 
+                    console.log(pairRelations);
                     for(var openFirst in pairRelations) {
                         var firstParentId = getEdgeParentId(openFirst);
+                        console.log(openFirst);
                         for (var openSecond in pairRelations[openFirst]) {
+                            console.log("  "+openSecond);
                             var secondParentId = getEdgeParentId(openSecond);
 
                             //console.log("rolling: "+openFirst+" | "+openSecond)
-                            console.log("rolling2: "+firstParentId+" | "+secondParentId);
+                           // console.log("rolling2: "+firstParentId+" | "+secondParentId);
 
                             if ((openedEdge.firstId == firstParentId && openedEdge.secondId == secondParentId) ||
                                 (openedEdge.firstId == secondParentId && openedEdge.secondId == firstParentId)) {
