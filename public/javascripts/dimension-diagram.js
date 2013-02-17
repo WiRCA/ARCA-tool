@@ -424,14 +424,16 @@ function doResize() {
  * @return object
  */
 function newNode(data, id, type) {
-    /*
-    var name = id;//data.title;
-    if (data.dimension == WHAT) {
-        //name = data.title.substring(0,2);
-        name = "" + id;
-    }
-    */
+
     var name = data.title;
+    if (data.dimension == WHAT) {
+        name = data.abbreviation;
+        if (!name) {
+            name = data.title.substring(0,2);
+        }
+    }
+
+
     return {
         id: id,
         //name: data.id+": "+data.title,
