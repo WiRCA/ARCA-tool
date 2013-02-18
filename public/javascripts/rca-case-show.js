@@ -229,7 +229,7 @@ var labelType, useGradients, nativeTextSupport, animate;
  */
 function updateChildrenVectors (node) {
     node.eachAdjacency(function (adj) {
-        if (adj.data.$type != "arrow" &&
+        if (adj.data.$type != "relationArrow" &&
                 adj.nodeTo.data.nodeLevel > node.data.nodeLevel && !(adj.nodeTo.data.locked)) {
             var xAdjPos = node.getPos('end').x + adj.nodeTo.data.xCoordinate;
             var yAdjPos = node.getPos('end').y + adj.nodeTo.data.yCoordinate;
