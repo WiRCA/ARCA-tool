@@ -3,7 +3,7 @@
 
 ALTER TABLE `rcacase` ADD COLUMN `URLHash` varchar(255) DEFAULT NULL;
 ALTER TABLE `rcacase` ADD COLUMN `importId` bigint(20) unsigned DEFAULT NULL;
-
+UPDATE rcacase SET URLHash = UUID();
 
 CREATE TABLE `classification` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
@@ -48,3 +48,4 @@ CREATE TABLE `dimension` (
   `name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 );
+
