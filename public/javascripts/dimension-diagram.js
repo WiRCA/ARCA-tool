@@ -434,19 +434,9 @@ function newNode(data, id, type) {
     }
     return {
         id: id,
-        //name: data.id+": "+data.title,
         name: name,
         data: data,
-        adjacencies: [{
-            nodeTo: 0,
-            "data": {
-                "$dim": 15,
-                "$color": "#0000aa",
-                "$type": "line",
-                "$weight": 3,
-                "$lineWidth": 3
-            }
-        }]
+        adjacencies: []
     };
 }
 
