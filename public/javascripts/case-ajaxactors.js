@@ -14,8 +14,34 @@ function addNewCause() {
 
     radmenu_fadeOut();
     $("#addcause-modal").modal('hide');
+
+    var classify = false;
+
     $.post(arca.ajax.addNewCause({causeId: selectedNode.id,
-                                  name: encodeURIComponent(name)}));
+                                  name: encodeURIComponent(name), classify: classify}));
+}
+
+
+/**
+ * Sends an AJAX request for adding and classifying a new cause, reads data from #causeName,
+ * #add-causeClassification-{1, 2}
+ */
+function addNewCauseAndClassify() {
+    var name = $.trim($("#causeName").val());
+    if (name == undefined || name == "") {
+        $("#causeName").parents(".clearfix").addClass("error");
+        return;
+    } else {
+        $("#causeName").parents(".clearfix").removeClass("error");
+    }
+
+    radmenu_fadeOut();
+    $("#addcause-modal").modal('hide');
+
+    var classify = true;
+
+    $.post(arca.ajax.addNewCause({causeId: selectedNode.id,
+                                     name: encodeURIComponent(name), classify: classify}));
 }
 
 

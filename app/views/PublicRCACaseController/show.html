@@ -225,21 +225,26 @@
                 <h3>&{'addCause.title'}</h3>
             </div>
 
-            <form action="" onsubmit="addNewCause(); return false;">
-                <div class="modal-body">
-                    <div class="clearfix">
-                        <label for="causeName">&{'addCause.name'}</label>
-                        <div class="input">
-                            <input class="xlarge" autofocus="autofocus" id="causeName" name="causeName" type="text" value="" />
-                        </div>
+
+            <div class="modal-body">
+                <div class="clearfix">
+                    <label for="causeName">&{'addCause.name'}</label>
+                    <div class="input">
+                        <input class="xlarge" autofocus="autofocus" id="causeName" name="causeName" type="text" value="" />
                     </div>
                 </div>
+            </div>
 
-                <div class="modal-footer">
+            <div class="modal-footer">
+                <form action="" onsubmit="addNewCauseAndClassify(); return false;">
+                    <input type="submit" value="&{'addNewCauseAndClassify.title'}" class="btn success" id="" />
+                </form>
+                <form action="" onsubmit="addNewCause(); return false;">
                     <input type="submit" value="&{'addCause.title'}" class="btn success" id="addcause-submit" />
-                    <a href="#" class="btn secondary" onclick="$('#addcause-modal').modal('hide')">&{'dialog.cancel'}</a>
-                </div>
-            </form>
+                </form>
+                <a href="#" class="btn secondary" onclick="$('#addcause-modal').modal('hide')">&{'dialog.cancel'}</a>
+            </div>
+
         </div>
 
         <div id="renameCause-modal" class="modal hide">
@@ -446,7 +451,7 @@ window.arca = {
     singlePoint: ' &{'editor.singlePoint'}',
     multiplePoints: ' &{'editor.multiplePoints'}',
     ajax: {
-        addNewCause: #{jsAction @CauseController.addCause(':causeId', ':name') /},
+        addNewCause: #{jsAction @CauseController.addCause(':causeId', ':name', ':classify') /},
         renameCause: #{jsAction @CauseController.renameCause(':causeId', ':name') /},
         likeCause: #{jsAction @CauseController.like(':causeId') /},
         dislikeCause: #{jsAction @CauseController.dislike(':causeId') /},

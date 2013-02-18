@@ -66,7 +66,7 @@ public class CauseController extends Controller {
 	 * @param causeId id of the cause to which the new cause is added
 	 * @param name the name of the new cause
 	 */
-	public static void addCause(Long causeId, String name) {
+	public static void addCause(Long causeId, String name, boolean classify) {
 		// causeId is used later as a String
 		Cause cause = Cause.findById(causeId);
 		RCACase rcaCase = cause.rcaCase;
@@ -78,7 +78,7 @@ public class CauseController extends Controller {
 		newCause.yCoordinate = (int)Math.round(150.0 * Math.sin(cause.getCauses().size() * Math.PI * 0.25));
 		newCause.save();
 
-		AddCauseEvent event = new AddCauseEvent(newCause, causeId, newCause.xCoordinate, newCause.yCoordinate);
+		AddCauseEvent event = new AddCauseEvent(newCause, causeId, newCause.xCoordinate, newCause.yCoordinate, classify);
 		CauseStream causeEvents = rcaCase.getCauseStream();
 		causeEvents.getStream().publish(event);
 		Logger.info("Cause %s added to cause %s", name, cause);

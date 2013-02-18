@@ -110,7 +110,8 @@ function addCauseHandler(data) {
             "parent": data.causeFrom,
             "creatorId": '' + data.creatorId,
             "likeCount": 0,
-            "hasUserLiked": false
+            "hasUserLiked": false,
+            "classifications": ''
         },
         "adjacencies": []
     };
@@ -135,6 +136,12 @@ function addCauseHandler(data) {
     });
     applyZoom(1, false); // refresh zooming for the new node
     $("#infovis-label div.node").disableSelection();
+
+    if (data.classify == true) {
+        selectedNode = newNode;
+        $('#tagcause-modal').modal('show');
+        populateTagEditor();
+    }
 }
 
 

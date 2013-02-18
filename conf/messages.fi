@@ -252,6 +252,7 @@ monitoring.statusCorrection.WILL_BE_IMPLEMENTED=Toteutetaan
 monitoring.statusCorrection.REJECTED=Ei korjata
 
 addCause.title=Lisää syy
+addNewCauseAndClassify.title=Lisää ja luokittele syy
 addCause.name=Syyn nimi
 renameCause.title=Uudelleennimeä syy
 renameCause.newName=Uusi nimi

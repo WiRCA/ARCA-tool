@@ -62,9 +62,14 @@ public class AddCauseEvent extends Event {
 	public final String y;
 
 	/**
+	 * Will we classify the cause at creation
+	 */
+	public final boolean classify;
+
+	/**
 	 * Basic constructor
 	 */
-	public AddCauseEvent(Cause cause, Long causeFrom, int x, int y) {
+	public AddCauseEvent(Cause cause, Long causeFrom, int x, int y, boolean classify) {
 		super("addcauseevent");
 		this.causeTo = Long.toString(cause.id);
 		this.text = cause.name.replaceAll("&", "&amp;").replaceAll(">", "&gt;").replaceAll("<", "&lt;");
@@ -72,6 +77,7 @@ public class AddCauseEvent extends Event {
 		this.creatorId = cause.creatorId == null ? null : Long.toString(cause.creatorId);
 		this.x = String.valueOf(x);
 		this.y = String.valueOf(y);
+		this.classify = classify;
 	}
 }
 

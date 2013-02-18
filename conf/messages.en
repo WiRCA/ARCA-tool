@@ -252,6 +252,7 @@ monitoring.statusCorrection.WILL_BE_IMPLEMENTED=Will be implemented
 monitoring.statusCorrection.REJECTED=Rejected
 
 addCause.title=Add cause
+addNewCauseAndClassify.title=Add and classify cause
 addCause.name=Cause name
 renameCause.title=Rename cause
 renameCause.newName=New name
