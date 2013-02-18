@@ -111,7 +111,7 @@ public class CauseTest extends GenericRCAUnitTest {
 		cause1.addCause(cause4);
 		Set<Cause> causes = cause1.getCauses();
 		Set<Cause> relations = cause4.getRelations();
-		Set<Cause> relations2 = cause2.getRelations();
+		Set<Cause> relations2 = cause2  .getRelations();
 		assertTrue(causes.contains(cause2));
 		assertTrue(causes.contains(cause3));
 		assertTrue(causes.contains(cause4));
