@@ -78,7 +78,7 @@ public class CauseTest extends GenericRCAUnitTest {
 		assertTrue(cause2.isChildOf(cause1));
 		assertTrue(cause2.getParent().equals(cause1));
 		cause3.addCause(cause2);
-		assertFalse(cause2.isChildOf(cause3));
+		assertTrue(cause2.isChildOf(cause3));
 	}
 
 	@Test
@@ -114,8 +114,8 @@ public class CauseTest extends GenericRCAUnitTest {
 		Set<Cause> relations2 = cause2.getRelations();
 		assertTrue(causes.contains(cause2));
 		assertTrue(causes.contains(cause3));
-		assertFalse(causes.contains(cause4));
-		assertTrue(relations.contains(cause1));
+		assertTrue(causes.contains(cause4));
+		assertFalse(relations.contains(cause1));
 		assertFalse(relations2.contains(cause1));
 	}
 

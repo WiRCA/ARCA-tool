@@ -131,11 +131,27 @@ public class ClassificationRelationMap {
 	public HashMap<Long, Integer> getClassificationRelevances() {
 		HashMap<Long, Integer> out = new HashMap<Long, Integer>();
 
-		for (Classification classification : this.simpleRelations.keySet()) {
-			if (out.containsKey(classification.id)) {
-				out.put(classification.id, out.get(classification.id) + 1);
-			} else {
-				out.put(classification.id, 1);
+		if (this.rootRelations.size() == 0)
+			return null;
+
+		RCACase rcaCase = this.rootRelations.keySet().iterator().next().rcaCase;
+
+		// Loop through all classifications
+		for (Classification classification : rcaCase.getClassifications()) {
+			SortedSet<Cause> causes = rcaCase.causes;
+			// Loop causes in current case
+			for (Cause cause : causes) {
+				// Loop classifications in cause
+				for (ClassificationPair classificationPair : cause.classifications) {
+					// If the cause has the classification, add relevance info
+					if (classificationPair.parent == classification) {
+						if (out.containsKey(classification.id)) {
+							out.put(classification.id, out.get(classification.id) + cause.effectRelations.size() + cause.causeRelations.size() + cause.likes.size());
+						} else {
+							out.put(classification.id, cause.effectRelations.size() + cause.causeRelations.size() + cause.likes.size());
+						}
+					}
+				}
 			}
 		}
 
