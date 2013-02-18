@@ -707,14 +707,9 @@ function showSimpleGraph(minNodeRelevance, minEdgeRelevance, keepNodes,
                     // Open edge found
                     var pairRelations = window.arca.relationMap.pairRelations;
 
-                    for(var index in pairRelations) {
-
-                        // to get the only key there is. Looks stupid but works
-                        for (key in pairRelations[index]) openFirst = key;
-
+                    for(var openFirst in pairRelations) {
                         var firstParentId = getEdgeParentId(openFirst);
-
-                        for (var openSecond in pairRelations[index][openFirst]) {
+                        for (var openSecond in pairRelations[openFirst]) {
                             var secondParentId = getEdgeParentId(openSecond);
 
                             if ((openedEdge.firstId == firstParentId && openedEdge.secondId == secondParentId) ||
@@ -791,6 +786,38 @@ function showSimpleGraph(minNodeRelevance, minEdgeRelevance, keepNodes,
                 });
             }
         }
+    }
+
+    // Add the root node connections
+    for (first in arca.relationMap.rootRelations) {
+        if (!arca.relationMap.rootRelations.hasOwnProperty(first)) { continue; }
+        relationData = arca.relationMap.rootRelations[first];
+        color = colorRelations ? getColor(relationData.likes) : '#0000aa';
+        glow = glowRelations ? getGlow(relationData.corrections) : 0;
+        lineWidth = weightRelations ? getWeight(relationData.strength) : 1;
+
+        // Create the relation if necessary
+        if (relationData.strength < minEdgeRelevance) { continue; }
+
+        // Create the node if necessary
+        if (!created.hasOwnProperty(first)) {
+            firstNodeData = arca.classifications[first];
+            if (firstNodeData.relevance < minNodeRelevance && keepNodes.indexOf(first) == -1) { continue; }
+            graphData.push(newNode(firstNodeData));
+            created[first] = graphData.length - 1;
+        }
+
+        // Add the adjacency
+        graphData[created[first]].adjacencies.push({
+            nodeTo: 0,
+            "data": {
+                "$dim": 15,
+                "$color": color,
+                "$lineWidth": lineWidth,
+                "$glow": glow,
+                "weight": 2
+            }
+        });
     }
 
     // If there are no nodes, stop here and go grab a drink or something
