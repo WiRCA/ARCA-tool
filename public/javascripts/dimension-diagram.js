@@ -556,23 +556,36 @@ function configurationView() {
 
 function show_edge_radial_menu(eventInfo, mouseEvent) {
 
-    var x = parseInt($(window).width()/2+eventInfo.getPos().x);
-    var y = parseInt($(window).height()/2+eventInfo.getPos().y);
-
     selectedEdge = eventInfo.getEdge();
+    var nodeFrom = eventInfo.getEdge().nodeFrom;
+    var nodeTo = eventInfo.getEdge().nodeTo;
 
-    //$("#" + given_node.id).addClass("nodeBoxSelected");
+    var fromPos = $("#" + nodeFrom.id).offset();
+    var toPos = $("#" + nodeTo.id).offset();
 
-    // Get the position of the placeholder element
+    var widthMid = Math.abs((fromPos.left - toPos.left)/2);
+    if (fromPos.left < toPos.left) {
+        widthMid = fromPos.left + widthMid;
+    }
+    else {
+        widthMid = toPos.left + widthMid;
+    }
+
+    var heightMid = Math.abs((fromPos.top - toPos.top)/2);
+    if (fromPos.top < toPos.top) {
+        heightMid = fromPos.top + heightMid;
+    }
+    else {
+        heightMid = toPos.top + heightMid;
+    }
 
     jQuery("#radial_menu").radmenu("opts").radius = 30;
 
     // show the menu directly over the placeholder
-
-    $("#radial_menu").css({
-        "left": x + "px",
-        "top": y + "px"
-    }).show();
+    $radial_menu.css({
+                                  "left": widthMid + 50 + "px",
+                                  "top": heightMid + 16 + "px"
+                              }).show();
 
      // jQuery("#radial_menu").radmenu("show");
     radmenu_fadeIn(selectedEdge);
