@@ -425,13 +425,14 @@ function doResize() {
  */
 function newNode(data, id, type) {
 
-    var name = data.title;
+    var name = id;
+    /*
     if (data.dimension == WHAT) {
         name = data.abbreviation;
         if (!name) {
             name = data.title.substring(0,2);
         }
-    }
+    }         */
     return {
         id: id,
         name: name,
@@ -526,8 +527,8 @@ function show_edge_radial_menu(eventInfo, mouseEvent) {
 
     // show the menu directly over the placeholder
     $radial_menu.css({
-                                  "left": widthMid + 50 + "px",
-                                  "top": heightMid + 16 + "px"
+                         "left": widthMid + 50 + "px",
+                         "top": heightMid + 16 + "px"
                               }).show();
 
      // jQuery("#radial_menu").radmenu("show");
@@ -536,13 +537,11 @@ function show_edge_radial_menu(eventInfo, mouseEvent) {
     if (selectedEdge.nodeTo.data.dimension == WHERE && selectedEdge.nodeFrom.data.dimension == WHERE) {
         jQuery("#radial_menu").radmenu("items")[0].style.visibility = "visible";
         jQuery("#radial_menu").radmenu("items")[1].style.visibility = "visible";
-        jQuery("#radial_menu").radmenu("items")[2].style.visibility = "visible";
-        jQuery("#radial_menu").radmenu("items")[3].style.visibility = "hidden";
+        jQuery("#radial_menu").radmenu("items")[2].style.visibility = "hidden";
     } else if (selectedEdge.nodeTo.data.dimension == WHAT && selectedEdge.nodeFrom.data.dimension == WHAT) {
         jQuery("#radial_menu").radmenu("items")[0].style.visibility = "hidden";
         jQuery("#radial_menu").radmenu("items")[1].style.visibility = "hidden";
-        jQuery("#radial_menu").radmenu("items")[2].style.visibility = "hidden";
-        jQuery("#radial_menu").radmenu("items")[3].style.visibility = "visible";
+        jQuery("#radial_menu").radmenu("items")[2].style.visibility = "visible";
 
     }
 }
@@ -719,63 +718,70 @@ function showSimpleGraph(minNodeRelevance, minEdgeRelevance, keepNodes,
 
                     // Open edge found
                     var pairRelations = window.arca.relationMap.pairRelations;
+                    console.log(pairRelations);
+                    for(var index in pairRelations) {
+                                   console.log("index: "+index);
+                        // to get the only key there is. Looks stupid but works
+                        for (key in pairRelations[index]) openFirst = key;
+                                       console.log("openFirst: "+openFirst);
+                        for (var openSecond in pairRelations[index][openFirst]) {
 
-                    for(var openFirst in pairRelations) {
-                        var firstParentId = getEdgeParentId(openFirst);
-                        for (var openSecond in pairRelations[openFirst]) {
-                            var secondParentId = getEdgeParentId(openSecond);
+                            var firstParentId = getEdgeParentId(openFirst);
+                            for (var openSecond in pairRelations[index][openFirst]) {
+                                var secondParentId = getEdgeParentId(openSecond);
 
-                            if ((openedEdge.firstId == firstParentId && openedEdge.secondId == secondParentId) ||
-                                (openedEdge.firstId == secondParentId && openedEdge.secondId == firstParentId)) {
+                                if ((openedEdge.firstId == firstParentId && openedEdge.secondId == secondParentId) ||
+                                    (openedEdge.firstId == secondParentId && openedEdge.secondId == firstParentId)) {
 
-                                var firstChildId = openFirst;
-                                var secondChildId = openSecond;
+                                    var firstChildId = openFirst;
+                                    var secondChildId = openSecond;
 
-                                var nNode = newNode(window.arca.classifications[getEdgeChildId(openFirst)], firstChildId, type);
-                                nNode.adjacencies = [];
-                                graphData.push(nNode);
-                                created[firstChildId] = graphData.length - 1;
+                                    var nNode = newNode(window.arca.classifications[getEdgeChildId(openFirst)], firstChildId, type);
+                                    nNode.adjacencies = [];
+                                    graphData.push(nNode);
+                                    created[firstChildId] = graphData.length - 1;
 
-                                nNode = newNode(window.arca.classifications[getEdgeChildId(openSecond)], secondChildId, type);
-                                nNode.adjacencies = [];
-                                graphData.push(nNode);
-                                created[secondChildId] = graphData.length - 1;
+                                    nNode = newNode(window.arca.classifications[getEdgeChildId(openSecond)], secondChildId, type);
+                                    nNode.adjacencies = [];
+                                    graphData.push(nNode);
+                                    created[secondChildId] = graphData.length - 1;
 
-                                // Between parent and child
-                                graphData[created[firstParentId]].adjacencies.push({
-                                    nodeTo: firstChildId,
-                                    "data": {
-                                        "$dim": 15,
-                                        "$color": "#ffffff",
-                                        "$type": type,
-                                        "$weight": 2,
-                                        "$lineWidth": 2,
-                                        "$glow": glow
-                                    }
-                                });
-                                graphData[created[secondParentId]].adjacencies.push({
-                                    nodeTo: secondChildId,
-                                    "data": {
-                                        "$dim": 15,
-                                        "$color": "#ffffff",
-                                        "$type": type,
-                                        "$weight": 2,
-                                        "$lineWidth": 2,
-                                        "$glow": glow
-                                    }
-                                });
-                                // Between childs
-                                graphData[created[firstChildId]].adjacencies.push({
-                                   nodeTo: secondChildId,
-                                   "data": {
-                                       "$dim": 15,
-                                       "$color": color,
-                                       "$weight": 2,
-                                       "$type": type,
-                                       "$lineWidth": lineWidth,
-                                       "$glow": glow
-                                   }
-                                });
+                                    // Between parent and child
+                                    graphData[created[firstParentId]].adjacencies.push({
+                                        nodeTo: firstChildId,
+                                        "data": {
+                                            "$dim": 15,
+                                            "$color": "#ffffff",
+                                            "$type": type,
+                                            "$weight": 2,
+                                            "$lineWidth": 2,
+                                            "$glow": glow
+                                        }
+                                    });
+                                    graphData[created[secondParentId]].adjacencies.push({
+                                        nodeTo: secondChildId,
+                                        "data": {
+                                            "$dim": 15,
+                                            "$color": "#ffffff",
+                                            "$type": type,
+                                            "$weight": 2,
+                                            "$lineWidth": 2,
+                                            "$glow": glow
+                                        }
+                                    });
+                                    // Between childs
+                                    graphData[created[firstChildId]].adjacencies.push({
+                                       nodeTo: secondChildId,
+                                       "data": {
+                                           "$dim": 15,
+                                           "$color": color,
+                                           "$weight": 2,
+                                           "$type": type,
+                                           "$lineWidth": lineWidth,
+                                           "$glow": glow
+                                       }
+                                    });
+                                }
                             }
                         }
                     }
