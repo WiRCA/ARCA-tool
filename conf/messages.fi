@@ -150,6 +150,7 @@ editor.singlePoint=piste
 editor.multiplePoints=pistettä
 
 editor.openEdge=Avaa relaatio
+editor.closeEdge=Sulje relaatio
 editor.nameEdge=Nimeä relaatio
 editor.showRelatedCauseNames=Näytä relaatioon liittyvät syyt
 
