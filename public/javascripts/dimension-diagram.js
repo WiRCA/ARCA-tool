@@ -262,7 +262,9 @@ function initGraph(graph_id, radial_menu_id, width, height, respondToResize) {
 
             // Change cursor style when the mouse cursor is on a non-root node
             onMouseEnter: function (node, eventInfo, e) {
-                fd.canvas.getElement().style.cursor = 'move';
+                if(node.data.dimension == WHERE) {
+                    fd.canvas.getElement().style.cursor = 'move';
+                }
             },
 
             // Restore mouse cursor when moving outside a node
@@ -271,7 +273,7 @@ function initGraph(graph_id, radial_menu_id, width, height, respondToResize) {
             },
 
             // Update node positions when dragged
-            onDragMove: function (node, eventInfo, e)
+            onDragMove: function (node, eventInfo, e) {
                 if (node.data.dimension == WHAT) {
                     return;
                 }
@@ -395,7 +397,7 @@ function initGraph(graph_id, radial_menu_id, width, height, respondToResize) {
     implementEdgeTypes();
 
     // Initialize Twipsy
-    $("a[rel=twipsy]").twipsy({live: true});
+    $("a[rel=twipsy]").twipsy({live: true, placement: 'left'});
     $('a[rel=twipsy]').twipsy('show');
 
     $('#' + graph_id).live("mousedown", function(event) {
@@ -425,14 +427,15 @@ function doResize() {
  */
 function newNode(data, id, type) {
 
-    var name = id;
-    /*
+    var name = data.title;
+
     if (data.dimension == WHAT) {
         name = data.abbreviation;
         if (!name) {
             name = data.title.substring(0,2);
         }
-    }         */
+        name = '<a href="#" rel="twipsy" title="'+data.title+'">'+name+'</a>';
+    }
     return {
         id: id,
         name: name,
