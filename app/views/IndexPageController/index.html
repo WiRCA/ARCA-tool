@@ -32,12 +32,7 @@
     <h1>&{'applicationName'}</h1>
     <p>&{'applicationDescription'}
     <br>
-    #{if tutorialCase != null}
-    #{list items:tutorialCase, as:'rcaCase'}
-        #{a @PublicRCACaseController.show(rcaCase.URLHash), class:'ellipsis caseTitle', id:'show-rcacase-'+rcaCase.id+'-link', rel:'popover',
-        title:"${rcaCase.caseName.escape().escape().raw()}", 'data-content':"${rcaCase.description.escape().escape().raw()}"}${rcaCase.caseName.escape().raw()}#{/a}
-    #{/list}
-    #{/if}
+
     </p>
 
 
