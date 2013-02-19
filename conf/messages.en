@@ -299,5 +299,5 @@ dimensionDiagramConfiguration.weighting=Hide relations:
 
 contactPage.feedbackFormTitle=Contact us or send feedback
 
-dimensions.one=Process area
-dimensions.two=Cause class
+dimensions.one=Cause class
+dimensions.two=Process area
