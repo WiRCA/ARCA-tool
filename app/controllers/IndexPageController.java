@@ -58,15 +58,10 @@ public class IndexPageController extends Controller {
 	public static void index() {
 
 
-		User tutorial = User.find("byEmail", "tutorial@local").first();
 
-		if (tutorial != null) {
-			SortedSet<RCACase> tutorialCase = tutorial.getRCACases();
-			render(tutorialCase);
-		} else {
-			render(null);
+		render();
 
-		}
+
 	}
 
 
