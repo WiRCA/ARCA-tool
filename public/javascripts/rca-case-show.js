@@ -224,20 +224,21 @@ var labelType, useGradients, nativeTextSupport, animate;
 
 
 /**
- * Updates the children vectors (ie. arrows) of the selected node, recursively
- * @param node the ID of the node to update
+ * Moves the children of the node recursively
+ * @param node the node to update (from ForceDirected)
+ * @param deltaX the change on the X axis
+ * @param deltaY the change on the Y axis
+ * @return void
  */
-function updateChildrenVectors (node) {
-    node.eachAdjacency(function (adj) {
-        if (adj.data.$type != "relationArrow" &&
-                adj.nodeTo.data.nodeLevel > node.data.nodeLevel && !(adj.nodeTo.data.locked)) {
-            var xAdjPos = node.getPos('end').x + adj.nodeTo.data.xCoordinate;
-            var yAdjPos = node.getPos('end').y + adj.nodeTo.data.yCoordinate;
-            adj.nodeTo.pos.setc(xAdjPos, yAdjPos);
-            adj.nodeTo.setPos(new $jit.Complex(xAdjPos, yAdjPos), 'end');
-            updateChildrenVectors(adj.nodeTo);
-        }
-    }, null, null);
+function moveChildren(node, deltaX, deltaY) {
+    fd.graph.computeLevels(arca.rootNodeId);
+    node.eachSubgraph(function (n) {
+        if (n == node) { return; }
+        var pos = n.getPos('current');
+        n.setPos(new $jit.Complex(pos.x + deltaX, pos.y + deltaY), 'end');
+        $.post(arca.ajax.moveNode({causeId: n.id, x: pos.x + deltaX, y: pos.y + deltaY}));
+    });
+    fd.plot();
 }
 
 
@@ -454,7 +455,6 @@ function init() {
             },
 
             // Update node positions when dragged
-            // TODO: Add a notification like "You cannot move the root node"
             onDragMove: function (node, eventInfo, e) {
                 jQuery("#radial_menu").radmenu("hide");
                 jQuery("#radial_menu_relation").radmenu("hide");
@@ -466,21 +466,17 @@ function init() {
                 }
             },
 
-            onDragEnd: function (node) {
-                var nodeParent = fd.graph.getNode(node.data.parent);
-                var xPos, yPos;
-                if (nodeParent != undefined) {
-                    xPos = node.getPos('end').x - nodeParent.getPos('end').x;
-                    yPos = node.getPos('end').y - nodeParent.getPos('end').y;
-                } else {
-                    xPos = node.getPos('end').x;
-                    yPos = node.getPos('end').y;
-                }
+            onDragEnd: function (node, eventInfo, e) {
+                var oldX = node.data.xCoordinate;
+                var oldY = node.data.yCoordinate;
+                var pos = node.getPos('end');
+                var deltaX = pos.x - oldX;
+                var deltaY = pos.y - oldY;
 
-                // The root node cannot be moved globally
+                // The root node cannot be moved
                 if (!node.data.isRootNode) {
-                    $.post(arca.ajax.moveNode({causeId: node.id, x: xPos, y: yPos}));
-                    updateChildrenVectors(node);
+                    $.post(arca.ajax.moveNode({causeId: node.id, x: pos.x, y: pos.y}));
+                    moveChildren(node, deltaX, deltaY);
                 }
             },
 
@@ -635,34 +631,9 @@ function init() {
 
     // Initialize the graph from the JSON data
     fd.loadJSON(arca.graphJson);
-    fd.plot();
-
-    // Calculate the node coordinates by their ancestors
-    var rootNodes = new Array();
     fd.graph.eachNode(function (node) {
-        var nodeLevel;
-        if (node.data.parent) {
-            nodeLevel = countParentNodes(node);
-        } else {
-            nodeLevel = 1;
-            rootNodes.push(node);
-        }
-        node.data.nodeLevel = nodeLevel;
-        if (nodeLevel == 1 && !node.data.isRootNode) {
-            node.setPos(new $jit.Complex(node.data.xCoordinate, node.data.yCoordinate), 'current');
-            node.setPos(new $jit.Complex(node.data.xCoordinate, node.data.yCoordinate), 'end');
-        } else {
-            node.setPos(new $jit.Complex(0, -300 + nodeLevel * 80), 'current');
-            node.setPos(new $jit.Complex(0, -300 + nodeLevel * 80), 'end');
-        }
-    }, null, null);
-
-    // Draw the arrows for each node
-    var rootNode;
-    for (rootNode in rootNodes) {
-        if (!rootNodes.hasOwnProperty(rootNode)) { continue; }
-        updateChildrenVectors(rootNodes[rootNode]);
-    }
+        node.setPos(new $jit.Complex(node.data.xCoordinate, node.data.yCoordinate), 'end');
+    });
 
     fd.animate({
         modes: ['linear'],
