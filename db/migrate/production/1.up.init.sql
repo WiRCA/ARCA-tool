@@ -23,6 +23,8 @@ DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS `arcatool`.`rcacase` (
   `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT ,
+  `URLHash` varchar(255) DEFAULT NULL ,
+  `importId` bigint(20) unsigned DEFAULT NULL ,
   `problemId` BIGINT(20) UNSIGNED NULL ,
   `ownerId` BIGINT(20) UNSIGNED NULL ,
   `name` VARCHAR(255) NOT NULL ,
