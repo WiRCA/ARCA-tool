@@ -262,7 +262,9 @@ function initGraph(graph_id, radial_menu_id, width, height, respondToResize) {
 
             // Change cursor style when the mouse cursor is on a non-root node
             onMouseEnter: function (node, eventInfo, e) {
-                fd.canvas.getElement().style.cursor = 'move';
+                if(node.data.dimension == WHERE) {
+                    fd.canvas.getElement().style.cursor = 'move';
+                }
             },
 
             // Restore mouse cursor when moving outside a node
@@ -395,7 +397,7 @@ function initGraph(graph_id, radial_menu_id, width, height, respondToResize) {
     implementEdgeTypes();
 
     // Initialize Twipsy
-    $("a[rel=twipsy]").twipsy({live: true});
+    $("a[rel=twipsy]").twipsy({live: true, placement: 'left'});
     $('a[rel=twipsy]').twipsy('show');
 
     $('#' + graph_id).live("mousedown", function(event) {
@@ -411,10 +413,10 @@ function initGraph(graph_id, radial_menu_id, width, height, respondToResize) {
  * Resizes the ForceDirected canvas according to the window size
  */
 function doResize() {
-    fd.canvas.resize(window.innerWidth, window.innerHeight);
+    //fd.canvas.resize(window.innerWidth, window.innerHeight);
     $("#infovis").css("width", window.innerWidth);
     $("#infovis").css("height", window.innerHeight);
-    applyZoom(1, false);
+    //applyZoom(1, false);
 }
 
 
@@ -426,11 +428,13 @@ function doResize() {
 function newNode(data, id, type) {
 
     var name = data.title;
+
     if (data.dimension == WHAT) {
         name = data.abbreviation;
         if (!name) {
             name = data.title.substring(0,2);
         }
+        name = '<a href="#" rel="twipsy" title="'+data.title+'">'+name+'</a>';
     }
     return {
         id: id,
@@ -526,8 +530,8 @@ function show_edge_radial_menu(eventInfo, mouseEvent) {
 
     // show the menu directly over the placeholder
     $radial_menu.css({
-                                  "left": widthMid + 50 + "px",
-                                  "top": heightMid + 16 + "px"
+                         "left": widthMid + 50 + "px",
+                         "top": heightMid + 16 + "px"
                               }).show();
 
      // jQuery("#radial_menu").radmenu("show");
@@ -536,13 +540,11 @@ function show_edge_radial_menu(eventInfo, mouseEvent) {
     if (selectedEdge.nodeTo.data.dimension == WHERE && selectedEdge.nodeFrom.data.dimension == WHERE) {
         jQuery("#radial_menu").radmenu("items")[0].style.visibility = "visible";
         jQuery("#radial_menu").radmenu("items")[1].style.visibility = "visible";
-        jQuery("#radial_menu").radmenu("items")[2].style.visibility = "visible";
-        jQuery("#radial_menu").radmenu("items")[3].style.visibility = "hidden";
+        jQuery("#radial_menu").radmenu("items")[2].style.visibility = "hidden";
     } else if (selectedEdge.nodeTo.data.dimension == WHAT && selectedEdge.nodeFrom.data.dimension == WHAT) {
         jQuery("#radial_menu").radmenu("items")[0].style.visibility = "hidden";
         jQuery("#radial_menu").radmenu("items")[1].style.visibility = "hidden";
-        jQuery("#radial_menu").radmenu("items")[2].style.visibility = "hidden";
-        jQuery("#radial_menu").radmenu("items")[3].style.visibility = "visible";
+        jQuery("#radial_menu").radmenu("items")[2].style.visibility = "visible";
 
     }
 }
@@ -719,63 +721,68 @@ function showSimpleGraph(minNodeRelevance, minEdgeRelevance, keepNodes,
 
                     // Open edge found
                     var pairRelations = window.arca.relationMap.pairRelations;
+                    for(var index in pairRelations) {
 
-                    for(var openFirst in pairRelations) {
-                        var firstParentId = getEdgeParentId(openFirst);
-                        for (var openSecond in pairRelations[openFirst]) {
-                            var secondParentId = getEdgeParentId(openSecond);
+                        // to get the only key there is. Looks stupid but works
+                        for (key in pairRelations[index]) openFirst = key;
+                        for (var openSecond in pairRelations[index][openFirst]) {
 
-                            if ((openedEdge.firstId == firstParentId && openedEdge.secondId == secondParentId) ||
-                                (openedEdge.firstId == secondParentId && openedEdge.secondId == firstParentId)) {
+                            var firstParentId = getEdgeParentId(openFirst);
+                            for (var openSecond in pairRelations[index][openFirst]) {
+                                var secondParentId = getEdgeParentId(openSecond);
 
-                                var firstChildId = openFirst;
-                                var secondChildId = openSecond;
+                                if ((openedEdge.firstId == firstParentId && openedEdge.secondId == secondParentId) ||
+                                    (openedEdge.firstId == secondParentId && openedEdge.secondId == firstParentId)) {
 
-                                var nNode = newNode(window.arca.classifications[getEdgeChildId(openFirst)], firstChildId, type);
-                                nNode.adjacencies = [];
-                                graphData.push(nNode);
-                                created[firstChildId] = graphData.length - 1;
+                                    var firstChildId = openFirst;
+                                    var secondChildId = openSecond;
 
-                                nNode = newNode(window.arca.classifications[getEdgeChildId(openSecond)], secondChildId, type);
-                                nNode.adjacencies = [];
-                                graphData.push(nNode);
-                                created[secondChildId] = graphData.length - 1;
+                                    var nNode = newNode(window.arca.classifications[getEdgeChildId(openFirst)], firstChildId, type);
+                                    nNode.adjacencies = [];
+                                    graphData.push(nNode);
+                                    created[firstChildId] = graphData.length - 1;
 
-                                // Between parent and child
-                                graphData[created[firstParentId]].adjacencies.push({
-                                    nodeTo: firstChildId,
-                                    "data": {
-                                        "$dim": 15,
-                                        "$color": "#ffffff",
-                                        "$type": type,
-                                        "$weight": 2,
-                                        "$lineWidth": 2,
-                                        "$glow": glow
-                                    }
-                                });
-                                graphData[created[secondParentId]].adjacencies.push({
-                                    nodeTo: secondChildId,
-                                    "data": {
-                                        "$dim": 15,
-                                        "$color": "#ffffff",
-                                        "$type": type,
-                                        "$weight": 2,
-                                        "$lineWidth": 2,
-                                        "$glow": glow
-                                    }
-                                });
-                                // Between childs
-                                graphData[created[firstChildId]].adjacencies.push({
-                                   nodeTo: secondChildId,
-                                   "data": {
-                                       "$dim": 15,
-                                       "$color": color,
-                                       "$weight": 2,
-                                       "$type": type,
-                                       "$lineWidth": lineWidth,
-                                       "$glow": glow
-                                   }
-                                });
+                                    nNode = newNode(window.arca.classifications[getEdgeChildId(openSecond)], secondChildId, type);
+                                    nNode.adjacencies = [];
+                                    graphData.push(nNode);
+                                    created[secondChildId] = graphData.length - 1;
+
+                                    // Between parent and child
+                                    graphData[created[firstParentId]].adjacencies.push({
+                                        nodeTo: firstChildId,
+                                        "data": {
+                                            "$dim": 15,
+                                            "$color": "#ffffff",
+                                            "$type": type,
+                                            "$weight": 2,
+                                            "$lineWidth": 2,
+                                            "$glow": glow
+                                        }
+                                    });
+                                    graphData[created[secondParentId]].adjacencies.push({
+                                        nodeTo: secondChildId,
+                                        "data": {
+                                            "$dim": 15,
+                                            "$color": "#ffffff",
+                                            "$type": type,
+                                            "$weight": 2,
+                                            "$lineWidth": 2,
+                                            "$glow": glow
+                                        }
+                                    });
+                                    // Between childs
+                                    graphData[created[firstChildId]].adjacencies.push({
+                                       nodeTo: secondChildId,
+                                       "data": {
+                                           "$dim": 15,
+                                           "$color": color,
+                                           "$weight": 2,
+                                           "$type": type,
+                                           "$lineWidth": lineWidth,
+                                           "$glow": glow
+                                       }
+                                    });
+                                }
                             }
                         }
                     }
@@ -843,6 +850,7 @@ function showSimpleGraph(minNodeRelevance, minEdgeRelevance, keepNodes,
 
     // Set the initial positions for the nodes, radially around the root node
     var i = 0, x, y;
+
     fd.graph.eachNode(function (node) {
         if (node.id == 0) {
             x = 0;
