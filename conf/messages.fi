@@ -300,5 +300,5 @@ dimensionDiagramConfiguration.weighting=Piilota relaatioita:
 
 contactPage.feedbackFormTitle=Ota meihin yhteyttä tai lähetä palautetta
 
-dimensions.one=Mikä
-dimensions.two=Missä
+dimensions.one=Syyluokka
+dimensions.two=Prosessialue

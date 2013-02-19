@@ -166,25 +166,13 @@ function causeRenameHandler(data) {
  */
 function nodeMoveHandler(data) {
     var nodeToMove = fd.graph.getNode(data.causeId);
-    var nodeParent = fd.graph.getNode(nodeToMove.data.parent);
     var intX = parseInt(data.x);
     var intY = parseInt(data.y);
+    var nodePos = new $jit.Complex(intX, intY);
+    nodeToMove.setPos(nodePos, 'end');
     nodeToMove.data.xCoordinate = intX;
     nodeToMove.data.yCoordinate = intY;
 
-    var xPos, yPos;
-    if (nodeParent != undefined) {
-        xPos = nodeParent.getPos('end').x + intX;
-        yPos = nodeParent.getPos('end').y + intY;
-    } else {
-        xPos = intX;
-        yPos = intY;
-    }
-
-    var nodePos = new $jit.Complex(xPos, yPos);
-    nodeToMove.setPos(nodePos, 'end');
-
-    updateChildrenVectors(nodeToMove);
     fd.animate({
         modes: ['linear'],
         transition: $jit.Trans.Elastic.easeOut,
