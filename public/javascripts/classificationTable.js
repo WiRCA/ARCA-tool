@@ -62,7 +62,7 @@ function replaceElementsIfEmpty(showAll, showCorrected, showLiked) {
  * Generates the HTML classification table and fills it with corresponding data
  * @param targetElement the
  */
-function generateClassificationTable(targetElement, showAll, showCorrected, showLiked) {
+function generateClassificationTable(targetElement, showAll, showLiked, showCorrected) {
     var buttonsChecked = replaceElementsIfEmpty(showAll, showCorrected, showLiked);
     if (buttonsChecked == 0) {
         return;
