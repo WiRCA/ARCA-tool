@@ -48,7 +48,8 @@ indexPage.bestBrowsers=Primary supported browsers
 indexPage.partiallySupportedBrowsers=Works with
 
 helpPage.title=Help
-helpPage.content= You can find the .pdf user manual covering all the aspects of the ARCA tool in Git Hub:
+helpPage.content= You can find the .pdf user manual covering all the aspects of the ARCA tool
+helpPage.manual=here.
 
 classificationTablePage.title=Classification Table
 classificationTablePage.help=You are looking at a case's classification table &ndash;
