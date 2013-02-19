@@ -427,7 +427,6 @@ function doResize() {
  * @return object
  */
 function newNode(data, id, type) {
-
     var name = data.title;
 
     if (data.dimension == WHAT) {
@@ -503,14 +502,23 @@ function configurationView() {
 }
 
 function show_edge_radial_menu(eventInfo, mouseEvent) {
-
+    console.log("CLICK");
     selectedEdge = eventInfo.getEdge();
+    console.log("4.1");
     var nodeFrom = eventInfo.getEdge().nodeFrom;
+    console.log("4.2");
     var nodeTo = eventInfo.getEdge().nodeTo;
 
-    var fromPos = $("#" + nodeFrom.id).offset();
-    var toPos = $("#" + nodeTo.id).offset();
-
+    if (nodeFrom.data.dimension == WHAT) {
+        var fromPos = $("#" + getEdgeParentId(nodeFrom.id)).offset();
+    } else {
+        var fromPos = $("#" + nodeFrom.id).offset();
+    }
+    if (nodeTo.data.dimension == WHAT) {
+        var toPos = $("#" + getEdgeParentId(nodeTo.id)).offset();
+    } else {
+        var toPos = $("#" + nodeTo.id).offset();
+    }
     var widthMid = Math.abs((fromPos.left - toPos.left)/2);
     if (fromPos.left < toPos.left) {
         widthMid = fromPos.left + widthMid;
@@ -518,15 +526,16 @@ function show_edge_radial_menu(eventInfo, mouseEvent) {
     else {
         widthMid = toPos.left + widthMid;
     }
-
+    console.log("6");
     var heightMid = Math.abs((fromPos.top - toPos.top)/2);
+    console.log("7");
     if (fromPos.top < toPos.top) {
         heightMid = fromPos.top + heightMid;
     }
     else {
         heightMid = toPos.top + heightMid;
     }
-
+          console.log("1");
     jQuery("#radial_menu").radmenu("opts").radius = 30;
 
     // show the menu directly over the placeholder
@@ -536,6 +545,7 @@ function show_edge_radial_menu(eventInfo, mouseEvent) {
                               }).show();
 
      // jQuery("#radial_menu").radmenu("show");
+    console.log("2");
     radmenu_fadeIn(selectedEdge);
     $("#radial_menu").disableSelection();
     if (selectedEdge.nodeTo.data.dimension == WHERE && selectedEdge.nodeFrom.data.dimension == WHERE) {
@@ -548,6 +558,7 @@ function show_edge_radial_menu(eventInfo, mouseEvent) {
         jQuery("#radial_menu").radmenu("items")[2].style.visibility = "visible";
 
     }
+    console.log("3");
 }
 
 
