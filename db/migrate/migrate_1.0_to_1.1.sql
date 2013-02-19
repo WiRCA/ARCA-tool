@@ -49,3 +49,5 @@ CREATE TABLE `dimension` (
   PRIMARY KEY (`id`)
 );
 
+INSERT INTO dimension (dimensionId, name) VALUES (1, 'What');
+INSERT INTO dimension (dimensionId, name) VALUES (2, 'Where');
