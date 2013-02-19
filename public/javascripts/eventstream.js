@@ -107,11 +107,11 @@ function readEventStream() {
  */
 function addRelationHandler(data) {
     fd.graph.addAdjacence(
-        fd.graph.getNode(data.causeFrom),
         fd.graph.getNode(data.causeTo),
+        fd.graph.getNode(data.causeFrom),
         {
             "$type": "relationArrow",
-            "$direction": [data.causeTo, data.causeFrom],
+            //"$direction": [data.causeTo, data.causeFrom],
             "$dim": 15,
             "$color": "#23A4FF",
             "weight": 1

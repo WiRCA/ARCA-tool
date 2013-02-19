@@ -58,7 +58,8 @@ aboutPage.content8=[1]	T. O. A. Lehtinen, M. V. Mäntylä and J. Vanhanen, “De
 aboutPage.content9=[2]	T. O. A. Lehtinen and M. V. Mäntylä, “What are problem causes of software projects? data of root cause analysis at four software companies”, 5th International Symposium on Empirical Software Engineering and Measurement, ESEM 2011 , pp. 388-391, 2011.
 
 helpPage.title=Apua
-helpPage.content=ARCA-työkalun kaikki ominaisuudet kattava käyttöohje löytyy englanniksi .pdf-muodossa GitHubista:
+helpPage.content=ARCA-työkalun kaikki ominaisuudet kattava käyttöohje löytyy englanniksi .pdf-muodossa
+helpPage.manual=tästä.
 
 classificationTablePage.title=Luokittelutaulukko
 classificationTablePage.help=Katsot analyysin luokittelutaulukkoa -

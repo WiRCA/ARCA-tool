@@ -234,7 +234,7 @@ var labelType, useGradients, nativeTextSupport, animate;
 function moveChildren(node, deltaX, deltaY) {
     fd.graph.computeLevels(arca.rootNodeId);
     node.eachSubgraph(function (n) {
-        if (n == node) { return; }
+        if (n == node || node.id == arca.rootNodeId) { return; }
         var pos = n.getPos('current');
         n.setPos(new $jit.Complex(pos.x + deltaX, pos.y + deltaY), 'end');
         $.post(arca.ajax.moveNode({causeId: n.id, x: pos.x + deltaX, y: pos.y + deltaY}));
