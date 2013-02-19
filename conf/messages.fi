@@ -299,5 +299,5 @@ dimensionDiagramConfiguration.weighting=Piilota relaatioita:
 
 contactPage.feedbackFormTitle=Ota meihin yhteyttä tai lähetä palautetta
 
-dimensions.one=Prosessialue
-dimensions.two=Syyluokka
+dimensions.one=Syyluokka
+dimensions.two=Prosessialue
