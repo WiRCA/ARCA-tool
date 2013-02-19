@@ -271,7 +271,7 @@ function initGraph(graph_id, radial_menu_id, width, height, respondToResize) {
             },
 
             // Update node positions when dragged
-            onDragMove: function (node, eventInfo, e) {
+            onDragMove: function (node, eventInfo, e)
                 if (node.data.dimension == WHAT) {
                     return;
                 }
@@ -411,10 +411,10 @@ function initGraph(graph_id, radial_menu_id, width, height, respondToResize) {
  * Resizes the ForceDirected canvas according to the window size
  */
 function doResize() {
-    fd.canvas.resize(window.innerWidth, window.innerHeight);
+    //fd.canvas.resize(window.innerWidth, window.innerHeight);
     $("#infovis").css("width", window.innerWidth);
     $("#infovis").css("height", window.innerHeight);
-    applyZoom(1, false);
+    //applyZoom(1, false);
 }
 
 
@@ -718,12 +718,10 @@ function showSimpleGraph(minNodeRelevance, minEdgeRelevance, keepNodes,
 
                     // Open edge found
                     var pairRelations = window.arca.relationMap.pairRelations;
-                    console.log(pairRelations);
                     for(var index in pairRelations) {
-                                   console.log("index: "+index);
+
                         // to get the only key there is. Looks stupid but works
                         for (key in pairRelations[index]) openFirst = key;
-                                       console.log("openFirst: "+openFirst);
                         for (var openSecond in pairRelations[index][openFirst]) {
 
                             var firstParentId = getEdgeParentId(openFirst);
@@ -849,6 +847,7 @@ function showSimpleGraph(minNodeRelevance, minEdgeRelevance, keepNodes,
 
     // Set the initial positions for the nodes, radially around the root node
     var i = 0, x, y;
+
     fd.graph.eachNode(function (node) {
         if (node.id == 0) {
             x = 0;
