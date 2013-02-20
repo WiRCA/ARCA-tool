@@ -162,7 +162,7 @@ function addCauseHandler(data) {
     applyZoom(1, false); // refresh zooming for the new node
     $("#infovis-label div.node").disableSelection();
 
-    if (data.classify == true) {
+    if (data.classify == true && arca.currentUser == newNode.data.creatorId && arca.currentUser != null) {
         selectedNode = newNode;
         $('#tagcause-modal').modal('show');
         populateTagEditor();
