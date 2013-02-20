@@ -82,7 +82,7 @@ public class CauseController extends Controller {
 		AddCauseEvent event = new AddCauseEvent(newCause, causeId, newCause.xCoordinate, newCause.yCoordinate, classify);
 		CauseStream causeEvents = rcaCase.getCauseStream();
 		causeEvents.getStream().publish(event);
-		Logger.info("Cause %s added to cause %s", name, cause);
+		Logger.debug("Cause %s added to cause %s", name, cause);
 	}
 
 	/**
@@ -109,7 +109,7 @@ public class CauseController extends Controller {
 		AddRelationEvent event = new AddRelationEvent(causeId, toId);
 		CauseStream causeEvents = rcaCase.getCauseStream();
 		causeEvents.getStream().publish(event);
-		Logger.info("Relation added between %s and %s", causeFrom, causeTo);
+		Logger.debug("Relation added between %s and %s", causeFrom, causeTo);
 	}
 	
 	/**
@@ -143,7 +143,7 @@ public class CauseController extends Controller {
 		AddCorrectionEvent event = new AddCorrectionEvent(causeTo, name, description);
 		CauseStream causeEvents = rcaCase.getCauseStream();
 		causeEvents.getStream().publish(event);
-		Logger.info("Correction added to cause %s: %s", causeTo.name, description);
+		Logger.debug("Correction added to cause %s: %s", causeTo.name, description);
 	}
 
 	/**
@@ -159,7 +159,7 @@ public class CauseController extends Controller {
 		RCACase rcaCase = cause.rcaCase;
 
 		if (!CauseController.userIsAllowedToDeleteAndRename(cause, rcaCase)) {
-			Logger.info("User %s tried to delete cause %s", SecurityController.getCurrentUser().name, cause.name);
+			Logger.warn("User %s tried to delete cause %s", SecurityController.getCurrentUser().name, cause.name);
 			forbidden();
 		}
 
@@ -192,7 +192,7 @@ public class CauseController extends Controller {
 		DeleteRelationEvent deleteEvent = new DeleteRelationEvent(fromCause, toCause);
 		CauseStream causeEvents = rcaCase.getCauseStream();
 		causeEvents.getStream().publish(deleteEvent);
-		Logger.info("Relation from %s to %s deleted", fromCause.name, toCause.name);
+		Logger.debug("Relation from %s to %s deleted", fromCause.name, toCause.name);
 	}
 
 	private static boolean userIsAllowedToDeleteAndRename(Cause cause, RCACase rcaCase) {
@@ -234,7 +234,7 @@ public class CauseController extends Controller {
 		User user = SecurityController.getCurrentUser();
 		
 		if (!userAllowedToLike(user, rcaCase, cause)) {
-			Logger.info("User %s tried to like cause %s", user.name, cause.name);
+			Logger.warn("User %s tried to like cause %s", user.name, cause.name);
 			forbidden();
 		}
 
@@ -244,7 +244,7 @@ public class CauseController extends Controller {
 		CauseStream causeEvents = rcaCase.getCauseStream();
 		causeEvents.getStream().publish(event);
 
-		Logger.info("Cause %s liked by %s", cause, user);
+		Logger.debug("Cause %s liked by %s", cause, user);
 		String likeData = String.format("{\"count\":%d,\"hasliked\":%b,\"isowner\":%b}", cause.countLikes(),
             cause.hasUserLiked(user), user.equals(rcaCase.getOwner()));
 		renderJSON(likeData);
@@ -260,7 +260,7 @@ public class CauseController extends Controller {
 		User user = SecurityController.getCurrentUser();
 
 		if (!userAllowedToDislike(user, rcaCase, cause)) {
-			Logger.info("User %s tried to dislike %s", user.name, cause.name);
+			Logger.warn("User %s tried to dislike %s", user.name, cause.name);
 			forbidden();
 		}
 		cause.dislike(user);
@@ -269,7 +269,7 @@ public class CauseController extends Controller {
 		CauseStream causeEvents = rcaCase.getCauseStream();
 		causeEvents.getStream().publish(event);
 
-		Logger.info("Cause %s disliked by %s", cause, user);
+		Logger.debug("Cause %s disliked by %s", cause, user);
 
 		String likeData = String.format("{\"count\":%d,\"hasliked\":%b,\"isowner\":%b}", cause.countLikes(),
             cause.hasUserLiked(user), user.equals(rcaCase.getOwner()));
@@ -286,8 +286,8 @@ public class CauseController extends Controller {
 		Cause cause = Cause.findById(causeId);
 		RCACase rcaCase = cause.rcaCase;
 
-        if (!CauseController.userIsAllowedToDeleteAndRename(cause, rcaCase)) {
-	        Logger.info("User %s tried to rename cause %s", SecurityController.getCurrentUser().name, cause.name);
+        if (!userIsAllowedToDeleteAndRename(cause, rcaCase)) {
+	        Logger.warn("User %s tried to rename cause %s", SecurityController.getCurrentUser().name, cause.name);
             forbidden();
         }
 		String oldName = cause.name;
@@ -303,7 +303,7 @@ public class CauseController extends Controller {
 		CauseRenameEvent event = new CauseRenameEvent(causeId, name);
 		CauseStream causeEvents = rcaCase.getCauseStream();
 		causeEvents.getStream().publish(event);
-		Logger.info("Cause %s renamed to cause %s", oldName, name);
+		Logger.debug("Cause %s renamed to cause %s", oldName, name);
 	}
 
 
@@ -366,7 +366,7 @@ public class CauseController extends Controller {
 		CauseStream causeEvents = rcaCase.getCauseStream();
 		CauseClassificationEvent event = new CauseClassificationEvent(causeId, classificationPairs);
 		causeEvents.getStream().publish(event);
-		Logger.info("Case %s reclassified with %d pair(s)", cause.name, classificationPairs.size());
+		Logger.debug("Case %s reclassified with %d pair(s)", cause.name, classificationPairs.size());
 	}
 
 	private static boolean userAllowedToLike(User user, RCACase rcaCase, Cause cause) {
