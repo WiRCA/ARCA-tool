@@ -64,17 +64,10 @@
     // Check that problem has a correct name.
     verifyTextPresent('Testikeissin probleema')
 
-    storeLocation('url')
-
-    open('/logout')
-
-    // open created RCA case with user that is not logged in
-    open('$[url]')
-    waitForTextPresent('Testikeissin probleema')
     clickAt('//*[text()="Testikeissin probleema"]')
     assertElementPresent('//div[@id='radmenu-event-addCause']')
 
-    // Add a new node with user that is not logged in
+    // Add a new node
     clickAt('//div[@id='radmenu-event-addCause']')
     waitForElementPresent('css=#addcause-modal > div.modal-header > h3')
     type('id=causeName','foo')
@@ -88,6 +81,8 @@
     verifyTextPresent('Not found')
 
     // Try to create new RCA case when not logged in
+    open('/logout')
+    open('/?language=en')
     open('/CreateRCACase')
     verifyTextPresent('Or log in using your Google Account')
 

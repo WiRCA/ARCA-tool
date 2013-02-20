@@ -105,10 +105,7 @@ waitForElementPresent('//div[@id='tagAreaMiddle']//span[text()="Mikä I"]')
 clickAt('id=tagCauseButton')
 waitForNotVisible('id=tagcause-modal')
 
-// Tag a cause when not logged in
-storeLocation('url')
-open('/logout')
-open('$[url]')
+// Tag another cause
 clickAt('//*[text()="Joku joi kaiken kahvin"]')
 waitForElementPresent('//div[@id='radmenu-event-tagCause']')
 clickAt('//div[@id='radmenu-event-tagCause']')
