@@ -148,6 +148,8 @@ editor.addRelationInfo1=Relaatiotila on nyt päällä.
 editor.addRelationInfo2=Klikkaa toista solmua lisätäksesi relaatio tai paina ESC peruuttaaksesi.
 editor.singlePoint=piste
 editor.multiplePoints=pistettä
+editor.loginHelp1=Et ole kirjautunut sisään!
+editor.loginHelp2=Kirjaudu sisään oikeasta yläkulmasta, jos haluat muokata solmuja.
 
 editor.openEdge=Avaa relaatio
 editor.closeEdge=Sulje relaatio

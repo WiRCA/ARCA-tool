@@ -496,37 +496,42 @@ function init() {
             // Add the click handler for opening a radial menu for nodes
             onClick: function (node, eventInfo, e) {
                 $("#help-message").hide();
-                if (node) {
-                    if (relationFromNode) {
-                        $.post(arca.ajax.addRelation({fromId: relationFromNode.id,
-                                                      toID: node.id}));
-                        relationFromNode = null;
-                        $("#relation-help-message").fadeOut(80, "linear");
+                if (arca.currentUser != null) {
+                    if (node) {
+                        if (relationFromNode) {
+                            $.post(arca.ajax.addRelation({fromId: relationFromNode.id,
+                                                          toID: node.id}));
+                            relationFromNode = null;
+                            $("#relation-help-message").fadeOut(80, "linear");
+                        } else {
+                            resetNodeEdges(selectedNode);
+                            jQuery("#corrections_link").fadeOut(400);
+                            show_radial_menu(node);
+                            node.eachAdjacency(function (adj) {
+                                adj.setDataset('current', {
+                                    lineWidth: '5',
+                                    color: '#4CC417'
+                                });
+                            }, null, null);
+                            fd.plot();
+                        }
                     } else {
                         resetNodeEdges(selectedNode);
+                        jQuery("#radial_menu").radmenu("hide");
                         jQuery("#corrections_link").fadeOut(400);
-                        show_radial_menu(node);
-                        node.eachAdjacency(function (adj) {
-                            adj.setDataset('current', {
-                                lineWidth: '5',
-                                color: '#4CC417'
-                            });
-                        }, null, null);
+                        $("#addCorrectiveForm").popover('hide');
                         fd.plot();
                     }
-                } else {
-                    resetNodeEdges(selectedNode);
-                    jQuery("#radial_menu").radmenu("hide");
-                    jQuery("#corrections_link").fadeOut(400);
-                    $("#addCorrectiveForm").popover('hide');
-                    fd.plot();
-                }
-                if (eventInfo.getEdge()) {
-                    show_edge_radial_menu(eventInfo);
-                    fd.plot();
-                } else {
-                    jQuery("#radial_menu_relation").radmenu("hide");
-                    fd.plot();
+                    if (eventInfo.getEdge()) {
+                        show_edge_radial_menu(eventInfo);
+                        fd.plot();
+                    } else {
+                        jQuery("#radial_menu_relation").radmenu("hide");
+                        fd.plot();
+                    }
+                } else if (node) {
+                    $("#login-help-message").show();
+                    $("#login-help-message").delay(5000).fadeOut("slow");
                 }
             }
         },
@@ -649,10 +654,15 @@ $(document).ready(function () {
         $(this).parent().hide();
     });
 
+    $("#login-help-message-close").click(function () {
+        $(this).parent().hide();
+    });
+
     init();
 
     $("#correction-help-message").hide();
     $("#relation-help-message").hide();
+    $("#login-help-message").hide();
     $("#addCorrectiveForm").hide();
     $("#ideaHeader").hide();
     $("#infovis").disableSelection();

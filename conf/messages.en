@@ -144,6 +144,8 @@ editor.addRelationInfo1=Relation mode is on.
 editor.addRelationInfo2=Click another node to create relation or press ESC to cancel.
 editor.singlePoint=point
 editor.multiplePoints=points
+editor.loginHelp1=Not logged in!
+editor.loginHelp2=Please log in from upper right corner in order to edit nodes.
 
 editor.openEdge=Open the edge
 editor.closeEdge=Close the edge
