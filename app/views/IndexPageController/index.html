@@ -1,7 +1,8 @@
 <!--
-  ~ Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
-  ~ Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus,
-  ~ Timo Lehtinen, Jaakko Harjuhahto
+  ~ Copyright (C) 2011 - 2013 by Eero Laukkanen, Risto Virtanen, Jussi Patana,
+  ~ Juha Viljanen, Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi,
+  ~ Mikko Valjus, Timo Lehtinen, Jaakko Harjuhahto, Jonne Viitanen, Jari Jaanto,
+  ~ Toni Sevenius, Anssi Matti Helin, Jerome Saarinen, Markus Kere
   ~
   ~ Permission is hereby granted, free of charge, to any person obtaining a copy
   ~ of this software and associated documentation files (the "Software"), to deal
@@ -21,6 +22,7 @@
   ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
   ~ THE SOFTWARE.
   -->
+
 #{extends 'main.html' /}
 #{set 'title'}&{'indexPage.title'}#{/set}
 #{set 'pageHeader'}&{'indexPage.title'}#{/set}
@@ -28,17 +30,11 @@
 
 <div class="hero-unit">
     <h1>&{'applicationName'}</h1>
-    <p>&{'applicationDescription'}</p>
+    <p>&{'applicationDescription'}
+    <br>
 
-    <h2>&{'user.allPublicCases'}</h2>
-    <ul>
-    #{list items:allPublicCases, as:'rcaCase'}
-    <li>#{a @PublicRCACaseController.show(rcaCase.id)} ${rcaCase.caseName} #{/a}</li>
-    #{/list}
-    #{else}<li>&{'user.noAnyPublicCases'}</li>#{/else}
-    </ul>
+    </p>
 
-    <hr>
 
     <!-- logos by Paul Irish http://paulirish.com/2010/high-res-browser-icons/ -->
 

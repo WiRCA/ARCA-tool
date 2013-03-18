@@ -1,7 +1,8 @@
 <!--
-  ~ Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
-  ~ Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus,
-  ~ Timo Lehtinen, Jaakko Harjuhahto
+  ~ Copyright (C) 2011 - 2013 by Eero Laukkanen, Risto Virtanen, Jussi Patana,
+  ~ Juha Viljanen, Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi,
+  ~ Mikko Valjus, Timo Lehtinen, Jaakko Harjuhahto, Jonne Viitanen, Jari Jaanto,
+  ~ Toni Sevenius, Anssi Matti Helin, Jerome Saarinen, Markus Kere
   ~
   ~ Permission is hereby granted, free of charge, to any person obtaining a copy
   ~ of this software and associated documentation files (the "Software"), to deal
@@ -21,6 +22,7 @@
   ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
   ~ THE SOFTWARE.
   -->
+
 #{fixture delete:'all',load:'data.yml' /}
 #{selenium}
     setTimeout('5000')
@@ -42,11 +44,11 @@
 	type('id=companyProducts','seppo myy')
 	clickAndWait('id=create')
 
-	//Creates new causes
+	// Creates new causes
 	clickAt('//*[text()="sepon oma keissi"]')
     waitForElementPresent('//div[@id='radmenu-event-addCause']')
 
-	//New cause
+	// New cause
 	click('//div[@id='radmenu-event-addCause']')
     waitForElementPresent('css=#addcause-modal > div.modal-header > h3')
     type('id=causeName','seppo ei saa myytyä')
@@ -55,7 +57,7 @@
 	clickAt('//*[text()="seppo ei saa myytyä"]')
 	waitForElementPresent('//div[@id='radmenu-event-addCause']')
 
-	//New cause
+	// New cause
 	click('//div[@id='radmenu-event-addCause']')
     waitForElementPresent('css=#addcause-modal > div.modal-header > h3')
     type('id=causeName','kukaan ei osta')
@@ -64,7 +66,7 @@
 	clickAt('//*[text()="kukaan ei osta"]')
     waitForElementPresent('//div[@id='radmenu-event-addCause']')
 
-	//New cause
+	// New cause
 	click('//div[@id='radmenu-event-addCause']')
     waitForElementPresent('css=#addcause-modal > div.modal-header > h3')
     type('id=causeName','syy 3')
@@ -73,7 +75,7 @@
 	clickAt('//*[text()="syy 3"]')
 	waitForElementPresent('//div[@id='radmenu-event-addCause']')
 
-	//New cause
+	// New cause
 	click('//div[@id='radmenu-event-addCause']')
     waitForElementPresent('css=#addcause-modal > div.modal-header > h3')
     type('id=causeName','adada')
@@ -81,7 +83,7 @@
 	waitForTextPresent('adada')
 	clickAt('//*[text()="seppo ei saa myytyä"]')
 
-	//New correction
+	// New correction
 	click('//div[@id='radmenu-event-addCorrection']')
     verifyTextPresent(&{'addCorrectiveAction.title'})
     clickAt('id=submitCorrectiveActionButton')
@@ -97,13 +99,13 @@
 	clickAt('//*[text()="kukaan ei osta"]')
 	waitForElementPresent('//div[@id='radmenu-event-addCause']')
 
-	//Removes cause
+	// Removes cause
 	click('//div[@id='radmenu-event-removeCause']')
 	waitForTextNotPresent('kukaan ei osta')
 	clickAt('//*[text()="syy 3"]')
 	waitForElementPresent('//div[@id='radmenu-event-addCause']')
 
-	//New cause
+	// New cause
 	click('//div[@id='radmenu-event-addCause']')
     waitForElementPresent('css=#addcause-modal > div.modal-header > h3')
     type('id=causeName','asdasdasd')
@@ -112,13 +114,13 @@
 	clickAt('//*[text()="asdasdasd"]')
 	waitForElementPresent('//div[@id='radmenu-event-addRelation']')
 
-	//New relation
+	// New relation
 	click('//div[@id='radmenu-event-addRelation']')
 	clickAt('//*[text()="adada"]')
 	clickAt('//*[text()="syy 3"]')
 	waitForElementPresent('//div[@id='radmenu-event-addRelation']')
 
-	//New relation
+	// New relation
 	click('//div[@id='radmenu-event-addRelation']')
 	clickAt('//*[text()="seppo ei saa myytyä"]')
 
@@ -128,7 +130,7 @@
 	clickAt('//*[text()="adada"]')
     waitForElementPresent('//div[@id='radmenu-event-addCause']')
 
-	//Removes cause
+	// Removes cause
 	click('//div[@id='radmenu-event-removeCause']')
 	waitForTextNotPresent('adada')
 	clickAndWait('id=logout-link')

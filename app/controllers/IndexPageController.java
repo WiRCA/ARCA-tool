@@ -1,7 +1,8 @@
 /*
- * Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
- * Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus,
- * Timo Lehtinen, Jaakko Harjuhahto
+ * Copyright (C) 2011 - 2013 by Eero Laukkanen, Risto Virtanen, Jussi Patana,
+ * Juha Viljanen, Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi,
+ * Mikko Valjus, Timo Lehtinen, Jaakko Harjuhahto, Jonne Viitanen, Jari Jaanto,
+ * Toni Sevenius, Anssi Matti Helin, Jerome Saarinen, Markus Kere
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,12 +25,16 @@
 
 package controllers;
 
+
 import models.RCACase;
+import job.Bootstrap;
+import models.User;
 import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.With;
 
-import java.util.List;
+
+import java.util.SortedSet;
 
 /**
  * Methods related to the index page.
@@ -51,8 +56,12 @@ public class IndexPageController extends Controller {
 	 * Open index page.
 	 */
 	public static void index() {
-		List<RCACase> allPublicCases = RCACase.find("byIsCasePublic", true).fetch();
-		render(allPublicCases);
+
+
+
+		render();
+
+
 	}
 
 

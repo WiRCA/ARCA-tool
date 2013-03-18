@@ -1927,10 +1927,12 @@ var MouseEventsManager = new Class({
           var edgeFrom = graph.edges[id];
           hashset[id] = true;
           for(var edgeId in edgeFrom) {
-            if(edgeId in hashset) continue;
+              // this is commented due to relations to ownself in dimension diagram
+           // if(edgeId in hashset) continue;
             var e = edgeFrom[edgeId],
                 geom = e && etypes[e.getData('type')],
                 contains = geom && geom.contains && geom.contains.call(fx, e, this.getPos());
+
             if(contains) {
               this.contains = contains;
               return that.edge = this.edge = e;
@@ -3897,7 +3899,7 @@ $jit.Graph = new Class({
 
   */  
   addNode: function(obj) { 
-   if(!this.nodes[obj.id]) {  
+   if(!this.nodes[obj.id]) {
      var edges = this.edges[obj.id] = {};
      this.nodes[obj.id] = new Graph.Node($.extend({
         'id': obj.id,
@@ -6198,11 +6200,11 @@ var EdgeHelper = {
       (end code)
       */
       'render': function(from, to, canvas){
-        var ctx = canvas.getCtx();
-        ctx.beginPath();
-        ctx.moveTo(from.x, from.y);
-        ctx.lineTo(to.x, to.y);
-        ctx.stroke();
+          var ctx = canvas.getCtx();
+          ctx.beginPath();
+          ctx.moveTo(from.x, from.y);
+          ctx.lineTo(to.x, to.y);
+          ctx.stroke();
       },
       /*
       Method: contains
@@ -6244,6 +6246,60 @@ var EdgeHelper = {
     Object: EdgeHelper.arrow
   */
   'arrow': {
+      /*
+      Method: calculateArrowPosition
+
+      Calculates the right position for relation arrows so that they are not "under" the nodes.
+
+      Parameters:
+
+
+       */
+    'calculateArrowPosition': function(from, to, adj, inv) {
+        // if the adjacency is inverted, then arrowhead is drawn towards adj.nodeFrom, otherwise towards adj.nodeTo
+        if (inv) {
+            var vect = new Complex(to.x - from.x, to.y - from.y),
+                from = adj.nodeFrom.pos.clone().getc(true),
+                arrow = from,
+                arrowWidth = new Complex(adj.nodeFrom.data.$width >> 1, 0),
+                arrowHeight = new Complex(0, adj.nodeFrom.data.$height >> 1),
+                arrowCorner = arrowWidth.clone().$add(arrowHeight),
+                arrowTheta = vect.getp(true).theta,
+                arrowCornerTheta = arrowCorner.getp(true).theta,
+                arrowNodeWidth = adj.nodeFrom.data.$width >> 1,
+                arrowNodeHeight = adj.nodeFrom.data.$height >> 1;
+        } else {
+            var vect = new Complex(from.x - to.x, from.y - to.y),
+                to = adj.nodeTo.pos.clone().getc(true),
+                arrow = to,
+                arrowWidth = new Complex(adj.nodeTo.data.$width >> 1, 0),
+                arrowHeight = new Complex(0, adj.nodeTo.data.$height >> 1),
+                arrowCorner = arrowWidth.clone().$add(arrowHeight),
+                arrowTheta = vect.getp(true).theta,
+                arrowCornerTheta = arrowCorner.getp(true).theta,
+                arrowNodeWidth = adj.nodeTo.data.$width >> 1,
+                arrowNodeHeight = adj.nodeTo.data.$height >> 1;
+        }
+
+        // angle between nodes is compared to the "corner angle" of the node and the position of the arrowhead is adjusted accordingly
+        if (arrowTheta < arrowCornerTheta) {
+            arrow.x = arrow.x + arrowNodeWidth;
+            arrow.y = arrow.y + arrowNodeWidth * Math.tan(arrowTheta);
+        } else if (arrowTheta < Math.PI - arrowCornerTheta) {
+            arrow.x = arrow.x + arrowNodeWidth * Math.cos(Math.PI * (arrowTheta - arrowCornerTheta) / (Math.PI - 2 * arrowCornerTheta));
+            arrow.y = arrow.y + arrowNodeHeight;
+        } else if (arrowTheta < Math.PI + arrowCornerTheta) {
+            arrow.x = arrow.x - arrowNodeWidth;
+            arrow.y = arrow.y + arrowNodeHeight * Math.cos(Math.PI * (arrowTheta - (Math.PI - arrowCornerTheta)) / (2 * arrowCornerTheta));
+        } else if (arrowTheta < 2 * Math.PI - arrowCornerTheta) {
+            arrow.x = arrow.x - arrowNodeWidth * Math.cos(Math.PI * (arrowTheta - (Math.PI + arrowCornerTheta)) / (Math.PI - 2 * arrowCornerTheta));
+            arrow.y = arrow.y - arrowNodeHeight;
+        } else {
+            arrow.x = arrow.x + arrowNodeWidth;
+            arrow.y = arrow.y - (arrowNodeHeight - arrowNodeWidth * Math.tan(arrowTheta - (2 * Math.PI - arrowCornerTheta)));
+        }
+        return arrow;
+    },
       /*
       Method: render
       
@@ -6310,9 +6366,15 @@ var EdgeHelper = {
     }
   },
   /*
-    Object: EdgeHelper.hyperline
+    Object: EdgeHelper.circleline
   */
-  'hyperline': {
+
+
+    /*
+     Object: EdgeHelper.hyperline
+     */
+
+    'hyperline': {
     /*
     Method: render
     
@@ -6331,25 +6393,26 @@ var EdgeHelper = {
     (end code)
     */
     'render': function(from, to, r, canvas){
-      var ctx = canvas.getCtx();  
-      var centerOfCircle = computeArcThroughTwoPoints(from, to);
-      if (centerOfCircle.a > 1000 || centerOfCircle.b > 1000
+        var ctx = canvas.getCtx();
+        var centerOfCircle = computeArcThroughTwoPoints(from, to);
+        if (centerOfCircle.a > 1000 || centerOfCircle.b > 1000
           || centerOfCircle.ratio < 0) {
-        ctx.beginPath();
-        ctx.moveTo(from.x * r, from.y * r);
-        ctx.lineTo(to.x * r, to.y * r);
-        ctx.stroke();
-      } else {
-        var angleBegin = Math.atan2(to.y - centerOfCircle.y, to.x
-            - centerOfCircle.x);
-        var angleEnd = Math.atan2(from.y - centerOfCircle.y, from.x
-            - centerOfCircle.x);
-        var sense = sense(angleBegin, angleEnd);
-        ctx.beginPath();
-        ctx.arc(centerOfCircle.x * r, centerOfCircle.y * r, centerOfCircle.ratio
-            * r, angleBegin, angleEnd, sense);
-        ctx.stroke();
-      }
+            ctx.beginPath();
+            ctx.moveTo(from.x * r, from.y * r);
+            ctx.lineTo(to.x * r, to.y * r);
+            ctx.stroke();
+        } else {
+            var angleBegin = Math.atan2(to.y - centerOfCircle.y, to.x
+             - centerOfCircle.x);
+            var angleEnd = Math.atan2(from.y - centerOfCircle.y, from.x
+             - centerOfCircle.x);
+            var sense = sense(angleBegin, angleEnd);
+            ctx.beginPath();
+            ctx.arc(centerOfCircle.x * r, centerOfCircle.y * r, centerOfCircle.ratio
+             * r, angleBegin, angleEnd, sense);
+            ctx.stroke();
+        }
+
       /*      
         Calculates the arc parameters through two points.
         
@@ -6405,7 +6468,7 @@ var EdgeHelper = {
         Parameters: 
       
            angleBegin - Starting angle for drawing the arc. 
-           angleEnd - The HyperLine will be drawn from angleBegin to angleEnd. 
+           angleEnd - The HyperLine will be drawn from angleBegin to angleEnd.
       
         Returns: 
       
@@ -6481,6 +6544,7 @@ Graph.Plot = {
           'dim': 'number',
           'alpha': 'number',
           'lineWidth': 'number',
+          'typetype': 'number',
           'angularWidth':'number',
           'span':'number',
           'valueArray':'array-number',
@@ -7024,6 +7088,7 @@ Graph.Plot = {
        canvas - (object) A <Canvas> element.
 
     */
+    // JAFFA
     plotNode: function(node, canvas, animating) {
         var f = node.getData('type'), 
             ctxObj = this.node.CanvasStyles;
@@ -8054,12 +8119,18 @@ Layouts.ForceDirected = new Class({
             var vp = v.getPos(p), up = u.getPos(p);
             dpos.x = vp.x - up.x;
             dpos.y = vp.y - up.y;
+              //jaffa     TAMA ON TARKEAA!!!
+
+              // We're in the what node now, look for its where node to connect
+              //console.log(v.name);
+
             var norm = dpos.norm() || 1;
             v.disp[p].$add(dpos
                 .$scale(opt.nodef(norm) / norm));
           });
         }
       });
+
     });
     //calculate attractive forces
     var T = !!graph.getNode(this.root).visited;
@@ -8069,8 +8140,8 @@ Layouts.ForceDirected = new Class({
         if(!!nodeTo.visited === T) {
           $.each(property, function(p) {
             var vp = node.getPos(p), up = nodeTo.getPos(p);
-            dpos.x = vp.x - up.x;
-            dpos.y = vp.y - up.y;
+              dpos.x = vp.x - up.x;
+              dpos.y = vp.y - up.y;
             var norm = dpos.norm() || 1;
             node.disp[p].$add(dpos.$scale(-opt.edgef(norm) / norm));
             nodeTo.disp[p].$add(dpos.$scale(-1));
@@ -8091,6 +8162,26 @@ Layouts.ForceDirected = new Class({
         p.x = min(w2, max(-w2, p.x));
         p.y = min(h2, max(-h2, p.y));
       });
+    });
+
+    graph.eachNode(function(node) {
+       // node.getPos('end').x = Math.random()*600;
+       // node.getPos('end').y = Math.random()*200-100;
+        //console.log("XOX: "+node.name);
+      //if (joo.name.substring(0,4) == 'what') {
+          //console.log(node);
+
+        node.eachAdjacency(function(adj) {
+         var nodeTo = adj.nodeTo;
+         // if (nodeTo.name.substring(0,5) == 'where') {
+
+            $.each(property, function(p) {
+
+            });
+
+        //  }
+        });
+      //}
     });
   }
 });
@@ -8619,13 +8710,17 @@ $jit.ForceDirected.$extend = true;
   */
   ForceDirected.Plot.EdgeTypes = new Class({
     'none': $.empty,
+
     'line': {
-      'render': function(adj, canvas) {
-        var from = adj.nodeFrom.pos.getc(true),
-            to = adj.nodeTo.pos.getc(true);
-        this.edgeHelper.line.render(from, to, canvas);
-      },
-      'contains': function(adj, pos) {
+        'render': function(adj, canvas) {
+            var from = adj.nodeFrom.pos.clone().getc(true),
+                to = adj.nodeTo.pos.clone().getc(true),
+                dim = adj.getData('dim'),
+                direction = adj.data.$direction,
+                inv = true;
+            this.edgeHelper.line.render(from, to, canvas);
+        },
+       'contains': function(adj, pos) {
         var from = adj.nodeFrom.pos.getc(true),
             to = adj.nodeTo.pos.getc(true);
         return this.edgeHelper.line.contains(from, to, pos, this.edge.epsilon);
@@ -8639,49 +8734,12 @@ $jit.ForceDirected.$extend = true;
             direction = adj.data.$direction,
             inv = (direction && direction.length>1 && direction[0] != adj.nodeFrom.id);
 
-
-        // if the adjacency is inverted, then arrowhead is drawn towards adj.nodeFrom, otherwise towards adj.nodeTo
         if (inv) {
-            var vect = new Complex(to.x - from.x, to.y - from.y),
-                arrow = from,
-                arrowWidth = new Complex(adj.nodeFrom.data.$width >> 1, 0),
-                arrowHeight = new Complex(0, adj.nodeFrom.data.$height >> 1),
-                arrowCorner = arrowWidth.clone().$add(arrowHeight),
-                arrowTheta = vect.getp(true).theta,
-                arrowCornerTheta = arrowCorner.getp(true).theta,
-                arrowNodeWidth = adj.nodeFrom.data.$width >> 1,
-                arrowNodeHeight = adj.nodeFrom.data.$height >> 1;
-        } else {
-            var vect = new Complex(from.x - to.x, from.y - to.y),
-                to = adj.nodeTo.pos.clone().getc(true),
-                arrow = to,
-                arrowWidth = new Complex(adj.nodeTo.data.$width >> 1, 0),
-                arrowHeight = new Complex(0, adj.nodeTo.data.$height >> 1),
-                arrowCorner = arrowWidth.clone().$add(arrowHeight),
-                arrowTheta = vect.getp(true).theta,
-                arrowCornerTheta = arrowCorner.getp(true).theta,
-                arrowNodeWidth = adj.nodeTo.data.$width >> 1,
-                arrowNodeHeight = adj.nodeTo.data.$height >> 1;
+            from = this.edgeHelper.arrow.calculateArrowPosition(from, to, adj, inv);
         }
-
-        // angle between nodes is compared to the "corner angle" of the node and the position of the arrowhead is adjusted accordingly
-        if (arrowTheta < arrowCornerTheta) {
-            arrow.x = arrow.x + arrowNodeWidth;
-            arrow.y = arrow.y + arrowNodeWidth * Math.tan(arrowTheta);
-        } else if (arrowTheta < Math.PI - arrowCornerTheta) {
-            arrow.x = arrow.x + arrowNodeWidth * Math.cos(Math.PI * (arrowTheta - arrowCornerTheta) / (Math.PI - 2 * arrowCornerTheta));
-            arrow.y = arrow.y + arrowNodeHeight;
-        } else if (arrowTheta < Math.PI + arrowCornerTheta) {
-            arrow.x = arrow.x - arrowNodeWidth;
-            arrow.y = arrow.y + arrowNodeHeight * Math.cos(Math.PI * (arrowTheta - (Math.PI - arrowCornerTheta)) / (2 * arrowCornerTheta));
-        } else if (arrowTheta < 2 * Math.PI - arrowCornerTheta) {
-            arrow.x = arrow.x - arrowNodeWidth * Math.cos(Math.PI * (arrowTheta - (Math.PI + arrowCornerTheta)) / (Math.PI - 2 * arrowCornerTheta));
-            arrow.y = arrow.y - arrowNodeHeight;
-        } else {
-            arrow.x = arrow.x + arrowNodeWidth;
-            arrow.y = arrow.y - (arrowNodeHeight - arrowNodeWidth * Math.tan(arrowTheta - (2 * Math.PI - arrowCornerTheta)));
+        else {
+            to = this.edgeHelper.arrow.calculateArrowPosition(from, to, adj, inv);
         }
-
         this.edgeHelper.arrow.render(from, to, dim, inv, canvas);
       },
       'contains': function(adj, pos) {

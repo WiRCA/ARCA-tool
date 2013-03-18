@@ -1,7 +1,8 @@
 /*
- * Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
- * Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus,
- * Timo Lehtinen, Jaakko Harjuhahto
+ * Copyright (C) 2011 - 2013 by Eero Laukkanen, Risto Virtanen, Jussi Patana,
+ * Juha Viljanen, Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi,
+ * Mikko Valjus, Timo Lehtinen, Jaakko Harjuhahto, Jonne Viitanen, Jari Jaanto,
+ * Toni Sevenius, Anssi Matti Helin, Jerome Saarinen, Markus Kere
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,33 +23,15 @@
  * THE SOFTWARE.
  */
 
-package job;/*
- * Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen, Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- */
+package job;
 
-import models.Cause;
-import models.RCACase;
-import models.User;
+
+import models.*;
 import play.jobs.Job;
 import play.jobs.OnApplicationStart;
+
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * @author Risto Virtanen
@@ -60,10 +43,21 @@ public class Bootstrap extends Job {
 	public static final String ADMIN_USER_PASSWORD = "admin";
 	public static final String TEST_USER_EMAIL = "tester@local";
 	public static final String TEST_USER_PASSWORD = "tester";
+	public static final String TUTORIAL_USER_EMAIL = "tutorial@local";
+	public static final String TUTORIAL_USER_PASSWORD = "tutorial";
+
 
     public void doJob() {
         // Check if the database is empty
         if(User.count() == 0) {
+	        // Create classification dimensions
+	        ClassificationDimension whatDimension = new
+			        ClassificationDimension("What", ClassificationDimension.WHAT_DIMENSION_ID);
+	        ClassificationDimension whereDimension = new
+			        ClassificationDimension("Where", ClassificationDimension.WHERE_DIMENSION_ID);
+	        whatDimension.save();
+	        whereDimension.save();
+
 	        // Admin user
 	        User admin = new User(ADMIN_USER_EMAIL, ADMIN_USER_PASSWORD);
 	        admin.name = "Admin user";
@@ -73,6 +67,11 @@ public class Bootstrap extends Job {
 	        User tester = new User(TEST_USER_EMAIL, TEST_USER_PASSWORD);
 		    tester.name = "Test user";
 		    tester.save();
+
+	        // Tutorial user
+	        User tutorial = new User(TUTORIAL_USER_EMAIL, TUTORIAL_USER_PASSWORD);
+	        tutorial.name = "Tutorial user";
+	        tutorial.save();
 
 	        // First RCA case
 	        RCACase firstRCACase = new RCACase(tester);
@@ -118,6 +117,47 @@ public class Bootstrap extends Job {
 	        testNode7.addCause(testNode3);
 	        testNode8.addCause(testNode6);
 	        testNode10.addCause(testNode6);
+
+	        // Some classifications for "firstRCACase"
+	        Classification testClassification1 = new Classification(firstRCACase,"Management",admin,ClassificationDimension.WHERE_DIMENSION_ID,
+	                                                            "MA", "MA");
+	        Classification testClassification2 = new Classification(firstRCACase,"Software Testing",admin,ClassificationDimension.WHERE_DIMENSION_ID,
+	                                                            "ST", "ST");
+	        Classification testClassification3 = new Classification(firstRCACase,"Implementation Work",admin,ClassificationDimension.WHERE_DIMENSION_ID,
+	                                                            "IM", "IM");
+	        Classification testClassification4 = new Classification(firstRCACase,"Work Practices",admin,ClassificationDimension.WHAT_DIMENSION_ID,
+	                                                            "WP", "WP");
+	        Classification testClassification5 = new Classification(firstRCACase,"Methods",admin,ClassificationDimension.WHAT_DIMENSION_ID,
+	                                                            "ME", "ME");
+	        Classification testClassification6 = new Classification(firstRCACase,"Task Priority",admin,ClassificationDimension.WHAT_DIMENSION_ID,
+	                                                            "TP", "TP");
+	        Classification testClassification7 = new Classification(firstRCACase,"Monitoring",admin,ClassificationDimension.WHAT_DIMENSION_ID,
+	                                                            "MO", "MO");
+	        Classification testClassification8 = new Classification(firstRCACase,"Co-operation",admin,ClassificationDimension.WHAT_DIMENSION_ID,
+	                                                            "CO", "CO");
+	        testClassification1.save();
+	        testClassification2.save();
+	        testClassification3.save();
+	        testClassification4.save();
+	        testClassification5.save();
+	        testClassification6.save();
+	        testClassification7.save();
+	        testClassification8.save();
+
+	        ClassificationPair pair = new ClassificationPair(testClassification1, testClassification4);
+	        pair.save();
+	        SortedSet<ClassificationPair> set1 = new TreeSet<ClassificationPair>();
+	        set1.add(pair);
+	        testNode1.setClassifications(set1);
+	        testNode1.save();
+
+	        ClassificationPair pair2 = new ClassificationPair(testClassification1, testClassification4);
+	        pair2.save();
+	        SortedSet<ClassificationPair> set2 = new TreeSet<ClassificationPair>();
+	        set2.add(pair2);
+	        testNode2.setClassifications(set2);
+	        testNode2.save();
+
 
 	        RCACase adminsPrivateCase = new RCACase(admin);
 	        adminsPrivateCase.caseName = "";
@@ -170,6 +210,36 @@ public class Bootstrap extends Job {
 	        admin.save();
 	        tester.addRCACase(adminsPublicCase);
 	        tester.save();
+
+
+	        Classification classification1 = new Classification(adminsPublicCase,"Management",admin,ClassificationDimension.WHERE_DIMENSION_ID,
+	                                                            "MA", "MA");
+	        Classification classification2 = new Classification(adminsPublicCase,"Software Testing",admin,ClassificationDimension.WHERE_DIMENSION_ID,
+	                                                            "ST", "ST");
+	        Classification classification3 = new Classification(adminsPublicCase,"Implementation Work",admin,ClassificationDimension.WHERE_DIMENSION_ID,
+	                                                            "IM", "IM");
+	        Classification classification4 = new Classification(adminsPublicCase,"Work Practices",admin,ClassificationDimension.WHAT_DIMENSION_ID,
+	                                                            "WP", "WP");
+	        Classification classification5 = new Classification(adminsPublicCase,"Methods",admin,ClassificationDimension.WHAT_DIMENSION_ID,
+	                                                            "ME", "ME");
+	        Classification classification6 = new Classification(adminsPublicCase,"Task Priority",admin,ClassificationDimension.WHAT_DIMENSION_ID,
+	                                                            "TP", "TP");
+	        Classification classification7 = new Classification(adminsPublicCase,"Monitoring",admin,ClassificationDimension.WHAT_DIMENSION_ID,
+	                                                            "MO", "MO");
+	        Classification classification8 = new Classification(adminsPublicCase,"Co-operation",admin,ClassificationDimension.WHAT_DIMENSION_ID,
+	                                                            "CO", "CO");
+	        classification1.save();
+	        classification2.save();
+	        classification3.save();
+	        classification4.save();
+	        classification5.save();
+	        classification6.save();
+	        classification7.save();
+	        classification8.save();
+
+	        //new TutorialRCACaseJob().doJob(tester, true);
+	        new TutorialRCACaseJob().doJob(tutorial,true);
+
 	    }
     }
 }

@@ -1,7 +1,8 @@
 /*
- * Copyright (C) 2012 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
- * Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus,
- * Timo Lehtinen, Jaakko Harjuhahto
+ * Copyright (C) 2011 - 2013 by Eero Laukkanen, Risto Virtanen, Jussi Patana,
+ * Juha Viljanen, Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi,
+ * Mikko Valjus, Timo Lehtinen, Jaakko Harjuhahto, Jonne Viitanen, Jari Jaanto,
+ * Toni Sevenius, Anssi Matti Helin, Jerome Saarinen, Markus Kere
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -36,6 +37,7 @@ import java.util.*;
  * Cause in RCA case tree.
  *
  * @author Eero Laukkanen
+ * @author AM Helin
  */
 @PersistenceUnit(name = "maindb")
 @Entity(name = "cause")
@@ -47,7 +49,14 @@ public class Cause extends LikableIdComparableModel {
 	public String name;
 
 	/**
-	* The rca case that the cause belongs to
+	 * the classifications of the cause
+	 */
+	@ManyToMany(cascade = CascadeType.REMOVE, fetch=FetchType.EAGER) // eager to avoid reclassification problems
+	@Sort(type = SortType.NATURAL)
+	public SortedSet<ClassificationPair> classifications;
+
+	/**
+	* the RCA case that the cause belongs to
 	*/
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "rcaCaseId")
@@ -59,7 +68,7 @@ public class Cause extends LikableIdComparableModel {
 	public Long creatorId;
 
 	/**
-	* The updated dat of the cause
+	* The updated date of the cause
 	*/
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "updated", nullable = false)
@@ -147,7 +156,27 @@ public class Cause extends LikableIdComparableModel {
 		this.effectRelations = new TreeSet<Relation>();
 		this.corrections = new TreeSet<Correction>();
 		this.likes = new ArrayList<Long>();
+		this.classifications = new TreeSet<ClassificationPair>();
 	}
+
+
+	/**
+	 * Returns all classifications related to the case
+	 * @return a set of classification pairs
+	 */
+	public SortedSet<ClassificationPair> getClassifications() {
+		return this.classifications;
+	}
+
+
+	/**
+	 * Sets the cause's classifications to the given ones.
+	 * @param classifications the set of classification pairs to use
+	 */
+	public void setClassifications(SortedSet<ClassificationPair> classifications) {
+		this.classifications = classifications;
+	}
+
 
 	/**
 	 * Return users who have liked this cause.
@@ -157,6 +186,7 @@ public class Cause extends LikableIdComparableModel {
 	public List<Long> getLikes() {
 		return this.likes;
 	}
+
 
 	/**
 	 * Adds a corrective action for a cause.
@@ -206,21 +236,22 @@ public class Cause extends LikableIdComparableModel {
 		return newCause;
 	}
 
+
 	/**
 	 * Adds a cause for a cause. If another already cause exists, it should be added with this method.
-	 *
-	 * @param cause cause to add.
-	 *
+	 * @param cause cause to add
 	 * @return returns the added cause
 	 */
 	public Cause addCause(Cause cause) {
 		Relation newRelation = new Relation(cause, this);
 		this.causeRelations.add(newRelation);
 		cause.effectRelations.add(newRelation);
+		newRelation.save();
 		cause.save();
 		this.save();
 		return cause;
 	}
+
 
 	/**
 	 * Deletes the cause from the relations of other causes.
@@ -234,14 +265,15 @@ public class Cause extends LikableIdComparableModel {
 		}
 	}
 
+
 	/**
 	 * Gets the creator of the cause
-	 *
 	 * @return the creator of the cause
 	 */
 	public User getCreator() {
 		return creatorId != null ? (User) User.findById(creatorId) : null;
 	}
+
 
 	/**
 	 * Returns the children of this cause.
@@ -259,6 +291,24 @@ public class Cause extends LikableIdComparableModel {
 	}
 
 	/**
+	 * Returns the children and the parent of this cause.
+	 *
+	 * @return all the related causes of this cause.
+	 */
+	public Set<Cause> getAllRelatedCauses() {
+		Set<Cause> allCauses = this.getCauses();
+		Cause[] parents = this.getParents();
+		if(parents != null) {
+			for (int i = 0; i < parents.length; i++) {
+				allCauses.add(parents[i]);
+			}
+		}
+		allCauses.add(this.rcaCase.problem);
+
+		return allCauses;
+	}
+
+	/**
 	 * Returns the effect causes, none of which are the parent of this cause.
 	 *
 	 * @return the causes
@@ -273,8 +323,9 @@ public class Cause extends LikableIdComparableModel {
 		return relations;
 	}
 
+
 	/**
-	 * returns the parent of this cause.
+	 * Returns the parent of this cause.
 	 *
 	 * @return the parent of this cause
 	 */
@@ -289,6 +340,27 @@ public class Cause extends LikableIdComparableModel {
 	}
 
 	/**
+	 * Returns the parent of this cause.
+	 *
+	 * @return the parent of this cause
+	 */
+	public Cause[] getParents() {
+		if (this.equals(this.rcaCase.problem)) {
+			return null;
+		} else if (this.effectRelations.size() > 0) {
+			Cause[] causes = new Cause[this.effectRelations.size()];
+			for (int i = 0; i < this.effectRelations.size(); i++) {
+				causes[i] = ((Relation) this.effectRelations.toArray()[i]).causeTo;
+			}
+			//return ((Relation) this.effectRelations.toArray()[0]).causeTo;
+			return causes;
+		} else {
+			return null;
+		}
+	}
+
+
+	/**
 	 * Checks if the cause is the parent of this cause.
 	 *
 	 * @param cause cause that can be the parent of this cause.
@@ -296,9 +368,17 @@ public class Cause extends LikableIdComparableModel {
 	 * @return true if the given cause is the parent of this cause.
 	 */
 	public boolean isChildOf(Cause cause) {
-		Cause parent = this.getParent();
-		return parent != null && parent.equals(cause);
+		Cause[] parents = this.getParents();
+		if (parents != null) {
+			for (int i = 0; i < parents.length; i++) {
+				if (parents[i].equals(cause)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
+
 
 	/**
 	 * Returns the status of the cause
@@ -309,6 +389,7 @@ public class Cause extends LikableIdComparableModel {
 		return StatusOfCause.valueOf(statusValue);
 	}
 
+
 	/**
 	 * Set the status of the cause
 	 *
@@ -318,6 +399,7 @@ public class Cause extends LikableIdComparableModel {
 		this.statusValue = status.value;
 	}
 
+
 	/**
 	* Basic toString method
 	* @return the name, id and the rca case of the case
@@ -326,5 +408,4 @@ public class Cause extends LikableIdComparableModel {
 	public String toString() {
 		return name + " (id: " + id + ", rca case: " + rcaCase + ")";
 	}
-
 }

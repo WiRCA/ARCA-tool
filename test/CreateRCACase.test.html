@@ -1,7 +1,8 @@
 <!--
-  ~ Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
-  ~ Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus,
-  ~ Timo Lehtinen, Jaakko Harjuhahto
+  ~ Copyright (C) 2011 - 2013 by Eero Laukkanen, Risto Virtanen, Jussi Patana,
+  ~ Juha Viljanen, Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi,
+  ~ Mikko Valjus, Timo Lehtinen, Jaakko Harjuhahto, Jonne Viitanen, Jari Jaanto,
+  ~ Toni Sevenius, Anssi Matti Helin, Jerome Saarinen, Markus Kere
   ~
   ~ Permission is hereby granted, free of charge, to any person obtaining a copy
   ~ of this software and associated documentation files (the "Software"), to deal
@@ -45,6 +46,10 @@
     assertElementPresent('id=description')
     assertElementPresent('id=caseGoals')
     assertElementPresent('id=companySize')
+    assertElementPresent('id=companyProducts')
+    assertElementPresent('id=isMultinational')
+    assertElementPresent('id=isCasePublic')
+    assertElementPresent('id=importIdSelection')
 
     // Verify that creating RCA case with no given values is not possible.
     clickAndWait('id=create')
@@ -53,21 +58,16 @@
     // Verify that creating RCA case with only case name and problem name is possible.
     type('id=caseName','Testikeissi')
     type('id=problemName','Testikeissin probleema')
-    click('id=isCasePublic')
+    click('id=isCasePublicYes')
     clickAndWait('id=create')
 
     // Check that problem has a correct name.
     verifyTextPresent('Testikeissin probleema')
 
-    open('/logout')
-
-    // open created RCA case with user that is not logged in
-    clickAndWait('link=Testikeissi')
-    verifyTextPresent('Testikeissin probleema')
     clickAt('//*[text()="Testikeissin probleema"]')
     assertElementPresent('//div[@id='radmenu-event-addCause']')
 
-    // Add a new node with user that is not logged in
+    // Add a new node
     clickAt('//div[@id='radmenu-event-addCause']')
     waitForElementPresent('css=#addcause-modal > div.modal-header > h3')
     type('id=causeName','foo')
@@ -81,6 +81,8 @@
     verifyTextPresent('Not found')
 
     // Try to create new RCA case when not logged in
+    open('/logout')
+    open('/?language=en')
     open('/CreateRCACase')
     verifyTextPresent('Or log in using your Google Account')
 
@@ -110,9 +112,25 @@
 
     open('/logout')
 
-    // Try to open a non-existent RCA case
-    // open('${url}')
-    // waitForTextPresent('Access denied')
+    // Creates a new user for testing
+    clickAndWait('id=register-link')
+    type('id=nameFieldRegister','testikäyttäjä')
+    type('id=emailFieldRegister','roope@roope.roope')
+    type('id=passwordFieldRegister','xxx')
+    type('id=password2FieldRegister','xxx')
+    clickAndWait('id=registerButton')
+    waitForTextPresent('testikäyttäjä')
+    clickAndWait('id=logout-link')
+
+    // log in user
+    assertElementPresent('id=signin')
+    type('id=username','roope@roope.roope')
+    type('id=password','xxx')
+    clickAndWait('id=signin')
+
+    // Try to open a non-public RCA case when not authorized
+    open('$[url]')
+    waitForTextPresent('Access denied')
 
 
 #{/selenium}

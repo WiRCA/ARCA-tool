@@ -1,7 +1,8 @@
 /*
- * Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
- * Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus,
- * Timo Lehtinen, Jaakko Harjuhahto
+ * Copyright (C) 2011 - 2013 by Eero Laukkanen, Risto Virtanen, Jussi Patana,
+ * Juha Viljanen, Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi,
+ * Mikko Valjus, Timo Lehtinen, Jaakko Harjuhahto, Jonne Viitanen, Jari Jaanto,
+ * Toni Sevenius, Anssi Matti Helin, Jerome Saarinen, Markus Kere
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -48,15 +49,15 @@ public class UserController extends Controller {
 		if (user == null) {
 			session.remove("username");
 			redirect("/");
+			return;
 		}
 
 		Set<RCACase> cases = user.getRCACases();
-		List<RCACase> allPublicCases = RCACase.find("byIsCasePublic", true).fetch();
 		Set<RCACase> ownCases = new HashSet<RCACase>();
 		Set<RCACase> privateCases = new HashSet<RCACase>();
 		Set<RCACase> publicCases = new HashSet<RCACase>();
 
-		for(RCACase case1 : cases){
+		for (RCACase case1 : cases){
 			if (user.id.equals(case1.ownerId)){
 				ownCases.add(case1);
 			}
@@ -66,9 +67,8 @@ public class UserController extends Controller {
 			else {
 				publicCases.add(case1);
 			}
-
 		}
-		render(user, ownCases, privateCases, publicCases, allPublicCases);
+		render(user, ownCases, privateCases, publicCases);
 	}
 
 }

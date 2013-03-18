@@ -1,7 +1,8 @@
 #
-# Copyright (C) 2012 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
-# Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus,
-# Timo Lehtinen, Jaakko Harjuhahto
+# Copyright (C) 2011 - 2013 by Eero Laukkanen, Risto Virtanen, Jussi Patana,
+# Juha Viljanen, Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi,
+# Mikko Valjus, Timo Lehtinen, Jaakko Harjuhahto, Jonne Viitanen, Jari Jaanto,
+# Toni Sevenius, Anssi Matti Helin, Jerome Saarinen, Markus Kere
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -24,6 +25,7 @@
 
 null=
 
+dialog.ok=Ok
 dialog.cancel=Peruuta
 submit=Lähetä
 
@@ -56,7 +58,24 @@ aboutPage.content8=[1]	T. O. A. Lehtinen, M. V. Mäntylä and J. Vanhanen, “De
 aboutPage.content9=[2]	T. O. A. Lehtinen and M. V. Mäntylä, “What are problem causes of software projects? data of root cause analysis at four software companies”, 5th International Symposium on Empirical Software Engineering and Measurement, ESEM 2011 , pp. 388-391, 2011.
 
 helpPage.title=Apua
-helpPage.content=ARCA-työkalun kaikki ominaisuudet kattava käyttöohje löytyy englanniksi .pdf-muodossa GitHubista:
+helpPage.content=ARCA-työkalun kaikki ominaisuudet kattava käyttöohje löytyy englanniksi .pdf-muodossa
+helpPage.manual=tästä.
+
+classificationTablePage.title=Luokittelutaulukko
+classificationTablePage.help=Katsot analyysin luokittelutaulukkoa -
+classificationTablePage.back=takaisin normaalinäkymään
+classificationTablePage.causes=Kaikkien syiden prosenttiosuus
+classificationTablePage.liked=Suositeltujen syiden prosenttiosuus
+classificationTablePage.corrections=Korjattujen syiden prosenttiosuus
+classificationTablePage.mouseovertable=Kaikkien luokittelujen prosenttiosuus
+classificationTablePage.total=Yhteensä
+
+classificationTablePage.piechartforprocessareacauses=Kaikkien syiden osuudet prosessialueittain
+classificationTablePage.piechartforcauseclasscauses=Kaikkien syiden osuudet syyluokittain
+classificationTablePage.piechartforprocessarealiked=Suositeltujen syiden osuudet prosessialueittain
+classificationTablePage.piechartforcauseclassliked=Suositeltujen syiden osuudet syyluokittain
+classificationTablePage.piechartforprocessareacorrections=Korjausehdotuksia sisältävien syiden osuudet prosessialueittain
+classificationTablePage.piechartforcauseclasscorrections=Korjausehdotuksia sisältävien syiden osuudet syyluokittain
 
 contactPage.title=Ota yhteyttä
 
@@ -109,9 +128,12 @@ createRCA.description=Ongelman lyhyt kuvaus
 createRCA.companyName=Yrityksen nimi
 createRCA.companySize=Työntekijöiden määrä yrityksessänne?
 createRCA.companyProducts=Mitkä ovat yrityksenne päätuotteet tai tuotetyypit?
-createRCA.public=Onko tämä julkinen analyysi?
+createRCA.public=Jakamisasetukset
+createRCA.publicYes=Jokaisella linkin saaneella on käyttöoikeus. Ei edellytä kirjautumista.
+createRCA.publicNo=Käyttöoikeus on vain nimenomaisesti käyttöoikeuden saaneilla. Edellyttää kirjautumista.
 createRCA.create=Luo analyysi!
 createRCA.isMultinational=Monikansallinen yritys?
+createRCA.import=Tuo luokittelut valitusta analyysistä
 
 editor.help1=Uusi käyttäjä?
 editor.help2=Aloita klikkaamalla solmua.
@@ -126,6 +148,15 @@ editor.addRelationInfo1=Relaatiotila on nyt päällä.
 editor.addRelationInfo2=Klikkaa toista solmua lisätäksesi relaatio tai paina ESC peruuttaaksesi.
 editor.singlePoint=piste
 editor.multiplePoints=pistettä
+editor.loginHelp1=Et ole kirjautunut sisään!
+editor.loginHelp2=Kirjaudu sisään oikeasta yläkulmasta, jos haluat muokata solmuja.
+
+editor.openEdge=Avaa relaatio
+editor.closeEdge=Sulje relaatio
+editor.nameEdge=Nimeä relaatio
+editor.showRelatedCauseNames=Näytä relaatioon liittyvät syyt
+
+relatedCauses=Relaatioon liittyvät syyt
 
 showRCACase.title=RCA analyysi %s
 showRCACase.owner=Omistaja
@@ -136,8 +167,8 @@ RCACaseType.hr=Henkilöstöön liittyvä ongelma
 RCACaseType.other=Muu
 
 user.welcomeTitle=Tervetuloa %s!
-user.createRCACase=Luo uusi RCA analyysi
-user.noRCACases=Ei RCA analyysejä
+user.createRCACase=Luo uusi RCA-analyysi
+user.noRCACases=Ei RCA-analyysejä
 user.noPrivateCases=Ei yksityisiä analyysejä
 user.noPublicCases=Kanssasi ei ole jaettu mitään julkista analyysiä
 user.created=Analyysi luotu
@@ -189,7 +220,7 @@ monitoring.help2=Täällä voit monitoroida RCA analyysejä ja muuttaa syiden ja
 monitoring.selectFilterTitle=Valitse suodin
 monitoring.causesCheckbox=Syyt
 monitoring.correctionsCheckbox=Korjaavat toimenpiteet
-monitoring.myCasesRadio=Minun analyysit
+monitoring.myCasesRadio=Minun analyysini
 monitoring.casesSharedWithMeRadio=Jaetut minun kanssa
 monitoring.publicCasesRadio=Julkiset analyysit
 monitoring.allCasesRadio=Kaikki analyysit
@@ -209,6 +240,12 @@ monitoring.csv.causeAndCorrectionName=Syy / Korjaavan toimenpiteen nimi
 monitoring.csv.relatedCaseAndCorrectionDescription=RCA analyysi / Korjaavan toimenpiteen kuvaus
 monitoring.csv.correctionName=Korjaavan toimenpiteen nimi
 monitoring.csv.correctionDescription=Korjaavan toimenpiteen kuvaus
+monitoring.causesAndCorrections=Syyt ja korjausehdotukset
+monitoring.classificationTable=Luokittelutaulukko
+monitoring.showClassificationTable=Näytä luokittelutaulukko
+monitoring.dimensionDiagram=Luokitteludiagrammi
+monitoring.showDimensionDiagram=Näytä luokitteludiagrammi
+monitoring.rootCause=Juurisyyt
 
 monitoring.statusCause.DETECTED=Havaittu
 monitoring.statusCause.ELIMINATION=Korjataan
@@ -220,14 +257,53 @@ monitoring.statusCorrection.WILL_BE_IMPLEMENTED=Toteutetaan
 monitoring.statusCorrection.REJECTED=Ei korjata
 
 addCause.title=Lisää syy
+addNewCauseAndClassify.title=Lisää ja luokittele syy
 addCause.name=Syyn nimi
 renameCause.title=Uudelleennimeä syy
 renameCause.newName=Uusi nimi
+tagCause.title=Luokittele syy
+tagCause.processArea=Prosessialue
+tagCause.causeClass=Syyluokka
+addClassification.title=Lisää luokitus
+addClassification.classificationName=Nimi
+addClassification.classificationType=Tyyppi
+addClassification.classificationAbbreviation=Lyhenne
+addClassification.classificationExplanation=Selitys
+editClassification.title=Muokkaa luokitusta
+editClassification.classification=Luokitus
+removeClassification.title=Poista luokitus
 addCorrectiveAction.title=Lisää korjausehdotus
 addCorrectiveAction.name=Nimi
 addCorrectiveAction.description=Kuvaus
 addCorrectiveAction.submit=Luo idea
 addCorrectiveAction.success=Korjaava idea lisätty
 addCorrectiveAction.ideaHeader=Korjaavat ideat
+classification.none=(ei mitään)
+
+dimensionDiagram.link=Luokitteludiagrammiin
+dimensionDiagram.help=Katsot analyysin luokittelupuuta -
+dimensionDiagram.back=takaisin normaalinäkymään
+
+dimensionDiagramConfiguration.link=Konfiguraatio
+dimensionDiagramConfiguration.weight=Syiden määrä
+dimensionDiagramConfiguration.weightOn=Painotus
+dimensionDiagramConfiguration.weightOff=Pois päältä
+dimensionDiagramConfiguration.color=Ehdotetut (tykätyt) syyt
+dimensionDiagramConfiguration.colorOn=Väritys
+dimensionDiagramConfiguration.colorOff=Pois päältä
+dimensionDiagramConfiguration.glow=Korjausehdotukset
+dimensionDiagramConfiguration.glowOn=Hohto
+dimensionDiagramConfiguration.glowOff=Pois päältä
+dimensionDiagramConfiguration.weightOnLegend=Piirrä relaatioiden paksuus sen mukaan, paljonko luokitteluihin liittyy syitä
+dimensionDiagramConfiguration.weightOffLegend=Piirrä relaatiot yhtä ohuina
+dimensionDiagramConfiguration.colorOnLegend=Väritä relaatiot sinisestä punaiseen sen mukaan, paljonko niitä on ehdotettu (tykätty)
+dimensionDiagramConfiguration.colorOffLegend=Väritä relaatiot samalla värillä
+dimensionDiagramConfiguration.glowOnLegend=Lisää hohtoa relaatioihin sen mukaan, paljonko luokitteluihin on lisätty korjausehdotuksia
+dimensionDiagramConfiguration.glowOffLegend=Poista hohtoefekti
+dimensionDiagramConfiguration.simplicity=Piilota syitä:
+dimensionDiagramConfiguration.weighting=Piilota relaatioita:
 
 contactPage.feedbackFormTitle=Ota meihin yhteyttä tai lähetä palautetta
+
+dimensions.one=Syyluokka
+dimensions.two=Prosessialue

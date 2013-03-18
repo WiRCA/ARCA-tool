@@ -1,7 +1,8 @@
 <!--
-  ~ Copyright (C) 2012 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
-  ~ Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus,
-  ~ Timo Lehtinen, Jaakko Harjuhahto
+  ~ Copyright (C) 2011 - 2013 by Eero Laukkanen, Risto Virtanen, Jussi Patana,
+  ~ Juha Viljanen, Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi,
+  ~ Mikko Valjus, Timo Lehtinen, Jaakko Harjuhahto, Jonne Viitanen, Jari Jaanto,
+  ~ Toni Sevenius, Anssi Matti Helin, Jerome Saarinen, Markus Kere
   ~
   ~ Permission is hereby granted, free of charge, to any person obtaining a copy
   ~ of this software and associated documentation files (the "Software"), to deal
@@ -21,18 +22,32 @@
   ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
   ~ THE SOFTWARE.
   -->
+
 #{extends 'main.html' /}
+
 #{set 'title'}&{'monitoringPage.title'}#{/set}
 #{set 'pageHeader'}&{'monitoringPage.title'} #{/set}
 #{set 'pageHeaderSmall'}#{/set}
 #{set 'activePage'}monitoring#{/set}
+
 #{set 'moreStyles'}
-<link rel="stylesheet" media="screen" href="@{'/public/stylesheets/monitoring.css'}">
+#{press.stylesheet 'arcaeditor.css' /}
+#{press.stylesheet 'monitoring.css' /}
+#{press.compressed-stylesheet /}
 #{/set}
+
 #{set 'moreScripts'}
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+#{press.script 'bootstrap-twipsy.js' /}
 #{press.script 'jquery.tablesorter.min.js' /}
 #{press.script 'jquery.alterclass.js' /}
 #{press.script 'jquery.jeditable.js' /}
+#{press.script 'jQuery.radmenu.js' /}
+#{press.script 'smalljit.js' /}
+#{press.script 'classificationTable.js' /}
+#{press.script 'commonvisualization.js' /}
+#{press.script 'dimension-diagram.js' /}
+#{press.script 'monitoring.js' /}
 #{press.compressed-script /}
 #{/set}
 
@@ -42,7 +57,6 @@
 </div>
 
 <div class="well" id="selectFilter">
-
     <h3 class="head">
         &{'monitoring.selectFilterTitle'}
         <span class="ui-icon ui-icon-default ui-icon-circle-triangle-n pull-right"></span>
@@ -53,10 +67,11 @@
             <ul class="inputs-list">
                 <li>
                     <label>
-                        <input type="checkbox" value="causes" name="whatToShow" checked=checked />
+                        <input type="checkbox" value="causes" name="whatToShow" checked="checked" id="showCauses" />
                         <span>&{'monitoring.causesCheckbox'}</span>
                     </label>
-                    <ul>
+
+                    <ul id="causeList">
                     #{list causeStatuses, as:'status'}
                         <li>
                             <label>
@@ -69,9 +84,10 @@
                 </li>
                 <li>
                     <label>
-                        <input type="checkbox" value="corrections" name="whatToShow" />
+                        <input type="checkbox" value="corrections" name="whatToShow" id="showCorrections" />
                         <span>&{'monitoring.correctionsCheckbox'}</span>
                     </label>
+
                     <ul id="correctionStatusesUl" style="display: none;">
                     #{list correctionStatuses, as:'status'}
                         <li>
@@ -85,238 +101,110 @@
                 </li>
             </ul>
         </div>
+
         <div class="span4 input">
             <ul class="inputs-list">
                 <li>
                     <label>
-                        <input type="checkbox" value="myCases" name="casesRadio" checked=checked>
-                        <span>&{'monitoring.myCasesRadio'}</span>
+                        <input type="checkbox" value="myCases" name="casesRadio" checked="checked" />
+                        &{'monitoring.myCasesRadio'}
                     </label>
                 </li>
                 <li>
                     <label>
-                        <input type="checkbox" value="sharedCases" name="casesRadio" checked=checked>
-                        <span>&{'monitoring.casesSharedWithMeRadio'}</span>
+                        <input type="checkbox" value="sharedCases" name="casesRadio" checked="checked" />
+                        &{'monitoring.casesSharedWithMeRadio'}
                     </label>
                 </li>
                 <li>
                     <label>
-                        <input type="checkbox" value="publicCases" name="casesRadio" checked=checked>
-                        <span>&{'monitoring.publicCasesRadio'}</span>
+                        <input type="checkbox" value="dimensionDiagram" id="showDimensionDiagram" name="dimensionDiagram" checked="checked" />
+                        &{'monitoring.showDimensionDiagram'}
+                    </label>
+                </li>
+                <li>
+                    <label>
+                        <input type="checkbox" value="classificationTable" id="showClassificationTable" name="classificationTable" checked="checked" />
+                        &{'monitoring.showClassificationTable'}
                     </label>
                 </li>
             </ul>
         </div>
     </div>
 </div>
-
 <div id="rcaCaseSelect"></div>
-<div id="causesAndCorrections"></div>
+
+<section id="causesAndCorrectionsSection">
+    <h1>&{'monitoring.causesAndCorrections'}</h1>
+    <div id="causesAndCorrections"></div>
+</section>
+
+<section id="classificationTableSection">
+    <h1>&{'monitoring.classificationTable'}</h1>
+    <table id="classificationTable"></table>
+
+    <div>
+        <p class="classificationCharts" id="chart_div_percentOfCauses"></p>
+        <p class="classificationCharts" id="chart_div_percentOfCauses_2"></p>
+        <p class="classificationCharts" id="chart_div_percentOfProposedCauses"></p>
+        <p class="classificationCharts" id="chart_div_percentOfProposedCauses_2"></p>
+        <p class="classificationCharts" id="chart_div_percentOfCorrectionCauses"></p>
+        <p class="classificationCharts" id="chart_div_percentOfCorrectionCauses_2"></p>
+    </div>
+</section>
+
+<section id="dimensionDiagramSection">
+    <h1>&{'monitoring.dimensionDiagram'}</h1>
+    <div id="graph"></div>
+    <div id="radial_menu" style="position: absolute; display: none; width: 0; height: 0;">
+        <ul class="list">
+            <li class="item radmenu-button" id="radmenu-event-openEdge">
+                <a href="#" rel='twipsy' data-placement="left" title='&{'editor.openEdge'}'>
+                    <img src="@{'/public/images/icons/opening.png'}" height="36" width="36"
+                         style="margin-left: -8px; margin-top: -8px" />
+                </a>
+            </li>
+        </ul>
+    </div>
+</section>
 
 <script type="text/javascript">
-	var ajaxRequest;
-	var caseSelections;
-    var whatToShow;
-    var selectedCauseStatuses;
-    var selectedCorrectionStatuses;
-    var selectedCases;
-    var allCases;
-	init();
-	
-	function show_help(){
-		$('#info_button').attr("disabled", true);
-		$("#help-block-message").show();
-		$("#help-block-message-close").click(function() {
-			$(this).parent().hide();
-			$('#info_button').attr("disabled", false);
-		});
-	}
+arca = {};
 
-	function init(){
-        $("#help-block-message-close").click(function() {
-            $(this).parent().hide();
-        });
+*{ Root node for the dimension diagram }*
+arca.rootNode = {"id": 0, "name": "&{'monitoring.rootNode'}"};
 
-		// if user is not logged in, only public cases checkbox is unabled
-		#{if controllers.SecurityController.getCurrentUser() == null }
-			$("input[name='casesRadio'][value='myCases']").attr("checked", false);
-			$("input[name='casesRadio'][value='sharedCases']").attr("checked", false);
-			$("input[name='casesRadio'][value='myCases']").attr("disabled", true);
-			$("input[name='casesRadio'][value='sharedCases']").attr("disabled", true);
-		#{/if}
-			
-		caseSelections = "";
-		$("input[name='casesRadio']:checked").each(function() {
-	        caseSelections += $(this).attr("value") + ",";
-	    });
-		if (caseSelections != "") {
-	        $("#rcaCaseSelect").html("<img src=\"@{'/public/images/wait-spinner.gif'}\">");
-	        var rcaCaseSelectingAction = #{jsAction @MonitoringController.rcaCaseSelecting(':showCases') /}
-			if (ajaxRequest != undefined) {
-				ajaxRequest.abort();
-			}
+*{ AJAX actions }*
+arca.ajax = {
+    caseSelecting: #{jsAction @MonitoringController.rcaCaseSelecting(':showCases') /},
+    causesAndCorrections: #{jsAction @MonitoringController.causesAndCorrections(
+                                        ':whatToShow',
+                                        ':selectedCases',
+                                        ':allCases',
+                                        ':selectedCauseStatuses',
+                                        ':selectedCorrectionStatuses',
+                                        ':csvExport') /},
+    dimensionDiagram: #{jsAction @MonitoringController.dimensionDiagram(':selectedCases') /},
+    classificationTable: #{jsAction @MonitoringController.classificationTable(':selectedCases') /}
+};
 
-	        ajaxRequest = $.get(rcaCaseSelectingAction({showCases: caseSelections}), function(html) {
-				$("#rcaCaseSelect").html(html);
-			});
-	    } else {
-	        $("#rcaCaseSelect").html("");
-	        $("#causesAndCorrections").html("");
-	    }
-    }
+*{ Images }*
+arca.imgs = {
+    spinner: "@{'/public/images/wait-spinner.gif'}"
+};
 
-    function collectSelectionsWhatToShow() {
-        whatToShow = "";
-        $("input[name='whatToShow']:checked").each(function() {
-            whatToShow += $(this).attr("value") + ",";
-        });
-        selectedCauseStatuses = "";
-        $("input[name='causeStatuses']:checked").each(function() {
-            selectedCauseStatuses += $(this).attr("value") + ",";
-        });
-        selectedCorrectionStatuses = "";
-        $("input[name='correctionStatuses']:checked").each(function() {
-            selectedCorrectionStatuses += $(this).attr("value") + ",";
-        });
-        selectedCases = "";
-        $("input[name='selectedCases']:checked").each(function() {
-            selectedCases += $(this).attr("value") + ",";
-        });
-        allCases = $("input[name='casesRadio'][value='allCases']:checked").length == 1;
-    }
+*{ Localization }*
+arca.localization = {
+    causes: "&{'classificationTablePage.causes'}",
+    liked: "&{'classificationTablePage.liked'}",
+    corrections: "&{'classificationTablePage.corrections'}",
+    piechartforprocessareacauses: "&{'classificationTablePage.piechartforprocessareacauses'}",
+    piechartforcauseclasscauses: "&{'classificationTablePage.piechartforcauseclasscauses'}",
+    piechartforprocessareacorrections: "&{'classificationTablePage.piechartforprocessareacorrections'}",
+    piechartforcauseclasscorrections: "&{'classificationTablePage.piechartforcauseclasscorrections'}",
+    piechartforprocessarealiked: "&{'classificationTablePage.piechartforprocessarealiked'}",
+    piechartforcauseclassliked: "&{'classificationTablePage.piechartforcauseclassliked'}"
+};
 
-    $(function() {
-        $('.well .head').live("click", function(event) {
-			if (event.target.name == 'selectAllCases') {
-				$("input[name='selectedCases']").attr("checked", "checked");
-				$("input[name='selectedCases']").eq(0).change();
-			} else {
-            	$(this).next().toggle();
-			}
-        });
-
-        $('.well .head').each(function() {
-            $(this).next().parent().css("padding", "10px 19px");
-        });
-
-    });
-
-    $("input[name='causeStatuses']").live("change", function() {
-        if ($("input[name='causeStatuses']:checked").length > 0) {
-            $("input[name='whatToShow'][value='causes']").attr("checked", "checked");
-            $("#correctionStatusesUl").hide();
-        }
-    });
-
-    $("input[name='whatToShow'][value='causes']").live("change", function() {
-        if ($("input[name='whatToShow'][value='causes']:checked").length != 1) {
-            $("input[name='causeStatuses']").removeAttr("checked");
-            $("#correctionStatusesUl").show();
-        } else {
-            $("#correctionStatusesUl").hide();
-        }
-    });
-
-    $("input[name='correctionStatuses']").live("change", function() {
-        if ($("input[name='correctionStatuses']:checked").length > 0) {
-            $("input[name='whatToShow'][value='corrections']").attr("checked", "checked");
-        }
-    });
-
-    $("input[name='whatToShow'][value='corrections']").live("change", function() {
-        if ($("input[name='whatToShow'][value='corrections']:checked").length != 1) {
-            $("input[name='correctionStatuses']").removeAttr("checked");
-        }
-    });
-
-    $("input[name='casesRadio']").live("change", function(event) {
-		caseSelections = "";
-        $("input[name='casesRadio']:checked").each(function() {
-            caseSelections += $(this).attr("value") + ",";
-        });
-        if (caseSelections != "") {
-            $("#rcaCaseSelect").html("<img src=\"@{'/public/images/wait-spinner.gif'}\">");
-            var rcaCaseSelectingAction = #{jsAction @MonitoringController.rcaCaseSelecting(':showCases') /}
-			if (ajaxRequest != undefined) {
-				ajaxRequest.abort();
-			}
-
-            ajaxRequest = $.get(rcaCaseSelectingAction({showCases: caseSelections}), function(html) {
-				$("#rcaCaseSelect").html(html);
-			});
-        } else {
-            $("#rcaCaseSelect").html("");
-            $("#causesAndCorrections").html("");
-        }
-    });
-
-    $("input[name='whatToShow'],input[name='causeStatuses'],input[name='correctionStatuses'],input[name='selectedCases']," +
-      "input[name='casesRadio'][value='allCases']").live("change", function(event) {
-        collectSelectionsWhatToShow();
-
-        if ((allCases || selectedCases != "") && whatToShow != "") {
-            $("#causesAndCorrections").html("<img src=\"@{'/public/images/wait-spinner.gif'}\">");
-            var causesAndCorrectionsAction = #{jsAction @MonitoringController.causesAndCorrections(':whatToShow',
-                ':selectedCases', ':allCases', ':selectedCauseStatuses', ':selectedCorrectionStatuses', ':csvExport') /}
-			if (ajaxRequest != undefined) {
-				ajaxRequest.abort();
-			}
-
-			ajaxRequest = $.get(causesAndCorrectionsAction({whatToShow: whatToShow, selectedCases: selectedCases,
-								allCases: allCases, selectedCauseStatuses: selectedCauseStatuses,
-								selectedCorrectionStatuses: selectedCorrectionStatuses, csvExport: 'false'}),
-					function(html) {
-						$("#causesAndCorrections").html(html);
-					}
-			);
-        } else {
-            $("#causesAndCorrections").html("");
-        }
-    });
-
-    $('#export-csv-link').live("click", function() {
-        collectSelectionsWhatToShow();
-        if ((allCases || selectedCases != "") && whatToShow != "") {
-            var causesAndCorrectionsAction = #{jsAction @MonitoringController.causesAndCorrections(':whatToShow',
-                ':selectedCases', ':allCases', ':selectedCauseStatuses', ':selectedCorrectionStatuses', ':csvExport') /}
-            location = causesAndCorrectionsAction({whatToShow: whatToShow, selectedCases: selectedCases,
-                                  allCases: allCases, selectedCauseStatuses: selectedCauseStatuses,
-                                  selectedCorrectionStatuses: selectedCorrectionStatuses, csvExport: 'true'});
-        }
-    });
-
-    $(".pagination li a").live("click", function(event) {
-        var clickedPage = $(this);
-        var pagination = $(this).parents(".pagination");
-        var paginationId =  $(pagination).attr("id").replace("pagination-", "");
-        var currentPage = $(pagination).find("li.active a");
-        var nextButton = $(pagination).find("li.next");
-        var prevButton = $(pagination).find("li.prev");
-        var isNext = $(this).parent().hasClass("next");
-        var isPrev = $(this).parent().hasClass("prev");
-        if (isNext) {
-            clickedPage = $(currentPage).parent().next().children("a");
-        }
-        if (isPrev) {
-            clickedPage = $(currentPage).parent().prev().children("a");
-        }
-        var nextSelected = $(clickedPage).parent();
-        if ($(nextSelected).hasClass("next") || $(nextSelected).hasClass("prev")) {
-            return;
-        }
-        if ($(nextSelected).next().hasClass("next")) {
-            $(nextButton).addClass("disabled");
-        } else {
-            $(nextButton).removeClass("disabled");
-        }
-        if ($(nextSelected).prev().hasClass("prev")) {
-            $(prevButton).addClass("disabled");
-        } else {
-            $(prevButton).removeClass("disabled");
-        }
-        $(currentPage).parent().removeClass("active");
-        $("." + paginationId + "-page-" + $(currentPage).html()).hide();
-        $(nextSelected).addClass("active");
-        $("." + paginationId + "-page-" + $(clickedPage).html()).show();
-    });
+initMonitoring(${controllers.SecurityController.getCurrentUser() != null});
 </script>

@@ -1,0 +1,249 @@
+<!--
+  ~ Copyright (C) 2011 - 2013 by Eero Laukkanen, Risto Virtanen, Jussi Patana,
+  ~ Juha Viljanen, Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi,
+  ~ Mikko Valjus, Timo Lehtinen, Jaakko Harjuhahto, Jonne Viitanen, Jari Jaanto,
+  ~ Toni Sevenius, Anssi Matti Helin, Jerome Saarinen, Markus Kere
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in
+  ~ all copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+  ~ THE SOFTWARE.
+  -->
+
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>&{'showRCACase.title', rcaCase.caseName}</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta charset="${_response_encoding}">
+        #{press.stylesheet 'main.css' /}
+        #{press.stylesheet 'jquery-ui-1.8.16.custom.css' /}
+        #{press.stylesheet 'base.css' /}
+        #{press.stylesheet src:'bootstrap.min.css', compressed:false /}
+        #{press.stylesheet 'arcaeditor.css' /}
+        #{press.compressed-stylesheet /}
+
+        <link rel="shortcut icon" type="image/png" href="@{'/public/images/favicon.png'}">
+        <!--[if lt IE 9]>
+        <script src="${'/public/javascripts/excanvas.compiled.js'}" type="text/javascript"></script>
+        <![endif]-->
+        #{press.script src:'jquery-1.7.1.min.js', compress:false /}
+        #{press.script 'bootstrap-modal.js' /}
+        #{press.script 'bootstrap-twipsy.js' /}
+        #{press.script 'bootstrap-popover.js' /}
+        #{press.script src:'jquery-ui-1.8.16.custom.min.js', compress:false /}
+        #{press.script src:'jquery.tagsinput.js', compress:false /}
+        #{press.script 'smalljit.js' /}
+        #{press.script 'commonvisualization.js' /}
+        #{press.script 'dimension-diagram.js' /}
+        #{press.script 'jQuery.radmenu.js' /}
+        #{press.script 'sessionstorage.1.4.js' /}
+
+        #{press.compressed-script /}
+
+        <script type="text/javascript">
+            // Google Analytics
+            var _gaq = _gaq || [];
+            _gaq.push(['_setAccount', 'UA-28831715-1']);
+            _gaq.push(['_trackPageview']);
+
+            (function() {
+                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+            })();
+        </script>
+    </head>
+
+    <body>
+        #{navigation /}
+        <div id="graph"></div>
+
+        <div id="radial_menu" style="position: absolute; display: none; width: 0; height: 0;">
+            <ul class="list">
+                <li class="item radmenu-button" id="radmenu-event-openEdge">
+                    <a href="#" rel='twipsy' data-placement="left" title='&{'editor.openEdge'}'>
+                        <img src="@{'/public/images/icons/opening.png'}" height="36" width="36"
+                             style="margin-left: -8px; margin-top: -8px" />
+                    </a>
+                </li>
+                <li class="item radmenu-button" id="radmenu-event-showRelatedCauseNames">
+                    <a href="#" rel='twipsy' data-placement="right" title='&{'editor.showRelatedCauseNames'}'>
+                        <img src="@{'/public/images/icons/cause_list.png'}" height="36" width="36"
+                             style="margin-left: -8px; margin-top: -8px" />
+                    </a>
+                </li>
+                <li class="item radmenu-button" id="radmenu-event-closeEdge">
+                    <a href="#" rel='twipsy' data-placement="left" title='&{'editor.closeEdge'}'>
+                        <img src="@{'/public/images/icons/closing.png'}" height="36" width="36"
+                             style="margin-left: -8px; margin-top: -8px" />
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div id="showCauses-modal" class="modal hide">
+            <div class="modal-header">
+                <a href="#" class="close">&times;</a>
+                <h3>&{'relatedCauses'}</h3>
+            </div>
+            <ol class="causeNameList" id="causeNameList">
+            </ol>
+            <div class="modal-footer">
+                <a href="#" class="btn secondary" id="btn_secondary" onclick="$('#showCauses-modal').modal('hide')">&{'dialog.ok'}</a>
+            </div>
+        </div>
+
+        <div id="nameEdge-modal" class="modal hide">
+            <div class="modal-header">
+                <a href="#" class="close">&times;</a>
+                <h3>&{'nameRelation.title'}</h3>
+            </div>
+
+            <form action="" onsubmit="nameEdgeName(); return false;">
+                <div>
+                    <div>
+                        <label for="edgeName">&{'nameRelation.relationName'}</label>
+                        <input type="text" id="edgeName" name="edgeName" />
+                    </div>
+
+                    <div class="error-field error"></div>
+                </div>
+
+                <div class="modal-footer">
+                    <input type="submit" value="&{'nameRelation.title'}" class="btn success" id="nameRelation-submit" />
+                    <a href="#" class="btn secondary" onclick="$('#nameRelation-modal').modal('hide')">&{'dialog.cancel'}</a>
+                </div>
+            </form>
+        </div>
+
+
+        <div id="zoomSlider">
+            <img id="zoomin" src="@{'/public/images/zoom-in.png'}" onclick="incZoomSlider()" />
+            <div id="slider-vertical"></div>
+            <img id="zoomout" src="@{'/public/images/zoom-out.png'}" onclick="decZoomSlider()" />
+        </div>
+
+        <div id="configurationButton">
+            <img id="configurationImage" height="25" width="25" onclick="configurationView()" src="@{'/public/images/icons/cog.png'}" alt="&{'dimensionDiagramConfiguration.link'}" />
+        </div>
+
+        <div id="RCAgraphButton">
+            <a href="@{PublicRCACaseController.show(rcaCase.URLHash)}">
+                <img height="50" width="43" id="RCAgraphButtonImage" src="@{'/public/images/causetreebutton.png'}" />
+            </a>
+        </div>
+
+        <div id="dimensionButton">
+            <img id="dimensionButtonImage" height="50" width="43" src="@{'/public/images/dimensiondiagrambutton.png'}" alt="&{'dimensionDiagram.link'}" />
+        </div>
+
+        <div id="tableButton">
+            <a href="@{ClassificationTableController.index(rcaCase.URLHash)}">
+                <img height="50" width="43" id="tableButtonImage" src="@{'/public/images/icons/classification_table_link.png'}" alt="&{'classificationTable.link'}" />
+            </a>
+        </div>
+
+        <div align="left" id="configurationArea" hidden=true>
+            <i>&{'dimensionDiagramConfiguration.weight'}</i><br>
+            <b>
+                <input title='&{'dimensionDiagramConfiguration.weightOnLegend'}' type="radio" name="groupCauses" value="1" onclick="showSimpleGraph(0, 0, [])" checked> &{'dimensionDiagramConfiguration.weightOn'}<br>
+                <input title='&{'dimensionDiagramConfiguration.weightOffLegend'}' type="radio" name="groupCauses" value="0" onclick="showSimpleGraph(0, 0, [])"> &{'dimensionDiagramConfiguration.weightOff'}<br>
+            </b>
+            <br>
+            <i>&{'dimensionDiagramConfiguration.color'}</i><br>
+            <b>
+                <input title='&{'dimensionDiagramConfiguration.colorOnLegend'}' type="radio" name="groupProposed" value="1" onclick="showSimpleGraph(0, 0, [])" checked> &{'dimensionDiagramConfiguration.colorOn'}<br>
+                <input title='&{'dimensionDiagramConfiguration.colorOffLegend'}' type="radio" name="groupProposed" value="0" onclick="showSimpleGraph(0, 0, [])"> &{'dimensionDiagramConfiguration.colorOff'}<br>
+            </b>
+            <br>
+            <i>&{'dimensionDiagramConfiguration.glow'}</i><br>
+            <b>
+                <input title='&{'dimensionDiagramConfiguration.glowOnLegend'}' type="radio" name="groupCorrections" value="1" onclick="showSimpleGraph(0, 0, [])" checked> &{'dimensionDiagramConfiguration.glowOn'}<br>
+                <input title='&{'dimensionDiagramConfiguration.glowOffLegend'}' type="radio" name="groupCorrections" value="0" onclick="showSimpleGraph(0, 0, [])"> &{'dimensionDiagramConfiguration.glowOff'}<br>
+            </b>
+            <br>
+            <i>&{'dimensionDiagramConfiguration.simplicity'}&nbsp;</i><span id="simplicity">0 %</span><br>
+            <b>
+                <div id="slider-simplicity" class="slider-horizontal"></div>
+            </b>
+            <br>
+            <i>&{'dimensionDiagramConfiguration.weighting'}&nbsp;&nbsp;</i><span id="weighting">0 %</span><br>
+            <b>
+                <div id="slider-weighting" class="slider-horizontal"></div>
+            </b>
+        </div>
+
+        <script type="text/javascript">
+if (typeof arca === 'undefined') { arca = {}; }
+arca.rcaCaseId = ${rcaCase.id};
+
+arca.rootNode = {
+    id: 0,
+    name: "${rcaCase.problem.name}"
+};
+
+arca.classifications = {
+    #{list rcaCase.getClassifications(), as:'classification'}
+    ${classification.id}: {
+        id: ${classification.id},
+        title: "${classification.name.escapeJavaScript().raw()}",
+        dimension: ${classification.classificationDimension},
+        abbreviation: "${classification.abbreviation.escapeJavaScript().raw()}",
+        explanation: "${classification.explanation.escapeJavaScript().raw()}",
+        relevance: ${classificationRelevance.get(classification.id) ?: 0},
+        causeNames: {#{list rcaCase.getCauseNamesForClassification(classification.id), as:'cause'}
+            ${cause.id}: {
+                name: "${cause.name}",
+                neighbourCauseIds: {#{list cause.getAllRelatedCauses(), as:'neighbourCause'}
+                ${neighbourCause.id}: {
+                    name: "${neighbourCause.name}"
+                    }${neighbourCause_isLast ? '' : ','}
+                #{/list}
+                }
+            }${cause_isLast ? '' : ','}
+            #{/list}
+        }
+    }${classification_isLast ? '' : ','}
+    #{/list}
+};
+
+arca.relationMap = (${relations.toJson().raw()}).map;
+
+arca.currentUser = ${currentUser == null ? 'null' : currentUser.id}    ;
+arca.ownerId =  ${rcaCase.ownerId}    ;
+
+arca.ajax = {
+    nameEdge: #{jsAction @DimensionDiagramController.nameEdge(':fromId', ':toId', ':name') /}
+}
+
+$(document).ready(function() {
+    init();
+    initGraph('graph', 'radial_menu', window.innerWidth, window.innerHeight, true);
+    showSimpleGraph(0, 0, []);
+
+    $('#showCauses-modal').modal({
+        keyboard: true,
+        backdrop: true,
+        show: false
+    }).bind('shown', function () {
+        $('#btn_secondary').focus();
+    });
+});
+        </script>
+    </body>
+</html>

@@ -1,7 +1,8 @@
 /*
- * Copyright (C) 2012 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
- * Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus,
- * Timo Lehtinen, Jaakko Harjuhahto
+ * Copyright (C) 2011 - 2013 by Eero Laukkanen, Risto Virtanen, Jussi Patana,
+ * Juha Viljanen, Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi,
+ * Mikko Valjus, Timo Lehtinen, Jaakko Harjuhahto, Jonne Viitanen, Jari Jaanto,
+ * Toni Sevenius, Anssi Matti Helin, Jerome Saarinen, Markus Kere
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -42,33 +43,39 @@ import java.util.List;
 public class PublicRCACaseController extends Controller {
 	
 	/**
-	 * Shows the RCA case with the given id.
+	 * Shows the RCA case with the given URLHash.
 	 * User has to have rights to view the case.
-	 * @param id ID of the RCA case
+	 * @param URLHash URLHash string of the RCA case
 	 */
-	public static void show(Long id) {
-		RCACase rcaCase = checkIfCurrentUserHasRightsForRCACase(id);
+	public static void show(String URLHash) {
+		RCACase rcaCase = RCACase.getRCACase(URLHash);
+		notFoundIfNull(rcaCase);
+		rcaCase = checkIfCurrentUserHasRightsForRCACase(rcaCase.id);
 		Long lastMessage = rcaCase.getCauseStream().lastEvent;
 		User currentUser = SecurityController.getCurrentUser();
 		render(rcaCase, lastMessage, currentUser);
 	}
 
+
 	/**
 	 * Publishes new events to clients that are viewing the case.
-	 * @param rcaCaseId ID of the RCA case
+	 * @param URLHash URL hash of the RCA case
 	 * @param lastReceived Last sent event for the client.
 	 */
-	public static void waitMessages(Long rcaCaseId, Long lastReceived) {
-		RCACase rcaCase = checkIfCurrentUserHasRightsForRCACase(rcaCaseId);
+	public static void waitMessages(String URLHash, Long lastReceived) {
+		RCACase rcaCase = RCACase.getRCACase(URLHash);
+		notFoundIfNull(rcaCase);
+		rcaCase = checkIfCurrentUserHasRightsForRCACase(rcaCase.id);
 		notFoundIfNull(lastReceived);
 		List<F.IndexedEvent<Event>> messages = await(rcaCase.nextMessages(lastReceived));
 		rcaCase.getCauseStream().lastEvent = messages.get(messages.size() - 1).id;
-		renderJSON(messages, new TypeToken<List<F.IndexedEvent<Event>>>() {
-		}.getType());
+		renderJSON(messages, new TypeToken<List<F.IndexedEvent<Event>>>(){}.getType());
 	}
+
 
 	/**
 	 * Check if the current user has rights for a specific RCA case
+	 * @todo refactor (return value)
 	 * @param rcaCaseId The ID of the RCA case to be checked
 	 * @return the RCA case that the user has access to
 	 */

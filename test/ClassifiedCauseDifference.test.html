@@ -1,0 +1,174 @@
+<!--
+  ~ Copyright (C) 2011 - 2013 by Eero Laukkanen, Risto Virtanen, Jussi Patana,
+  ~ Juha Viljanen, Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi,
+  ~ Mikko Valjus, Timo Lehtinen, Jaakko Harjuhahto, Jonne Viitanen, Jari Jaanto,
+  ~ Toni Sevenius, Anssi Matti Helin, Jerome Saarinen, Markus Kere
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in
+  ~ all copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+  ~ THE SOFTWARE.
+  -->
+
+#{fixture delete:'all', load:'data.yml' /}
+#{selenium}
+
+// Test init
+open('/logout')
+open('/?language=en')
+
+// Set timeout to 5 seconds, used in waitFor-accessors
+setTimeout('5000')
+
+// Login
+type('id=username','admin@local')
+type('id=password','admin')
+clickAndWait('id=signin')
+
+// Create new case
+clickAndWait('id=createRCACase-link')
+type('id=caseName','Ropleema')
+clickAndWait('id=create')
+
+// Create classifications
+waitForTextPresent('Ropleema')
+clickAt('id=tagIcon')
+waitForVisible('id=addTag')
+
+clickAt('id=addTag')
+type('id=classificationName', 'Mikä I')
+type('id=classificationAbbreviation', 'MK1')
+click('id=addClassification-submit')
+waitForNotVisible('id=addClassification-modal')
+
+clickAt('id=addTag')
+select('id=classificationType', 'value=2')
+type('id=classificationName', 'Missä I')
+type('id=classificationAbbreviation', 'MS1')
+click('id=addClassification-submit')
+waitForNotVisible('id=addClassification-modal')
+
+// Create new cause
+clickAt('css=div.rootNodeBox')
+waitForElementPresent('//div[@id='radmenu-event-addCause']')
+clickAt('//div[@id='radmenu-event-addCause']')
+waitForElementPresent('css=#addcause-modal > div.modal-header > h3')
+type('id=causeName','Eka syy')
+clickAt('//input[@id='addcause-submit']')
+waitForTextPresent('Eka syy')
+
+// Create subcause
+clickAt('//*[text()="Eka syy"]')
+waitForElementPresent('//div[@id='radmenu-event-addCause']')
+clickAt('//div[@id='radmenu-event-addCause']')
+waitForElementPresent('css=#addcause-modal > div.modal-header > h3')
+type('id=causeName','Toka syy')
+clickAt('//input[@id='addcause-submit']')
+waitForTextPresent('Toka syy')
+
+// Create new cause (3.)
+clickAt('css=div.rootNodeBox')
+waitForElementPresent('//div[@id='radmenu-event-addCause']')
+clickAt('//div[@id='radmenu-event-addCause']')
+waitForElementPresent('css=#addcause-modal > div.modal-header > h3')
+type('id=causeName','Kolmas syy')
+clickAt('//input[@id='addcause-submit']')
+waitForTextPresent('Kolmas syy')
+
+// Create new cause (4.)
+clickAt('css=div.rootNodeBox')
+waitForElementPresent('//div[@id='radmenu-event-addCause']')
+clickAt('//div[@id='radmenu-event-addCause']')
+waitForElementPresent('css=#addcause-modal > div.modal-header > h3')
+type('id=causeName','Neljas syy')
+clickAt('//input[@id='addcause-submit']')
+waitForTextPresent('Neljas syy')
+
+
+
+// Open the classification dialog
+clickAt('//*[text()="Eka syy"]')
+waitForElementPresent('//div[@id='radmenu-event-tagCause']')
+clickAt('//div[@id='radmenu-event-tagCause']')
+waitForVisible('id=tagcause-modal')
+
+// Verify that the classifications are present
+verifyTextPresent('Mikä I')
+verifyTextPresent('Missä I')
+
+// Tag first  cause
+clickAt('//div[text()="Missä I"]')
+clickAt('//div[text()="Mikä I"]')
+// Here waitFor[...] is used instead of verify[...] because the JS might take long enough for Selenium to be faster
+// (even though the delay should be imperceptible for a human user)
+waitForElementPresent('//div[@id='tagAreaMiddle']//span[text()="Missä I"]')
+waitForElementPresent('//div[@id='tagAreaMiddle']//span[text()="Mikä I"]')
+clickAt('id=tagCauseButton')
+waitForNotVisible('id=tagcause-modal')
+
+// Tag second cause
+clickAt('//*[text()="Toka syy"]')
+waitForElementPresent('//div[@id='radmenu-event-tagCause']')
+clickAt('//div[@id='radmenu-event-tagCause']')
+waitForVisible('id=tagcause-modal')
+
+// Verify that the classifications are present
+verifyTextPresent('Mikä I')
+verifyTextPresent('Missä I')
+
+// Tag second  cause
+clickAt('//div[text()="Missä I"]')
+clickAt('//div[text()="Mikä I"]')
+
+// Here waitFor[...] is used instead of verify[...] because the JS might take long enough for Selenium to be faster
+// (even though the delay should be imperceptible for a human user)
+waitForElementPresent('//div[@id='tagAreaMiddle']//span[text()="Missä I"]')
+waitForElementPresent('//div[@id='tagAreaMiddle']//span[text()="Mikä I"]')
+clickAt('id=tagCauseButton')
+waitForNotVisible('id=tagcause-modal')
+
+//Correct second cause
+waitForTextPresent('Toka syy')
+clickAt('//*[text()="Toka syy"]')
+waitForElementPresent('//div[@id='radmenu-event-addCorrection']')
+click('//div[@id='radmenu-event-addCorrection']')
+waitForTextPresent('Add corrective action')
+type('id=ideaName','testing')
+type('id=ideaDescription','testing')
+click('id=submitCorrectiveActionButton')
+
+//Correct third cause
+waitForTextPresent('Kolmas syy')
+clickAt('//*[text()="Kolmas syy"]')
+waitForElementPresent('//div[@id='radmenu-event-addCorrection']')
+click('//div[@id='radmenu-event-addCorrection']')
+waitForTextPresent('Add corrective action')
+type('id=ideaName','testing')
+type('id=ideaDescription','testing')
+click('id=submitCorrectiveActionButton')
+waitForTextPresent('Eka syy')
+
+//Check the classes of the nodes
+//First node
+waitForElementPresent('css=.nodeBox:not(.corrected).classified')
+//Second node
+waitForElementPresent('css=.nodeBox.corrected.classified')
+//Third node
+waitForElementPresent('css=.nodeBox.corrected:not(.classified)')
+// Fourth node
+waitForElementPresent('css=.nodeBox:not(.corrected):not(.classified)')
+
+#{/selenium}

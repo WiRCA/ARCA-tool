@@ -1,7 +1,8 @@
 /*
- * Copyright (C) 2012 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
- * Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus,
- * Timo Lehtinen, Jaakko Harjuhahto
+ * Copyright (C) 2011 - 2013 by Eero Laukkanen, Risto Virtanen, Jussi Patana,
+ * Juha Viljanen, Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi,
+ * Mikko Valjus, Timo Lehtinen, Jaakko Harjuhahto, Jonne Viitanen, Jari Jaanto,
+ * Toni Sevenius, Anssi Matti Helin, Jerome Saarinen, Markus Kere
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,9 +25,7 @@
 
 package job;
 
-import models.Cause;
-import models.RCACase;
-import models.User;
+import models.*;
 import models.enums.CompanySize;
 import models.enums.RCACaseType;
 import play.Logger;
@@ -41,7 +40,7 @@ public class TutorialRCACaseJob extends Job {
 	 * Generate a tutorial rca case for a user
 	 * @param user the user whom to generate a tutorial case
 	 */
-	public void doJob(User user) {
+	public void doJob(User user, boolean isPublic) {
 		Logger.debug("Tutorial RCA case job started for user %s", user);
 		// Tutorial RCA case
         RCACase tutorialRCACase = new RCACase(user);
@@ -53,13 +52,39 @@ public class TutorialRCACaseJob extends Job {
 		tutorialRCACase.isMultinational = false;
 		tutorialRCACase.companyName = "WiRCA";
 		tutorialRCACase.companyProducts = "";
-		tutorialRCACase.isCasePublic = false;
+		tutorialRCACase.isCasePublic = isPublic;
 
         // Problem of the tutorial RCA case
         tutorialRCACase.problem = new Cause(tutorialRCACase,  tutorialRCACase.caseName, user).save();
         tutorialRCACase.save();
 		user.addRCACase(tutorialRCACase);
         user.save();
+
+		// Some classifications for "tutorialRCACase"
+		Classification testClassification1 = new Classification(tutorialRCACase,"Management",user, ClassificationDimension.WHERE_DIMENSION_ID,
+				                                         "Problems in Management", "MA");
+		Classification testClassification2 = new Classification(tutorialRCACase,"Software Testing",user,ClassificationDimension.WHERE_DIMENSION_ID,
+		                                                        "Problems in Testing", "ST");
+		Classification testClassification3 = new Classification(tutorialRCACase,"Implementation Work",user,ClassificationDimension.WHERE_DIMENSION_ID,
+		                                                        "Problems in Implementation", "IM");
+		Classification testClassification4 = new Classification(tutorialRCACase,"Work Practices",user,ClassificationDimension.WHAT_DIMENSION_ID,
+		                                                        "Problems in Work Practices", "WP");
+		Classification testClassification5 = new Classification(tutorialRCACase,"Methods",user,ClassificationDimension.WHAT_DIMENSION_ID,
+		                                                        "Problems in Methods", "ME");
+		Classification testClassification6 = new Classification(tutorialRCACase,"Task Priority",user,ClassificationDimension.WHAT_DIMENSION_ID,
+		                                                        "Problems in Task Prioritising", "TP");
+		Classification testClassification7 = new Classification(tutorialRCACase,"Monitoring",user,ClassificationDimension.WHAT_DIMENSION_ID,
+		                                                        "Problems in Monitoring", "MO");
+		Classification testClassification8 = new Classification(tutorialRCACase,"Co-operation",user,ClassificationDimension.WHAT_DIMENSION_ID,
+		                                                        "Problems in Co-operation", "CO");
+		testClassification1.save();
+		testClassification2.save();
+		testClassification3.save();
+		testClassification4.save();
+		testClassification5.save();
+		testClassification6.save();
+		testClassification7.save();
+		testClassification8.save();
 
         Cause activityNode = tutorialRCACase.problem
 	            .addCause("The activity menu can be accessed by clicking on a node (like this one)", user);

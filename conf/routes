@@ -30,11 +30,17 @@ GET     /about                                                      AboutControl
 GET     /contact                                                    ContactController.index
 
 # Show RCA case
-GET     /case/{id}                                                  PublicRCACaseController.show
-GET     /case/{rcaCaseId}/update/{lastReceived}                     RCACaseController.waitMessages
+GET     /{URLHash}                                                  PublicRCACaseController.show
+GET     /{URLHash}/update/{lastReceived}                            RCACaseController.waitMessages
 
 # Extract RCA case
-GET     /case/extract/csv/{rcaCaseId}                               RCACaseController.extractCSV
+GET     /{URLHash}/csv                                              RCACaseController.extractCSV
+
+# Show classification table for case
+GET     /{URLHash}/table                                            ClassificationTableController.index
+
+# Show dimension diagram for case
+GET     /{URLHash}/dimensions                                       DimensionDiagramController.show
 
 # Ignore favicon requests
 GET     /favicon.ico                                                404

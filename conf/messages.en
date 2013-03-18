@@ -1,7 +1,8 @@
 #
-# Copyright (C) 2012 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
-# Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus,
-# Timo Lehtinen, Jaakko Harjuhahto
+# Copyright (C) 2011 - 2013 by Eero Laukkanen, Risto Virtanen, Jussi Patana,
+# Juha Viljanen, Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi,
+# Mikko Valjus, Timo Lehtinen, Jaakko Harjuhahto, Jonne Viitanen, Jari Jaanto,
+# Toni Sevenius, Anssi Matti Helin, Jerome Saarinen, Markus Kere
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -24,6 +25,7 @@
 
 null=
 
+dialog.ok=Ok
 dialog.cancel=Cancel
 submit=Submit
 
@@ -47,7 +49,24 @@ indexPage.bestBrowsers=Primary supported browsers
 indexPage.partiallySupportedBrowsers=Works with
 
 helpPage.title=Help
-helpPage.content= You can find the .pdf user manual covering all the aspects of the ARCA tool in Git Hub:
+helpPage.content= You can find the .pdf user manual covering all the aspects of the ARCA tool
+helpPage.manual=here.
+
+classificationTablePage.title=Classification Table
+classificationTablePage.help=You are looking at a case's classification table &ndash;
+classificationTablePage.back=go back
+classificationTablePage.causes=Percent of all causes
+classificationTablePage.liked=Percent of recommended causes
+classificationTablePage.corrections=Percent of causes with corrections
+classificationTablePage.mouseovertable=Percent of all classifications
+classificationTablePage.total=Total
+
+classificationTablePage.piechartforprocessareacauses=Percentages of causes by process area
+classificationTablePage.piechartforcauseclasscauses=Percentages of causes by cause class
+classificationTablePage.piechartforprocessarealiked=Percentages of recommended causes by process area
+classificationTablePage.piechartforcauseclassliked=Percentages of recommended causes by cause class
+classificationTablePage.piechartforprocessareacorrections=Percentages of causes with corrections by process area
+classificationTablePage.piechartforcauseclasscorrections=Percentages of causes with corrections by cause class
 
 aboutPage.title=About
 aboutPage.content1=ARCA tool has been implemented in co-operation with researchers and students from Aalto University. The tool is licensed under the MIT open source license. You can use, download, and modify the software without practical limitations. However, the names of contributors have to be listed. You can download the project from GitHub you can find from this forum.
@@ -101,9 +120,12 @@ createRCA.description=Short description of the problem
 createRCA.companyName=Company name
 createRCA.companySize=What is the amount of personnel in your company?
 createRCA.companyProducts=What are the main products or product types of the company?
-createRCA.public=Is this a public case?
+createRCA.public=Sharing Settings
+createRCA.publicYes=Anyone who has the link can access. No sign-in required.
+createRCA.publicNo=Only people explicitly granted permission can access. Sign-in required.
 createRCA.create=Create the case!
 createRCA.isMultinational=Multinational company?
+createRCA.import=Import classifications from selected case
 
 showRCACase.title=RCA Case %s
 showRCACase.owner=RCA case owner
@@ -122,6 +144,15 @@ editor.addRelationInfo1=Relation mode is on.
 editor.addRelationInfo2=Click another node to create relation or press ESC to cancel.
 editor.singlePoint=point
 editor.multiplePoints=points
+editor.loginHelp1=Not logged in!
+editor.loginHelp2=Please log in from upper right corner in order to edit nodes.
+
+editor.openEdge=Open the edge
+editor.closeEdge=Close the edge
+editor.nameEdge=Edit a name for the edge
+editor.showRelatedCauseNames=Show related causes
+
+relatedCauses=Related causes
 
 RCACaseType.softwareProject=Software project
 RCACaseType.hr=Human resources related problem
@@ -209,6 +240,12 @@ monitoring.csv.causeAndCorrectionName=Cause / Name of Corrective action
 monitoring.csv.relatedCaseAndCorrectionDescription=RCA case / Description of Corrective action
 monitoring.csv.correctionName=Name of Corrective action
 monitoring.csv.correctionDescription=Description of Corrective action
+monitoring.causesAndCorrections=Causes and corrections
+monitoring.classificationTable=Classification table
+monitoring.showClassificationTable=Show classification table
+monitoring.dimensionDiagram=Classification diagram
+monitoring.showDimensionDiagram=Show classification diagram
+monitoring.rootNode=Root causes
 
 monitoring.statusCause.DETECTED=Detected
 monitoring.statusCause.ELIMINATION=Elimination
@@ -220,13 +257,53 @@ monitoring.statusCorrection.WILL_BE_IMPLEMENTED=Will be implemented
 monitoring.statusCorrection.REJECTED=Rejected
 
 addCause.title=Add cause
+addNewCauseAndClassify.title=Add and classify cause
 addCause.name=Cause name
 renameCause.title=Rename cause
 renameCause.newName=New name
+tagCause.title=Classify cause
+tagCause.processArea=Process area
+tagCause.causeClass=Cause class
+addClassification.title=Add a classification
+addClassification.classificationName=Name
+addClassification.classificationType=Type
+addClassification.classificationAbbreviation=Abbreviation
+addClassification.classificationExplanation=Explanation
+editClassification.title=Edit a classification
+editClassification.classification=Classification
+removeClassification.title=Remove a classification
 addCorrectiveAction.title=Add corrective action
 addCorrectiveAction.name=Name
 addCorrectiveAction.description=Description
 addCorrectiveAction.submit=Add
 addCorrectiveAction.success=Corrective action added
 addCorrectiveAction.ideaHeader=Corrective actions
+classification.none=(none)
+
+dimensionDiagram.link=Classification diagram
+dimensionDiagram.help=You are looking at a case's classification diagram &ndash;
+dimensionDiagram.back=go back
+
+dimensionDiagramConfiguration.link=Configuration
+dimensionDiagramConfiguration.weight=Number of Causes
+dimensionDiagramConfiguration.weightOn=Weighting
+dimensionDiagramConfiguration.weightOff=Off
+dimensionDiagramConfiguration.color=Portion of Proposed Causes
+dimensionDiagramConfiguration.colorOn=Color
+dimensionDiagramConfiguration.colorOff=Off
+dimensionDiagramConfiguration.glow=Correction Ideas
+dimensionDiagramConfiguration.glowOn=Glow
+dimensionDiagramConfiguration.glowOff=Off
+dimensionDiagramConfiguration.weightOnLegend=Show the relation line thickness according to the number of related causes
+dimensionDiagramConfiguration.weightOffLegend=Show the relation lines equally thick
+dimensionDiagramConfiguration.colorOnLegend=Color the relation lines from blue to red according to the number of related proposed (liked) causes
+dimensionDiagramConfiguration.colorOffLegend=Show all the relation lines with the same color
+dimensionDiagramConfiguration.glowOnLegend=Add a glow to the relation lines according to the number of related causes with correction ideas
+dimensionDiagramConfiguration.glowOffLegend=Remove glow from the relation lines
+dimensionDiagramConfiguration.simplicity=Hide nodes:
+dimensionDiagramConfiguration.weighting=Hide relations:
+
 contactPage.feedbackFormTitle=Contact us or send feedback
+
+dimensions.one=Cause class
+dimensions.two=Process area

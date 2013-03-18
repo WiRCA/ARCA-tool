@@ -1,7 +1,8 @@
 /*
- * Copyright (C) 2012 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
- * Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus,
- * Timo Lehtinen, Jaakko Harjuhahto
+ * Copyright (C) 2011 - 2013 by Eero Laukkanen, Risto Virtanen, Jussi Patana,
+ * Juha Viljanen, Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi,
+ * Mikko Valjus, Timo Lehtinen, Jaakko Harjuhahto, Jonne Viitanen, Jari Jaanto,
+ * Toni Sevenius, Anssi Matti Helin, Jerome Saarinen, Markus Kere
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -85,14 +86,7 @@ public abstract class LikableIdComparableModel extends IdComparableModel {
 	 * @return true if user has liked, false otherwise
 	 */
 	public boolean hasUserLiked(User user) {
-		if (user == null) {
-			return false;
-		}
-		if (getLikes().contains(user.id)) {
-			return true;
-		} else {
-			return false;
-		}
+		return user != null && getLikes().contains(user.id);
 	}
 
 }

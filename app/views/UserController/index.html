@@ -1,7 +1,8 @@
 <!--
-  ~ Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
-  ~ Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus,
-  ~ Timo Lehtinen, Jaakko Harjuhahto
+  ~ Copyright (C) 2011 - 2013 by Eero Laukkanen, Risto Virtanen, Jussi Patana,
+  ~ Juha Viljanen, Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi,
+  ~ Mikko Valjus, Timo Lehtinen, Jaakko Harjuhahto, Jonne Viitanen, Jari Jaanto,
+  ~ Toni Sevenius, Anssi Matti Helin, Jerome Saarinen, Markus Kere
   ~
   ~ Permission is hereby granted, free of charge, to any person obtaining a copy
   ~ of this software and associated documentation files (the "Software"), to deal
@@ -21,6 +22,7 @@
   ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
   ~ THE SOFTWARE.
   -->
+
 #{extends 'main.html' /}
 #{set 'title'}&{'user.allCases'}#{/set}
 #{set 'pageHeader'}&{'user.welcomeTitle', user.name.escape().raw()}#{/set}
@@ -43,9 +45,9 @@
         })
     </script>
 <script type="text/javascript">
-    var getRCACaseUsers = #{jsAction @RCACaseController.getUsers(':rcaCaseId') /}
-    var inviteUserAction = #{jsAction @RCACaseController.inviteUser(':rcaCaseId', ':invitedEmail') /}
-    var removeUserAction = #{jsAction @RCACaseController.removeUser(':rcaCaseId', ':isInvitedUser', ':email') /}
+    var getRCACaseUsers = #{jsAction @RCACaseController.getUsers(':rcaCaseId') /};
+    var inviteUserAction = #{jsAction @RCACaseController.inviteUser(':rcaCaseId', ':invitedEmail') /};
+    var removeUserAction = #{jsAction @RCACaseController.removeUser(':rcaCaseId', ':isInvitedUser', ':email') /};
 
     $(function() {
 
@@ -167,8 +169,6 @@
 <ul class="tabs" data-tabs="tabs">
     <li class="active"><a href="#mycases">&{'user.myCases'}</a></li>
     <li><a href="#privatecases">&{'user.sharedCases'}</a></li>
-    <li><a href="#publiccases">&{'user.publicCasesTab'}</a></li>
-    </li>
 </ul>
 
 <div id="my-tab-content" class="tab-content">
@@ -176,12 +176,13 @@
 <h2>&{'user.myCases'}</h2>
 <ul>
     #{list items:ownCases, as:'rcaCase'}
-    <li>#{a @PublicRCACaseController.show(rcaCase.id), class:'ellipsis caseTitle', id:'show-rcacase-'+rcaCase.id+'-link', rel:'popover',
+
+    <li>#{a @PublicRCACaseController.show(rcaCase.URLHash), class:'ellipsis caseTitle', id:'show-rcacase-'+rcaCase.id+'-link', rel:'popover',
         title:"${rcaCase.caseName.escape().escape().raw()}", 'data-content':"${rcaCase.description.escape().escape().raw()}"}${rcaCase.caseName.escape().raw()}#{/a}
         &{'rcacase.lastmodified'} ${rcaCase.updated.since(true)}
         &{'user.created'} ${rcaCase.created.since(true)}
         <a id="rcacase-share-${rcaCase.id}" href="javascript:;" class="btn small primary">&{'rcacase.share'}</a>
-        #{a @RCACaseController.extractCSV(rcaCase.id), class:'btn small'}&{'rcaCase.csv.exportCSV'}#{/a}
+        #{a @RCACaseController.extractCSV(rcaCase.URLHash), class:'btn small'}&{'rcaCase.csv.exportCSV'}#{/a}
     </li>
     #{/list}
     #{else}
@@ -193,7 +194,8 @@
 <h2>&{'user.sharedPrivateCases'}</h2>
         <ul>
         #{list items:privateCases, as:'rcaCase'}
-        <li>#{a @PublicRCACaseController.show(rcaCase.id), class:'ellipsis caseTitle', id:'show-rcacase-'+rcaCase.id+'-link', rel:'popover',
+
+        <li>#{a @PublicRCACaseController.show(rcaCase.URLHash), class:'ellipsis caseTitle', id:'show-rcacase-'+rcaCase.id+'-link', rel:'popover',
             title:"${rcaCase.caseName.escape().escape().raw()}", 'data-content':"${rcaCase.description.escape().escape().raw()}"}${rcaCase.caseName.escape().raw()}#{/a}
             &{'rcacase.sharedBy'} <b>${rcaCase.owner.name.escape().raw()}</b>
             &{'rcacase.lastmodified'} ${rcaCase.updated.since(true)}
@@ -207,7 +209,8 @@
             <h2>&{'user.publicCases'}</h2>
             <ul>
             #{list items:publicCases, as:'rcaCase'}
-                <li>#{a @PublicRCACaseController.show(rcaCase.id), class:'ellipsis caseTitle', id:'show-rcacase-'+rcaCase.id+'-link', rel:'popover',
+
+                <li>#{a @PublicRCACaseController.show(rcaCase.URLHash), class:'ellipsis caseTitle', id:'show-rcacase-'+rcaCase.id+'-link', rel:'popover',
                 title:"${rcaCase.caseName.escape().escape().raw()}", 'data-content':"${rcaCase.description.escape().escape().raw()}"}${rcaCase.caseName.escape().raw()}#{/a}
                 &{'rcacase.sharedBy'} <b>${rcaCase.owner.name.escape().raw()}</b>
                 &{'rcacase.lastmodified'} ${rcaCase.updated.since(true)}
@@ -220,21 +223,7 @@
             </ul>
 
     </div>
-    <div class="tab-pane" id="publiccases">
 
-
-<h2>&{'user.allPublicCases'}</h2>
-<ul>
-    #{list items:allPublicCases, as:'rcaCase'}
-    <li>#{a @PublicRCACaseController.show(rcaCase.id), class:'ellipsis caseTitle', id:'show-rcacase-'+rcaCase.id+'-link', rel:'popover',
-    title:"${rcaCase.caseName.escape().escape().raw()}", 'data-content':"${rcaCase.description.escape().escape().raw()}"}${rcaCase.caseName.escape().raw()}#{/a}
-        &{'rcacase.sharedBy'} ${rcaCase.owner.name.escape().raw()}</li>
-    #{/list}
-    #{else}
-    <li>&{'user.noAnyPublicCases'}</li>
-    #{/else}
-</ul>
-    </div>
 </div>
 
 

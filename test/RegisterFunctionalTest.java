@@ -1,7 +1,8 @@
 /*
- * Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
- * Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus,
- * Timo Lehtinen, Jaakko Harjuhahto
+ * Copyright (C) 2011 - 2013 by Eero Laukkanen, Risto Virtanen, Jussi Patana,
+ * Juha Viljanen, Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi,
+ * Mikko Valjus, Timo Lehtinen, Jaakko Harjuhahto, Jonne Viitanen, Jari Jaanto,
+ * Toni Sevenius, Anssi Matti Helin, Jerome Saarinen, Markus Kere
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -137,6 +138,7 @@ public class RegisterFunctionalTest extends FunctionalTest {
 	@Test
 	public void registerInvitedUser() {
 		Fixtures.deleteAllModels();
+		Fixtures.loadModels("data.yml");
 		new Invitation("invitation@te.st").save();
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("user.name", "test");
@@ -179,8 +181,6 @@ public class RegisterFunctionalTest extends FunctionalTest {
 		Http.Response response = makeRequest(request);
 		assertStatus(302, response);
 
-		String wircamiesGoogleLoginUrl = response.getHeader("Location");
-
 		// false response from open id
 		request.params.put("openid.mode", "notNull");
 		response = makeRequest(request);
@@ -188,6 +188,7 @@ public class RegisterFunctionalTest extends FunctionalTest {
 		assertHeaderEquals("Location", "/", response);
 
 		/* TODO try to login with google open id
+		String wircamiesGoogleLoginUrl = response.getHeader("Location");
 		request.params.remove("openid.mode");
 		request.url = wircamiesGoogleLoginUrl;
 		request.path = wircamiesGoogleLoginUrl;

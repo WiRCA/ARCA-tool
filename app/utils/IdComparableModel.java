@@ -1,7 +1,8 @@
 /*
- * Copyright (C) 2012 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
- * Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus,
- * Timo Lehtinen, Jaakko Harjuhahto
+ * Copyright (C) 2011 - 2013 by Eero Laukkanen, Risto Virtanen, Jussi Patana,
+ * Juha Viljanen, Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi,
+ * Mikko Valjus, Timo Lehtinen, Jaakko Harjuhahto, Jonne Viitanen, Jari Jaanto,
+ * Toni Sevenius, Anssi Matti Helin, Jerome Saarinen, Markus Kere
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -49,12 +50,12 @@ public abstract class IdComparableModel extends Model implements Comparable {
 		if (this.id != null && oid == null) {
 			return -1;
 		}
-		if (this.id == null && oid == null) {
+		if (this.id == null /* && oid == null here */) {
 			return 0;
 		}
 		if (this.id < oid) {
 			return -1;
-		} else if (this.id == oid) {
+		} else if (this.id.equals(oid)) {
 			return 0;
 		} else {
 			return 1;

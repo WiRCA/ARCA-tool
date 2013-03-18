@@ -1,7 +1,8 @@
 /*
- * Copyright (C) 2012 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
- * Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus,
- * Timo Lehtinen, Jaakko Harjuhahto
+ * Copyright (C) 2011 - 2013 by Eero Laukkanen, Risto Virtanen, Jussi Patana,
+ * Juha Viljanen, Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi,
+ * Mikko Valjus, Timo Lehtinen, Jaakko Harjuhahto, Jonne Viitanen, Jari Jaanto,
+ * Toni Sevenius, Anssi Matti Helin, Jerome Saarinen, Markus Kere
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -58,7 +59,7 @@ public class RCACaseFunctionalTest extends FunctionalTest {
 		request.url = Router.reverse("PublicRCACaseController.show").url;
 		request.method = "GET";
 
-		request.params.put("id", "9999");
+		request.params.put("URLHash", "9999");
 		Http.Response response = GET(request, request.url);
 		assertStatus(Http.StatusCode.NOT_FOUND, response);
 	}
@@ -78,11 +79,11 @@ public class RCACaseFunctionalTest extends FunctionalTest {
 		request.url = Router.reverse("RCACaseController.extractCSV").url;
 		request.method = "GET";
 
-		request.params.put("rcaCaseId", "9999");
+		request.params.put("URLHash", "9999");
 		Http.Response response = GET(request, request.url);
 		assertStatus(Http.StatusCode.NOT_FOUND, response);
 
-		request.params.put("rcaCaseId", rcaCase.id.toString());
+		request.params.put("URLHash", rcaCase.URLHash);
 		response = GET(request, request.url);
 		assertStatus(Http.StatusCode.OK, response);
 	}
@@ -95,7 +96,7 @@ public class RCACaseFunctionalTest extends FunctionalTest {
 		Http.Request request = newRequest();
 		request.url = Router.reverse("PublicRCACaseController.show").url;
 		request.method = "GET";
-		request.params.put("id", privateRcaCase.id.toString());
+		request.params.put("URLHash", privateRcaCase.URLHash);
 		Http.Response response = GET(request, request.url);
 		assertStatus(Http.StatusCode.FOUND, response);
 
@@ -108,7 +109,7 @@ public class RCACaseFunctionalTest extends FunctionalTest {
 		request = newRequest();
 		request.url = Router.reverse("PublicRCACaseController.show").url;
 		request.method = "GET";
-		request.params.put("id", privateRcaCase.id.toString());
+		request.params.put("URLHash", privateRcaCase.URLHash);
 		response = GET(request, request.url);
 		assertStatus(Http.StatusCode.FORBIDDEN, response);
 
@@ -119,7 +120,7 @@ public class RCACaseFunctionalTest extends FunctionalTest {
 		request = newRequest();
 		request.url = Router.reverse("PublicRCACaseController.show").url;
 		request.method = "GET";
-		request.params.put("id", privateRcaCase.id.toString());
+		request.params.put("URLHash", privateRcaCase.URLHash);
 		response = GET(request, request.url);
 		assertStatus(Http.StatusCode.OK, response);
 
@@ -138,7 +139,7 @@ public class RCACaseFunctionalTest extends FunctionalTest {
 		request = newRequest();
 		request.url = Router.reverse("PublicRCACaseController.show").url;
 		request.method = "GET";
-		request.params.put("id", privateRcaCase.id.toString());
+		request.params.put("URLHash", privateRcaCase.URLHash);
 		response = GET(request, request.url);
 		assertStatus(Http.StatusCode.FORBIDDEN, response);
 
@@ -148,7 +149,7 @@ public class RCACaseFunctionalTest extends FunctionalTest {
 		request = newRequest();
 		request.url = Router.reverse("PublicRCACaseController.show").url;
 		request.method = "GET";
-		request.params.put("id", privateRcaCase.id.toString());
+		request.params.put("URLHash", privateRcaCase.URLHash);
 		response = GET(request, request.url);
 		assertStatus(Http.StatusCode.FORBIDDEN, response);
 
@@ -158,7 +159,7 @@ public class RCACaseFunctionalTest extends FunctionalTest {
 		request = newRequest();
 		request.url = Router.reverse("PublicRCACaseController.show").url;
 		request.method = "GET";
-		request.params.put("id", privateRcaCase.id.toString());
+		request.params.put("URLHash", privateRcaCase.URLHash.toString());
 		response = GET(request, request.url);
 		assertStatus(Http.StatusCode.OK, response);
 	}

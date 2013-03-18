@@ -1,7 +1,8 @@
 /*
- * Copyright (C) 2012 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
- * Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus,
- * Timo Lehtinen, Jaakko Harjuhahto
+ * Copyright (C) 2011 - 2013 by Eero Laukkanen, Risto Virtanen, Jussi Patana,
+ * Juha Viljanen, Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi,
+ * Mikko Valjus, Timo Lehtinen, Jaakko Harjuhahto, Jonne Viitanen, Jari Jaanto,
+ * Toni Sevenius, Anssi Matti Helin, Jerome Saarinen, Markus Kere
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +24,7 @@
  */
 
 .nodeBox, .rootNodeBox {
-    font-family:Helvetica;
+    font-family: Helvetica;
     text-align: center;
     border: solid;
     border-radius: 10px;
@@ -50,20 +51,50 @@
 .nodeBox {
     color:rgb(0,0,0);
   	font-size: 10pt;
+    border: 1px dashed black;
 	padding: 3px;
-    background-color: #BCD2EE;
+    background-color: #c9e2ff;
     background-image: -webkit-linear-gradient(top, #D6E3F5, #A5C2E9); /* Chrome 10+, Saf5.1+, iOS 5+ */
-
     /* background-image:    -moz-linear-gradient(top, #D6E3F5, #A5C2E9); /* FF3.6 */
     /* background-image:     -ms-linear-gradient(top, #D6E3F5, #A5C2E9); /* IE10 */
     /* background-image:      -o-linear-gradient(top, #D6E3F5, #A5C2E9); /* Opera 11.10+ */
     /* background-image:         linear-gradient(to bottom, #D6E3F5, #A5C2E9); */
 	max-width:10em;
 }
-.nodeBoxCorrection {
-  background-color: #FFDD33;
+
+.nodeBox.corrected {
+  background-color: #fff878;
   background-image: -webkit-linear-gradient(top, #FFDD33, #A5C3F0); /* Chrome 10+, Saf5.1+, iOS 5+ */
-  
+}
+
+.nodeBox.classified {
+  border-style: solid;
+  border-width: 1px;
+  background-color: #8ABFFF;
+}
+
+.nodeBox.classified.corrected {
+  background-color: #FFF700
+}
+
+.whatNodeBox {
+    color:rgb(0,0,0);
+    /*text-shadow: 1px 1px 2px #000;      */
+    font-size: 10pt;
+    padding: 4px;
+
+    background:#ffcc00;
+    background-image: -webkit-linear-gradient(top, #ffcc00, #ffcc00); /* Chrome 10+, Saf5.1+, iOS 5+ */
+    max-width:1em;
+    max-height:1em;
+   /* border-radius: 10px; */
+    border: 1px solid #ff8800;
+
+    /* disabled for performance issues, Chrome has better performance. */
+    /* background-image:    -moz-linear-gradient(top, #528BE0, #2569D0); /* FF3.6 */
+    /* background-image:     -ms-linear-gradient(top, #528BE0, #2569D0); /* IE10 */
+    /* background-image:      -o-linear-gradient(top, #528BE0, #2569D0); /* Opera 11.10+ */
+    /* background-image:         linear-gradient(to bottom, #528BE0, #2569D0); */
 }
 
 .rootNodeBox {
@@ -116,6 +147,7 @@
 	width:20px;
 	height:20px;
 	-webkit-border-radius:30px;
+    z-index: 101;
 }
 
 .alert-message {
@@ -128,7 +160,7 @@
     padding: 2px;
 }
 
-#likeBox {
+.likeBox {
     text-shadow: 1px 1px 2px #000;
     position: relative;
     height: 12px;
@@ -136,7 +168,7 @@
     display: inline;
 }
 
-#likeBoxWrapper {
+.likeBoxWrapper {
     position: absolute;
     top: 0;
     left: 0;
@@ -168,10 +200,268 @@
     cursor: pointer;
 }
 
+.slider-horizontal {
+    height: 8px;
+    margin: 10px;
+    width: 150px;
+    cursor: pointer;
+}
+
 #zoomSlider img {
     cursor: pointer;
 }
 
 #zoomSlider img#zoomout {
     margin-top: 10px;
+}
+
+#RCAgraphButton {
+    position: absolute;
+    top: 43px;
+    left: 3px;
+}
+
+#dimensionButton {
+    position: absolute;
+    top: 43px;
+    left: 56px;
+    background-color: white;
+}
+
+#tableButton {
+    position: absolute;
+    top: 43px;
+    left: 109px;
+}
+
+#configurationButton {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+}
+
+#configurationArea {
+    position: absolute;
+    top: 80px;
+    right: 45px;
+    border-color: lightgray;
+    border-style: solid;
+    padding: 5px;
+}
+
+#tagArea {
+    display: none;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    border-top: 1px solid #999;
+    border-right: 1px solid #999;
+    padding: 0;
+    margin: 0;
+}
+
+#tagArea img:first-child {
+    margin: 0;
+    padding: 0;
+}
+
+#tagArea img + img {
+    margin-top: 3px;
+    margin-left: 3px;
+    cursor: pointer;
+}
+
+.modal form {
+    margin: 0;
+    padding: 0;
+}
+
+#tagcause-modal {
+    width: 740px;
+    margin-left: -370px;
+}
+
+#tagcause-modal h4 {
+    margin-top: -1em;
+}
+
+#tagAreaLeft {
+    display: block;
+    width: 28%;
+    float: left;
+}
+
+#tagAreaLeft > div {
+    width: 90%;
+    background-color: #cdeac0;
+    border: 1px solid #57a957;
+    margin: .5em auto 0 auto;
+    padding: .4em;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#tagAreaMiddle {
+    display: block;
+    width: 40%;
+    min-height: 100px;
+    height: auto !important;
+    float: left;
+    border: 1px solid black;
+    border-radius: 5px;
+    margin-left: 2%;
+}
+
+.tagAreaSection {
+    border: 2px dashed transparent;
+    border-radius: 5px;
+    width: 95%;
+    margin: .1em 0 0 1%;
+    padding: .25em;
+}
+
+.tagAreaSection.selected {
+    border: 2px dashed black;
+    background-color: #cdeac0;
+}
+
+.tagAreaSection + .tagAreaSection {
+    margin-top: .5em;
+}
+
+.tagAreaTitle {
+    font-size: 0.9em;
+    font-weight: bold;
+    float: left;
+}
+
+.tagAreaSection > a {
+    font-weight: bold;
+    float: right;
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#tagAreaRight {
+    display: block;
+    width: 28%;
+    float: right;
+}
+
+#tagAreaRight > div {
+    width: 95%;
+    background-color: #dcecff;
+    border: 1px solid #0064cd;
+    margin: .5em auto 0 auto;
+    padding: .4em;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+#tagAreaRight:not(.disabled) > div {
+    cursor: pointer;
+}
+
+#tagAreaRight.disabled > div {
+    background-color: silver;
+    border: 1px solid #333;
+    color: #555;
+}
+
+.cleaner {
+    display: block;
+    clear: both;
+}
+
+/* jQuery tags input */
+div.tagsinput {
+    padding: 5px;
+    width: 95%;
+    min-height: 30px;
+    overflow-y: auto;
+    clear: both;
+}
+
+div.tagsinput span.tag {
+    border: 1px solid #a5d24a;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    display: block;
+    float: left;
+    padding: 5px;
+    text-decoration: none;
+    background: #cde69c;
+    color: #638421;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    font-family: helvetica;
+    font-size: 13px;
+}
+
+div.tagsinput span.tag a {
+    font-weight: bold;
+    color: #82ad2b;
+    text-decoration: none;
+    font-size: 11px;
+}
+
+div.tagsinput input {
+    width: 80px;
+    margin: 0 5px 5px 0;
+    font-family: "Helvetica", sans-serif;
+    font-size: 13px;
+    border: 1px solid transparent;
+    padding: 5px;
+    background: transparent;
+    color: #000;
+    outline: 0;
+}
+
+div.tagsinput div {
+    display: block;
+    float: left;
+}
+
+.tags_clear {
+    clear: both;
+    width: 100%;
+    height: 0;
+}
+
+.not_valid {
+    background: #FBD8DB !important;
+    color: #90111A !important;
+}
+
+.classificationCharts {
+    float: left;
+    /*left: -80px;*/
+    width: 500px;
+    height: 250px;
+}
+
+#dimensionHelp, #classificationTableHelp {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    /*padding: 1em;
+    background-color: rgba(200, 220, 255, 0.75);
+    color: black;
+    font-weight: bold;
+    z-index: 5;      */
+}
+
+#classificationTableView {
+    position: absolute;
+    left: 8%;
+    right: 8%;
+    top: 70px;
+    padding: 1em;
+}
+
+.error-field {
+    color: red;
+    font-weight: bold;
 }

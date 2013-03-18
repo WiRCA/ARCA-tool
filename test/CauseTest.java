@@ -1,7 +1,8 @@
 /*
- * Copyright (C) 2012 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
- * Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus,
- * Timo Lehtinen, Jaakko Harjuhahto
+ * Copyright (C) 2011 - 2013 by Eero Laukkanen, Risto Virtanen, Jussi Patana,
+ * Juha Viljanen, Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi,
+ * Mikko Valjus, Timo Lehtinen, Jaakko Harjuhahto, Jonne Viitanen, Jari Jaanto,
+ * Toni Sevenius, Anssi Matti Helin, Jerome Saarinen, Markus Kere
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -78,7 +79,7 @@ public class CauseTest extends GenericRCAUnitTest {
 		assertTrue(cause2.isChildOf(cause1));
 		assertTrue(cause2.getParent().equals(cause1));
 		cause3.addCause(cause2);
-		assertFalse(cause2.isChildOf(cause3));
+		assertTrue(cause2.isChildOf(cause3));
 	}
 
 	@Test
@@ -114,8 +115,8 @@ public class CauseTest extends GenericRCAUnitTest {
 		Set<Cause> relations2 = cause2.getRelations();
 		assertTrue(causes.contains(cause2));
 		assertTrue(causes.contains(cause3));
-		assertFalse(causes.contains(cause4));
-		assertTrue(relations.contains(cause1));
+		assertTrue(causes.contains(cause4));
+		assertFalse(relations.contains(cause1));
 		assertFalse(relations2.contains(cause1));
 	}
 

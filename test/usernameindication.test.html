@@ -1,7 +1,8 @@
 <!--
-  ~ Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
-  ~ Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus,
-  ~ Timo Lehtinen, Jaakko Harjuhahto
+  ~ Copyright (C) 2011 - 2013 by Eero Laukkanen, Risto Virtanen, Jussi Patana,
+  ~ Juha Viljanen, Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi,
+  ~ Mikko Valjus, Timo Lehtinen, Jaakko Harjuhahto, Jonne Viitanen, Jari Jaanto,
+  ~ Toni Sevenius, Anssi Matti Helin, Jerome Saarinen, Markus Kere
   ~
   ~ Permission is hereby granted, free of charge, to any person obtaining a copy
   ~ of this software and associated documentation files (the "Software"), to deal
@@ -22,29 +23,20 @@
   ~ THE SOFTWARE.
   -->
 
-#{fixture delete:'all',load:'data.yml' /}
+#{fixture delete:'all', load:'data.yml' /}
 #{selenium}
-	open('/?language=en')
-	type('id=username','admin@local')
-	type('id=password','admin')
-	clickAndWait('id=signin')
-	
-	// Creates a new public RCA case
-	clickAndWait('id=createRCACase-link')
-	type('id=caseName','asd')
-	select('id=caseTypeValue','value=2')
-	type('id=description','asd')
-	type('id=caseGoals','asd')
-	type('id=companyName','asd')
-	select('id=companySize','label=11-50')
-	type('id=companyProducts','asd')
-	click('id=isCasePublic')
-	clickAndWait('id=create')
-	
-	open('/?language=en')
-	verifyTextPresent('Admin user')
-	clickAndWait('id=logout-link')
-	
-	// Verifies that the public case is shown on the index page.
-	verifyTextPresent('All public cases')
+//Log in
+open('/?language=en')
+assertElementPresent('id=signin')
+type('id=username','admin@local')
+type('id=password','admin')
+clickAndWait('id=signin')
+
+//See if the text is there
+verifyTextPresent('Admin user')
+
+//logout
+assertElementPresent('id=logout-link')
+clickAndWait('id=logout-link')
+
 #{/selenium}

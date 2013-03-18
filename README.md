@@ -2,7 +2,7 @@
 
 ARCA-tool is the finalist project of the [Software Development Project (2011-2012)](http://www.soberit.hut.fi/T-76.4115/) course in Aalto University.
 
-ARCA-tool is a tool for doing root acuse analysis. It is implemented as a web application, with Play! framework.
+ARCA-tool is a tool for doing root cause analysis. It is implemented as a web application, with Play! framework.
 
 Current version includes:
 
@@ -14,6 +14,16 @@ Current version includes:
     - Deleting causes
     - Renaming causes
     - Adding corrective actions for causes
+    - Recommending and de-recommending causes
+    - Creating classifications for causes
+    - Tagging causes with classifications
+  - Opening a view with the RCA Case condensed into a classification diagram
+    - Opening relations between classifications to see a deeper dimension
+    - Seeing the causes related to different classification relations
+    - Being able to name the relations
+  - Viewing percentage statistics and charts about the cause classification distribution
+    - Categorized by percentage of total amount/ with corrective actions /with recommendations
+    - Also pie charts related to the abovementioned figures
   - Sharing RCA Cases by email
   - Users can be invited even if they do not have an account
   - Cause-effect diagrams can be made simultaneously by multiple people, collaboratively

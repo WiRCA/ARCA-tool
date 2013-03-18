@@ -1,0 +1,154 @@
+<!--
+  ~ Copyright (C) 2011 - 2013 by Eero Laukkanen, Risto Virtanen, Jussi Patana,
+  ~ Juha Viljanen, Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi,
+  ~ Mikko Valjus, Timo Lehtinen, Jaakko Harjuhahto, Jonne Viitanen, Jari Jaanto,
+  ~ Toni Sevenius, Anssi Matti Helin, Jerome Saarinen, Markus Kere
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in
+  ~ all copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+  ~ THE SOFTWARE.
+  -->
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>&{'classificationTablePage.title'}</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="${_response_encoding}">
+    #{press.stylesheet 'main.css' /}
+    #{press.stylesheet 'jquery-ui-1.8.16.custom.css' /}
+    #{press.stylesheet 'base.css' /}
+    #{press.stylesheet src:'bootstrap.min.css', compressed:false /}
+    #{press.stylesheet 'arcaeditor.css' /}
+    #{press.compressed-stylesheet /}
+
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <link rel="shortcut icon" type="image/png" href="@{'/public/images/favicon.png'}">
+    <!--[if lt IE 9]>
+    <script src="${'/public/javascripts/excanvas.compiled.js'}" type="text/javascript"></script>
+    <![endif]-->
+
+    #{press.script src:'jquery-1.7.1.min.js', compress:false /}
+    #{press.script 'bootstrap-twipsy.js' /}
+    #{press.script 'bootstrap-popover.js' /}
+    #{press.script src:'jquery-ui-1.8.16.custom.min.js', compress:false /}
+    #{press.script src:'jquery.tagsinput.js', compress:false /}
+    #{press.script 'smalljit.js' /}
+    #{press.script 'dimension-diagram.js' /}
+    #{press.script 'classificationTable.js' /}
+    #{press.compressed-script /}
+
+    <script type="text/javascript">
+        // Google Analytics
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-28831715-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+</head>
+
+<body>
+
+#{navigation /}
+
+<div id="classificationTableHelp">
+ <div id="RCAgraphButton">
+    <a href="@{PublicRCACaseController.show(rcaCase.URLHash)}">
+        <img height="50" width="43" id="RCAgraphButtonImage" src="@{'/public/images/causetreebutton.png'}" />
+    </a>
+</div>
+
+    <div id="dimensionButton">
+        <a href="@{DimensionDiagramController.show(rcaCase.URLHash)}">
+            <img height="50" width="43" id="dimensionButtonImage" src="@{'/public/images/dimensiondiagrambutton.png'}" alt="&{'dimensionDiagram.link'}" />
+        </a>
+    </div>
+
+    <div id="tableButton">
+            <img height="50" width="43" id="tableButtonImage" src="@{'/public/images/icons/classification_table_link.png'}" alt="&{'classificationTable.link'}" />
+    </div>
+</div>
+
+<div id="classificationTableView">
+    <h2 id="classificationTableHeader" >&{'classificationTablePage.title'}</h2>
+    <div id="classificationCheckbox">
+        <label class="checkbox">
+            <input id="all" type="checkbox" checked="true"/>
+        &{'classificationTablePage.causes'}
+        </label>
+        <label class="checkbox">
+            <input id="liked" type="checkbox" checked="true"/>
+        &{'classificationTablePage.liked'}
+        </label>
+        <label class="checkbox">
+            <input id="corrections" type="checkbox" checked="true"/>
+        &{'classificationTablePage.corrections'}
+        </label>
+    </div>
+
+    <table id="classificationTable"></table>
+
+    <div id="classificationChartContainer">
+        <p class="classificationCharts" id="chart_div_percentOfCauses"></p>
+        <p class="classificationCharts" id="chart_div_percentOfCauses_2"></p>
+        <p class="classificationCharts" id="chart_div_percentOfProposedCauses"></p>
+        <p class="classificationCharts" id="chart_div_percentOfProposedCauses_2"></p>
+        <p class="classificationCharts" id="chart_div_percentOfCorrectionCauses"></p>
+        <p class="classificationCharts" id="chart_div_percentOfCorrectionCauses_2"></p>
+    </div>
+</div>
+
+<script type="text/javascript">
+if (typeof arca === 'undefined') { arca = {}; }
+
+*{ Generate the JS object for the classification table }*
+arca.classificationTable = ${classificationTable.toJson().raw()};
+
+*{ Store the localization strings for JS }*
+arca.localization = {
+    causes: "&{'classificationTablePage.causes'}",
+    liked: "&{'classificationTablePage.liked'}",
+    corrections: "&{'classificationTablePage.corrections'}",
+    piechartforprocessareacauses: "&{'classificationTablePage.piechartforprocessareacauses'}",
+    piechartforcauseclasscauses: "&{'classificationTablePage.piechartforcauseclasscauses'}",
+    piechartforprocessareacorrections: "&{'classificationTablePage.piechartforprocessareacorrections'}",
+    piechartforcauseclasscorrections: "&{'classificationTablePage.piechartforcauseclasscorrections'}",
+    piechartforprocessarealiked: "&{'classificationTablePage.piechartforprocessarealiked'}",
+    piechartforcauseclassliked: "&{'classificationTablePage.piechartforcauseclassliked'}"
+};
+
+function classificationTableWrapper() {
+    generateClassificationTable(
+        'classificationTable', $('#all:checked').val(), $('#liked:checked').val(), $('#corrections:checked').val()
+    );
+}
+
+*{ Show the classification table when the page has loaded }*
+$(function() {
+    classificationTableWrapper();
+    $('#all, #liked, #corrections').change(classificationTableWrapper);
+});
+</script>
+
+</body>
+</html>

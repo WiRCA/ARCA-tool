@@ -1,7 +1,8 @@
 /*
- * Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
- * Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus,
- * Timo Lehtinen, Jaakko Harjuhahto
+ * Copyright (C) 2011 - 2013 by Eero Laukkanen, Risto Virtanen, Jussi Patana,
+ * Juha Viljanen, Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi,
+ * Mikko Valjus, Timo Lehtinen, Jaakko Harjuhahto, Jonne Viitanen, Jari Jaanto,
+ * Toni Sevenius, Anssi Matti Helin, Jerome Saarinen, Markus Kere
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -35,30 +36,50 @@ public class AddCauseEvent extends Event {
 	* the name of the new cause
 	*/
 	public final String text;
+
 	/**
 	* the id of the old cause
 	*/
 	public final String causeFrom;
+
 	/**
 	* the id of te new sub cause
 	*/
 	public final String causeTo;
+
 	/**
 	* id of the creator user of the sub cause
 	*/
 	public final String creatorId;
 
 	/**
-	* Basic constructor
-	*/
-	public AddCauseEvent(Cause cause, Long causeFrom) {
+	 * X coordinate of the sub cause
+	 */
+	public final String x;
+
+	/**
+	 * Y coordinate of the sub cause
+	 */
+	public final String y;
+
+	/**
+	 * Will we classify the cause at creation
+	 */
+	public final boolean classify;
+
+	/**
+	 * Basic constructor
+	 */
+	public AddCauseEvent(Cause cause, Long causeFrom, int x, int y, boolean classify) {
 		super("addcauseevent");
 		this.causeTo = Long.toString(cause.id);
 		this.text = cause.name.replaceAll("&", "&amp;").replaceAll(">", "&gt;").replaceAll("<", "&lt;");
 		this.causeFrom = String.valueOf(causeFrom);
 		this.creatorId = cause.creatorId == null ? null : Long.toString(cause.creatorId);
+		this.x = String.valueOf(x);
+		this.y = String.valueOf(y);
+		this.classify = classify;
 	}
-
 }
 
 

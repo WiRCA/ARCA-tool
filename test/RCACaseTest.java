@@ -1,7 +1,8 @@
 /*
- * Copyright (C) 2012 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
- * Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus,
- * Timo Lehtinen, Jaakko Harjuhahto
+ * Copyright (C) 2011 - 2013 by Eero Laukkanen, Risto Virtanen, Jussi Patana,
+ * Juha Viljanen, Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi,
+ * Mikko Valjus, Timo Lehtinen, Jaakko Harjuhahto, Jonne Viitanen, Jari Jaanto,
+ * Toni Sevenius, Anssi Matti Helin, Jerome Saarinen, Markus Kere
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -71,13 +72,13 @@ public class RCACaseTest extends UnitTest {
 	public void getAndSetTest() {
 		RCACase testCase = new RCACase(user);
 		user.addRCACase(testCase, "another name");		
-		assertTrue(testCase.getOwner() == user);
-		assertTrue(testCase.problem.name == "another name");
+		assertTrue(testCase.getOwner().equals(user));
+		assertTrue(testCase.problem.name.equals("another name"));
 		testCase.setRCACaseType(rcaCaseType);
 		assertTrue(testCase.getRCACaseType() == rcaCaseType);
 		testCase.setCompanySize(size);
 		assertTrue(testCase.getCompanySize() == size);
-		assertFalse(testCase.toString() == "");
+		assertFalse(testCase.toString().equals(""));
 	}
 
 	@Test

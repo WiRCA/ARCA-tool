@@ -1,7 +1,8 @@
 /*
- * Copyright (C) 2012 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
- * Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus,
- * Timo Lehtinen, Jaakko Harjuhahto
+ * Copyright (C) 2011 - 2013 by Eero Laukkanen, Risto Virtanen, Jussi Patana,
+ * Juha Viljanen, Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi,
+ * Mikko Valjus, Timo Lehtinen, Jaakko Harjuhahto, Jonne Viitanen, Jari Jaanto,
+ * Toni Sevenius, Anssi Matti Helin, Jerome Saarinen, Markus Kere
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,10 +25,7 @@
 
 package controllers;
 
-import models.Cause;
-import models.Correction;
-import models.RCACase;
-import models.User;
+import models.*;
 import models.enums.StatusOfCause;
 import models.enums.StatusOfCorrection;
 import play.data.binding.As;
@@ -58,10 +56,6 @@ public class MonitoringController extends Controller {
 	public static void rcaCaseSelecting(@As(",") List<String> showCases) {
 		Set<RCACase> cases = new HashSet<RCACase>();
 		User user = SecurityController.getCurrentUser();
-		if (showCases.contains("publicCases")) {
-			List<RCACase> publicCases = RCACase.find("isCasePublic", true).fetch();
-			cases.addAll(publicCases);
-		}
 		if (showCases.contains("sharedCases")) {
 			if (user != null) {
 				List<RCACase> sharedCases = new ArrayList<RCACase>();
@@ -80,6 +74,22 @@ public class MonitoringController extends Controller {
 			}
 		}
 		render(cases);
+	}
+
+	public static void dimensionDiagram(@As(",") List<Long> selectedCases) {
+		ClassificationRelationMap map = new ClassificationRelationMap();
+		for (Long id : selectedCases) {
+			map.loadCase((RCACase) RCACase.findById(id));
+		}
+		renderJSON(map.toJson());
+	}
+
+	public static void classificationTable(@As(",") List<Long> selectedCases) {
+		ClassificationTable table = new ClassificationTable();
+		for (Long id : selectedCases) {
+			table.loadCase((RCACase) RCACase.findById(id));
+		}
+		renderJSON(table.toJson());
 	}
 
 	/**
@@ -164,7 +174,7 @@ public class MonitoringController extends Controller {
 	/**
 	* Change the status of a corrective action
 	* @param correctionId the id of the corrective action to be updated
-	* @param statusOdCorrection the new status of the corrective action
+	* @param statusOfCorrection the new status of the corrective action
 	*/
 	public static void changeCorrectionStatus(Long correctionId, StatusOfCorrection statusOfCorrection) {
 		Correction correction = Correction.findById(correctionId);

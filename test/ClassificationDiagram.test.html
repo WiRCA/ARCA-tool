@@ -1,0 +1,163 @@
+<!--
+  ~ Copyright (C) 2011 - 2013 by Eero Laukkanen, Risto Virtanen, Jussi Patana,
+  ~ Juha Viljanen, Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi,
+  ~ Mikko Valjus, Timo Lehtinen, Jaakko Harjuhahto, Jonne Viitanen, Jari Jaanto,
+  ~ Toni Sevenius, Anssi Matti Helin, Jerome Saarinen, Markus Kere
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in
+  ~ all copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+  ~ THE SOFTWARE.
+  -->
+
+#{fixture delete:'all', load:'data.yml' /}
+#{selenium}
+
+// Test init
+open('/logout')
+open('/?language=en')
+
+// Set timeout to 5 seconds, used in waitFor-accessors
+setTimeout('5000')
+
+// login
+type('id=username','admin@local')
+type('id=password','admin')
+clickAndWait('id=signin')
+
+// Create new public case
+clickAndWait('id=createRCACase-link')
+type('id=caseName', 'Ropleema')
+click('id=isCasePublicYes')
+clickAndWait('id=create')
+
+// Create classifications
+waitForTextPresent('Ropleema')
+clickAt('id=tagIcon')
+waitForVisible('id=addTag')
+
+clickAt('id=addTag')
+type('id=classificationName', 'Mikä I')
+type('id=classificationAbbreviation', 'MK1')
+click('id=addClassification-submit')
+waitForNotVisible('id=addClassification-modal')
+
+clickAt('id=addTag')
+type('id=classificationName', 'Mikä II')
+type('id=classificationAbbreviation', 'MK2')
+click('id=addClassification-submit')
+waitForNotVisible('id=addClassification-modal')
+
+clickAt('id=addTag')
+select('id=classificationType', 'value=2')
+type('id=classificationName', 'Missä I')
+type('id=classificationAbbreviation', 'MS1')
+click('id=addClassification-submit')
+waitForNotVisible('id=addClassification-modal')
+
+clickAt('id=addTag')
+select('id=classificationType', 'value=2')
+type('id=classificationName', 'Missä II')
+type('id=classificationAbbreviation', 'MS2')
+click('id=addClassification-submit')
+waitForNotVisible('id=addClassification-modal')
+
+// Create new cause
+clickAt('css=div.rootNodeBox')
+waitForElementPresent('//div[@id='radmenu-event-addCause']')
+clickAt('//div[@id='radmenu-event-addCause']')
+waitForElementPresent('css=#addcause-modal > div.modal-header > h3')
+type('id=causeName','Kahvi on loppu')
+clickAt('//input[@id='addcause-submit']')
+waitForTextPresent('Kahvi on loppu')
+
+// Create subcause
+clickAt('//*[text()="Kahvi on loppu"]')
+waitForElementPresent('//div[@id='radmenu-event-addCause']')
+clickAt('//div[@id='radmenu-event-addCause']')
+waitForElementPresent('css=#addcause-modal > div.modal-header > h3')
+type('id=causeName','Joku joi kaiken kahvin')
+clickAt('//input[@id='addcause-submit']')
+waitForTextPresent('Joku joi kaiken kahvin')
+
+// Tag the cause
+clickAt('//*[text()="Kahvi on loppu"]')
+waitForElementPresent('//div[@id='radmenu-event-tagCause']')
+clickAt('//div[@id='radmenu-event-tagCause']')
+waitForVisible('id=tagcause-modal')
+clickAt('//div[text()="Missä I"]')
+clickAt('//div[text()="Mikä I"]')
+waitForElementPresent('//div[@id='tagAreaMiddle']//span[text()="Missä I"]')
+waitForElementPresent('//div[@id='tagAreaMiddle']//span[text()="Mikä I"]')
+clickAt('id=tagCauseButton')
+waitForNotVisible('id=tagcause-modal')
+
+// Tag another cause
+clickAt('//*[text()="Joku joi kaiken kahvin"]')
+waitForElementPresent('//div[@id='radmenu-event-tagCause']')
+clickAt('//div[@id='radmenu-event-tagCause']')
+waitForVisible('id=tagcause-modal')
+clickAt('//div[text()="Missä II"]')
+clickAt('//div[text()="Mikä II"]')
+waitForElementPresent('//div[@id='tagAreaMiddle']//span[text()="Missä II"]')
+waitForElementPresent('//div[@id='tagAreaMiddle']//span[text()="Mikä II"]')
+clickAt('id=tagCauseButton')
+waitForNotVisible('id=tagcause-modal')
+
+// Go to the classification diagram and test if configuration view works
+clickAndWait('id=dimensionButtonImage')
+
+// Move to the classification diagram
+waitForTextPresent('Ropleema')
+
+// Check that the configuration view is correct
+clickAt('id=configurationButton')
+waitForTextPresent('Number of Causes')
+waitForTextPresent('Portion of Proposed Causes')
+waitForTextPresent('Correction Ideas')
+
+// Check that the nodes for the two Where classifications are present
+waitForTextPresent('Missä I')
+waitForTextPresent('Missä II')
+
+// Test in Finnish
+open('/logout')
+open('/?language=fi')
+
+// Login
+type('id=username','admin@local')
+type('id=password','admin')
+clickAndWait('id=signin')
+
+// Create new case
+clickAndWait('id=createRCACase-link')
+type('id=caseName','testi')
+clickAndWait('id=create')
+
+// Go to the classification diagram and test if configuration view works
+waitForTextPresent('testi')
+clickAndWait('id=dimensionButtonImage')
+
+// Now at the classification diagram
+waitForTextPresent('testi')
+clickAt('id=configurationButton')
+waitForTextPresent('Syiden määrä')
+waitForTextPresent('Ehdotetut (tykätyt) syyt')
+waitForTextPresent('Korjausehdotukset')
+
+clickAndWait('id=logout-link')
+
+#{/selenium}

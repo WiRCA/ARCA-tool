@@ -16,7 +16,20 @@ User(test):
     password: d033e22ae348aeb5660fc2140aec35850c4da997
     name: Test user
 
+User(tutorial):
+    email: tutorial@local
+    password: d033e22ae348aeb5660fc2140aec35850c4da997
+    name: Tutorial user
+
 User(email):
     email: email@local.fi
     password: d033e22ae348aeb5660fc2140aec35850c4da997
     name: Email user
+
+ClassificationDimension(what):
+    name: What
+    dimensionId: 1
+
+ClassificationDimension(where):
+    name: Where
+    dimensionId: 2

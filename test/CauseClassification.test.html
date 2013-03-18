@@ -1,0 +1,199 @@
+<!--
+  ~ Copyright (C) 2011 - 2013 by Eero Laukkanen, Risto Virtanen, Jussi Patana,
+  ~ Juha Viljanen, Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi,
+  ~ Mikko Valjus, Timo Lehtinen, Jaakko Harjuhahto, Jonne Viitanen, Jari Jaanto,
+  ~ Toni Sevenius, Anssi Matti Helin, Jerome Saarinen, Markus Kere
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in
+  ~ all copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+  ~ THE SOFTWARE.
+  -->
+
+#{fixture delete:'all', load:'data.yml' /}
+#{selenium}
+
+// Test init
+open('/logout')
+open('/?language=en')
+
+// Set timeout to 5 seconds, used in waitFor-accessors
+setTimeout('5000')
+
+// Login
+type('id=username','admin@local')
+type('id=password','admin')
+clickAndWait('id=signin')
+
+// Create new case
+clickAndWait('id=createRCACase-link')
+type('id=caseName','Ropleema')
+clickAndWait('id=create')
+
+// Create classifications
+waitForTextPresent('Ropleema')
+clickAt('id=tagIcon')
+waitForVisible('id=addTag')
+
+clickAt('id=addTag')
+type('id=classificationName', 'Mikä I')
+type('id=classificationAbbreviation', 'MK1')
+click('id=addClassification-submit')
+waitForNotVisible('id=addClassification-modal')
+
+clickAt('id=addTag')
+type('id=classificationName', 'Mikä II')
+type('id=classificationAbbreviation', 'MK2')
+click('id=addClassification-submit')
+waitForNotVisible('id=addClassification-modal')
+
+clickAt('id=addTag')
+select('id=classificationType', 'value=2')
+type('id=classificationName', 'Missä I')
+type('id=classificationAbbreviation', 'MS1')
+click('id=addClassification-submit')
+waitForNotVisible('id=addClassification-modal')
+
+clickAt('id=addTag')
+select('id=classificationType', 'value=2')
+type('id=classificationName', 'Missä II')
+type('id=classificationAbbreviation', 'MS2')
+click('id=addClassification-submit')
+waitForNotVisible('id=addClassification-modal')
+
+// Create new cause
+clickAt('css=div.rootNodeBox')
+waitForElementPresent('//div[@id='radmenu-event-addCause']')
+clickAt('//div[@id='radmenu-event-addCause']')
+waitForElementPresent('css=#addcause-modal > div.modal-header > h3')
+type('id=causeName','Kahvi on loppu')
+clickAt('//input[@id='addcause-submit']')
+waitForTextPresent('Kahvi on loppu')
+
+// Create subcause
+clickAt('//*[text()="Kahvi on loppu"]')
+waitForElementPresent('//div[@id='radmenu-event-addCause']')
+clickAt('//div[@id='radmenu-event-addCause']')
+waitForElementPresent('css=#addcause-modal > div.modal-header > h3')
+type('id=causeName','Joku joi kaiken kahvin')
+clickAt('//input[@id='addcause-submit']')
+waitForTextPresent('Joku joi kaiken kahvin')
+
+// Open the classification dialog
+clickAt('//*[text()="Kahvi on loppu"]')
+waitForElementPresent('//div[@id='radmenu-event-tagCause']')
+clickAt('//div[@id='radmenu-event-tagCause']')
+waitForVisible('id=tagcause-modal')
+
+// Verify that the classifications are present
+verifyTextPresent('Mikä I')
+verifyTextPresent('Mikä II')
+verifyTextPresent('Missä I')
+verifyTextPresent('Missä II')
+
+// Tag the cause
+clickAt('//div[text()="Missä I"]')
+clickAt('//div[text()="Mikä I"]')
+// Here waitFor[...] is used instead of verify[...] because the JS might take long enough for Selenium to be faster
+// (even though the delay should be imperceptible for a human user)
+waitForElementPresent('//div[@id='tagAreaMiddle']//span[text()="Missä I"]')
+waitForElementPresent('//div[@id='tagAreaMiddle']//span[text()="Mikä I"]')
+clickAt('id=tagCauseButton')
+waitForNotVisible('id=tagcause-modal')
+
+// Ensure they're still there
+clickAt('//div[@id='radmenu-event-tagCause']')
+waitForVisible('id=tagcause-modal')
+waitForElementPresent('//div[@id='tagAreaMiddle']//span[text()="Missä I"]')
+waitForElementPresent('//div[@id='tagAreaMiddle']//span[text()="Mikä I"]')
+
+// Close the dialog
+clickAt('css=#tagcause-modal .close')
+waitForNotVisible('id=tagcause-modal')
+
+// Rename a where classification that's in use
+clickAt('id=editTag')
+waitForVisible('id=editClassification-modal')
+select('id=edit-classificationId', 'label=Missä I')
+type('id=edit-classificationTitle', 'Missä III')
+clickAt('id=editClassification-edit')
+waitForNotVisible('id=editClassification-modal')
+
+// Rename a what classification that's in use
+clickAt('id=editTag')
+waitForVisible('id=editClassification-modal')
+select('id=edit-classificationId', 'label=Mikä I')
+type('id=edit-classificationTitle', 'Mikä III')
+clickAt('id=editClassification-edit')
+waitForNotVisible('id=editClassification-modal')
+
+// Rename a where classification not in use
+clickAt('id=editTag')
+waitForVisible('id=editClassification-modal')
+select('id=edit-classificationId', 'label=Missä II')
+type('id=edit-classificationTitle', 'Missä IV')
+clickAt('id=editClassification-edit')
+waitForNotVisible('id=editClassification-modal')
+
+// Rename a what classification not in use
+clickAt('id=editTag')
+waitForVisible('id=editClassification-modal')
+select('id=edit-classificationId', 'label=Mikä II')
+type('id=edit-classificationTitle', 'Mikä IV')
+clickAt('id=editClassification-edit')
+waitForNotVisible('id=editClassification-modal')
+
+// Check that the changes were reflected in the tag editor
+clickAt('//*[text()="Kahvi on loppu"]')
+waitForElementPresent('//div[@id='radmenu-event-tagCause']')
+clickAt('//div[@id='radmenu-event-tagCause']')
+waitForVisible('id=tagcause-modal')
+waitForElementPresent('//div[@id='tagAreaLeft']/div[text()="Missä IV"]')
+waitForElementPresent('//div[@id='tagAreaRight']/div[text()="Mikä IV"]')
+waitForElementPresent('//div[@id='tagAreaMiddle']//span[text()="Missä III"]')
+waitForElementPresent('//div[@id='tagAreaMiddle']//span[text()="Mikä III"]')
+
+// Close the tag editor
+clickAt('css=#tagcause-modal .close')
+waitForNotVisible('id=tagcause-modal')
+
+// Remove all of the tags
+clickAt('id=removeTag')
+waitForVisible('id=removeClassification-modal')
+clickAt('id=removeClassification-submit')
+waitForNotVisible('id=editClassification-modal')
+clickAt('id=removeTag')
+waitForVisible('id=removeClassification-modal')
+clickAt('id=removeClassification-submit')
+waitForNotVisible('id=editClassification-modal')
+clickAt('id=removeTag')
+waitForVisible('id=removeClassification-modal')
+clickAt('id=removeClassification-submit')
+waitForNotVisible('id=editClassification-modal')
+clickAt('id=removeTag')
+waitForVisible('id=removeClassification-modal')
+clickAt('id=removeClassification-submit')
+waitForNotVisible('id=editClassification-modal')
+
+// Ensure that the tag editor is empty
+clickAt('//*[text()="Kahvi on loppu"]')
+waitForElementPresent('//div[@id='radmenu-event-tagCause']')
+clickAt('//div[@id='radmenu-event-tagCause']')
+waitForVisible('id=tagcause-modal')
+verifyXpathCount('//div[@id=tagAreaLeft]/div', 0)
+verifyXpathCount('//div[@id=tagAreaMiddle]/*', 0)
+verifyXpathCount('//div[@id=tagAreaRight]/div', 0)
+#{/selenium}

@@ -1,7 +1,8 @@
 /*
- * Copyright (C) 2012 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
- * Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus,
- * Timo Lehtinen, Jaakko Harjuhahto
+ * Copyright (C) 2011 - 2013 by Eero Laukkanen, Risto Virtanen, Jussi Patana,
+ * Juha Viljanen, Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi,
+ * Mikko Valjus, Timo Lehtinen, Jaakko Harjuhahto, Jonne Viitanen, Jari Jaanto,
+ * Toni Sevenius, Anssi Matti Helin, Jerome Saarinen, Markus Kere
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,9 +25,7 @@
 
 package controllers;
 
-import models.Invitation;
-import models.RCACase;
-import models.User;
+import models.*;
 import models.enums.CompanySize;
 import models.enums.RCACaseType;
 import notifiers.Mails;
@@ -35,11 +34,15 @@ import play.data.validation.Email;
 import play.data.validation.MaxSize;
 import play.data.validation.Required;
 import play.data.validation.Valid;
+import play.libs.Codec;
 import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.With;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Methods related to RCA cases.
@@ -62,15 +65,26 @@ public class RCACaseController extends Controller {
         Secure.checkAccess();
     }
 
+
 	/**
 	 * Opens the new RCA case creation form.
 	 */
 	public static void createRCACase() {
-		RCACase rcaCase = new RCACase(SecurityController.getCurrentUser());
 		RCACaseType[] types = RCACaseType.values();
 		CompanySize[] companySizes = CompanySize.values();
-		render(rcaCase, types, companySizes);
+
+		User user = SecurityController.getCurrentUser();
+		if (user == null) {
+			session.remove("username");
+			redirect("/");
+			return;
+		}
+
+		Set<RCACase> cases = user.getRCACases();
+
+		render(types, companySizes, cases);
 	}
+
 
 	/**
 	 * Creates a new RCA case with the values given in the RCA case creation form.
@@ -82,22 +96,43 @@ public class RCACaseController extends Controller {
 			validation.keep(); // keep the errors for the next request
 			createRCACase();
 		}
-		rcaCase.save();
+
 		User user = SecurityController.getCurrentUser();
+
+		// Import classifications from the selected case (rcaCase.importId)
+		if (rcaCase.importId != null) {
+			RCACase importCase = RCACase.findById(rcaCase.importId);
+			if (importCase != null) {
+				List<Classification> classifications = importCase.getClassifications();
+				for (Classification importClassification: classifications) {
+					Classification classification = new Classification(rcaCase, importClassification.name, user,
+					                                                   importClassification.classificationDimension,
+					                                                   importClassification.explanation,
+					                                                   importClassification.abbreviation);
+					classification.save();
+				}
+			}
+		}
+		rcaCase.ownerId = user.id;
+		rcaCase.causes = new TreeSet<Cause>();
+		rcaCase.URLHash = Codec.UUID();
+		rcaCase.save();
+
 		if (problemName.trim().length() == 0) {
 			problemName = rcaCase.caseName;
 		}
 		user.addRCACase(rcaCase, problemName);
 		Logger.info("User %s created new RCA case with name %s", user, rcaCase.caseName);
-		PublicRCACaseController.show(rcaCase.id);
+		PublicRCACaseController.show(rcaCase.URLHash);
 	}
+
 
 	/**
 	 * Views users that have access to the RCA case.
 	 * @param rcaCaseId ID of the RCA case
 	 */
 	public static void getUsers(Long rcaCaseId) {
-		RCACase rcaCase = PublicRCACaseController.checkIfCurrentUserHasRightsForRCACase(rcaCaseId);
+		PublicRCACaseController.checkIfCurrentUserHasRightsForRCACase(rcaCaseId);
 		List<User> existingUsers =
 				User.find("Select u from user as u inner join u.caseIds as caseIds" + " where ? in caseIds",
 				          rcaCaseId)
@@ -108,6 +143,7 @@ public class RCACaseController extends Controller {
 		request.format = "json";
 		render(existingUsers, invitedUsers);
 	}
+
 
 	/**
 	 * Invites the user with the given email address to the RCA case.
@@ -147,6 +183,7 @@ public class RCACaseController extends Controller {
 		}
 	}
 
+
 	/**
 	 * Removes a user from the RCA case.
 	 * Only the RCA case owner can remove users from his case.
@@ -180,12 +217,15 @@ public class RCACaseController extends Controller {
 		renderJSON("{\"success\":\"false\"}");
 	}
 
+
 	/**
 	 * Exports the RCA case to csv format, that the user can download.
-	 * @param rcaCaseId ID of the RCA case
+	 * @param URLHash URL hash of the RCA case
 	 */
-	public static void extractCSV(Long rcaCaseId) {
-		RCACase rcaCase = PublicRCACaseController.checkIfCurrentUserHasRightsForRCACase(rcaCaseId);
+	public static void extractCSV(String URLHash) {
+		RCACase rcaCase = RCACase.getRCACase(URLHash);
+		notFoundIfNull(rcaCase);
+		rcaCase = PublicRCACaseController.checkIfCurrentUserHasRightsForRCACase(rcaCase.id);
 		response.setHeader("Content-Disposition", "attachment;filename=" +
 		                                          rcaCase.caseName.replace(" ", "-") + ".csv");
 		request.format = "text/csv";

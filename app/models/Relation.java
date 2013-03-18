@@ -1,7 +1,8 @@
 /*
- * Copyright (C) 2011 by Eero Laukkanen, Risto Virtanen, Jussi Patana, Juha Viljanen,
- * Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi, Mikko Valjus,
- * Timo Lehtinen, Jaakko Harjuhahto
+ * Copyright (C) 2011 - 2013 by Eero Laukkanen, Risto Virtanen, Jussi Patana,
+ * Juha Viljanen, Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi,
+ * Mikko Valjus, Timo Lehtinen, Jaakko Harjuhahto, Jonne Viitanen, Jari Jaanto,
+ * Toni Sevenius, Anssi Matti Helin, Jerome Saarinen, Markus Kere
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,9 +25,11 @@
 
 package models;
 
+import play.db.jpa.JPABase;
 import utils.IdComparableModel;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * Relation between two causes in an RCA tree.
@@ -59,5 +62,33 @@ public class Relation extends IdComparableModel {
 	public Relation(Cause causeFrom, Cause causeTo) {
 		this.causeFrom = causeFrom;
 		this.causeTo = causeTo;
+	}
+
+	public <T extends JPABase> T delete() {
+		this.causeFrom.causeRelations.remove(this);
+		this.causeTo.causeRelations.remove(this);
+		super.delete();
+		return (T) this;
+	}
+
+
+	/**
+	 * Finds a relation that is between the given two causes, regardless of the relation's direction.
+	 *
+	 * @param cause1 the first cause
+	 * @param cause2 the second cause
+	 * @return a Relation or null
+	 */
+	public static Relation findByCauses(Cause cause1, Cause cause2) {
+		List<Relation> relationList = Relation.find(
+				"SELECT r FROM relation AS r WHERE (causeFrom=? AND causeTo=?) OR (causeTo=? AND causeFrom=?)",
+				cause1, cause2, cause1, cause2
+		).fetch();
+
+		if (relationList.size() > 0) {
+			return relationList.get(0);
+		} else {
+			return null;
+		}
 	}
 }

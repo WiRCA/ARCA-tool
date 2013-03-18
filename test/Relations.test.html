@@ -1,0 +1,105 @@
+<!--
+  ~ Copyright (C) 2011 - 2013 by Eero Laukkanen, Risto Virtanen, Jussi Patana,
+  ~ Juha Viljanen, Joona Koistinen, Pekka Rihtniemi, Mika Kekäle, Roope Hovi,
+  ~ Mikko Valjus, Timo Lehtinen, Jaakko Harjuhahto, Jonne Viitanen, Jari Jaanto,
+  ~ Toni Sevenius, Anssi Matti Helin, Jerome Saarinen, Markus Kere
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in
+  ~ all copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+  ~ THE SOFTWARE.
+  -->
+
+#{fixture delete:'all',load:'data.yml' /}
+#{selenium}
+// Create the RCA case
+setTimeout('5000')
+open('/logout')
+open('/?language=en')
+clickAndWait('id=register-link')
+type('id=nameFieldRegister','seppo')
+type('id=emailFieldRegister','seppo@seppo.seppo')
+type('id=passwordFieldRegister','seppo')
+type('id=password2FieldRegister','seppo')
+clickAndWait('id=registerButton')
+clickAndWait('id=createRCACase-link')
+type('id=caseName','sepon oma keissi')
+select('id=caseTypeValue','label=Human resources related problem')
+type('id=description','seppo')
+type('id=caseGoals','seppon tavoitteet')
+type('id=companyName','sepon firma')
+select('id=companySize','label=1-10')
+type('id=companyProducts','seppo myy')
+clickAndWait('id=create')
+
+// Add a bunch of new causes
+clickAt('//*[text()="sepon oma keissi"]')
+waitForElementPresent('//div[@id='radmenu-event-addCause']')
+click('//div[@id='radmenu-event-addCause']')
+waitForElementPresent('css=#addcause-modal > div.modal-header > h3')
+type('id=causeName','seppo ei saa myytyä')
+click('//input[@id='addcause-submit']')
+waitForTextPresent('seppo ei saa myytyä')
+clickAt('//*[text()="seppo ei saa myytyä"]')
+waitForElementPresent('//div[@id='radmenu-event-addCause']')
+
+click('//div[@id='radmenu-event-addCause']')
+waitForElementPresent('css=#addcause-modal > div.modal-header > h3')
+type('id=causeName','kukaan ei osta')
+click('//input[@id='addcause-submit']')
+waitForTextPresent('kukaan ei osta')
+clickAt('//*[text()="kukaan ei osta"]')
+waitForElementPresent('//div[@id='radmenu-event-addCause']')
+
+click('//div[@id='radmenu-event-addCause']')
+waitForElementPresent('css=#addcause-modal > div.modal-header > h3')
+type('id=causeName','syy 3')
+click('//input[@id='addcause-submit']')
+waitForTextPresent('syy 3')
+clickAt('//*[text()="syy 3"]')
+waitForElementPresent('//div[@id='radmenu-event-addCause']')
+
+
+click('//div[@id='radmenu-event-addCause']')
+waitForElementPresent('css=#addcause-modal > div.modal-header > h3')
+type('id=causeName','adada')
+click('//input[@id='addcause-submit']')
+waitForTextPresent('adada')
+clickAt('//*[text()="seppo ei saa myytyä"]')
+
+
+click('//div[@id='radmenu-event-addCause']')
+waitForElementPresent('css=#addcause-modal > div.modal-header > h3')
+type('id=causeName','asdasdasd')
+click('//input[@id='addcause-submit']')
+waitForTextPresent('asdasdasd')
+clickAt('//*[text()="asdasdasd"]')
+waitForElementPresent('//div[@id='radmenu-event-addRelation']')
+
+// New relation
+click('//div[@id='radmenu-event-addRelation']')
+clickAt('//*[text()="adada"]')
+clickAt('//*[text()="syy 3"]')
+waitForElementPresent('//div[@id='radmenu-event-addRelation']')
+
+// New relation
+click('//div[@id='radmenu-event-addRelation']')
+clickAt('//*[text()="seppo ei saa myytyä"]')
+
+// Remove relation (now this is interesting)
+runScript('selenium_ok = false; selenium_id1 = null; selenium_id2 = null; selenium_idx1 = null; selenium_idx2 = null; for (var i = 0; i < window.arca.graphJson.length; i++) { var e = window.arca.graphJson[i]; if (e.name === "asdasdasd") { selenium_id1 = e.id; selenium_idx1 = i; } else if (e.name === "seppo ei saa myytyä") { selenium_id2 = e.id; selenium_idx2 = i; } } $.post(arca.ajax.deleteRelation({causeId: selenium_id1, toId: selenium_id2}), function() { selenium_ok = true; });')
+waitForEval('selenium_ok == true');
+#{/selenium}
