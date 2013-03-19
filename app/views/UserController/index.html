@@ -116,16 +116,19 @@
     });
 
         $("#ownCasesTable").tablesorter({
-            sortList:[[2,0]],
-            headers: { 3: { sorter: false}}
+            sortList:[[2,1]],
+            headers: { 3: { sorter: false}},
+            dateFormat: "dd.mm.yy"
         });
         $("#privateCasesTable").tablesorter({
-            sortList:[[2,0]],
-            headers: { 4: { sorter: false}}
+            sortList:[[2,1]],
+            headers: { 4: { sorter: false}},
+            dateFormat: "dd.mm.yy"
         });
         $("#publicCasesTable").tablesorter({
-            sortList:[[2,0]],
-            headers: { 4: { sorter: false}}
+            sortList:[[2,1]],
+            headers: { 4: { sorter: false}},
+            dateFormat: "dd.mm.yy"
         });
     });
 
@@ -238,7 +241,7 @@
             <td>${rcaCase.owner.name}</td>
             <td>
                 <a id="rcacase-share-${rcaCase.id}" href="javascript:;" class="btn small primary">&{'rcacase.share'}</a>
-            #{a @RCACaseController.extractCSV(rcaCase.URLHash), class:'btn small'}&{'rcaCase.csv.exportCSV'}#{/a}
+                #{a @RCACaseController.extractCSV(rcaCase.URLHash), class:'btn small'}&{'rcaCase.csv.exportCSV'}#{/a}
             </td>
         </tr>
         #{/list}
@@ -270,7 +273,7 @@
                 <td>${rcaCase.owner.name}</td>
                 <td>
                     <a id="rcacase-share-${rcaCase.id}" href="javascript:;" class="btn small primary">&{'rcacase.share'}</a>
-                #{a @RCACaseController.extractCSV(rcaCase.URLHash), class:'btn small'}&{'rcaCase.csv.exportCSV'}#{/a}
+                    #{a @RCACaseController.extractCSV(rcaCase.URLHash), class:'btn small'}&{'rcaCase.csv.exportCSV'}#{/a}
                 </td>
             </tr>
             #{/list}

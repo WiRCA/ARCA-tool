@@ -30,6 +30,7 @@ import models.*;
 import play.jobs.Job;
 import play.jobs.OnApplicationStart;
 
+import java.util.Calendar;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -158,8 +159,8 @@ public class Bootstrap extends Job {
 	        testNode2.setClassifications(set2);
 	        testNode2.save();
 
-
-	        RCACase adminsPrivateCase = new RCACase(admin);
+            final Calendar calendar = Calendar.getInstance();
+            RCACase adminsPrivateCase = new RCACase(admin);
 	        adminsPrivateCase.caseName = "";
 	        adminsPrivateCase.caseName = "Admin's private RCA case";
 	        adminsPrivateCase.caseTypeValue = 2;
@@ -171,7 +172,9 @@ public class Bootstrap extends Job {
 			adminsPrivateCase.companyProducts = "ARCA-tool";
 	        adminsPrivateCase.isCasePublic = false;
 	        adminsPrivateCase.problem = new Cause(adminsPrivateCase, adminsPrivateCase.caseName, admin).save();
-	        adminsPrivateCase.save();
+            calendar.set(2011,Calendar.DECEMBER,02,11,31);
+            adminsPrivateCase.created = calendar.getTime();
+            adminsPrivateCase.save();
 	        admin.addRCACase(adminsPrivateCase);
 	        admin.save();
 	        tester.addRCACase(adminsPrivateCase);
@@ -189,6 +192,8 @@ public class Bootstrap extends Job {
 	        adminsOwnPrivateCase.companyProducts = "ARCA-tool";
             adminsOwnPrivateCase.isCasePublic = false;
             adminsOwnPrivateCase.problem = new Cause(adminsOwnPrivateCase, adminsOwnPrivateCase.caseName, admin).save();
+            calendar.set(2012,Calendar.JUNE,05,10,30);
+            adminsOwnPrivateCase.created = calendar.getTime();
             adminsOwnPrivateCase.save();
             admin.addRCACase(adminsOwnPrivateCase);
             admin.save();
@@ -205,7 +210,9 @@ public class Bootstrap extends Job {
 			adminsPublicCase.companyProducts = "ARCA-tool";
 	        adminsPublicCase.isCasePublic = true;
 	        adminsPublicCase.problem = new Cause(adminsPublicCase, adminsPublicCase.caseName, admin).save();
-	        adminsPublicCase.save();
+            calendar.set(2011,Calendar.DECEMBER,6,22,12);
+            adminsPublicCase.created = calendar.getTime();
+            adminsPublicCase.save();
 	        admin.addRCACase(adminsPublicCase);
 	        admin.save();
 	        tester.addRCACase(adminsPublicCase);
