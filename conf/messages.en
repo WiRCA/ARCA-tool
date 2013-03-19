@@ -172,6 +172,11 @@ user.allPublicCases=All public cases
 user.noAnyPublicCases=No public cases
 user.allCases=All cases
 user.publicCasesTab=Public cases
+user.table.title.caseName=Case name
+user.table.title.modified=Modified
+user.table.title.created=Created
+user.table.title.actions=Actions
+user.table.title.owner=Owner
 
 rcacase.lastmodified=last modified
 rcacase.share=Share

@@ -29,12 +29,10 @@
 #{set 'pageHeaderSmall'}#{/set}
 #{set 'activePage'}index#{/set}
 
-<script src="@{'/public/javascripts/bootstrap-twipsy.js'}" type="text/javascript"
-        charset="${_response_encoding}"></script>
-<script src="@{'/public/javascripts/bootstrap-popover.js'}" type="text/javascript"
-        charset="${_response_encoding}"></script>
-<script src="@{'/public/javascripts/bootstrap-tabs.js'}" type="text/javascript"
-        charset="${_response_encoding}"></script>
+<script src="@{'/public/javascripts/bootstrap-twipsy.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+<script src="@{'/public/javascripts/bootstrap-popover.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+<script src="@{'/public/javascripts/bootstrap-tabs.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+<script src="@{'/public/javascripts/jquery.tablesorter.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
 
 <script type="text/javascript">
         $(function () {
@@ -116,6 +114,19 @@
     });
     return false;
     });
+
+        $("#ownCasesTable").tablesorter({
+            sortList:[[2,0]],
+            headers: { 3: { sorter: false}}
+        });
+        $("#privateCasesTable").tablesorter({
+            sortList:[[2,0]],
+            headers: { 4: { sorter: false}}
+        });
+        $("#publicCasesTable").tablesorter({
+            sortList:[[2,0]],
+            headers: { 4: { sorter: false}}
+        });
     });
 
     $("a[id^='rcacase-share-']").live("click", function () {
@@ -174,54 +185,101 @@
 <div id="my-tab-content" class="tab-content">
     <div class="active tab-pane" id="mycases">
 <h2>&{'user.myCases'}</h2>
-<ul>
-    #{list items:ownCases, as:'rcaCase'}
-
-    <li>#{a @PublicRCACaseController.show(rcaCase.URLHash), class:'ellipsis caseTitle', id:'show-rcacase-'+rcaCase.id+'-link', rel:'popover',
-        title:"${rcaCase.caseName.escape().escape().raw()}", 'data-content':"${rcaCase.description.escape().escape().raw()}"}${rcaCase.caseName.escape().raw()}#{/a}
-        &{'rcacase.lastmodified'} ${rcaCase.updated.since(true)}
-        &{'user.created'} ${rcaCase.created.since(true)}
-        <a id="rcacase-share-${rcaCase.id}" href="javascript:;" class="btn small primary">&{'rcacase.share'}</a>
-        #{a @RCACaseController.extractCSV(rcaCase.URLHash), class:'btn small'}&{'rcaCase.csv.exportCSV'}#{/a}
-    </li>
+    #{if !myCases.empty}
+    <table id="ownCasesTable" class="table zebra-striped condensed-table">
+        <thead>
+        <tr>
+            <th>&{'user.table.title.caseName'}</th>
+            <th>&{'user.table.title.modified'}</th>
+            <th>&{'user.table.title.created'}</th>
+            <th>&{'user.table.title.actions'}</th>
+        </tr>
+        </thead>
+        <tbody>
+    #{list items:myCases, as:'rcaCase'}
+        <tr>
+            <td>#{a @PublicRCACaseController.show(rcaCase.URLHash), class:'ellipsis caseTitle', id:'show-rcacase-'+rcaCase.id+'-link', rel:'popover',
+            title:"${rcaCase.caseName.escape().escape().raw()}", 'data-content':"${rcaCase.description.escape().escape().raw()}"}${rcaCase.caseName.escape().raw()}#{/a}</td>
+            <td>${rcaCase.updated.format() + " " + rcaCase.updated.format("HH:mm")}</td>
+            <td>${rcaCase.created.format() + " " + rcaCase.created.format("HH:mm")}</td>
+            <td>
+                <a id="rcacase-share-${rcaCase.id}" href="javascript:;" class="btn small primary">&{'rcacase.share'}</a>
+                #{a @RCACaseController.extractCSV(rcaCase.URLHash), class:'btn small'}&{'rcaCase.csv.exportCSV'}#{/a}
+            </td>
+        </tr>
     #{/list}
+        </tbody>
+    </table>
+    #{/if}
     #{else}
     <li>&{'user.noRCACases'}</li>
     #{/else}
-</ul>
     </div>
     <div class="tab-pane" id="privatecases">
 <h2>&{'user.sharedPrivateCases'}</h2>
-        <ul>
+    #{if !privateCases.empty}
+        <table id="privateCasesTable" class="table zebra-striped condensed-table">
+            <thead>
+            <tr>
+                <th>&{'user.table.title.caseName'}</th>
+                <th>&{'user.table.title.modified'}</th>
+                <th>&{'user.table.title.created'}</th>
+                <th>&{'user.table.title.owner'}</th>
+                <th>&{'user.table.title.actions'}</th>
+            </tr>
+            </thead>
+            <tbody>
         #{list items:privateCases, as:'rcaCase'}
-
-        <li>#{a @PublicRCACaseController.show(rcaCase.URLHash), class:'ellipsis caseTitle', id:'show-rcacase-'+rcaCase.id+'-link', rel:'popover',
-            title:"${rcaCase.caseName.escape().escape().raw()}", 'data-content':"${rcaCase.description.escape().escape().raw()}"}${rcaCase.caseName.escape().raw()}#{/a}
-            &{'rcacase.sharedBy'} <b>${rcaCase.owner.name.escape().raw()}</b>
-            &{'rcacase.lastmodified'} ${rcaCase.updated.since(true)}
-            &{'user.created'} ${rcaCase.created.since(true)}
-        </li>
-    #{/list}
+        <tr>
+            <td>#{a @PublicRCACaseController.show(rcaCase.URLHash), class:'ellipsis caseTitle', id:'show-rcacase-'+rcaCase.id+'-link', rel:'popover',
+            title:"${rcaCase.caseName.escape().escape().raw()}", 'data-content':"${rcaCase.description.escape().escape().raw()}"}${rcaCase.caseName.escape().raw()}#{/a}</td>
+            <td>${rcaCase.updated.format() + " " + rcaCase.updated.format("HH:mm")}</td>
+            <td>${rcaCase.created.format() + " " + rcaCase.created.format("HH:mm")}</td>
+            <td>${rcaCase.owner.name}</td>
+            <td>
+                <a id="rcacase-share-${rcaCase.id}" href="javascript:;" class="btn small primary">&{'rcacase.share'}</a>
+            #{a @RCACaseController.extractCSV(rcaCase.URLHash), class:'btn small'}&{'rcaCase.csv.exportCSV'}#{/a}
+            </td>
+        </tr>
+        #{/list}
+            </tbody>
+        </table>
+    #{/if}
     #{else}
     <li>&{'user.noPrivateCases'}</li>
     #{/else}
-        </ul>
             <h2>&{'user.publicCases'}</h2>
-            <ul>
+    #{if !privateCases.empty}
+        <table id="publicCasesTable" class="table zebra-striped condensed-table">
+            <thead>
+            <tr>
+                <th>&{'user.table.title.caseName'}</th>
+                <th>&{'user.table.title.modified'}</th>
+                <th>&{'user.table.title.created'}</th>
+                <th>&{'user.table.title.owner'}</th>
+                <th>&{'user.table.title.actions'}</th>
+            </tr>
+            </thead>
+            <tbody>
             #{list items:publicCases, as:'rcaCase'}
-
-                <li>#{a @PublicRCACaseController.show(rcaCase.URLHash), class:'ellipsis caseTitle', id:'show-rcacase-'+rcaCase.id+'-link', rel:'popover',
-                title:"${rcaCase.caseName.escape().escape().raw()}", 'data-content':"${rcaCase.description.escape().escape().raw()}"}${rcaCase.caseName.escape().raw()}#{/a}
-                &{'rcacase.sharedBy'} <b>${rcaCase.owner.name.escape().raw()}</b>
-                &{'rcacase.lastmodified'} ${rcaCase.updated.since(true)}
-                &{'user.created'} ${rcaCase.created.since(true)}
-                </li>
+            <tr>
+                <td>#{a @PublicRCACaseController.show(rcaCase.URLHash), class:'ellipsis caseTitle', id:'show-rcacase-'+rcaCase.id+'-link', rel:'popover',
+                title:"${rcaCase.caseName.escape().escape().raw()}", 'data-content':"${rcaCase.description.escape().escape().raw()}"}${rcaCase.caseName.escape().raw()}#{/a}</td>
+                <td>${rcaCase.updated.format() + " " + rcaCase.updated.format("HH:mm")}</td>
+                <td>${rcaCase.created.format() + " " + rcaCase.created.format("HH:mm")}</td>
+                <td>${rcaCase.owner.name}</td>
+                <td>
+                    <a id="rcacase-share-${rcaCase.id}" href="javascript:;" class="btn small primary">&{'rcacase.share'}</a>
+                #{a @RCACaseController.extractCSV(rcaCase.URLHash), class:'btn small'}&{'rcaCase.csv.exportCSV'}#{/a}
+                </td>
+            </tr>
             #{/list}
+            </tbody>
+        </table>
+    #{/if}
             #{else}
                 <li>&{'user.noPublicCases'}</li>
             #{/else}
-            </ul>
-
     </div>
 
 </div>

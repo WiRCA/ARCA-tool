@@ -53,13 +53,13 @@ public class UserController extends Controller {
 		}
 
 		Set<RCACase> cases = user.getRCACases();
-		Set<RCACase> ownCases = new HashSet<RCACase>();
+		Set<RCACase> myCases = new HashSet<RCACase>();
 		Set<RCACase> privateCases = new HashSet<RCACase>();
 		Set<RCACase> publicCases = new HashSet<RCACase>();
 
 		for (RCACase case1 : cases){
 			if (user.id.equals(case1.ownerId)){
-				ownCases.add(case1);
+				myCases.add(case1);
 			}
 			else if (!case1.isCasePublic){
 				privateCases.add(case1);
@@ -68,7 +68,7 @@ public class UserController extends Controller {
 				publicCases.add(case1);
 			}
 		}
-		render(user, ownCases, privateCases, publicCases);
+		render(user, myCases, privateCases, publicCases);
 	}
 
 }

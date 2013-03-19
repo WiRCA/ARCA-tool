@@ -183,6 +183,11 @@ user.allPublicCases=Kaikki julkiset analyysit
 user.noAnyPublicCases=Ei julkisia analyysejä
 user.allCases=Kaikki analyysit
 user.publicCasesTab=Julkiset analyysit
+user.table.title.caseName=Analyysin nimi
+user.table.title.modified=Muokattu
+user.table.title.created=Luotu
+user.table.title.actions=Toiminnot
+user.table.title.owner=Omistaja
 
 rcacase.share.dialog.title=Jakamisasetukset
 rcacase.share.dialog.whoHasAccess=Seuraavilla henkilöillä on käyttöoikeudet
