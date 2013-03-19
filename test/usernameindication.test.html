@@ -25,6 +25,7 @@
 
 #{fixture delete:'all', load:'data.yml' /}
 #{selenium}
+open('/logout')
 //Log in
 open('/?language=en')
 assertElementPresent('id=signin')
