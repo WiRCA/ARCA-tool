@@ -83,6 +83,7 @@
     click('//input[@id='addcause-submit']')
     waitForTextPresent('another cause')
     // corrective ideas to the first cause
+    setSpeed(200)
     waitForElementPresent('//*[text()="another cause"]')
     clickAt('//*[text()="another cause"]')
     waitForElementPresent('//div[@id='radmenu-event-addCorrection']')
@@ -112,6 +113,7 @@
     type('id=ideaDescription','description for third correction to this Tutorial RCA case')
     clickAt('id=submitCorrectiveActionButton')
     waitForTextPresent('Corrective action added')
+    setSpeed(0)
 
     //testing monitoring
     clickAndWait('link=Monitoring')

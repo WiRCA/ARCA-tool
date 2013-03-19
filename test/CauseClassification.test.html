@@ -99,6 +99,7 @@ clickAt('//div[@id='radmenu-event-tagCause']')
 waitForVisible('id=tagcause-modal')
 
 // Verify that the classifications are present
+setSpeed(200)
 verifyTextPresent('Mikä I')
 verifyTextPresent('Mikä II')
 verifyTextPresent('Missä I')
@@ -117,6 +118,7 @@ waitForNotVisible('id=tagcause-modal')
 // Ensure they're still there
 clickAt('//div[@id='radmenu-event-tagCause']')
 waitForVisible('id=tagcause-modal')
+setSpeed(0)
 waitForElementPresent('//div[@id='tagAreaMiddle']//span[text()="Missä I"]')
 waitForElementPresent('//div[@id='tagAreaMiddle']//span[text()="Mikä I"]')
 

@@ -151,11 +151,13 @@ type('id=ideaDescription','testing')
 click('id=submitCorrectiveActionButton')
 
 //Correct third cause
+setSpeed(200)
 waitForTextPresent('Kolmas syy')
 clickAt('//*[text()="Kolmas syy"]')
 waitForElementPresent('//div[@id='radmenu-event-addCorrection']')
 click('//div[@id='radmenu-event-addCorrection']')
 waitForTextPresent('Add corrective action')
+setSpeed(0)
 type('id=ideaName','testing')
 type('id=ideaDescription','testing')
 click('id=submitCorrectiveActionButton')

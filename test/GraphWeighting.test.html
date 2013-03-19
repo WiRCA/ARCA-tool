@@ -22,588 +22,114 @@
   ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
   ~ THE SOFTWARE.
   -->
-
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-<head profile="http://selenium-ide.openqa.org/profiles/test-case">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="selenium.base" href="http://localhost:9000/" />
-    <title>New Test</title>
-</head>
-<body>
-<table cellpadding="1" cellspacing="1" border="1">
-<thead>
-<tr><td rowspan="1" colspan="3">New Test</td></tr>
-</thead><tbody>
-<tr>
-    <td>open</td>
-    <td>/logout</td>
-    <td></td>
-</tr>
-<tr>
-    <td>waitForPageToLoad</td>
-    <td></td>
-    <td></td>
-</tr>
-
-//Sign in
-<tr>
-    <td>type</td>
-    <td>id=username</td>
-    <td>admin@local</td>
-</tr>
-<tr>
-    <td>type</td>
-    <td>id=password</td>
-    <td>admin</td>
-</tr>
-<tr>
-    <td>clickAndWait</td>
-    <td>id=signin</td>
-    <td></td>
-</tr>
-
-//Create rca case
-<tr>
-    <td>clickAndWait</td>
-    <td>id=createRCACase-link</td>
-    <td></td>
-</tr>
-<tr>
-    <td>type</td>
-    <td>id=caseName</td>
-    <td>Raakasyiden listaus testi</td>
-</tr>
-<tr>
-    <td>click</td>
-    <td>id=isCasePublicYes</td>
-    <td></td>
-</tr>
-<tr>
-    <td>clickAndWait</td>
-    <td>id=create</td>
-    <td></td>
-</tr>
-<tr>
-    <td>waitForTextPresent</td>
-    <td>Raakasyiden listaus testi</td>
-    <td></td>
-</tr>
-
-//Lisää syy
-<tr>
-    <td>clickAt</td>
-    <td>//div[text()='Raakasyiden listaus testi']</td>
-    <td></td>
-</tr>
-<tr>
-    <td>click</td>
-    <td>css=div.radial_div &gt; #radmenu-event-addCause &gt; a &gt; img</td>
-    <td></td>
-</tr>
-<tr>
-    <td>type</td>
-    <td>id=causeName</td>
-    <td>Tämä syy on kiinni juuri nodessa</td>
-</tr>
-<tr>
-    <td>click</td>
-    <td>id=addcause-submit</td>
-    <td></td>
-</tr>
-<tr>
-    <td>waitForTextPresent</td>
-    <td>Tämä syy on kiinni juuri nodessa</td>
-    <td></td>
-</tr>
-
-
-<tr>
-    <td>clickAt</td>
-    <td>//div[text()='Tämä syy on kiinni juuri nodessa']</td>
-    <td></td>
-</tr>
-<tr>
-    <td>click</td>
-    <td>css=div.radial_div &gt; #radmenu-event-tagCause &gt; a &gt; img</td>
-    <td></td>
-</tr>
-<tr>
-    <td>click</td>
-    <td>css=#tagcause-modal &gt; form &gt; div.modal-footer &gt; a.btn.secondary</td>
-    <td></td>
-</tr>
-
-//Add classifications
-<tr>
-    <td>click</td>
-    <td>id=tagIcon</td>
-    <td></td>
-</tr>
-<tr>
-    <td>click</td>
-    <td>id=addTag</td>
-    <td></td>
-</tr>
-<tr>
-    <td>type</td>
-    <td>id=classificationName</td>
-    <td>Values</td>
-</tr>
-<tr>
-    <td>click</td>
-    <td>id=addClassification-submit</td>
-    <td></td>
-</tr>
-<tr>
-    <td>click</td>
-    <td>id=addTag</td>
-    <td></td>
-</tr>
-<tr>
-    <td>type</td>
-    <td>id=classificationName</td>
-    <td>Methods</td>
-</tr>
-<tr>
-    <td>click</td>
-    <td>id=addClassification-submit</td>
-    <td></td>
-</tr>
-<tr>
-    <td>click</td>
-    <td>id=addTag</td>
-    <td></td>
-</tr>
-<tr>
-    <td>select</td>
-    <td>id=classificationType</td>
-    <td>label=Process area</td>
-</tr>
-<tr>
-    <td>type</td>
-    <td>id=classificationName</td>
-    <td>Management</td>
-</tr>
-<tr>
-    <td>click</td>
-    <td>id=addClassification-submit</td>
-    <td></td>
-</tr>
-<tr>
-    <td>click</td>
-    <td>id=addTag</td>
-    <td></td>
-</tr>
-<tr>
-    <td>type</td>
-    <td>id=classificationName</td>
-    <td>Testing</td>
-</tr>
-<tr>
-    <td>click</td>
-    <td>id=addClassification-submit</td>
-    <td></td>
-</tr>
-<tr>
-    <td>click</td>
-    <td>id=addTag</td>
-    <td></td>
-</tr>
-<tr>
-    <td>type</td>
-    <td>id=classificationName</td>
-    <td>Implementation</td>
-</tr>
-<tr>
-    <td>click</td>
-    <td>id=addClassification-submit</td>
-    <td></td>
-</tr>
-
-//Luokittele syy
-<tr>
-    <td>click</td>
-    <td>css=div.radial_div &gt; #radmenu-event-tagCause &gt; a &gt; img</td>
-    <td></td>
-</tr>
-<tr>
-    <td>clickAt</td>
-    <td>//div[text()='Management']</td>
-    <td></td>
-</tr>
-<tr>
-    <td>clickAt</td>
-    <td>//div[text()='Values']</td>
-    <td></td>
-</tr>
-<tr>
-    <td>click</td>
-    <td>id=tagCauseButton</td>
-    <td></td>
-</tr>
-
-//Lisää syy
-<tr>
-    <td>click</td>
-    <td>css=div.radial_div &gt; #radmenu-event-addCause &gt; a &gt; img</td>
-    <td></td>
-</tr>
-<tr>
-    <td>type</td>
-    <td>id=causeName</td>
-    <td>Toinen syy</td>
-</tr>
-<tr>
-    <td>click</td>
-    <td>id=addcause-submit</td>
-    <td></td>
-</tr>
-<tr>
-    <td>waitForTextPresent</td>
-    <td>Toinen syy</td>
-    <td></td>
-</tr>
-
-//Lisää syy
-<tr>
-    <td>clickAt</td>
-    <td>//div[text()='Toinen syy']</td>
-    <td></td>
-</tr>
-<tr>
-    <td>click</td>
-    <td>css=div.radial_div &gt; #radmenu-event-addCause &gt; a &gt; img</td>
-    <td></td>
-</tr>
-<tr>
-    <td>type</td>
-    <td>id=causeName</td>
-    <td>All about testing</td>
-</tr>
-<tr>
-    <td>click</td>
-    <td>id=addcause-submit</td>
-    <td></td>
-</tr>
-<tr>
-    <td>waitForTextPresent</td>
-    <td>All about testing</td>
-    <td></td>
-</tr>
-
-//Lisää syy
-<tr>
-    <td>clickAt</td>
-    <td>//div[text()='Raakasyiden listaus testi']</td>
-    <td></td>
-</tr>
-<tr>
-    <td>click</td>
-    <td>css=div.radial_div &gt; #radmenu-event-addCause &gt; a &gt; img</td>
-    <td></td>
-</tr>
-<tr>
-    <td>type</td>
-    <td>id=causeName</td>
-    <td>Relaatio juureen</td>
-</tr>
-<tr>
-    <td>click</td>
-    <td>id=addcause-submit</td>
-    <td></td>
-</tr>
-<tr>
-    <td>waitForTextPresent</td>
-    <td>Relaatio juureen</td>
-    <td></td>
-</tr>
-
-//Lisää relaatio
-<tr>
-    <td>clickAt</td>
-    <td>//div[text()='Relaatio juureen']</td>
-    <td></td>
-</tr>
-<tr>
-    <td>click</td>
-    <td>css=div.radial_div &gt; #radmenu-event-addRelation &gt; a &gt; img</td>
-    <td></td>
-</tr>
-<tr>
-    <td>clickAt</td>
-    <td>//div[text()='All about testing']</td>
-    <td></td>
-</tr>
-
-//Luokittele syy
-<tr>
-    <td>clickAt</td>
-    <td>//div[text()='Toinen syy']</td>
-    <td></td>
-</tr>
-<tr>
-    <td>click</td>
-    <td>css=div.radial_div &gt; #radmenu-event-tagCause &gt; a &gt; img</td>
-    <td></td>
-</tr>
-<tr>
-    <td>clickAt</td>
-    <td>//div[text()='Testing']</td>
-    <td></td>
-</tr>
-<tr>
-    <td>clickAt</td>
-    <td>//div[text()='Values']</td>
-    <td></td>
-</tr>
-<tr>
-    <td>click</td>
-    <td>id=tagCauseButton</td>
-    <td></td>
-</tr>
-
-//Luokittele syy
-<tr>
-    <td>clickAt</td>
-    <td>//div[text()='Relaatio juureen']</td>
-    <td></td>
-</tr>
-<tr>
-    <td>click</td>
-    <td>css=div.radial_div &gt; #radmenu-event-tagCause &gt; a &gt; img</td>
-    <td></td>
-</tr>
-<tr>
-    <td>clickAt</td>
-    <td>//div[text()='Implementation']</td>
-    <td></td>
-</tr>
-<tr>
-    <td>clickAt</td>
-    <td>//div[text()='Values']</td>
-    <td></td>
-</tr>
-<tr>
-    <td>click</td>
-    <td>id=tagCauseButton</td>
-    <td></td>
-</tr>
-
-//Luokittele syy
-<tr>
-    <td>clickAt</td>
-    <td>//div[text()='All about testing']</td>
-    <td></td>
-</tr>
-<tr>
-    <td>click</td>
-    <td>css=div.radial_div &gt; #radmenu-event-tagCause &gt; a &gt; img</td>
-    <td></td>
-</tr>
-<tr>
-    <td>clickAt</td>
-    <td>//div[text()='Testing']</td>
-    <td></td>
-</tr>
-<tr>
-    <td>clickAt</td>
-    <td>//div[text()='Values']</td>
-    <td></td>
-</tr>
-<tr>
-    <td>click</td>
-    <td>id=tagCauseButton</td>
-    <td></td>
-</tr>
-
-//Lisää relaatio
-<tr>
-    <td>clickAt</td>
-    <td>//div[text()='All about testing']</td>
-    <td></td>
-</tr>
-<tr>
-    <td>click</td>
-    <td>css=div.radial_div &gt; #radmenu-event-addRelation &gt; a &gt; img</td>
-    <td></td>
-</tr>
-<tr>
-    <td>clickAt</td>
-    <td>//div[text()='Relaatio juureen']</td>
-    <td></td>
-</tr>
-
-//Luokittele syy
-<tr>
-    <td>clickAt</td>
-    <td>//div[text()='Relaatio juureen']</td>
-    <td></td>
-</tr>
-<tr>
-    <td>click</td>
-    <td>css=div.radial_div &gt; #radmenu-event-tagCause &gt; a &gt; img</td>
-    <td></td>
-</tr>
-<tr>
-    <td>clickAt</td>
-    <td>//div[text()='Management']</td>
-    <td></td>
-</tr>
-<tr>
-    <td>clickAt</td>
-    <td>//div[text()='Values']</td>
-    <td></td>
-</tr>
-<tr>
-    <td>click</td>
-    <td>id=tagCauseButton</td>
-    <td></td>
-</tr>
-
-//Siirry dimensio näkymään
-<tr>
-    <td>clickAndWait</td>
-    <td>id=dimensionButtonImage</td>
-    <td></td>
-</tr>
-
-<tr>
-    <td>click</td>
-    <td>id=zoomout</td>
-    <td></td>
-</tr>
-<tr>
-    <td>click</td>
-    <td>id=zoomout</td>
-    <td></td>
-</tr>
-<tr>
-    <td>click</td>
-    <td>id=zoomout</td>
-    <td></td>
-</tr>
-<tr>
-    <td>click</td>
-    <td>id=zoomout</td>
-    <td></td>
-</tr>
-<tr>
-    <td>click</td>
-    <td>id=zoomout</td>
-    <td></td>
-</tr>
-<tr>
-    <td>click</td>
-    <td>id=zoomout</td>
-    <td></td>
-</tr>
-<tr>
-    <td>click</td>
-    <td>id=zoomout</td>
-    <td></td>
-</tr>
-<tr>
-    <td>click</td>
-    <td>id=zoomout</td>
-    <td></td>
-</tr>
-<tr>
-    <td>click</td>
-    <td>id=zoomout</td>
-    <td></td>
-</tr>
-<tr>
-    <td>click</td>
-    <td>id=zoomout</td>
-    <td></td>
-</tr>
-<tr>
-    <td>click</td>
-    <td>id=zoomout</td>
-    <td></td>
-</tr>
-<tr>
-    <td>click</td>
-    <td>id=zoomout</td>
-    <td></td>
-</tr>
-<tr>
-    <td>click</td>
-    <td>id=zoomout</td>
-    <td></td>
-</tr>
-<tr>
-    <td>click</td>
-    <td>id=zoomout</td>
-    <td></td>
-</tr>
-<tr>
-    <td>click</td>
-    <td>id=zoomout</td>
-    <td></td>
-</tr>
-<tr>
-    <td>click</td>
-    <td>id=zoomout</td>
-    <td></td>
-</tr>
-
-<tr>
-    <td>click</td>
-    <td>id=configurationImage</td>
-    <td></td>
-</tr>
-<tr>
-    <td>dragAndDrop</td>
-    <td>id=slider-simplicity</td>
-    <td>100, 0</td>
-</tr>
-
-<tr>
-    <td>waitForTextPresent</td>
-    <td>Testing</td>
-    <td></td>
-</tr>
-<tr>
-    <td>waitForTextNotPresent</td>
-    <td>Implementation</td>
-    <td></td>
-</tr>
-
-<tr>
-    <td>dragAndDrop</td>
-    <td>id=slider-simplicity</td>
-    <td>-20, 0</td>
-</tr>
-<tr>
-    <td>waitForTextPresent</td>
-    <td>Implementation</td>
-    <td></td>
-</tr>
-
-<tr>
-    <td>dragAndDrop</td>
-    <td>id=slider-weighting</td>
-    <td>160, 0</td>
-</tr>
-<tr>
-    <td>waitForTextNotPresent</td>
-    <td>Management</td>
-    <td></td>
-</tr>
-<tr>
-    <td>dragAndDrop</td>
-    <td>id=slider-weighting</td>
-    <td>-160, 0</td>
-</tr>
-<tr>
-    <td>waitForTextPresent</td>
-    <td>Management</td>
-    <td></td>
-</tr>
-
-</tbody></table>
-</body>
-</html>
+#{fixture delete:'all', load:'data.yml' /}
+#{selenium}
+open('/logout')
+waitForPageToLoad('')
+type('id=username','admin@local')
+type('id=password','admin')
+clickAndWait('id=signin')
+clickAndWait('id=createRCACase-link')
+type('id=caseName','Raakasyiden listaus testi')
+click('id=isCasePublicYes')
+clickAndWait('id=create')
+waitForTextPresent('Raakasyiden listaus testi')
+clickAt('//div[text()='Raakasyiden listaus testi']')
+click('css=div.radial_div > #radmenu-event-addCause > a > img')
+type('id=causeName','Tämä syy on kiinni juuri nodessa')
+click('id=addcause-submit')
+waitForTextPresent('Tämä syy on kiinni juuri nodessa')
+clickAt('//div[text()='Tämä syy on kiinni juuri nodessa']')
+click('css=div.radial_div > #radmenu-event-tagCause > a > img')
+click('css=#tagcause-modal > form > div.modal-footer > a.btn.secondary')
+click('id=tagIcon')
+click('id=addTag')
+type('id=classificationName','Values')
+click('id=addClassification-submit')
+click('id=addTag')
+type('id=classificationName','Methods')
+click('id=addClassification-submit')
+click('id=addTag')
+select('id=classificationType','label=Process area')
+type('id=classificationName','Management')
+click('id=addClassification-submit')
+click('id=addTag')
+type('id=classificationName','Testing')
+click('id=addClassification-submit')
+click('id=addTag')
+type('id=classificationName','Implementation')
+click('id=addClassification-submit')
+click('css=div.radial_div > #radmenu-event-tagCause > a > img')
+clickAt('//div[text()='Management']')
+clickAt('//div[text()='Values']')
+click('id=tagCauseButton')
+click('css=div.radial_div > #radmenu-event-addCause > a > img')
+type('id=causeName','Toinen syy')
+click('id=addcause-submit')
+waitForTextPresent('Toinen syy')
+clickAt('//div[text()='Toinen syy']')
+click('css=div.radial_div > #radmenu-event-addCause > a > img')
+type('id=causeName','All about testing')
+click('id=addcause-submit')
+waitForTextPresent('All about testing')
+clickAt('//div[text()='Raakasyiden listaus testi']')
+click('css=div.radial_div > #radmenu-event-addCause > a > img')
+type('id=causeName','Relaatio juureen')
+click('id=addcause-submit')
+waitForTextPresent('Relaatio juureen')
+clickAt('//div[text()='Relaatio juureen']')
+click('css=div.radial_div > #radmenu-event-addRelation > a > img')
+clickAt('//div[text()='All about testing']')
+clickAt('//div[text()='Toinen syy']')
+click('css=div.radial_div > #radmenu-event-tagCause > a > img')
+clickAt('//div[text()='Testing']')
+clickAt('//div[text()='Values']')
+click('id=tagCauseButton')
+clickAt('//div[text()='Relaatio juureen']')
+click('css=div.radial_div > #radmenu-event-tagCause > a > img')
+clickAt('//div[text()='Implementation']')
+clickAt('//div[text()='Values']')
+click('id=tagCauseButton')
+clickAt('//div[text()='All about testing']')
+click('css=div.radial_div > #radmenu-event-tagCause > a > img')
+clickAt('//div[text()='Testing']')
+clickAt('//div[text()='Values']')
+click('id=tagCauseButton')
+clickAt('//div[text()='All about testing']')
+click('css=div.radial_div > #radmenu-event-addRelation > a > img')
+clickAt('//div[text()='Relaatio juureen']')
+clickAt('//div[text()='Relaatio juureen']')
+click('css=div.radial_div > #radmenu-event-tagCause > a > img')
+clickAt('//div[text()='Management']')
+clickAt('//div[text()='Values']')
+click('id=tagCauseButton')
+clickAndWait('id=dimensionButtonImage')
+click('id=zoomout')
+click('id=zoomout')
+click('id=zoomout')
+click('id=zoomout')
+click('id=zoomout')
+click('id=zoomout')
+click('id=zoomout')
+click('id=zoomout')
+click('id=zoomout')
+click('id=zoomout')
+click('id=zoomout')
+click('id=zoomout')
+click('id=zoomout')
+click('id=zoomout')
+click('id=zoomout')
+click('id=zoomout')
+click('id=configurationImage')
+setSpeed(200)
+dragAndDrop('id=slider-simplicity','100, 0')
+waitForTextPresent('Testing')
+waitForTextNotPresent('Implementation')
+dragAndDrop('id=slider-simplicity','-20, 0')
+waitForTextPresent('Implementation')
+dragAndDrop('id=slider-weighting','160, 0')
+waitForTextNotPresent('Management')
+dragAndDrop('id=slider-weighting','-160, 0')
+waitForTextPresent('Management')
+setSpeed(0)
+#{/selenium}
