@@ -131,7 +131,7 @@ public class RegisterController extends Controller {
 				}
 				Logger.info("User with email %s logged in via Google login", email);
 				session.put("username", email);
-				IndexPageController.index();
+				SecurityController.onAuthenticated();
 			}
 		} else {
 			redirectToGoogleLogin();
