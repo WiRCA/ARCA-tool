@@ -29,10 +29,12 @@
 #{set 'pageHeaderSmall'}#{/set}
 #{set 'activePage'}index#{/set}
 
+#{set 'moreScripts'}
 <script src="@{'/public/javascripts/bootstrap-twipsy.js'}" type="text/javascript" charset="${_response_encoding}"></script>
 <script src="@{'/public/javascripts/bootstrap-popover.js'}" type="text/javascript" charset="${_response_encoding}"></script>
 <script src="@{'/public/javascripts/bootstrap-tabs.js'}" type="text/javascript" charset="${_response_encoding}"></script>
 <script src="@{'/public/javascripts/jquery.tablesorter.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+#{/set}
 
 <script type="text/javascript">
         $(function () {
@@ -116,19 +118,29 @@
     });
 
         $("#ownCasesTable").tablesorter({
-            sortList:[[2,1]],
-            headers: { 3: { sorter: false}},
-            dateFormat: "dd.mm.yy"
+            // Modified, descending
+            sortList:[[1,1]],
+            headers: {
+                1: { sorter: "shortDate", dateFormat: "ddmmyyyy" },
+                2: { sorter: "shortDate", dateFormat: "ddmmyyyy" },
+                3: { sorter: false}
+            }
         });
         $("#privateCasesTable").tablesorter({
-            sortList:[[2,1]],
-            headers: { 4: { sorter: false}},
-            dateFormat: "dd.mm.yy"
+            sortList:[[1,1]],
+            headers: {
+                1: { sorter: "shortDate", dateFormat: "ddmmyyyy" },
+                2: { sorter: "shortDate", dateFormat: "ddmmyyyy" },
+                4: { sorter: false}
+            }
         });
         $("#publicCasesTable").tablesorter({
-            sortList:[[2,1]],
-            headers: { 4: { sorter: false}},
-            dateFormat: "dd.mm.yy"
+            sortList:[[1,1]],
+            headers: {
+                1: { sorter: "shortDate", dateFormat: "ddmmyyyy" },
+                2: { sorter: "shortDate", dateFormat: "ddmmyyyy" },
+                4: { sorter: false}
+            }
         });
     });
 

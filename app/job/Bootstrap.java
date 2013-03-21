@@ -172,7 +172,7 @@ public class Bootstrap extends Job {
 			adminsPrivateCase.companyProducts = "ARCA-tool";
 	        adminsPrivateCase.isCasePublic = false;
 	        adminsPrivateCase.problem = new Cause(adminsPrivateCase, adminsPrivateCase.caseName, admin).save();
-            calendar.set(2011,Calendar.DECEMBER,02,11,31);
+            calendar.set(2013,Calendar.JANUARY,8,13,2);
             adminsPrivateCase.created = calendar.getTime();
             adminsPrivateCase.save();
 	        admin.addRCACase(adminsPrivateCase);
@@ -192,7 +192,7 @@ public class Bootstrap extends Job {
 	        adminsOwnPrivateCase.companyProducts = "ARCA-tool";
             adminsOwnPrivateCase.isCasePublic = false;
             adminsOwnPrivateCase.problem = new Cause(adminsOwnPrivateCase, adminsOwnPrivateCase.caseName, admin).save();
-            calendar.set(2012,Calendar.JUNE,05,10,30);
+            calendar.set(2012,Calendar.OCTOBER,10,10,31);
             adminsOwnPrivateCase.created = calendar.getTime();
             adminsOwnPrivateCase.save();
             admin.addRCACase(adminsOwnPrivateCase);
@@ -210,7 +210,7 @@ public class Bootstrap extends Job {
 			adminsPublicCase.companyProducts = "ARCA-tool";
 	        adminsPublicCase.isCasePublic = true;
 	        adminsPublicCase.problem = new Cause(adminsPublicCase, adminsPublicCase.caseName, admin).save();
-            calendar.set(2011,Calendar.DECEMBER,6,22,12);
+            calendar.set(2012,Calendar.MAY,8,9,40);
             adminsPublicCase.created = calendar.getTime();
             adminsPublicCase.save();
 	        admin.addRCACase(adminsPublicCase);
@@ -218,22 +218,165 @@ public class Bootstrap extends Job {
 	        tester.addRCACase(adminsPublicCase);
 	        tester.save();
 
+            RCACase test1 = new RCACase(admin);
+            test1.caseName = "";
+            test1.caseName = "the first date sorting test case";
+            test1.caseTypeValue = 2;
+            test1.caseGoals = "Test the program";
+            test1.companySizeValue = 2;
+            test1.description = "We are going to save the world with our ARCA-tool!";
+            test1.isMultinational = true;
+            test1.companyName = "WiRCA";
+            test1.companyProducts = "ARCA-tool";
+            test1.isCasePublic = true;
+            test1.problem = new Cause(test1, test1.caseName, admin).save();
+            calendar.set(2011,Calendar.DECEMBER,9,9,44);
+            test1.created = calendar.getTime();
+            test1.save();
+            admin.addRCACase(test1);
+            admin.save();
 
-	        Classification classification1 = new Classification(adminsPublicCase,"Management",admin,ClassificationDimension.WHERE_DIMENSION_ID,
+            RCACase test2 = new RCACase(admin);
+            test2.caseName = "";
+            test2.caseName = "test case number 2";
+            test2.caseTypeValue = 2;
+            test2.caseGoals = "Test the program";
+            test2.companySizeValue = 2;
+            test2.description = "We are going to save the world with our ARCA-tool!";
+            test2.isMultinational = true;
+            test2.companyName = "WiRCA";
+            test2.companyProducts = "ARCA-tool";
+            test2.isCasePublic = true;
+            test2.problem = new Cause(test2, test2.caseName, admin).save();
+            calendar.set(2011,Calendar.DECEMBER,9,9,45);
+            test2.created = calendar.getTime();
+            test2.save();
+            admin.addRCACase(test2);
+            admin.save();
+
+            RCACase test3 = new RCACase(admin);
+            test3.caseName = "";
+            test3.caseName = "everybody should 3 test date sorting!";
+            test3.caseTypeValue = 2;
+            test3.caseGoals = "Test the program";
+            test3.companySizeValue = 2;
+            test3.description = "We are going to save the world with our ARCA-tool!";
+            test3.isMultinational = true;
+            test3.companyName = "WiRCA";
+            test3.companyProducts = "ARCA-tool";
+            test3.isCasePublic = true;
+            test3.problem = new Cause(test3, test3.caseName, admin).save();
+            calendar.set(2012,Calendar.FEBRUARY,28,9,4);
+            test3.created = calendar.getTime();
+            test3.save();
+            admin.addRCACase(test3);
+            admin.save();
+
+            RCACase test4 = new RCACase(admin);
+            test4.caseName = "";
+            test4.caseName = "4 why to test date sorting?";
+            test4.caseTypeValue = 2;
+            test4.caseGoals = "Test the program";
+            test4.companySizeValue = 2;
+            test4.description = "We are going to save the world with our ARCA-tool!";
+            test4.isMultinational = true;
+            test4.companyName = "WiRCA";
+            test4.companyProducts = "ARCA-tool";
+            test4.isCasePublic = true;
+            test4.problem = new Cause(test4, test4.caseName, admin).save();
+            calendar.set(2011,Calendar.NOVEMBER,29,21,2);
+            test4.created = calendar.getTime();
+            test4.save();
+            admin.addRCACase(test4);
+            admin.save();
+
+            RCACase test5 = new RCACase(admin);
+            test5.caseName = "";
+            test5.caseName = "TESTING TIMESTAMPS 5";
+            test5.caseTypeValue = 2;
+            test5.caseGoals = "Test the program";
+            test5.companySizeValue = 2;
+            test5.description = "We are going to save the world with our ARCA-tool!";
+            test5.isMultinational = true;
+            test5.companyName = "WiRCA";
+            test5.companyProducts = "ARCA-tool";
+            test5.isCasePublic = true;
+            test5.problem = new Cause(test5, test5.caseName, admin).save();
+            calendar.set(2012,Calendar.FEBRUARY,21,8,53);
+            test5.created = calendar.getTime();
+            test5.save();
+            admin.addRCACase(test5);
+            admin.save();
+
+            RCACase test6 = new RCACase(admin);
+            test6.caseName = "";
+            test6.caseName = "case test 6";
+            test6.caseTypeValue = 2;
+            test6.caseGoals = "Test the program";
+            test6.companySizeValue = 2;
+            test6.description = "We are going to save the world with our ARCA-tool!";
+            test6.isMultinational = true;
+            test6.companyName = "WiRCA";
+            test6.companyProducts = "ARCA-tool";
+            test6.isCasePublic = true;
+            test6.problem = new Cause(test6, test6.caseName, admin).save();
+            calendar.set(2013,Calendar.FEBRUARY,26,12,24);
+            test6.created = calendar.getTime();
+            test6.save();
+            admin.addRCACase(test6);
+            admin.save();
+
+            RCACase test7 = new RCACase(admin);
+            test7.caseName = "";
+            test7.caseName = "testing 7!";
+            test7.caseTypeValue = 2;
+            test7.caseGoals = "Test the program";
+            test7.companySizeValue = 2;
+            test7.description = "We are going to save the world with our ARCA-tool!";
+            test7.isMultinational = true;
+            test7.companyName = "WiRCA";
+            test7.companyProducts = "ARCA-tool";
+            test7.isCasePublic = true;
+            test7.problem = new Cause(test7, test7.caseName, admin).save();
+            calendar.set(2012,Calendar.AUGUST,31,11,58);
+            test7.created = calendar.getTime();
+            test7.save();
+            admin.addRCACase(test7);
+            admin.save();
+
+            RCACase test8 = new RCACase(admin);
+            test8.caseName = "";
+            test8.caseName = "test 8";
+            test8.caseTypeValue = 2;
+            test8.caseGoals = "Test the program";
+            test8.companySizeValue = 2;
+            test8.description = "We are going to save the world with our ARCA-tool!";
+            test8.isMultinational = true;
+            test8.companyName = "WiRCA";
+            test8.companyProducts = "ARCA-tool";
+            test8.isCasePublic = true;
+            test8.problem = new Cause(test8, test8.caseName, admin).save();
+            calendar.set(2012,Calendar.AUGUST,31,11,58);
+            test8.created = calendar.getTime();
+            test8.save();
+            admin.addRCACase(test8);
+            admin.save();
+
+	        Classification classification1 = new Classification(test2,"Management",admin,ClassificationDimension.WHERE_DIMENSION_ID,
 	                                                            "MA", "MA");
-	        Classification classification2 = new Classification(adminsPublicCase,"Software Testing",admin,ClassificationDimension.WHERE_DIMENSION_ID,
+	        Classification classification2 = new Classification(test2,"Software Testing",admin,ClassificationDimension.WHERE_DIMENSION_ID,
 	                                                            "ST", "ST");
-	        Classification classification3 = new Classification(adminsPublicCase,"Implementation Work",admin,ClassificationDimension.WHERE_DIMENSION_ID,
+	        Classification classification3 = new Classification(test2,"Implementation Work",admin,ClassificationDimension.WHERE_DIMENSION_ID,
 	                                                            "IM", "IM");
-	        Classification classification4 = new Classification(adminsPublicCase,"Work Practices",admin,ClassificationDimension.WHAT_DIMENSION_ID,
+	        Classification classification4 = new Classification(test2,"Work Practices",admin,ClassificationDimension.WHAT_DIMENSION_ID,
 	                                                            "WP", "WP");
-	        Classification classification5 = new Classification(adminsPublicCase,"Methods",admin,ClassificationDimension.WHAT_DIMENSION_ID,
+	        Classification classification5 = new Classification(test2,"Methods",admin,ClassificationDimension.WHAT_DIMENSION_ID,
 	                                                            "ME", "ME");
-	        Classification classification6 = new Classification(adminsPublicCase,"Task Priority",admin,ClassificationDimension.WHAT_DIMENSION_ID,
+	        Classification classification6 = new Classification(test2,"Task Priority",admin,ClassificationDimension.WHAT_DIMENSION_ID,
 	                                                            "TP", "TP");
-	        Classification classification7 = new Classification(adminsPublicCase,"Monitoring",admin,ClassificationDimension.WHAT_DIMENSION_ID,
+	        Classification classification7 = new Classification(test2,"Monitoring",admin,ClassificationDimension.WHAT_DIMENSION_ID,
 	                                                            "MO", "MO");
-	        Classification classification8 = new Classification(adminsPublicCase,"Co-operation",admin,ClassificationDimension.WHAT_DIMENSION_ID,
+	        Classification classification8 = new Classification(test2,"Co-operation",admin,ClassificationDimension.WHAT_DIMENSION_ID,
 	                                                            "CO", "CO");
 	        classification1.save();
 	        classification2.save();
