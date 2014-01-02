@@ -82,7 +82,9 @@ public class CauseController extends Controller {
 		AddCauseEvent event = new AddCauseEvent(newCause, causeId, newCause.xCoordinate, newCause.yCoordinate, classify);
 		CauseStream causeEvents = rcaCase.getCauseStream();
 		causeEvents.getStream().publish(event);
-		Logger.debug("Cause %s added to cause %s", name, cause);
+		if (Logger.isDebugEnabled()) {
+			Logger.debug("Cause %s added to cause %s", name, cause);
+		}
 	}
 
 	/**
@@ -109,7 +111,9 @@ public class CauseController extends Controller {
 		AddRelationEvent event = new AddRelationEvent(causeId, toId);
 		CauseStream causeEvents = rcaCase.getCauseStream();
 		causeEvents.getStream().publish(event);
-		Logger.debug("Relation added between %s and %s", causeFrom, causeTo);
+		if (Logger.isDebugEnabled()) {
+			Logger.debug("Relation added between %s and %s", causeFrom, causeTo);
+		}
 	}
 	
 	/**
@@ -143,7 +147,9 @@ public class CauseController extends Controller {
 		AddCorrectionEvent event = new AddCorrectionEvent(causeTo, name, description);
 		CauseStream causeEvents = rcaCase.getCauseStream();
 		causeEvents.getStream().publish(event);
-		Logger.debug("Correction added to cause %s: %s", causeTo.name, description);
+		if (Logger.isDebugEnabled()) {
+			Logger.debug("Correction added to cause %s: %s", causeTo.name, description);
+		}
 	}
 
 	/**
@@ -168,13 +174,17 @@ public class CauseController extends Controller {
 		DeleteCauseEvent deleteEvent = new DeleteCauseEvent(cause);
 		CauseStream causeEvents = rcaCase.getCauseStream();
 		causeEvents.getStream().publish(deleteEvent);
-		Logger.debug("Cause %s deleted", cause);
+		if (Logger.isDebugEnabled()) {
+			Logger.debug("Cause %s deleted", cause);
+		}
 	}
 
 	public static void deleteRelation(Long causeId, Long toId) {
 		Cause fromCause = Cause.findById(causeId);
 		Cause toCause = Cause.findById(toId);
-		Logger.debug(fromCause + " -> " + toCause);
+		if (Logger.isDebugEnabled()) {
+			Logger.debug(fromCause + " -> " + toCause);
+		}
 
 		RCACase rcaCase = fromCause.rcaCase;
 		Relation relation = Relation.findByCauses(fromCause, toCause);
@@ -191,7 +201,9 @@ public class CauseController extends Controller {
 		DeleteRelationEvent deleteEvent = new DeleteRelationEvent(fromCause, toCause);
 		CauseStream causeEvents = rcaCase.getCauseStream();
 		causeEvents.getStream().publish(deleteEvent);
-		Logger.debug("Relation from %s to %s deleted", fromCause.name, toCause.name);
+		if (Logger.isDebugEnabled()) {
+			Logger.debug("Relation from %s to %s deleted", fromCause.name, toCause.name);
+		}
 	}
 
 	private static boolean userIsAllowedToDeleteAndRename(Cause cause, RCACase rcaCase) {
@@ -220,7 +232,9 @@ public class CauseController extends Controller {
 
 		CauseStream causeStream = rcaCase.getCauseStream();
 		causeStream.getStream().publish(movedEvent);
-		Logger.debug("Cause %s moved to x:%d, y:%d", cause, x, y);
+		if (Logger.isDebugEnabled()) {
+			Logger.debug("Cause %s moved to x:%d, y:%d", cause, x, y);
+		}
 	}
 
 	/**
@@ -243,7 +257,9 @@ public class CauseController extends Controller {
 		CauseStream causeEvents = rcaCase.getCauseStream();
 		causeEvents.getStream().publish(event);
 
-		Logger.debug("Cause %s liked by %s", cause, user);
+		if (Logger.isDebugEnabled()) {
+			Logger.debug("Cause %s liked by %s", cause, user);
+		}
 		String likeData = String.format("{\"count\":%d,\"hasliked\":%b,\"isowner\":%b}", cause.countLikes(),
             cause.hasUserLiked(user), user.equals(rcaCase.getOwner()));
 		renderJSON(likeData);
@@ -268,7 +284,9 @@ public class CauseController extends Controller {
 		CauseStream causeEvents = rcaCase.getCauseStream();
 		causeEvents.getStream().publish(event);
 
-		Logger.debug("Cause %s disliked by %s", cause, user);
+		if (Logger.isDebugEnabled()) {
+			Logger.debug("Cause %s disliked by %s", cause, user);
+		}
 
 		String likeData = String.format("{\"count\":%d,\"hasliked\":%b,\"isowner\":%b}", cause.countLikes(),
             cause.hasUserLiked(user), user.equals(rcaCase.getOwner()));
@@ -302,7 +320,9 @@ public class CauseController extends Controller {
 		CauseRenameEvent event = new CauseRenameEvent(causeId, name);
 		CauseStream causeEvents = rcaCase.getCauseStream();
 		causeEvents.getStream().publish(event);
-		Logger.debug("Cause %s renamed to cause %s", oldName, name);
+		if (Logger.isDebugEnabled()) {
+			Logger.debug("Cause %s renamed to cause %s", oldName, name);
+		}
 	}
 
 
@@ -365,7 +385,9 @@ public class CauseController extends Controller {
 		CauseStream causeEvents = rcaCase.getCauseStream();
 		CauseClassificationEvent event = new CauseClassificationEvent(causeId, classificationPairs);
 		causeEvents.getStream().publish(event);
-		Logger.debug("Case %s reclassified with %d pair(s)", cause.name, classificationPairs.size());
+		if (Logger.isDebugEnabled()) {
+			Logger.debug("Case %s reclassified with %d pair(s)", cause.name, classificationPairs.size());
+		}
 	}
 
 	private static boolean userAllowedToLike(User user, RCACase rcaCase, Cause cause) {

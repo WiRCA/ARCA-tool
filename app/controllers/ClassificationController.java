@@ -94,8 +94,10 @@ public class ClassificationController extends Controller {
 		                                                          abbreviation, explanation);
 		CauseStream causeEvents = rcaCase.getCauseStream();
 		causeEvents.getStream().publish(event);
-		Logger.debug("Classification %s (%s) added for case %s", name, ClassificationDimension.valueOf(type),
-		                                                         rcaCase.caseName);
+		if (Logger.isDebugEnabled()) {
+			Logger.debug("Classification %s (%s) added for case %s", name, ClassificationDimension.valueOf(type),
+			             rcaCase.caseName);
+		}
 		renderJSON("{\"success\": true}");
 	}
 
@@ -155,8 +157,10 @@ public class ClassificationController extends Controller {
 		                                                            abbreviation, explanation);
 		CauseStream causeEvents = rcaCase.getCauseStream();
 		causeEvents.getStream().publish(event);
-		Logger.debug("Classification %s (%s) edited for case %s", name, ClassificationDimension.valueOf(type),
-		             rcaCase.caseName);
+		if (Logger.isDebugEnabled()) {
+			Logger.debug("Classification %s (%s) edited for case %s", name, ClassificationDimension.valueOf(type),
+			             rcaCase.caseName);
+		}
 		renderJSON("{\"success\": true}");
 	}
 
@@ -203,7 +207,9 @@ public class ClassificationController extends Controller {
 		                                                                classification.classificationDimension);
 		CauseStream causeEvents = rcaCase.getCauseStream();
 		causeEvents.getStream().publish(event);
-		Logger.debug("Classification #%d removed from case %s", classificationId, rcaCase.caseName);
+		if (Logger.isDebugEnabled()) {
+			Logger.debug("Classification #%d removed from case %s", classificationId, rcaCase.caseName);
+		}
 		renderJSON("{\"success\": true}");
 	}
 

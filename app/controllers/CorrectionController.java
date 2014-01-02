@@ -73,7 +73,9 @@ public class CorrectionController extends Controller {
 		} else if (!correction.hasUserLiked(user)) {
 			correction.like(user);
 		}
-		Logger.debug("Correction %s liked by %s", correction, user);
+		if (Logger.isDebugEnabled()) {
+			Logger.debug("Correction %s liked by %s", correction, user);
+		}
 
 		String likeData = String.format("{\"count\":%d,\"hasliked\":%b,\"isowner\":%b}", correction.countLikes(),
 		                                correction.hasUserLiked(user), user.equals(rcaCase.getOwner()));
@@ -94,7 +96,9 @@ public class CorrectionController extends Controller {
 			return;
 		}
 		correction.dislike(user);
-		Logger.debug("Correction %s disliked by %s", correction, user);
+		if (Logger.isDebugEnabled()) {
+			Logger.debug("Correction %s disliked by %s", correction, user);
+		}
 		String likeData = String.format("{\"count\":%d,\"hasliked\":%b,\"isowner\":%b}", correction.countLikes(),
 		                                correction.hasUserLiked(user), user.equals(rcaCase.getOwner()));
 
