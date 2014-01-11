@@ -34,191 +34,50 @@
 <script src="@{'/public/javascripts/bootstrap-popover.js'}" type="text/javascript" charset="${_response_encoding}"></script>
 <script src="@{'/public/javascripts/bootstrap-tabs.js'}" type="text/javascript" charset="${_response_encoding}"></script>
 <script src="@{'/public/javascripts/jquery.tablesorter.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+<script src="@{'/public/javascripts/user-index.js'}" type="text/javascript" charset="${_response_encoding}"></script>
 #{/set}
 
+#{i18n /}
 <script type="text/javascript">
-        $(function () {
-        $("a[rel=popover]")
-        .popover({
-        offset: 10
-        })
-        })
-    </script>
-<script type="text/javascript">
-    var getRCACaseUsers = #{jsAction @RCACaseController.getUsers(':rcaCaseId') /};
-    var inviteUserAction = #{jsAction @RCACaseController.inviteUser(':rcaCaseId', ':invitedEmail') /};
-    var removeUserAction = #{jsAction @RCACaseController.removeUser(':rcaCaseId', ':isInvitedUser', ':email') /};
-
-    $(function() {
-
-    $("#rcacase-share-dialog-success").hide();
-    $("#rcacase-share-dialog-invalidEmail").hide();
-	$("#rcacase-share-dialog-alreadyInvited").hide();
-    $("#rcacase-share-dialog").dialog({
-    autoOpen: false,
-    height: 400,
-    width: 500,
-    modal: true,
-    buttons: {
-    "&{'rcacase.share.dialog.close'}": function() {
-    $( this ).dialog( "close" );
-    }
-    },
-    close: function() {
-    $("table#rcacase-share-dialog-persons").remove();
-    $("#rcacase-share-dialog-invitedEmail-input").val("");
-    $("#rcacase-share-dialog-rcaCaseId-input").val("");
-    $("#rcacase-share-dialog-invitedEmail-error").hide();
-	$("#rcacase-share-dialog-invalidEmail").hide();
-	$("#rcacase-share-dialog-alreadyInvited").hide();
-    }
-    });
-
-    $("#rcacase-share-dialog-share-form").submit(function() {
-    var rcaId = $("#rcacase-share-dialog-rcaCaseId-input").val();
-    var email = $.trim($("#rcacase-share-dialog-invitedEmail-input").val());
-
-	/* Check if the input is an empty string */
-	if(email == undefined || email == "") {
-	    $("#rcacase-share-dialog-invalidEmail").show();
-	    $("#rcacase-share-dialog-invalidEmail").delay(1700).fadeOut(1600, "linear");
-	    $("#rcacase-share-dialog-invitedEmail-error").show();
-		return false;
-	}
-
-    /* Check if user exists already */
-    if ($('#rcacase-share-dialog-persons tr').find('td[name="' + email + '"]').length > 0) {
-    $("#rcacase-share-dialog-invitedEmail-input").val("");
-	$("#rcacase-share-dialog-alreadyInvited").show();
-    $("#rcacase-share-dialog-alreadyInvited").delay(1700).fadeOut(1600, "linear");
-    $("#rcacase-share-dialog-invitedEmail-error").hide();
-    return false
-    }
-
-    $.getJSON(inviteUserAction({rcaCaseId: rcaId, invitedEmail: email}), function(data) {
-    if (data.invalidEmail == "true") {
-    $("#rcacase-share-dialog-invalidEmail").show();
-    $("#rcacase-share-dialog-invalidEmail").delay(1700).fadeOut(1600, "linear");
-    $("#rcacase-share-dialog-invitedEmail-error").show();
-    } else {
-    var invited = data.invited == "true" ? "invited-" : "";
-    $('<tr id="user-' + invited + data.id + '">'+
-       '<td>'+data.name+'</td>'+
-        '<td name="' + data.email + '">'+data.email+'</td>'+
-        '<td><a href="#" style="color:red;" id="remove-user-share">'+
-        '&{"rcacase.share.dialog.remove"}'+'</a></td>'+
-        '</tr>').appendTo("table#rcacase-share-dialog-persons");
-    $("#rcacase-share-dialog-invitedEmail-input").val("");
-    $("#rcacase-share-dialog-invitedEmail-error").hide();
-    $("#rcacase-share-dialog-success").show();
-    $("#rcacase-share-dialog-success").delay(1700).fadeOut(1600, "linear");
-    }
-    });
-    return false;
-    });
-
-        $("#ownCasesTable").tablesorter({
-            // Modified, descending
-            sortList:[[1,1]],
-            headers: {
-                1: { sorter: "shortDate", dateFormat: "ddmmyyyy" },
-                2: { sorter: "shortDate", dateFormat: "ddmmyyyy" },
-                3: { sorter: false}
-            }
-        });
-        $("#privateCasesTable").tablesorter({
-            sortList:[[1,1]],
-            headers: {
-                1: { sorter: "shortDate", dateFormat: "ddmmyyyy" },
-                2: { sorter: "shortDate", dateFormat: "ddmmyyyy" },
-                4: { sorter: false}
-            }
-        });
-        $("#publicCasesTable").tablesorter({
-            sortList:[[1,1]],
-            headers: {
-                1: { sorter: "shortDate", dateFormat: "ddmmyyyy" },
-                2: { sorter: "shortDate", dateFormat: "ddmmyyyy" },
-                4: { sorter: false}
-            }
-        });
-    });
-
-    $("a[id^='rcacase-share-']").live("click", function () {
-    var id = this.id.replace("rcacase-share-", "");
-    $.getJSON(getRCACaseUsers({rcaCaseId: id}), function(data) {
-    var users = [];
-    for (i in data) {
-    var user = data[i];
-    var removeLink = "${session.username}" == user.email ? "" :
-    '<a href="#" style="color:red;" id="remove-user-share">&{"rcacase.share.dialog.remove"}</a>';
-    var invited = user.invitedUser == "true" ? "invited-" : "";
-    users.push('<tr id="user-' + invited + user.id + '">'+
-        '<td>'+user.name+'</td>'+
-        '<td name="' + user.email + '">'+user.email+'</td>'+
-        '<td>' + removeLink + '</td>'+'</tr>');
-    }
-    $("<table/>", {'id': 'rcacase-share-dialog-persons',
-    'html': "<tr><th>&{'rcacase.share.dialog.name'}</th>" +
-        "<th>&{'rcacase.share.dialog.email'}</th>" +
-        "<th>&{'rcacase.share.dialog.actions'}</th></tr>"+
-    users.join('')
-    }).appendTo("#rcacase-share-dialog");
-
-    $("#rcacase-share-dialog-invitedEmail-error").hide();
-    $("#rcacase-share-dialog-rcaCaseId-input").val(id);
-    $("#rcacase-share-dialog").dialog( "open" );
-    var width = $("table#rcacase-share-dialog-persons").width();
-    $("#rcacase-share-dialog").dialog( "option", "width", width+100 );
-    $("#rcacase-share-dialog").css("height", "auto");
-    });
-    });
-
-    $("a#remove-user-share").live("click", function() {
-    var rcaId = $("#rcacase-share-dialog-rcaCaseId-input").val();
-    var email = $(this).parent().prev().html();
-    var tr = $(this).parents("tr");
-    var trId = $(tr).attr("id");
-    var isInvitedUser = trId.indexOf("user-invited-") != -1;
-    $.getJSON(removeUserAction({rcaCaseId: rcaId, isInvitedUser: isInvitedUser, email: email}), function(data) {
-    if (data.success == "true") {
-    $(tr).remove();
-    }
-    });
-    });
+    window.arca = {
+        currentUsername: "${session.username}",
+        ajax: {
+            getRCACaseUsers: #{jsAction @RCACaseController.getUsers(':rcaCaseId') /},
+            inviteUserAction: #{jsAction @RCACaseController.inviteUser(':rcaCaseId', ':invitedEmail') /},
+            removeUserAction: #{jsAction @RCACaseController.removeUser(':rcaCaseId', ':isInvitedUser', ':email') /}
+        }
+    };
 </script>
 
 <p>
 #{a @RCACaseController.createRCACase(), id:'createRCACase-link', class:'btn large primary'}&{'user.createRCACase'}#{/a}
 </p>
 
-<ul class="tabs" data-tabs="tabs">
-    <li class="active"><a href="#mycases">&{'user.myCases'}</a></li>
-    <li><a href="#privatecases">&{'user.sharedCases'}</a></li>
-</ul>
-
 <div id="my-tab-content" class="tab-content">
-    <div class="active tab-pane" id="mycases">
-<h2>&{'user.myCases'}</h2>
-    #{if !myCases.empty}
+<h2>&{'user.allCases'}</h2>
+    #{if !cases.empty}
     <table id="ownCasesTable" class="table zebra-striped condensed-table">
         <thead>
         <tr>
             <th>&{'user.table.title.caseName'}</th>
             <th>&{'user.table.title.modified'}</th>
             <th>&{'user.table.title.created'}</th>
+            <th>&{'user.table.title.owner'}</th>
             <th>&{'user.table.title.actions'}</th>
         </tr>
         </thead>
         <tbody>
-    #{list items:myCases, as:'rcaCase'}
+    #{list items:cases, as:'rcaCase'}
         <tr>
             <td>#{a @PublicRCACaseController.show(rcaCase.URLHash), class:'ellipsis caseTitle', id:'show-rcacase-'+rcaCase.id+'-link', rel:'popover',
             title:"${rcaCase.caseName.escape().escape().raw()}", 'data-content':"${rcaCase.description.escape().escape().raw()}"}${rcaCase.caseName.escape().raw()}#{/a}</td>
             <td>${rcaCase.updated.format() + " " + rcaCase.updated.format("HH:mm")}</td>
             <td>${rcaCase.created.format() + " " + rcaCase.created.format("HH:mm")}</td>
+            <td>${rcaCase.owner.name}</td>
             <td>
-                <a id="rcacase-share-${rcaCase.id}" href="javascript:;" class="btn small primary">&{'rcacase.share'}</a>
+                #{if user == rcaCase.owner}
+                    <a id="rcacase-share-${rcaCase.id}" href="javascript:;" class="btn small primary">&{'rcacase.share'}</a>
+                #{/if}
                 #{a @RCACaseController.extractCSV(rcaCase.URLHash), class:'btn small'}&{'rcaCase.csv.exportCSV'}#{/a}
             </td>
         </tr>
@@ -229,74 +88,6 @@
     #{else}
     <li>&{'user.noRCACases'}</li>
     #{/else}
-    </div>
-    <div class="tab-pane" id="privatecases">
-<h2>&{'user.sharedPrivateCases'}</h2>
-    #{if !privateCases.empty}
-        <table id="privateCasesTable" class="table zebra-striped condensed-table">
-            <thead>
-            <tr>
-                <th>&{'user.table.title.caseName'}</th>
-                <th>&{'user.table.title.modified'}</th>
-                <th>&{'user.table.title.created'}</th>
-                <th>&{'user.table.title.owner'}</th>
-                <th>&{'user.table.title.actions'}</th>
-            </tr>
-            </thead>
-            <tbody>
-        #{list items:privateCases, as:'rcaCase'}
-        <tr>
-            <td>#{a @PublicRCACaseController.show(rcaCase.URLHash), class:'ellipsis caseTitle', id:'show-rcacase-'+rcaCase.id+'-link', rel:'popover',
-            title:"${rcaCase.caseName.escape().escape().raw()}", 'data-content':"${rcaCase.description.escape().escape().raw()}"}${rcaCase.caseName.escape().raw()}#{/a}</td>
-            <td>${rcaCase.updated.format() + " " + rcaCase.updated.format("HH:mm")}</td>
-            <td>${rcaCase.created.format() + " " + rcaCase.created.format("HH:mm")}</td>
-            <td>${rcaCase.owner.name}</td>
-            <td>
-                <a id="rcacase-share-${rcaCase.id}" href="javascript:;" class="btn small primary">&{'rcacase.share'}</a>
-                #{a @RCACaseController.extractCSV(rcaCase.URLHash), class:'btn small'}&{'rcaCase.csv.exportCSV'}#{/a}
-            </td>
-        </tr>
-        #{/list}
-            </tbody>
-        </table>
-    #{/if}
-    #{else}
-    <li>&{'user.noPrivateCases'}</li>
-    #{/else}
-            <h2>&{'user.publicCases'}</h2>
-    #{if !publicCases.empty}
-        <table id="publicCasesTable" class="table zebra-striped condensed-table">
-            <thead>
-            <tr>
-                <th>&{'user.table.title.caseName'}</th>
-                <th>&{'user.table.title.modified'}</th>
-                <th>&{'user.table.title.created'}</th>
-                <th>&{'user.table.title.owner'}</th>
-                <th>&{'user.table.title.actions'}</th>
-            </tr>
-            </thead>
-            <tbody>
-            #{list items:publicCases, as:'rcaCase'}
-            <tr>
-                <td>#{a @PublicRCACaseController.show(rcaCase.URLHash), class:'ellipsis caseTitle', id:'show-rcacase-'+rcaCase.id+'-link', rel:'popover',
-                title:"${rcaCase.caseName.escape().escape().raw()}", 'data-content':"${rcaCase.description.escape().escape().raw()}"}${rcaCase.caseName.escape().raw()}#{/a}</td>
-                <td>${rcaCase.updated.format() + " " + rcaCase.updated.format("HH:mm")}</td>
-                <td>${rcaCase.created.format() + " " + rcaCase.created.format("HH:mm")}</td>
-                <td>${rcaCase.owner.name}</td>
-                <td>
-                    <a id="rcacase-share-${rcaCase.id}" href="javascript:;" class="btn small primary">&{'rcacase.share'}</a>
-                    #{a @RCACaseController.extractCSV(rcaCase.URLHash), class:'btn small'}&{'rcaCase.csv.exportCSV'}#{/a}
-                </td>
-            </tr>
-            #{/list}
-            </tbody>
-        </table>
-    #{/if}
-            #{else}
-                <li>&{'user.noPublicCases'}</li>
-            #{/else}
-    </div>
-
 </div>
 
 

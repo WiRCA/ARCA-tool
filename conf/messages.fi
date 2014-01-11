@@ -119,7 +119,7 @@ button.next=Seuraava
 
 teamPoweredBy=Tiimiä avustamassa
 
-createRCA.title=Luo uusi RCA analyysi
+createRCA.title=Luo uusi juurisyyanalyysi
 createRCA.caseName=Analyysin nimi (pakollinen)
 createRCA.rcaCaseType=Analyysin tyyppi
 createRCA.caseGoals=Analyysin tavoitteet
@@ -158,7 +158,7 @@ editor.showRelatedCauseNames=Näytä relaatioon liittyvät syyt
 
 relatedCauses=Relaatioon liittyvät syyt
 
-showRCACase.title=RCA analyysi %s
+showRCACase.title=Juurisyyanalyysi %s
 showRCACase.owner=Omistaja
 showRCACase.back=Takaisin omiin analyyseihin
 
@@ -167,8 +167,8 @@ RCACaseType.hr=Henkilöstöön liittyvä ongelma
 RCACaseType.other=Muu
 
 user.welcomeTitle=Tervetuloa %s!
-user.createRCACase=Luo uusi RCA-analyysi
-user.noRCACases=Ei RCA-analyysejä
+user.createRCACase=Luo uusi juurisyyanalyysi
+user.noRCACases=Ei juurisyyanalyysejä
 user.noPrivateCases=Ei yksityisiä analyysejä
 user.noPublicCases=Kanssasi ei ole jaettu mitään julkista analyysiä
 user.created=Analyysi luotu
@@ -181,7 +181,7 @@ rcacase.share=Jaa..
 rcacase.sharedBy=Omistaja:
 user.allPublicCases=Kaikki julkiset analyysit
 user.noAnyPublicCases=Ei julkisia analyysejä
-user.allCases=Kaikki analyysit
+user.allCases=Juurisyyanalyysit
 user.publicCasesTab=Julkiset analyysit
 user.table.title.caseName=Analyysin nimi
 user.table.title.modified=Muokattu
@@ -213,7 +213,7 @@ register.passwordsDidNotMatch=Salasanat eivät täsmänneet
 register.gLogin=Tai kirjaudu Google-tunnuksellasi
 
 rcaCase.csv.exportCSV=Lataa CSV
-rcaCase.csv.caseName=RCA analyysi
+rcaCase.csv.caseName=Juurisyyanalyysi
 rcaCase.csv.causeID=Syyn ID
 rcaCase.csv.causeName=Syyn nimi
 rcaCase.csv.causedById=Alasyyt
@@ -221,7 +221,7 @@ rcaCase.csv.relations=Relaatiot
 
 monitoringPage.title=Monitorointi
 monitoring.help1=Tervetuloa monitorointisivulle!
-monitoring.help2=Täällä voit monitoroida RCA analyysejä ja muuttaa syiden ja korjaavien ideoiden statuksia. Aloita valitsemalla monitoroitava RCA analyysi.
+monitoring.help2=Täällä voit monitoroida juurisyyanalyysejä ja muuttaa syiden ja korjaavien ideoiden statuksia. Aloita valitsemalla monitoroitava juurisyyanalyysi.
 monitoring.selectFilterTitle=Valitse suodin
 monitoring.causesCheckbox=Syyt
 monitoring.correctionsCheckbox=Korjaavat toimenpiteet
@@ -232,7 +232,7 @@ monitoring.allCasesRadio=Kaikki analyysit
 monitoring.selectCaseTitle=Valitse analyysi(t)
 monitoring.numberOfCorrections=Korjaavia toimenpiteitä
 monitoring.causeName=Syy
-monitoring.relatedCase=RCA analyysi
+monitoring.relatedCase=Juurianalyysi
 monitoring.status=Tila
 monitoring.score=Tykkäyksiä
 monitoring.commands=Toiminnot
@@ -242,7 +242,7 @@ monitoring.correctionNameAndDescription=Korjaava toimenpide
 monitoring.selectAllCasesButton=Valitse kaikki analyysit
 monitoring.csv.exportCSV=Lataa CSV
 monitoring.csv.causeAndCorrectionName=Syy / Korjaavan toimenpiteen nimi
-monitoring.csv.relatedCaseAndCorrectionDescription=RCA analyysi / Korjaavan toimenpiteen kuvaus
+monitoring.csv.relatedCaseAndCorrectionDescription=Juurisyyanalyysi / Korjaavan toimenpiteen kuvaus
 monitoring.csv.correctionName=Korjaavan toimenpiteen nimi
 monitoring.csv.correctionDescription=Korjaavan toimenpiteen kuvaus
 monitoring.causesAndCorrections=Syyt ja korjausehdotukset
