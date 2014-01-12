@@ -99,29 +99,13 @@ $(function() {// element variables
         return false;
     });
 
-    $("#ownCasesTable").tablesorter({
+    $("#casesTable").tablesorter({
         // Modified, descending
         sortList:[[1,1]],
         headers: {
             1: { sorter: "shortDate", dateFormat: "ddmmyyyy" },
             2: { sorter: "shortDate", dateFormat: "ddmmyyyy" },
             3: { sorter: false}
-        }
-    });
-    $("#privateCasesTable").tablesorter({
-        sortList:[[1,1]],
-        headers: {
-            1: { sorter: "shortDate", dateFormat: "ddmmyyyy" },
-            2: { sorter: "shortDate", dateFormat: "ddmmyyyy" },
-            4: { sorter: false}
-        }
-    });
-    $("#publicCasesTable").tablesorter({
-        sortList:[[1,1]],
-        headers: {
-            1: { sorter: "shortDate", dateFormat: "ddmmyyyy" },
-            2: { sorter: "shortDate", dateFormat: "ddmmyyyy" },
-            4: { sorter: false}
         }
     });
 });
