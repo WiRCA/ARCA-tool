@@ -65,6 +65,10 @@ table .cause .toggleCorrections {
     position: relative;
 }
 
+.topbar .google-login div {
+    padding: 9px 0 0 5px !important;
+}
+
 #languageSelection {
     margin-top: 12px;
 	margin-right: 30px;

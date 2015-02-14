@@ -24,18 +24,42 @@
   -->
 
 #{if session.username}
-   #{a @Secure.logout(), id:'logout-link', class:'btn'}&{'logout'}#{/a}
+    #{a @Secure.logout(), id:'logout-link', class:'btn'}&{'logout'}#{/a}
 #{/if}
 #{else}
 <div id="login">
-
 	#{form @Secure.authenticate()}
-
 	    <input class="input-small" type="text" name="username" id="username" value="${flash.username}" placeholder="&{'secure.username'}" />
         <input class="input-small" type="password" name="password" id="password" value="" placeholder="&{'secure.password'}" />
         <button type="submit" id="signin" class="btn">&{'secure.signin'}</button>
-        #{a @RegisterController.googleLogin(), id:'gLogin-link'}<img src="@{'/public/images/google_icon.png'}" alt="Google"/>#{/a}
-
     #{/form}
+    <span class="google-login">
+        <span
+                class="g-signin"
+                data-height="short"
+                data-width="iconOnly"
+                data-redirecturi="postmessage"
+                data-callback="signinCallback"
+                data-clientid="${play.configuration['google.client.id']}"
+                data-cookiepolicy="single_host_origin"
+                data-scope="https://www.googleapis.com/auth/plus.me https://www.googleapis.com/auth/userinfo.email">
+        </span>
+    </span>
 </div>
 #{/else}
+
+<script type="application/javascript">
+    $("#logout-link").live("click", function() {
+        gapi.auth.signOut();
+    });
+    function signinCallback(authResult) {
+        console.log(authResult);
+        if (authResult['status']['signed_in']) {
+            googleLogin = #{jsAction @RegisterController.googlePlus(':googleAccessToken', ':authenticityToken') /}
+            authToken = '${session.getAuthenticityToken()}';
+            $.post(googleLogin({googleAccessToken: authResult.access_token, authenticityToken: authToken}), function(data) {
+                window.location.reload();
+            });
+        }
+    }
+</script>

@@ -25,6 +25,8 @@
 
 package controllers;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import job.TutorialRCACaseJob;
 import models.Invitation;
 import models.RCACase;
@@ -32,7 +34,7 @@ import models.User;
 import play.Logger;
 import play.data.validation.Required;
 import play.data.validation.Valid;
-import play.libs.OpenID;
+import play.libs.WS;
 import play.mvc.Controller;
 import play.mvc.With;
 import utils.EncodingUtils;
@@ -106,36 +108,26 @@ public class RegisterController extends Controller {
 		IndexPageController.index();
 	}
 
-	/**
-	 * Handles Google login.
-	 * If user logs in for the first time with the email of his Google account, the user is registered.
-	 * In this case a random password is generated for the account.
-	 * Google login can also be used to log in a user that has registered with our systems sign up
-	 * feature.
-	 * @throws NoSuchAlgorithmException should no be thrown
-	 */
-	public static void googleLogin() throws NoSuchAlgorithmException {
-		if (OpenID.isAuthenticationResponse()) {
-			OpenID.UserInfo verifiedUser = OpenID.getVerifiedID();
-			if (verifiedUser == null) {
-				flash.error("Oops. Authentication has failed");
-				IndexPageController.index();
-			} else {
-				String email = verifiedUser.extensions.get("email");
-				String firstName = verifiedUser.extensions.get("firstname");
-				String lastName = verifiedUser.extensions.get("lastname");
-				String name = firstName + " " + lastName;
-
-				if (!userExists(email)) {
-					createGoogleUser(email, name);
-				}
-				Logger.info("User with email %s logged in via Google login", email);
-				session.put("username", email);
-				SecurityController.onAuthenticated();
+	public static void googlePlus(String googleAccessToken, String authenticityToken) throws NoSuchAlgorithmException {
+		checkAuthenticity();
+		String apiUrl = "https://www.googleapis.com/plus/v1/people/me?access_token=" + googleAccessToken;
+		final JsonObject jsonResponse = WS.url(apiUrl).get().getJson().getAsJsonObject();
+		final String fullName = jsonResponse.get("displayName").getAsString();
+		JsonElement emails = jsonResponse.get("emails");
+		String email = null;
+		for (JsonElement emailElement : emails.getAsJsonArray()) {
+			final JsonObject emailObject = (JsonObject) emailElement;
+			if ("account".equals(emailObject.get("type").getAsString())) {
+				email = emailObject.get("value").getAsString();
+				break;
 			}
-		} else {
-			redirectToGoogleLogin();
 		}
+
+		if (!userExists(email)) {
+			createGoogleUser(email, fullName);
+		}
+		session.put("username", email);
+		SecurityController.onAuthenticated();
 	}
 
 	/**
@@ -175,15 +167,6 @@ public class RegisterController extends Controller {
 		user.save();
 		new TutorialRCACaseJob().doJob(user, false);
 		Logger.info("User %s registered via Google login", user);
-	}
-
-	private static void redirectToGoogleLogin() {
-		// will redirect the user
-		OpenID.id("https://www.google.com/accounts/o8/id")
-					.required("email", "http://axschema.org/contact/email")
-					.required("firstname", "http://axschema.org/namePerson/first")
-					.required("lastname", "http://axschema.org/namePerson/last")
-					.verify();
 	}
 
 	private static boolean userExists(String email) {

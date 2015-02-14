@@ -167,43 +167,4 @@ public class RegisterFunctionalTest extends FunctionalTest {
 		Http.Response response = POST("/register", params);
 		assertStatus(302, response);
 	}
-
-	@Test
-	public void googleLoginTest() {
-		String googleLoginUrl = Router.reverse("RegisterController.googleLogin").url;
-		Http.Request request = newRequest();
-		request.url = googleLoginUrl;
-		request.method = "GET";
-		request.params.put("notEmpty", "notEmpty");
-
-		// redirect to google openid
-		request.path = request.url;
-		Http.Response response = makeRequest(request);
-		assertStatus(302, response);
-
-		// false response from open id
-		request.params.put("openid.mode", "notNull");
-		response = makeRequest(request);
-		assertStatus(302, response);
-		assertHeaderEquals("Location", "/", response);
-
-		/* TODO try to login with google open id
-		String wircamiesGoogleLoginUrl = response.getHeader("Location");
-		request.params.remove("openid.mode");
-		request.url = wircamiesGoogleLoginUrl;
-		request.path = wircamiesGoogleLoginUrl;
-		response = makeRequest(request);
-		while(response.status == 302) {
-			request = newRequest();
-			wircamiesGoogleLoginUrl = response.getHeader("Location");
-			request.url = wircamiesGoogleLoginUrl;
-			request.path = wircamiesGoogleLoginUrl;
-			request.domain = "google.com";
-			request.secure = true;
-			request.cookies = response.cookies;
-			response = makeRequest(request);
-		}
-		assertIsOk(response);
-        */
-	}
 }
