@@ -58,13 +58,6 @@
 			<input type="submit" id="signin" value="&{'secure.signin'}" />
 		</p>
 
-        <div id="gLogin">
-            #{a @RegisterController.googleLogin(), id:'gLogin-link'}
-                &{'register.gLogin'}
-                <img src="@{'/public/images/google_icon.png'}" alt="Google" class="center"/>
-            #{/a}
-        </div>
-
         <div id="register">
             #{a @RegisterController.registerUser(), id:'register-link'}&{'register.title'}#{/a}
         </div>

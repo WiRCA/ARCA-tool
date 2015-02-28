@@ -33,18 +33,19 @@
         <input class="input-small" type="password" name="password" id="password" value="" placeholder="&{'secure.password'}" />
         <button type="submit" id="signin" class="btn">&{'secure.signin'}</button>
     #{/form}
+    #{if play.configuration['test.mode'] == 'false'}
     <span class="google-login">
         <span
                 class="g-signin"
                 data-height="short"
                 data-width="iconOnly"
-                data-redirecturi="postmessage"
                 data-callback="signinCallback"
                 data-clientid="${play.configuration['google.client.id']}"
                 data-cookiepolicy="single_host_origin"
                 data-scope="https://www.googleapis.com/auth/plus.me https://www.googleapis.com/auth/userinfo.email">
         </span>
     </span>
+    #{/if}
 </div>
 #{/else}
 

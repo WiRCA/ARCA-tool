@@ -138,8 +138,8 @@ div#rcacase-share-dialog form {
     margin-right: 50px;
 }
 
-div#googleRegister p {
-    margin-left: 150px;
+div#googleRegister p, div#googleRegister div {
+    margin-left: 150px !important;
 }
 
 .checkbox {
