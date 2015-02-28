@@ -1,3 +1,7 @@
+### Build Status
+
+[![Build Status](http://wirca.soberit.hut.fi:8000/jenkins/buildStatus/icon?job=GitHub ARCA Test)](http://wirca.soberit.hut.fi:8000/jenkins/job/GitHub%20ARCA%20Test/)
+
 # ARCA-tool Readme
 
 ARCA-tool is the finalist project of the [Software Development Project (2011-2012)](http://www.soberit.hut.fi/T-76.4115/) course in Aalto University.
